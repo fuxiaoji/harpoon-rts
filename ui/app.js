@@ -46,6 +46,10 @@ async function api(path, options = {}) {
 async function refresh(preserveSelection = true) {
   try {
     app.state = await api(`/api/state?side=${app.side}`);
+    if(app.side!=="referee" && !app.state.available_sides.includes(app.side)){
+      app.side=app.state.available_sides[0];
+      app.state=await api(`/api/state?side=${app.side}`);
+    }
     app.actions = app.side === "referee" ? [] : await api(`/api/actions?side=${app.side}`);
     if (!preserveSelection || !app.state.units.some(u => u.unit_id === app.selectedUnit)) app.selectedUnit = app.state.units[0]?.unit_id || null;
     render();
@@ -168,11 +172,20 @@ function renderUnits() {
     button.innerHTML=`<strong>${escapeHtml(unit.unit_id)}</strong><span>${unit.speed_knots.toFixed(0)} KT / ${unit.course_deg.toFixed(0)}°</span><div class="damage-bar"><i style="width:${percent}%"></i></div>`;
     button.onclick=()=>selectUnit(unit.unit_id); list.appendChild(button);
   });
+  if(app.state.ground_facilities?.length){
+    const heading=document.createElement("p");heading.className="section-label";heading.textContent="基地设施";list.appendChild(heading);
+    app.state.ground_facilities.forEach(facility=>{
+      const percent=facility.maximum_dp?Math.round(facility.damage_dp/facility.maximum_dp*100):0;
+      const card=document.createElement("div");card.className="unit-card facility-card";
+      card.innerHTML=`<strong>${escapeHtml(facility.name)}</strong><span>${escapeHtml(facility.provenance)} · ${facility.destroyed?"摧毁":facility.runway_cuts?`跑道切口 ${facility.runway_cuts}`:"可用"}</span><div class="damage-bar"><i style="width:${percent}%"></i></div>`;
+      list.appendChild(card);
+    });
+  }
   const unit=app.state.units.find(u=>u.unit_id===app.selectedUnit);
   $("#unit-detail").innerHTML=unit ? unitDetail(unit) : "在海图或列表中选择一个单位";
 }
 
-function platformMaxDp(platformId) { const values={"kortenaer-1982":177,"bremen-1986":175,"poolster-1983":249,"leander-b3-1989":157,"oh-perry-1989":154,"mod-kashin-1975":161}; return values[platformId] || 0; }
+function platformMaxDp(platformId) { return app.state.platforms?.[platformId]?.maximum_dp || 0; }
 function unitDetail(unit) { const max=platformMaxDp(unit.platform_id); return `<p class="section-label">${escapeHtml(unit.side_id)} · ${escapeHtml(unit.platform_id)}</p><h3>${escapeHtml(unit.unit_id)}</h3><div class="detail-grid"><div><span>位置 NM</span><strong>${unit.position.x_nm.toFixed(2)}, ${unit.position.y_nm.toFixed(2)}</strong></div><div><span>航行状态</span><strong>${unit.course_deg.toFixed(0)}° / ${unit.speed_knots.toFixed(0)} KT</strong></div><div><span>损伤</span><strong>${unit.damage_dp} / ${max} DP</strong></div><div><span>战备</span><strong>${escapeHtml(unit.readiness)}</strong></div><div><span>弹药</span><strong>${Object.entries(unit.ammunition).map(([k,v])=>`${k} ×${v}`).join(", ")||"—"}</strong></div><div><span>状态</span><strong>${unit.sunk?"沉没":unit.crippled?"重创":"可用"}</strong></div></div>`; }
 
 function renderActions() {
@@ -191,6 +204,8 @@ function renderEvents() {
 function diceText(record){return record?.rolls?.join(" + ")||"—";}
 function eventOutcome(event){
   const p=event.payload||{};
+  if(event.event_type==="land_strike_adjudicated")return p.hit?`${p.damage_dp||0} DP · 对陆命中`:`D100 ${p.roll?.rolls?.[0]||"—"} · 未命中`;
+  if(event.event_type==="land_attack_missile_launched")return `${p.weapon_id} · ETA ${p.eta_turns} 回合`;
   if(event.event_type==="weapon_adjudicated")return p.hit?`${p.damage_dp||0} DP · ${p.critical_hit_resolution?.results?.length||0} 项致命损伤`:"软杀伤成功 · 导弹脱靶";
   if(event.event_type==="weapon_launched")return `${p.weapon_id} · ETA ${p.eta_turns} 回合`;
   if(event.event_type==="unit_moved")return `${Number(p.distance_nm||0).toFixed(2)} NM`;
@@ -198,7 +213,12 @@ function eventOutcome(event){
   return event.actors.join(" → ")||"系统事件";
 }
 function resolutionSteps(event){
-  const p=event.payload||{}; if(event.event_type!=="weapon_adjudicated")return [];
+  const p=event.payload||{};
+  if(event.event_type==="land_strike_adjudicated"){
+    const lookup=p.lookup||{};const coords=lookup.coordinates||{};const die=p.roll?.rolls?.[0]||"—";
+    return [["11-3 查表坐标",`${coords.missile_type||"—"} · ${coords.guidance||"—"} · 目标尺寸 ${coords.target_size_class||"—"}`],["命中概率",`${lookup.result!=null?Math.round(lookup.result*100):"—"}%`],["D100 检定",`${die}；${p.comparison||"—"}；${p.hit?"命中":"未命中"}`],["毁伤",`${p.damage_dp||0} DP；装甲已在引擎中扣除`]];
+  }
+  if(event.event_type!=="weapon_adjudicated")return [];
   const hit=p.hit_resolution||{}; const lookup=hit.lookup||{}; const coords=lookup.coordinates||{}; const roll=hit.roll||{};
   const steps=[
     ["目标与对抗",`${coords.target_signature||"—"} 特征 · ECM ${coords.ecm_generation||"—"} 代 · ${coords.countermeasure||"无对抗"} · 导引头 ${coords.seeker_generation||"—"} 代`],
@@ -220,7 +240,7 @@ function showCombatFeedback(event){
   requestAnimationFrame(()=>node.classList.add("show")); clearTimeout(app.feedbackTimer); app.feedbackTimer=setTimeout(()=>node.classList.remove("show"),3200);
 }
 
-function eventName(type){return ({orders_locked:"双方命令锁定",unit_moved:"单位移动结算",weapon_launched:"武器发射",weapon_arrival_requires_adjudication:"武器抵达待裁决",weapon_adjudicated:"命中与损伤裁决",contact_solution_report:"接触与火控解报告",readiness_transition_started:"战备转换查表",attack_word_check:"攻击命令检定",victory:"胜负判定",launch_rejected_at_resolution:"发射被拒绝"})[type]||type;}
+function eventName(type){return ({orders_locked:"双方命令锁定",unit_moved:"单位移动结算",weapon_launched:"武器发射",land_attack_missile_launched:"对陆导弹发射",weapon_arrival_requires_adjudication:"武器抵达待裁决",weapon_adjudicated:"命中与损伤裁决",land_strike_adjudicated:"对陆打击查表结算",contact_solution_report:"接触与火控解报告",readiness_transition_started:"战备转换查表",attack_word_check:"攻击命令检定",victory:"胜负判定",launch_rejected_at_resolution:"发射被拒绝"})[type]||type;}
 function flattenTrace(value,prefix="") { const rows=[]; Object.entries(value||{}).forEach(([key,item])=>{const label=prefix?`${prefix}.${key}`:key;if(item&&typeof item==="object"&&!Array.isArray(item))rows.push(...flattenTrace(item,label));else rows.push([label,Array.isArray(item)?item.join(", "):String(item)]);});return rows; }
 
 function selectUnit(unitId) { app.selectedUnit=unitId; renderMap(); renderUnits(); renderActions(); activateTab("units",false); if(app.tutorial.active&&app.tutorial.step===1&&unitId==="poolster-a835")setTutorialStep(2);if(app.tutorial.active&&app.tutorial.step===8&&unitId==="uss-copeland-ffg25")setTutorialStep(9); }
@@ -230,7 +250,7 @@ function openAction(actionId) {
   const action=app.actions.find(a=>a.action_id===actionId); if(!action) return; app.selectedAction=action;
   $("#dialog-title").textContent=app.actionNames[action.action_type]||action.action_type; const fields=$("#action-fields"); fields.innerHTML="";
   if(action.action_type==="move") fields.innerHTML=`<div class="field"><label>新航向 · 0–359°</label><input name="course_deg" type="number" min="0" max="359.99" step="1" value="${app.state.units.find(u=>u.unit_id===action.unit_id)?.course_deg||0}" required></div><div class="field"><label>新速度 · 节</label><input name="speed_knots" type="number" min="0" step="1" value="${app.state.units.find(u=>u.unit_id===action.unit_id)?.speed_knots||0}" required></div>`;
-  if(action.action_type==="fire") fields.innerHTML=`<div class="field"><label>目标</label><select name="target_id" required>${action.candidate_targets.map(t=>`<option value="${escapeHtml(t)}">${escapeHtml(t)}</option>`).join("")}</select></div>`;
+  if(action.action_type==="fire" || action.action_type==="land_strike") fields.innerHTML=`<div class="field"><label>目标</label><select name="target_id" required>${action.candidate_targets.map(t=>`<option value="${escapeHtml(t)}">${escapeHtml(t)}</option>`).join("")}</select></div>`;
   $("#dialog-rule").innerHTML=`<strong>${escapeHtml(action.rule.rule_id)} · ${escapeHtml(action.rule.title_zh)}</strong><br>${escapeHtml(action.rule.explanation)}`;
   $("#action-dialog").showModal(); showRule(action.rule);
   if(app.tutorial.active&&app.tutorial.step===3&&actionId==="move:poolster-a835") { $("[name=course_deg]").value="20"; $("[name=speed_knots]").value="15"; setTutorialStep(4); }
@@ -242,7 +262,7 @@ function showRule(rule) { $("#rule-detail").innerHTML=`<span class="rule-id">${e
 async function submitAction(event) { event.preventDefault(); const action=app.selectedAction; if(!action)return; const form=new FormData(event.currentTarget); const parameters={}; for(const [key,value] of form.entries()) parameters[key]=key==="target_id"?value:Number(value); try { if(app.tutorial.active&&app.tutorial.step===11&&action.action_type==="fire"){await api("/api/tutorial/salvo",{method:"POST",body:"{}"});$("#action-dialog").close();setTutorialStep(12);toast("四枚 Harpoon 齐射已加入计划");await refresh();return;} const result=await api("/api/submit",{method:"POST",body:JSON.stringify({command_id:`ui-${app.state.turn}-${Date.now()}`,side_id:app.side,action_id:action.action_id,observation_version:app.state.version,parameters})}); if(!result.accepted) throw new Error(result.errors.join("；")); $("#action-dialog").close(); toast("命令已加入计划"); if(app.tutorial.active&&app.tutorial.step===4)setTutorialStep(5); await refresh(); } catch(error){toast(error.message,true);} }
 
 async function mutate(path,payload={},message="操作完成") { try { await api(path,{method:"POST",body:JSON.stringify(payload)}); toast(message); await refresh(false); } catch(error){toast(error.message,true);} }
-function openAdjudication(weapon) { const hit=confirm(`${weapon.weapon_id} 已抵达 ${weapon.target_id}\n\n确定：命中并掷伤害骰\n取消：未命中`); mutate("/api/adjudicate",{entity_id:weapon.entity_id,hit},hit?"命中裁决完成":"未命中裁决完成"); }
+function openAdjudication(weapon) { if(weapon.target_kind==="ground_facility"){mutate("/api/adjudicate/land",{entity_id:weapon.entity_id},"已按11-3表自动查表裁决");return;} const hit=confirm(`${weapon.weapon_id} 已抵达 ${weapon.target_id}\n\n确定：命中并掷伤害骰\n取消：未命中`); mutate("/api/adjudicate",{entity_id:weapon.entity_id,hit},hit?"命中裁决完成":"未命中裁决完成"); }
 function toast(message,error=false){const node=$("#toast");node.textContent=message;node.className=error?"show error":"show";clearTimeout(app.toastTimer);app.toastTimer=setTimeout(()=>node.className="",2600);}
 
 function renderTutorial() {
