@@ -25,3 +25,24 @@
 
 发生歧义时按“最新英文规则 > 官方订正/变更日志 > 对应中文译本 > 速查与辅助资料”的优先级裁决，并把差异写入 `docs/rules/open_questions.md`。
 
+## 引擎快速开始
+
+```powershell
+$env:UV_CACHE_DIR='.uv-cache'
+uv sync --extra dev
+uv run pytest -q
+uv run harpoon actions soviet --unit smyshlennyy-mod-kashin
+```
+
+跨命令对局使用 `--state` 读取存档、`--write` 写回存档：
+
+```powershell
+uv run harpoon --write tmp/session.json submit '<Command JSON>'
+uv run harpoon --state tmp/session.json --write tmp/session.json lock nato
+uv run harpoon --state tmp/session.json --write tmp/session.json lock soviet
+uv run harpoon --state tmp/session.json --write tmp/session.json resolve
+uv run harpoon --state tmp/session.json replay --jsonl tmp/session.jsonl
+```
+
+当前为严格规则子集：Tattletail 的六舰数据、反舰导弹射程/飞行/损伤、战备转换、DP 阈值和胜负规则已启用；未核验命中表由裁判裁决，其他章节能力会在行动列表中显示为不可用并解释原因。详见 `data/rules/coverage.json`，不得把接口存在误报为规则已完成。
+
