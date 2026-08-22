@@ -37,3 +37,26 @@ def test_missile_impact_bands_and_critical_table_have_twenty_rows() -> None:
     assert tables.missile_extra_criticals(54, 5)[0] == 5
     for roll in range(1, 21):
         assert tables.critical_type("guided_vs_surface_combatant_size_a_e", roll).result
+
+
+def test_land_attack_table_visual_reference_cells_and_blocked_cells() -> None:
+    tables = SettlementTables()
+    assert tables.land_missile_probability("ballistic", "T2", "A").result == 0.80
+    assert tables.land_missile_probability("land_attack_cruise", "D2", "D").result == 0.25
+    assert tables.land_missile_probability("land_attack_cruise", "T1+", "H").result == 0.01
+    try:
+        tables.land_missile_probability("ballistic", "M1", "B")
+    except ValueError as exc:
+        assert "不能攻击" in str(exc)
+    else:
+        raise AssertionError("表中的 -- 单元必须阻断裁决")
+
+
+def test_runway_use_boundaries_and_airbase_component_ranges() -> None:
+    tables = SettlementTables()
+    assert tables.runway_aircraft_limit(3700, 1).result == "large"
+    assert tables.runway_aircraft_limit(3700, 8).result == "stol"
+    assert tables.runway_aircraft_limit(3700, 9).result == "none"
+    assert tables.air_base_component(1).result == "runways"
+    assert tables.air_base_component(60).result == "defenses"
+    assert tables.air_base_component(100).result == "empty_space"

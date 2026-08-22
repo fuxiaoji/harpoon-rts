@@ -80,7 +80,7 @@ def test_server_type_is_explicit() -> None:
         server.server_close()
 
 
-def test_scenario_catalog_and_provisional_ryukyu_data_are_exposed_safely() -> None:
+def test_scenario_catalog_and_verified_ryukyu_data_are_exposed_safely() -> None:
     with running_server() as base:
         catalog = get_json(f"{base}/api/scenarios")
         assert isinstance(catalog, list)
@@ -94,9 +94,12 @@ def test_scenario_catalog_and_provisional_ryukyu_data_are_exposed_safely() -> No
         state = get_json(f"{base}/api/state?side=china")
         actions = get_json(f"{base}/api/actions?side=china")
         assert state["scenario_id"] == "ryukyu-shockwave-2025"
-        assert len(state["units"]) == 2
-        assert all(not action["available"] for action in actions)
-        assert any("尚未逐页核验" in (action["unavailable_reason"] or "") for action in actions)
+        assert len(state["units"]) == 3
+        assert not state["ground_facilities"]
+        land_strikes = [action for action in actions if action["action_type"] == "land_strike"]
+        assert len(land_strikes) == 1
+        assert land_strikes[0]["available"]
+        assert "kadena-runway-05r23l" in land_strikes[0]["candidate_targets"]
 
 
 def test_staff_api_requires_plan_and_fire_confirmation() -> None:
