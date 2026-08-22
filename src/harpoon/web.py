@@ -87,11 +87,7 @@ class GameApplication:
         if not arrivals:
             raise RuntimeError("当前没有该方待裁决的抵达武器")
         return [
-            self.game.adjudicate_arrival(
-                weapon.entity_id,
-                hit=True,
-                adjudication_basis="tutorial_referee_fixed_hit_not_a_verified_hit_roll",
-            ).model_dump(mode="json")
+            self.game.auto_adjudicate_arrival(weapon.entity_id).model_dump(mode="json")
             for weapon in arrivals
         ]
 

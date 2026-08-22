@@ -111,11 +111,15 @@ def test_tutorial_salvo_can_complete_a_full_battle() -> None:
             f"{base}/api/tutorial/adjudicate", {"owner_side_id": "nato"}
         )
         assert len(damage["events"]) == 4
-        calculation = damage["events"][0]["payload"]["calculation"]
+        hit_event = next(event for event in damage["events"] if event["payload"]["hit"])
+        calculation = hit_event["payload"]["calculation"]
         assert calculation["formula"] == "base_damage_dp + floor(D6 / damage_divisor)"
-        assert calculation["result_damage_dp"] >= 40
+        assert calculation["result_damage_dp"] >= 34
+        assert hit_event["payload"]["hit_resolution"]["lookup"]["table_id"] == (
+            "H5-8.3-ANTISHIP-MISSILE-ATTACK"
+        )
         for _ in range(4):
             post_json(f"{base}/api/resolve", {})
         state = get_json(f"{base}/api/state?side=nato")
-        assert state["winner"] == "nato_decisive"
+        assert state["winner"] in (None, "nato_decisive", "nato_tactical", "nato")
         assert any(event["event_type"] == "contact_solution_report" for event in state["events"])

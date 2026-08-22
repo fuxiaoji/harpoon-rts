@@ -8,7 +8,6 @@ from pathlib import Path
 
 from pypdf import PdfReader
 
-
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE_DIR = ROOT / "【20260405】鱼叉5（本体+中美俄数据库）"
 OUTPUT = ROOT / "resources" / "catalog" / "inventory.csv"

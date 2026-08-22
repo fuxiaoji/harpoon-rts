@@ -20,13 +20,13 @@ const tutorialSteps = [
   { kicker:"反击 3/4 · 选择目标", title:"确认目标 Smyshlennyy", copy:"本教学用一次四枚 Harpoon 齐射缩短流程。每枚仍作为独立命令、独立在途实体和独立损伤骰处理。", focus:"#action-dialog" },
   { kicker:"反击 4/4 · 锁定齐射", title:"锁定 NATO 齐射计划", copy:"四枚命令已进入计划。苏方 AI 本回合保持航向，双方再次同时锁定。", focus:"#lock-button" },
   { kicker:"来袭导弹", title:"推进到 P-15M 抵达", copy:"先执行计划，再执行移动。在途导弹每个移动阶段减少一个到达回合。", button:"推进并解释当前阶段" },
-  { kicker:"命中裁决边界", title:"教学裁判处理 P-15M", copy:"注意：权威命中表尚未逐表核验，所以引擎不会伪造命中概率。本教学明确采用“裁判预设命中”，随后只自动执行已核验的损伤公式。", button:"裁判预设命中并查看判伤" },
+  { kicker:"软杀伤查表", title:"自动处理 P-15M", copy:"按 Poolster 的 Medium 特征、二代 ECM、诱饵和 P-15M 二代导引头定位 8-15 表的 56% 单元，再掷 D100。只有导引成功才继续判伤。", button:"查 8-15 表、掷 D100 并查看结果" },
   { kicker:"完成第二回合", title:"继续到下一计划阶段", copy:"计划射击阶段会发射四枚 Harpoon；探测阶段报告 Good 火控解的来源；结算阶段更新战备和胜负。", button:"推进并解释当前阶段" },
   { kicker:"导弹飞行", title:"锁定等待命令，进入第三回合", copy:"这一回合无需新机动。双方保持命令，重点观察四枚 Harpoon 如何在移动阶段抵达。", button:"双方保持并锁定" },
   { kicker:"导弹飞行", title:"推进到 Harpoon 齐射抵达", copy:"查看海图上的在途实体和发射事件中的射程、速度、ETA 公式。", button:"推进并解释当前阶段" },
-  { kicker:"损伤查表", title:"逐枚裁决四枚 Harpoon", copy:"教学裁判预设四枚命中。每枚伤害 = 40 + floor(D6÷2) DP；事件将逐项显示骰值、累计 DP、50% 重创线和沉没线。", button:"裁判预设命中并逐枚判伤" },
-  { kicker:"胜负判定", title:"推进到结算阶段", copy:"Smyshlennyy 达到最大 DP 后沉没；结算阶段依据苏舰状态与 NATO 重创舰数量给出胜利等级。", button:"推进并解释当前阶段" },
-  { kicker:"完整战役完成", title:"NATO 取得决定性胜利", copy:"你已经走完移动、探测/火控、ROE、武器发射、导弹飞行、人工命中边界、自动 DP 判伤和胜负判定。可展开任一事件复盘全部计算。", button:"结束教学并查看战报" }
+  { kicker:"完整损伤链", title:"逐枚裁决四枚 Harpoon", copy:"每枚先按 Small 特征、二代 J&D、三代导引头查得 80%，独立掷 D100；命中后再结算特殊伤害修正、伤害比率、D6 致命数量、D20 类型和自动火灾。", button:"逐枚查表并判伤" },
+  { kicker:"胜负判定", title:"推进到结算阶段", copy:"真实骰运可能造成沉没、重创或未决结果。结算阶段严格依据当前舰艇状态和想定胜利条件报告结果，不保证教学方必胜。", button:"推进并解释当前阶段" },
+  { kicker:"完整战役完成", title:"本次交战已完成", copy:"你已经走完移动、探测/火控、ROE、武器发射、导弹飞行、软杀伤查表、DP、致命损伤与胜负检查。展开事件可复盘每个行列、骰值和中间结果。", button:"结束教学并查看战报" }
 ];
 
 const $ = (selector) => document.querySelector(selector);
@@ -169,7 +169,7 @@ function renderTutorial() {
   if(step.focus) document.querySelectorAll(step.focus).forEach(node=>node.classList.add("tutorial-focus"));
 }
 
-function phaseLesson(phase){return ({plotting:{title:"计划阶段 · 命令封存",copy:"裁决双方已经锁定的计划，只记录命令数量，不泄露秘密内容；随后进入移动。"},movement:{title:"移动阶段 · 坐标与在途武器",copy:"舰艇按 speed×3÷60 计算三分钟航程；在途导弹的 ETA 减 1，抵达后停在待裁决状态。"},planned_fire:{title:"计划射击 · 射程门与 ETA",copy:"检查 Good 火控解、弹药和最小/最大射程；通过后扣弹药，并用 ceil(距离÷每回合航程) 计算 ETA。"},detection:{title:"探测阶段 · 接触质量",copy:"当前严格想定直接给定 Good 火控解。完整雷达/声呐探测表尚未核验，因此这里只报告来源，不进行虚构骰。"},reaction_fire:{title:"反应射击 · 当前能力边界",copy:"此阶段通常处理 SAM、近防炮、诱饵和干扰；这些表尚未 verified，当前严格子集不自动裁决，并在覆盖台账中保持阻塞。"},resolution:{title:"结算阶段 · 战备、损伤与胜负",copy:"更新 Condition III→I 的剩余回合，并依据 DP 阈值和想定胜利条件检查胜负，然后时间推进三分钟。"}})[phase]||{title:"阶段执行",copy:"推进当前阶段并查看下方事件明细。"};}
+function phaseLesson(phase){return ({plotting:{title:"计划阶段 · 命令封存",copy:"裁决双方已经锁定的计划，只记录命令数量，不泄露秘密内容；随后进入移动。"},movement:{title:"移动阶段 · 坐标与在途武器",copy:"舰艇按 speed×3÷60 计算三分钟航程；在途导弹的 ETA 减 1，抵达后停在待裁决状态。"},planned_fire:{title:"计划射击 · 射程门与 ETA",copy:"检查 Good 火控解、弹药和最小/最大射程；通过后扣弹药，并用 ceil(距离÷每回合航程) 计算 ETA。"},detection:{title:"探测阶段 · 接触质量",copy:"当前严格想定直接给定 Good 火控解。完整雷达/声呐探测表尚未核验，因此这里只报告来源，不进行虚构骰。"},reaction_fire:{title:"反应射击 · 防御窗口",copy:"此阶段通常安排 SAM/近防射击；当前教学在武器抵达时执行已录入的 ECM/诱饵软杀伤查表，硬杀伤渠道仍按平台能力继续扩展。"},resolution:{title:"结算阶段 · 战备、损伤与胜负",copy:"更新 Condition III→I 的剩余回合，并依据 DP 阈值和想定胜利条件检查胜负，然后时间推进三分钟。"}})[phase]||{title:"阶段执行",copy:"推进当前阶段并查看下方事件明细。"};}
 
 function setTutorialStep(step) { app.tutorial.step=step; if(step===8)activateTab("units",false); renderTutorial(); }
 async function startTutorial() { await api("/api/reset",{method:"POST",body:"{}"}); app.tutorial.active=true; app.tutorial.step=1; app.aiOpponent=true; app.side="nato"; app.selectedUnit=null; await refresh(false); }
@@ -185,7 +185,7 @@ async function tutorialNext() {
   if(app.tutorial.step===16){await lockTutorialPlayer();setTutorialStep(17);return;}
   if(app.tutorial.step===17){await advanceTutorialPhase();if(app.state.in_flight_weapons.some(w=>w.owner_side_id==="nato"&&w.awaiting_adjudication))setTutorialStep(18);return;}
   if(app.tutorial.step===18){await api("/api/tutorial/adjudicate",{method:"POST",body:JSON.stringify({owner_side_id:"nato"})});await refresh();setTutorialStep(19);toast("四枚 Harpoon 已逐枚判伤");return;}
-  if(app.tutorial.step===19){await advanceTutorialPhase();if(app.state.winner)setTutorialStep(20);return;}
+  if(app.tutorial.step===19){await advanceTutorialPhase();setTutorialStep(20);return;}
   if(app.tutorial.step===20){app.tutorial.active=false;app.tutorial.step=-1;renderTutorial();toast("完整战役教学完成");}
 }
 function exitTutorial(){app.tutorial.active=false;app.tutorial.step=-1;renderTutorial();toast("已退出教学模式");}

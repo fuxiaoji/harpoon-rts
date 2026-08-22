@@ -27,6 +27,7 @@ from harpoon.domain.models import (
 )
 from harpoon.engine.randomness import RecordedRandom
 from harpoon.rules.catalog import explain
+from harpoon.rules.settlement import SettlementTables
 
 
 class GameEngine:
@@ -47,6 +48,39 @@ class GameEngine:
         self._commands: dict[str, Command] = {}
         self._rng = RecordedRandom(state.seed)
         self._event_sequence = 0
+        self._tables = SettlementTables()
+
+    def auto_adjudicate_arrival(self, entity_id: str) -> Event:
+        """Resolve an arrived SSM from the verified attack and damage tables."""
+        entity = next(
+            x for x in self.state.in_flight_weapons if x.entity_id == entity_id and x.awaiting_adjudication
+        )
+        weapon = self.weapons[entity.weapon_id]
+        target = self.state.units[entity.target_id]
+        platform = self.platforms[target.platform_id]
+        if weapon.seeker_generation is None or platform.ecm_generation is None:
+            raise RuntimeError("缺少导引头或 ECM 世代，禁止自动裁决")
+        lookup = self._tables.antiship_probability(
+            platform.target_signature,
+            platform.ecm_generation,
+            weapon.seeker_generation,
+            platform.countermeasure,
+        )
+        roll, record = self._rng.d100(self.state.random_draw_index)
+        hit = roll <= round(float(lookup.result) * 100)
+        return self._apply_arrival_result(
+            entity,
+            hit,
+            "verified_antiship_missile_attack_table",
+            hit_trace={
+                "lookup": lookup.trace(),
+                "roll": record,
+                "comparison": f"D100 <= {round(float(lookup.result) * 100)}",
+                "result": "seeker_lock" if hit else "soft_kill",
+                "hard_kill_defense": "not_available_or_not_yet_resolved",
+            },
+            initial_draws=1,
+        )
 
     def observe(self, side_id: str) -> Observation:
         visible = tuple(
@@ -247,26 +281,88 @@ class GameEngine:
             for x in self.state.in_flight_weapons
             if x.entity_id == entity_id and x.awaiting_adjudication
         )
+        return self._apply_arrival_result(
+            weapon_entity, hit, adjudication_basis, hit_trace=None, initial_draws=0
+        )
+
+    def _apply_arrival_result(
+        self,
+        weapon_entity: InFlightWeapon,
+        hit: bool,
+        adjudication_basis: str,
+        hit_trace: dict[str, Any] | None,
+        initial_draws: int,
+    ) -> Event:
         weapon = self.weapons[weapon_entity.weapon_id]
         payload: dict[str, Any] = {
             "hit": hit,
             "target_id": weapon_entity.target_id,
             "adjudication_basis": adjudication_basis,
-            "hit_table_status": "blocked_pending_authoritative_table_verification",
+            "hit_table_status": "verified" if hit_trace else "manual_referee_ruling",
         }
+        if hit_trace:
+            payload["hit_resolution"] = hit_trace
         random_record = None
         units = dict(self.state.units)
+        draws = initial_draws
         if hit:
-            die, random_record = self._rng.d6(self.state.random_draw_index)
-            damage = weapon.base_damage_dp + die // weapon.damage_divisor
+            die, random_record = self._rng.d6(self.state.random_draw_index + draws)
+            draws += 1
+            raw_damage = weapon.base_damage_dp + die // weapon.damage_divisor
             target = units[weapon_entity.target_id]
+            platform = self.platforms[target.platform_id]
+            damage = math.floor(raw_damage * (100 + platform.damage_modifier_percent) / 100)
             new_dp = min(target.damage_dp + damage, self.platforms[target.platform_id].maximum_dp)
             maximum = self.platforms[target.platform_id].maximum_dp
+            remaining = maximum - new_dp
+            ratio_die, ratio_record = self._rng.d6(self.state.random_draw_index + draws)
+            draws += 1
+            ratio_criticals, ratio_lookup = self._tables.damage_ratio_criticals(
+                damage, remaining, maximum, ratio_die
+            )
+            extra_die, extra_record = self._rng.d6(self.state.random_draw_index + draws)
+            draws += 1
+            extra_criticals, extra_lookup = self._tables.missile_extra_criticals(
+                raw_damage, extra_die
+            )
+            criticals: list[str] = []
+            critical_traces: list[dict[str, Any]] = []
+            for origin, count in (("damage_ratio", ratio_criticals), ("missile_airframe", extra_criticals)):
+                for _ in range(count):
+                    d20, d20_record = self._rng.d20(self.state.random_draw_index + draws)
+                    draws += 1
+                    critical_lookup = self._tables.critical_type(
+                        "guided_vs_surface_combatant_size_a_e", d20
+                    )
+                    criticals.append(str(critical_lookup.result))
+                    critical_traces.append(
+                        {"origin": origin, "roll": d20_record, "lookup": critical_lookup.trace()}
+                    )
+            if weapon.missile_impact_criticals:
+                criticals.append("fire")
             units[target.unit_id] = target.model_copy(
                 update={
                     "damage_dp": new_dp,
-                    "crippled": new_dp * 2 >= maximum,
+                    "speed_knots": min(
+                        target.speed_knots,
+                        next(
+                            speed
+                            for threshold, speed in reversed(
+                                list(
+                                    zip(
+                                        platform.damage_breakpoints_dp,
+                                        platform.speed_breakpoints_knots,
+                                        strict=True,
+                                    )
+                                )
+                            )
+                            if new_dp >= threshold
+                        ),
+                    ),
+                    "crippled": new_dp >= platform.damage_breakpoints_dp[2],
                     "sunk": new_dp >= maximum,
+                    "critical_hits": target.critical_hits + tuple(criticals),
+                    "fire_critical_count": target.fire_critical_count + criticals.count("fire"),
                 }
             )
             payload["damage_dp"] = damage
@@ -275,19 +371,32 @@ class GameEngine:
                 "base_damage_dp": weapon.base_damage_dp,
                 "die_roll": die,
                 "damage_divisor": weapon.damage_divisor,
+                "raw_damage_dp": raw_damage,
+                "target_damage_modifier_percent": platform.damage_modifier_percent,
                 "result_damage_dp": damage,
                 "target_previous_damage_dp": target.damage_dp,
                 "target_new_damage_dp": new_dp,
                 "crippled_threshold_dp": math.ceil(maximum / 2),
                 "sunk_threshold_dp": maximum,
             }
-        remaining = tuple(x for x in self.state.in_flight_weapons if x.entity_id != entity_id)
+            payload["critical_hit_resolution"] = {
+                "damage_ratio_roll": ratio_record,
+                "damage_ratio_lookup": ratio_lookup.trace(),
+                "missile_airframe_roll": extra_record,
+                "missile_airframe_lookup": extra_lookup.trace(),
+                "automatic_fire_critical": weapon.missile_impact_criticals,
+                "critical_rolls": critical_traces,
+                "results": criticals,
+            }
+        remaining = tuple(
+            x for x in self.state.in_flight_weapons if x.entity_id != weapon_entity.entity_id
+        )
         self.state = self.state.model_copy(
             update={
                 "units": units,
                 "in_flight_weapons": remaining,
                 "version": self.state.version + 1,
-                "random_draw_index": self.state.random_draw_index + (1 if hit else 0),
+                "random_draw_index": self.state.random_draw_index + draws,
             }
         )
         event = self._event(

@@ -91,7 +91,9 @@ def test_launch_moves_next_turn_and_damage_is_recorded() -> None:
         game.resolve()
     event = game.adjudicate_arrival(entity.entity_id, hit=True)
     assert event.random_record and event.random_record["kind"] == "d6"
-    assert game.state.units["poolster-a835"].damage_dp >= 55
+    assert game.state.units["poolster-a835"].damage_dp >= 41
+    assert event.payload["calculation"]["target_damage_modifier_percent"] == -25
+    assert event.payload["critical_hit_resolution"]["automatic_fire_critical"] is True
 
 
 def test_soviet_launch_starts_nato_readiness_transition() -> None:
