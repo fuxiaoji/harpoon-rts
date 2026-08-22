@@ -10,6 +10,7 @@
 # Generated extraction and local tooling output
 resources/processed/text/
 resources/processed/rendered/
+resources/rag/harpoon_rules.sqlite3
 tmp/
 __pycache__/
 *.pyc

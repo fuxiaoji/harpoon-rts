@@ -1,0 +1,4 @@
+interface:
+  display_name: "Harpoon V 核心规则核验"
+  short_description: "检索、核验并审计 Harpoon V 核心规则与结算表执行证据"
+  default_prompt: "Use $harpoon-v-rules to retrieve and audit the authoritative Harpoon V rule before changing the engine."

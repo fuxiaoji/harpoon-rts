@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0.0",
+  "source": {
+    "document_id": "expanded_critical_hits_cn",
+    "version": "2026-03-01 digital",
+    "path": "【20260405】鱼叉5（本体+中美俄数据库）/3-2.（扩展损伤手册26版）Harpoon_V_Expanded_Critical_Hit_Tables_(Chinese_Language).pdf"
+  },
+  "implementation_policy": "indexed is not executable; every row needs complete data, engine path and tests",
+  "tables": [
+    {"rule_id":"HV-ECT-00","pdf_page":2,"title":"通用规则与轻型武器的致命损伤","status":"indexed","optional":false},
+    {"rule_id":"HV-ECT-01","pdf_page":3,"title":"1955年前水面战斗舰船（尺寸A至E）","status":"indexed","optional":false},
+    {"rule_id":"HV-ECT-02","pdf_page":4,"title":"1955年后水面战斗舰船（尺寸A至E）","status":"indexed","optional":false},
+    {"rule_id":"HV-ECT-03","pdf_page":5,"title":"制导武器对水面战斗舰船（尺寸A至E）","status":"partial","optional":false,"note":"现引擎仅实现少量结果类型，未录入本页完整百分率结果与组件效果"},
+    {"rule_id":"HV-ECT-04","pdf_page":6,"title":"战斗小艇（尺寸F至G）","status":"indexed","optional":false},
+    {"rule_id":"HV-ECT-05","pdf_page":7,"title":"航空舰船","status":"indexed","optional":false},
+    {"rule_id":"HV-ECT-06","pdf_page":8,"title":"水下攻击","status":"indexed","optional":false},
+    {"rule_id":"HV-ECT-07","pdf_page":9,"title":"空爆和弹片命中","status":"indexed","optional":false},
+    {"rule_id":"HV-ECT-08","pdf_page":10,"title":"商船和辅助舰船（尺寸A至E）","status":"indexed","optional":false},
+    {"rule_id":"HV-ECT-09","pdf_page":11,"title":"运输小艇（尺寸F至G）","status":"indexed","optional":false},
+    {"rule_id":"HV-ECT-10","pdf_page":12,"title":"潜艇（重度损伤）","status":"indexed","optional":false},
+    {"rule_id":"HV-ECT-11","pdf_page":13,"title":"潜艇（轻度损伤）","status":"indexed","optional":false},
+    {"rule_id":"HV-ECT-12","pdf_page":14,"title":"《海上指挥》主要水面战斗舰船（尺寸A/B）（经调整）","status":"indexed","optional":true},
+    {"rule_id":"HV-ECT-13","pdf_page":15,"title":"《海上指挥》次要水面战斗舰船（尺寸C/D/E）（经调整）","status":"indexed","optional":true}
+  ]
+}
