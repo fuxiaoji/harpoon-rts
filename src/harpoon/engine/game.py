@@ -12,6 +12,7 @@ from harpoon.domain.models import (
     Command,
     Event,
     GameSnapshot,
+    GroundFacilityDefinition,
     InFlightWeapon,
     Observation,
     Phase,
@@ -39,11 +40,13 @@ class GameEngine:
         platforms: dict[str, Any],
         weapons: dict[str, WeaponDefinition],
         objectives: dict[str, tuple[str, ...]],
+        ground_facilities: dict[str, GroundFacilityDefinition] | None = None,
     ) -> None:
         self.state = state
         self.platforms = platforms
         self.weapons = weapons
         self.objectives = objectives
+        self.ground_facilities = ground_facilities or {}
         self.events: list[Event] = []
         self._commands: dict[str, Command] = {}
         self._rng = RecordedRandom(state.seed)
@@ -147,6 +150,32 @@ class GameEngine:
             )
             for weapon_id in platform.weapons:
                 ammo = unit.ammunition.get(weapon_id, 0)
+                weapon_definition = self.weapons[weapon_id]
+                if weapon_definition.attack_domain == "land":
+                    land_targets = tuple(
+                        facility_id
+                        for facility_id, facility in self.ground_facilities.items()
+                        if facility.side_id != side_id
+                        and not self.state.ground_facilities[facility_id].destroyed
+                    )
+                    strike_ok = base_ok and ammo > 0 and bool(land_targets)
+                    options.append(
+                        ActionOption(
+                            action_id=f"landstrike:{unit.unit_id}:{weapon_id}",
+                            action_type="land_strike",
+                            unit_id=unit.unit_id,
+                            parameter_schema={
+                                "type": "object",
+                                "properties": {"target_id": {"type": "string"}},
+                                "required": ["target_id"],
+                            },
+                            candidate_targets=land_targets,
+                            available=strike_ok,
+                            unavailable_reason=None if strike_ok else "需要弹药和可用陆上目标",
+                            rule=explain("H5-11-STRIKE"),
+                        )
+                    )
+                    continue
                 fire_ok = base_ok and ammo > 0 and bool(targets)
                 reason = None if fire_ok else "需要计划阶段、可用弹药和 Good 火控解"
                 if side_id == "nato" and not self._nato_may_fire():
@@ -181,7 +210,6 @@ class GameEngine:
             ("air_mission", "H5-4-AIR"),
             ("air_attack", "H5-9-AIRWAR"),
             ("submarine_attack", "H5-10-SUBWAR"),
-            ("land_strike", "H5-11-STRIKE"),
             ("electronic_warfare", "H5-12-EW"),
             ("mine_warfare", "H5-13-MINES"),
         ):
@@ -229,7 +257,7 @@ class GameEngine:
                     errors=("航向或速度超出平台限制",),
                     rule_ids=(option.rule.rule_id,),
                 )
-        if prefix == "fire" and command.parameters.get("target_id") not in option.candidate_targets:
+        if prefix in ("fire", "landstrike") and command.parameters.get("target_id") not in option.candidate_targets:
             return ValidationResult(
                 accepted=False, errors=("目标不在候选列表",), rule_ids=(option.rule.rule_id,)
             )
@@ -418,6 +446,75 @@ class GameEngine:
         self.events.append(event)
         return event
 
+    def auto_adjudicate_land_arrival(self, entity_id: str) -> Event:
+        entity = next(
+            item
+            for item in self.state.in_flight_weapons
+            if item.entity_id == entity_id
+            and item.awaiting_adjudication
+            and item.target_kind == "ground_facility"
+        )
+        weapon = self.weapons[entity.weapon_id]
+        facility = self.ground_facilities[entity.target_id]
+        if weapon.land_attack_type is None or weapon.guidance is None:
+            raise RuntimeError("缺少对陆导弹类型或制导等级，禁止自动裁决")
+        lookup = self._tables.land_missile_probability(
+            weapon.land_attack_type, weapon.guidance, facility.size_class
+        )
+        roll, record = self._rng.d100(self.state.random_draw_index)
+        hit = roll <= round(float(lookup.result) * 100)
+        facilities = dict(self.state.ground_facilities)
+        target = facilities[entity.target_id]
+        damage = 0
+        damage_record: dict[str, Any] | None = None
+        if hit:
+            if weapon.penetration is None:
+                raise RuntimeError("缺少武器穿透值，禁止对陆毁伤裁决")
+            if weapon.penetration < facility.armor:
+                raise RuntimeError("穿透规则分支尚未核验，当前武器不足以穿透该目标")
+            damage_die, damage_record = self._rng.d6(self.state.random_draw_index + 1)
+            damage = weapon.base_damage_dp + damage_die // weapon.damage_divisor
+            new_damage = min(facility.maximum_dp, target.damage_dp + damage)
+            facilities[entity.target_id] = target.model_copy(
+                update={
+                    "damage_dp": new_damage,
+                    "runway_cuts": target.runway_cuts
+                    + (1 if facility.facility_type == "runway" else 0),
+                    "operational": new_damage < facility.maximum_dp / 2,
+                    "destroyed": new_damage >= facility.maximum_dp,
+                }
+            )
+        remaining = tuple(
+            item for item in self.state.in_flight_weapons if item.entity_id != entity_id
+        )
+        self.state = self.state.model_copy(
+            update={
+                "ground_facilities": facilities,
+                "in_flight_weapons": remaining,
+                "version": self.state.version + 1,
+                "random_draw_index": self.state.random_draw_index + (2 if hit else 1),
+            }
+        )
+        event = self._event(
+            "land_strike_adjudicated",
+            (entity.shooter_id, entity.target_id),
+            ("H5-11-3-LAND-MISSILE-ATTACK",),
+            {
+                "hit": hit,
+                "damage_dp": damage,
+                "damage_roll": damage_record,
+                "damage_formula": "base_damage_dp + floor(D6 / damage_divisor)",
+                "penetration": weapon.penetration,
+                "target_armor": facility.armor,
+                "lookup": lookup.trace(),
+                "roll": record,
+                "comparison": f"D100 <= {round(float(lookup.result) * 100)}",
+            },
+            random_record=record,
+        )
+        self.events.append(event)
+        return event
+
     def snapshot(self) -> GameSnapshot:
         return GameSnapshot(
             state=self.state, event_cursor=len(self.events), state_hash=self.state.state_hash()
@@ -429,6 +526,9 @@ class GameEngine:
             "events": [e.model_dump(mode="json") for e in self.events],
             "platforms": [p.model_dump(mode="json") for p in self.platforms.values()],
             "weapons": [w.model_dump(mode="json") for w in self.weapons.values()],
+            "ground_facility_definitions": [
+                item.model_dump(mode="json") for item in self.ground_facilities.values()
+            ],
             "objectives": self.objectives,
             "pending_commands": [
                 command.model_dump(mode="json") for command in self._commands.values()
@@ -558,6 +658,42 @@ class GameEngine:
         events = []
         soviet_attack = False
         for command in sorted(self._commands.values(), key=lambda c: c.command_id):
+            if command.action_id.startswith("landstrike:"):
+                _, shooter_id, weapon_id = command.action_id.split(":")
+                target_id = str(command.parameters["target_id"])
+                shooter = units[shooter_id]
+                weapon = self.weapons[weapon_id]
+                ammo = dict(shooter.ammunition)
+                ammo[weapon_id] -= 1
+                units[shooter_id] = shooter.model_copy(update={"ammunition": ammo})
+                eta = max(
+                    1,
+                    math.ceil(
+                        weapon.maximum_range_nm
+                        / max(weapon.speed_knots * 3 / 60, 0.001)
+                    ),
+                )
+                inflight.append(
+                    InFlightWeapon(
+                        entity_id=f"weapon-{self.state.turn}-{command.command_id}",
+                        weapon_id=weapon_id,
+                        shooter_id=shooter_id,
+                        target_id=target_id,
+                        owner_side_id=shooter.side_id,
+                        turns_to_arrival=eta,
+                        launch_range_nm=weapon.maximum_range_nm,
+                        target_kind="ground_facility",
+                    )
+                )
+                events.append(
+                    self._event(
+                        "land_attack_missile_launched",
+                        (shooter_id, target_id),
+                        ("H5-11-STRIKE", weapon.rule_id),
+                        {"weapon_id": weapon_id, "eta_turns": eta},
+                    )
+                )
+                continue
             if not command.action_id.startswith("fire:"):
                 continue
             _, shooter_id, weapon_id = command.action_id.split(":")
@@ -680,6 +816,21 @@ class GameEngine:
         return events
 
     def _winner(self, units: dict[str, UnitState]) -> str | None:
+        if self.state.scenario_id == "ryukyu-shockwave-2025":
+            runway_ids = [
+                facility_id
+                for facility_id, definition in self.ground_facilities.items()
+                if definition.facility_type == "runway"
+            ]
+            disabled = sum(
+                not self.state.ground_facilities[facility_id].operational
+                for facility_id in runway_ids
+            )
+            if disabled >= 3:
+                return "china_tactical"
+            if self.state.turn >= 239:
+                return "usa_tactical"
+            return None
         if self.state.scenario_id != "tattletail-1991-strict":
             return None
         soviet = units["smyshlennyy-mod-kashin"]

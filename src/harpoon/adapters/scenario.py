@@ -10,6 +10,8 @@ from harpoon.domain.models import (
     Command,
     Contact,
     Event,
+    GroundFacilityDefinition,
+    GroundFacilityState,
     PlatformDefinition,
     UnitState,
     WeaponDefinition,
@@ -29,6 +31,18 @@ class ScenarioDocument(BaseModel):
     platforms: list[PlatformDefinition]
     units: list[UnitState]
     contacts: dict[str, list[Contact]]
+    ground_facility_definitions: list[GroundFacilityDefinition] = []
+    ground_facilities: list[GroundFacilityState] = []
+    data_packages: list[str] = []
+
+
+class ScenarioDataPackage(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    schema_version: str
+    package_id: str
+    weapons: list[WeaponDefinition] = []
+    platforms: list[PlatformDefinition] = []
+    ground_facility_definitions: list[GroundFacilityDefinition] = []
 
 
 class ScenarioCatalogEntry(BaseModel):
@@ -62,17 +76,51 @@ def scenario_path(scenario_id: str) -> Path:
 def load_scenario(path: Path) -> GameEngine:
     raw = json.loads(path.read_text(encoding="utf-8"))
     document = ScenarioDocument.model_validate(raw)
-    platforms = {item.platform_id: item for item in document.platforms}
-    weapons = {item.weapon_id: item for item in document.weapons}
+    packages: list[ScenarioDataPackage] = []
+    root = Path(__file__).resolve().parents[3]
+    data_root = (root / "data").resolve()
+    for relative in document.data_packages:
+        package_path = (root / relative).resolve()
+        if data_root not in package_path.parents:
+            raise ValueError("数据包路径越界")
+        packages.append(
+            ScenarioDataPackage.model_validate(
+                json.loads(package_path.read_text(encoding="utf-8"))
+            )
+        )
+    platforms = {
+        item.platform_id: item
+        for item in document.platforms
+        + [entry for package in packages for entry in package.platforms]
+    }
+    weapons = {
+        item.weapon_id: item
+        for item in document.weapons
+        + [entry for package in packages for entry in package.weapons]
+    }
     state = WorldState(
         scenario_id=document.scenario_id,
         seed=document.seed,
         timestamp=document.start,
         units={item.unit_id: item for item in document.units},
+        ground_facilities={item.facility_id: item for item in document.ground_facilities},
         contacts={side: tuple(items) for side, items in document.contacts.items()},
     )
+    facilities = {
+        item.facility_id: item
+        for item in document.ground_facility_definitions
+        + [
+            entry
+            for package in packages
+            for entry in package.ground_facility_definitions
+        ]
+    }
     return GameEngine(
-        state, platforms, weapons, {k: tuple(v) for k, v in document.objectives.items()}
+        state,
+        platforms,
+        weapons,
+        {k: tuple(v) for k, v in document.objectives.items()},
+        facilities,
     )
 
 
@@ -97,6 +145,13 @@ def load_saved_game(path: Path) -> GameEngine:
         platforms,
         weapons,
         {key: tuple(value) for key, value in raw["objectives"].items()},
+        {
+            item.facility_id: item
+            for item in (
+                GroundFacilityDefinition.model_validate(value)
+                for value in raw.get("ground_facility_definitions", [])
+            )
+        },
     )
     game.events = [Event.model_validate(value) for value in raw["events"]]
     game._commands = {

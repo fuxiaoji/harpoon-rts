@@ -177,6 +177,14 @@ class GameApplication:
             "locked_sides": sorted(self.game.state.locked_sides),
             "winner": self.game.state.winner,
             "units": units,
+            "platforms": {
+                platform_id: {
+                    "name": platform.name,
+                    "maximum_dp": platform.maximum_dp,
+                    "maximum_speed_knots": platform.maximum_speed_knots,
+                }
+                for platform_id, platform in self.game.platforms.items()
+            },
             "contacts": contacts,
             "events": events,
             "objectives": list(self.game.objectives.get(side_id, ())),
@@ -185,7 +193,22 @@ class GameApplication:
                 for weapon in self.game.state.in_flight_weapons
                 if side_id == "referee"
                 or weapon.owner_side_id == side_id
-                or self.game.state.units[weapon.target_id].side_id == side_id
+                or (
+                    weapon.target_kind == "unit"
+                    and self.game.state.units[weapon.target_id].side_id == side_id
+                )
+                or (
+                    weapon.target_kind == "ground_facility"
+                    and self.game.ground_facilities[weapon.target_id].side_id == side_id
+                )
+            ],
+            "ground_facilities": [
+                {
+                    **definition.model_dump(mode="json"),
+                    **self.game.state.ground_facilities[facility_id].model_dump(mode="json"),
+                }
+                for facility_id, definition in self.game.ground_facilities.items()
+                if side_id == "referee" or definition.side_id == side_id
             ],
             "pending_commands": len(self.game._commands) if side_id == "referee" else None,
             "available_sides": sorted(self.game.objectives),
@@ -250,6 +273,10 @@ class Handler(BaseHTTPRequestHandler):
         if path == "/api/adjudicate":
             return game.adjudicate_arrival(
                 str(payload["entity_id"]), bool(payload["hit"])
+            ).model_dump(mode="json")
+        if path == "/api/adjudicate/land":
+            return game.auto_adjudicate_land_arrival(
+                str(payload["entity_id"])
             ).model_dump(mode="json")
         if path == "/api/reset":
             self.server.app.reset()

@@ -55,6 +55,9 @@ class WeaponDefinition(FrozenModel):
     signature: str | None = None
     penetration: int | None = None
     missile_impact_criticals: bool = False
+    attack_domain: Literal["surface", "land"] = "surface"
+    land_attack_type: Literal["ballistic", "land_attack_cruise"] | None = None
+    guidance: str | None = None
     rule_id: str
     source: str
     verified: bool = True
@@ -98,6 +101,30 @@ class UnitState(FrozenModel):
     fire_critical_count: int = 0
 
 
+class GroundFacilityDefinition(FrozenModel):
+    facility_id: str
+    name: str
+    side_id: str
+    facility_type: str
+    size_class: str
+    maximum_dp: int
+    armor: int
+    latitude: float
+    longitude: float
+    runway_length_m: int | None = None
+    source: str
+    provenance: Literal["official_database", "public_source", "scenario_assumption"]
+    verified: bool = True
+
+
+class GroundFacilityState(FrozenModel):
+    facility_id: str
+    damage_dp: int = 0
+    runway_cuts: int = 0
+    operational: bool = True
+    destroyed: bool = False
+
+
 class Contact(FrozenModel):
     contact_id: str
     observer_side_id: str
@@ -116,6 +143,7 @@ class InFlightWeapon(FrozenModel):
     turns_to_arrival: int
     launch_range_nm: float
     awaiting_adjudication: bool = False
+    target_kind: Literal["unit", "ground_facility"] = "unit"
 
 
 class WorldState(FrozenModel):
@@ -127,6 +155,7 @@ class WorldState(FrozenModel):
     version: int = 0
     random_draw_index: int = 0
     units: dict[str, UnitState]
+    ground_facilities: dict[str, GroundFacilityState] = Field(default_factory=dict)
     contacts: dict[str, tuple[Contact, ...]] = Field(default_factory=dict)
     in_flight_weapons: tuple[InFlightWeapon, ...] = ()
     locked_sides: frozenset[str] = frozenset()

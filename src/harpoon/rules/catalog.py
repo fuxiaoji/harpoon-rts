@@ -100,10 +100,10 @@ RULES: dict[str, RuleExplanation] = {
         rule_id="H5-11-STRIKE",
         title_zh="对陆打击",
         title_en="Strike Warfare",
-        explanation="接口已保留，当前想定没有陆上目标。",
+        explanation="对陆弹道导弹与巡航导弹按11-3表以制导等级和目标尺寸查命中率；机场组件与跑道切口按11-2表处理。",
         source_document=SOURCE,
         source_section="Chapter 11",
-        verification="blocked",
+        verification="partial",
     ),
     "H5-12-EW": RuleExplanation(
         rule_id="H5-12-EW",

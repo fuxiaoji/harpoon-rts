@@ -37,6 +37,64 @@ class SettlementTables:
     def __init__(self) -> None:
         self.attack = _load("surface_missile_attack.json")
         self.damage = _load("damage_tables.json")
+        self.land_strike = _load("land_strike_tables.json")
+        self.airfield = _load("airfield_tables.json")
+
+    def land_missile_probability(
+        self, missile_type: Literal["ballistic", "land_attack_cruise"], guidance: str,
+        target_size_class: str,
+    ) -> TableLookup:
+        table = self.land_strike["missile_attack"]
+        if missile_type not in ("ballistic", "land_attack_cruise"):
+            raise ValueError(f"未知对陆导弹类型: {missile_type}")
+        if guidance not in table[missile_type]:
+            raise ValueError(f"未知制导等级: {guidance}")
+        try:
+            column = table["target_size_classes"].index(target_size_class.upper())
+        except ValueError as exc:
+            raise ValueError(f"未知目标尺寸: {target_size_class}") from exc
+        probability = table[missile_type][guidance][column]
+        if probability is None:
+            raise ValueError("该制导等级不能攻击此尺寸目标")
+        return TableLookup(
+            table_id=table["table_id"],
+            source_page=self.land_strike["source"]["printed_page"],
+            coordinates={
+                "missile_type": missile_type,
+                "guidance": guidance,
+                "target_size_class": target_size_class.upper(),
+            },
+            result=float(probability),
+        )
+
+    def runway_aircraft_limit(self, runway_length_m: int, cuts: int) -> TableLookup:
+        table = self.airfield["runway_use"]
+        if cuts < 1 or cuts > 10:
+            raise ValueError("跑道切口数必须为 1..10")
+        eligible = [length for length in table["lengths_m"] if length <= runway_length_m]
+        if not eligible:
+            raise ValueError("跑道长度小于表格最小值 500 米")
+        length = max(eligible)
+        column = table["lengths_m"].index(length)
+        result = table["cuts"][str(cuts)][column]
+        return TableLookup(
+            table_id=table["table_id"],
+            source_page=self.airfield["source"]["printed_page"],
+            coordinates={"runway_length_m": length, "cuts": cuts},
+            result=str(result),
+        )
+
+    def air_base_component(self, d100: int) -> TableLookup:
+        if not 1 <= d100 <= 100:
+            raise ValueError("D100 必须为 1..100")
+        table = self.airfield["air_base_component_d100"]
+        row = next(row for row in table["ranges"] if row["minimum"] <= d100 <= row["maximum"])
+        return TableLookup(
+            table_id=table["table_id"],
+            source_page=self.airfield["source"]["printed_page"],
+            coordinates={"d100": d100, "range": f"{row['minimum']:02d}-{row['maximum']:02d}"},
+            result=str(row["component"]),
+        )
 
     def antiship_probability(
         self,
