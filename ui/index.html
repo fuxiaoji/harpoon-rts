@@ -22,6 +22,8 @@
         <span class="status-dot online"></span><span>LOCAL ENGINE</span>
         <code id="hash-label">HASH —</code>
       </div>
+      <label class="top-select">想定<select id="scenario-select"></select></label>
+      <label class="top-select">模式<select id="control-mode"><option value="human">人类直控</option><option value="staff">半 LLM 参谋</option><option value="auto">AI 自动</option></select></label>
       <button id="tutorial-toggle" class="tutorial-toggle">新手教学</button>
     </header>
 
@@ -67,11 +69,21 @@
         <div class="legend"><span><i class="unit-swatch friendly"></i>己方</span><span><i class="unit-swatch contact"></i>接触</span><span><i class="unit-swatch weapon"></i>在途武器</span></div>
       </div>
       <div id="map" class="map" aria-label="战术海图">
-        <div class="map-grid"></div>
-        <div class="range-ring ring-one"></div><div class="range-ring ring-two"></div>
+        <div id="map-world" class="map-world">
+          <div class="map-grid"></div>
+          <div class="range-ring ring-one"></div><div class="range-ring ring-two"></div>
+          <div id="map-entities"></div>
+        </div>
         <div class="north">N<br><span>↑</span></div>
-        <div class="scale">5 NM</div>
-        <div id="map-entities"></div>
+        <div class="map-controls" aria-label="海图缩放控制">
+          <button id="map-zoom-in" title="放大海图" aria-label="放大海图">＋</button>
+          <button id="map-zoom-out" title="缩小海图" aria-label="缩小海图">－</button>
+          <button id="map-reset" title="复位海图" aria-label="复位海图">⌖</button>
+          <span id="map-zoom-label">100%</span>
+        </div>
+        <div class="scale"><i></i><span id="scale-label">5 NM</span></div>
+        <div class="map-hint">滚轮缩放 · 按住拖动 · 双击复位</div>
+        <div id="combat-feedback" class="combat-feedback" aria-live="assertive"></div>
         <section id="tutorial-panel" class="tutorial-panel" aria-live="polite">
           <div class="tutorial-progress"><span id="tutorial-step-label">入门训练</span><i id="tutorial-progress-bar"></i></div>
           <div id="tutorial-chapters" class="tutorial-chapters"></div>
@@ -90,6 +102,7 @@
         <button class="tab active" data-tab="units">单位</button>
         <button class="tab" data-tab="actions">行动</button>
         <button class="tab" data-tab="rules">规则</button>
+        <button class="tab" data-tab="staff">参谋</button>
       </div>
       <div id="unit-view" class="tab-content active">
         <div id="unit-list" class="unit-list"></div>
@@ -101,6 +114,16 @@
       </div>
       <div id="rule-view" class="tab-content">
         <div id="rule-detail" class="rule-detail empty-state">选择行动后显示对应规则说明</div>
+      </div>
+      <div id="staff-view" class="tab-content">
+        <form id="staff-intent-form" class="staff-form">
+          <p class="section-label">指挥官意图</p>
+          <textarea id="staff-intent" required maxlength="2000" placeholder="例如：保持编队隐蔽，确认目标后准备联合打击；未经我确认不得开火。"></textarea>
+          <button class="primary-button" type="submit">生成作战计划</button>
+        </form>
+        <div id="staff-plan" class="staff-card empty-state">尚未生成计划</div>
+        <div id="staff-approvals" class="staff-card"></div>
+        <div id="staff-briefing" class="staff-card empty-state">批准计划后生成指挥所简报</div>
       </div>
     </aside>
 

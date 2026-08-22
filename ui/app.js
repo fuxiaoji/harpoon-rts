@@ -2,7 +2,10 @@ const app = {
   side: "nato", state: null, actions: [], selectedUnit: null, selectedAction: null,
   phaseNames: { plotting:"计划", movement:"移动", planned_fire:"计划射击", detection:"探测", reaction_fire:"反应射击", resolution:"结算" },
   actionNames: { move:"机动", fire:"武器发射", wait:"保持当前命令", air_mission:"航空任务", air_attack:"空中攻击", submarine_attack:"潜艇攻击", land_strike:"对陆打击", electronic_warfare:"电子战", mine_warfare:"水雷战" },
-  tutorial: { active:false, step:0 }, aiOpponent:false
+  tutorial: { active:false, step:0 }, aiOpponent:false,
+  scenarios:[], controlMode:"human", staffPlan:null, staffApprovals:[], staffBriefing:null,
+  mapView: { zoom:1, x:0, y:0, dragging:false, pointerId:null, startX:0, startY:0, originX:0, originY:0 },
+  lastFeedbackEventId:null, feedbackTimer:null
 };
 
 const tutorialSteps = [
@@ -51,6 +54,7 @@ async function refresh(preserveSelection = true) {
 
 function render() {
   const state = app.state;
+  $("#scenario-name").textContent = (app.scenarios.find(item=>item.scenario_id===state.scenario_id)?.title || state.scenario_id).toUpperCase();
   $("#game-time").textContent = state.timestamp.slice(0,16).replace("T"," ");
   $("#turn-label").textContent = `TURN ${String(state.turn).padStart(2,"0")}`;
   $("#hash-label").textContent = `HASH ${state.state_hash.slice(0,10).toUpperCase()}`;
@@ -62,13 +66,69 @@ function render() {
   $("#lock-button").disabled = !isPlayer || state.phase !== "plotting" || state.locked_sides.includes(app.side);
   $("#resolve-button").disabled = app.side !== "referee" && !(state.phase !== "plotting" || state.locked_sides.length === 2);
   $("#objectives").innerHTML = state.objectives.length ? state.objectives.map(item => `<li>${escapeHtml(item)}</li>`).join("") : `<li>${app.side === "referee" ? "监督双方态势与未决武器" : "未载入任务目标"}</li>`;
-  renderMap(); renderUnits(); renderActions(); renderEvents(); renderTutorial();
+  renderMap(); renderUnits(); renderActions(); renderEvents(); renderTutorial(); renderStaff();
+}
+
+function renderSideButtons(){
+  if(!app.state)return;
+  const rail=document.querySelector(".side-switch");
+  const labels={china:"中国",usa:"美国",nato:"NATO",soviet:"苏方"};
+  rail.innerHTML=[...app.state.available_sides,"referee"].map(side=>`<button class="side-button ${side==="referee"?"referee":""} ${side===app.side?"active":""}" data-side="${escapeHtml(side)}">${escapeHtml(labels[side]||side.toUpperCase())}</button>`).join("");
+  rail.querySelectorAll(".side-button").forEach(button=>button.onclick=()=>{if(app.tutorial.active||app.aiOpponent)return;app.side=button.dataset.side;app.selectedUnit=null;app.staffPlan=null;app.staffApprovals=[];app.staffBriefing=null;refresh(false).then(renderSideButtons);});
+}
+
+function renderStaff(){
+  const enabled=app.controlMode==="staff"&&app.side!=="referee";
+  $("#staff-intent-form").querySelectorAll("textarea,button").forEach(node=>node.disabled=!enabled);
+  const plan=app.staffPlan;
+  $("#staff-plan").classList.toggle("empty-state",!plan);
+  $("#staff-plan").innerHTML=plan?`<h3>${escapeHtml(plan.summary)}</h3><p>状态：${escapeHtml(plan.status)} · 有效至 T${plan.valid_until_turn}</p><ol>${plan.steps.map(step=>`<li>${escapeHtml(step.objective)}${step.requires_confirmation?" · 需确认":""}</li>`).join("")}</ol>${plan.status==="draft"?`<button id="staff-approve-plan" class="primary-button">批准计划</button>`:`<button id="staff-execute-plan" class="primary-button">执行下一决策点</button>`}`:"尚未生成计划";
+  const approvals=app.staffApprovals||[];
+  $("#staff-approvals").innerHTML=approvals.length?`<h3>待指挥官确认</h3>${approvals.map(item=>`<div><p>${escapeHtml(item.reason)}<br>${escapeHtml(item.proposal.action_id)}</p><button class="primary-button staff-approve-action" data-approval="${escapeHtml(item.approval_id)}">批准该行动</button></div>`).join("")}`:"";
+  const brief=app.staffBriefing;
+  $("#staff-briefing").classList.toggle("empty-state",!brief);
+  $("#staff-briefing").innerHTML=brief?`<h3>指挥所简报</h3><p>${escapeHtml(brief.mission_progress)}</p><strong>已确认情报</strong><ul>${brief.confirmed_intelligence.map(item=>`<li>${escapeHtml(item.statement)} · ${Math.round(item.confidence*100)}%</li>`).join("")||"<li>无</li>"}</ul><strong>建议</strong><ul>${brief.recommendations.map(item=>`<li>${escapeHtml(item)}</li>`).join("")}</ul>`:"批准计划后生成指挥所简报";
+  const approvePlan=$("#staff-approve-plan"); if(approvePlan)approvePlan.onclick=approveStaffPlan;
+  const execute=$("#staff-execute-plan"); if(execute)execute.onclick=executeStaffPlan;
+  $$(".staff-approve-action").forEach(button=>button.onclick=()=>approveStaffAction(button.dataset.approval));
+}
+
+async function submitStaffIntent(event){
+  event.preventDefault();
+  try{
+    app.staffPlan=await api("/api/staff/intent",{method:"POST",body:JSON.stringify({intent_id:`intent-${Date.now()}`,side_id:app.side,objective:$("#staff-intent").value})});
+    app.staffApprovals=[];app.staffBriefing=null;renderStaff();toast("参谋计划已生成，等待批准");
+  }catch(error){toast(error.message,true);}
+}
+async function approveStaffPlan(){app.staffPlan=await api("/api/staff/plan/approve",{method:"POST",body:JSON.stringify({side_id:app.side,plan_id:app.staffPlan.plan_id})});app.staffBriefing=await api(`/api/staff/briefing?side=${app.side}`);renderStaff();toast("计划已批准");}
+async function executeStaffPlan(){const result=await api("/api/staff/execute",{method:"POST",body:JSON.stringify({side_id:app.side})});app.staffApprovals=result.approvals;app.staffBriefing=await api(`/api/staff/briefing?side=${app.side}`);await refresh();toast(result.approvals.length?"重大行动等待确认":"参谋已提交合法动作");}
+async function approveStaffAction(approvalId){await api("/api/staff/action/approve",{method:"POST",body:JSON.stringify({side_id:app.side,approval_id:approvalId})});app.staffApprovals=app.staffApprovals.filter(item=>item.approval_id!==approvalId);app.staffBriefing=await api(`/api/staff/briefing?side=${app.side}`);await refresh();toast("重大行动已批准并提交");}
+
+async function initializeScenarios(){
+  app.scenarios=await api("/api/scenarios");
+  $("#scenario-select").innerHTML=app.scenarios.map(item=>`<option value="${escapeHtml(item.scenario_id)}">${escapeHtml(item.title)} · ${escapeHtml(item.status)}</option>`).join("");
+  await refresh(false);$("#scenario-select").value=app.state.scenario_id;renderSideButtons();
 }
 
 function coordinates(position) {
   const scale = 28;
   return { left:`calc(50% + ${position.x_nm * scale}px)`, top:`calc(50% - ${position.y_nm * scale}px)` };
 }
+
+function applyMapTransform() {
+  const view=app.mapView;
+  $("#map-world").style.transform=`translate(${view.x}px,${view.y}px) scale(${view.zoom})`;
+  $("#map-zoom-label").textContent=`${Math.round(view.zoom*100)}%`;
+  $("#scale-label").textContent=`${(5/view.zoom).toFixed(view.zoom>=1?1:0)} NM`;
+}
+function setMapZoom(next,anchorX=null,anchorY=null) {
+  const map=$("#map"); const rect=map.getBoundingClientRect(); const view=app.mapView;
+  const zoom=Math.min(3.5,Math.max(.45,next)); if(zoom===view.zoom)return;
+  const ax=anchorX??rect.left+rect.width/2; const ay=anchorY??rect.top+rect.height/2;
+  const localX=ax-(rect.left+rect.width/2)-view.x; const localY=ay-(rect.top+rect.height/2)-view.y;
+  const ratio=zoom/view.zoom; view.x-=localX*(ratio-1); view.y-=localY*(ratio-1); view.zoom=zoom; applyMapTransform();
+}
+function resetMapView(){Object.assign(app.mapView,{zoom:1,x:0,y:0});applyMapTransform();}
 
 function renderMap() {
   const container = $("#map-entities"); container.innerHTML = "";
@@ -97,6 +157,7 @@ function renderMap() {
     if(app.side === "referee" && weapon.awaiting_adjudication) button.onclick=()=>openAdjudication(weapon);
     container.appendChild(button);
   });
+  applyMapTransform();
 }
 
 function renderUnits() {
@@ -123,14 +184,47 @@ function renderActions() {
 
 function renderEvents() {
   const events=[...app.state.events].reverse(); $("#event-count").textContent=`${events.length} EVENTS`;
-  $("#event-log").innerHTML=events.length?events.map(event=>`<article class="event-card ${event.random_record?"random":""}"><span class="event-meta">T${event.turn} · ${escapeHtml(app.phaseNames[event.phase]||event.phase)}</span><h3>${escapeHtml(eventName(event.event_type))}</h3><p>${escapeHtml(event.actors.join(" → ")||"系统事件")}</p>${event.random_record?`<p>D6: ${escapeHtml(event.random_record.rolls.join(", "))}</p>`:""}<details><summary>查看结算明细</summary><div class="trace-grid">${flattenTrace(event.payload).map(([key,value])=>`<div><b>${escapeHtml(key)}</b><span>${escapeHtml(value)}</span></div>`).join("")||"<div><span>此事件没有额外数值输入</span></div>"}</div><div class="event-rules">规则：${escapeHtml(event.rule_ids.join(" · ")||"想定胜负条件")}</div></details></article>`).join(""):`<div class="empty-state">尚无事件。提交命令并推进阶段开始推演。</div>`;
+  $("#event-log").innerHTML=events.length?events.map((event,index)=>renderEventCard(event,index===0)).join(""):`<div class="empty-state">尚无事件。提交命令并推进阶段开始推演。</div>`;
+  const battle=events.find(event=>event.event_type==="weapon_adjudicated"); if(battle)showCombatFeedback(battle);
+}
+
+function diceText(record){return record?.rolls?.join(" + ")||"—";}
+function eventOutcome(event){
+  const p=event.payload||{};
+  if(event.event_type==="weapon_adjudicated")return p.hit?`${p.damage_dp||0} DP · ${p.critical_hit_resolution?.results?.length||0} 项致命损伤`:"软杀伤成功 · 导弹脱靶";
+  if(event.event_type==="weapon_launched")return `${p.weapon_id} · ETA ${p.eta_turns} 回合`;
+  if(event.event_type==="unit_moved")return `${Number(p.distance_nm||0).toFixed(2)} NM`;
+  if(event.event_type==="victory")return String(p.winner||"胜负已判定");
+  return event.actors.join(" → ")||"系统事件";
+}
+function resolutionSteps(event){
+  const p=event.payload||{}; if(event.event_type!=="weapon_adjudicated")return [];
+  const hit=p.hit_resolution||{}; const lookup=hit.lookup||{}; const coords=lookup.coordinates||{}; const roll=hit.roll||{};
+  const steps=[
+    ["目标与对抗",`${coords.target_signature||"—"} 特征 · ECM ${coords.ecm_generation||"—"} 代 · ${coords.countermeasure||"无对抗"} · 导引头 ${coords.seeker_generation||"—"} 代`],
+    ["8-15 查表",`表格结果 ${lookup.result!=null?Math.round(lookup.result*100)+"%":"裁判裁决"}`],
+    ["命中骰",`${roll.kind?.toUpperCase()||"D100"} = ${diceText(roll)} · ${hit.comparison||"人工裁决"} · ${p.hit?"导引成功":"诱偏脱靶"}`]
+  ];
+  if(p.hit&&p.calculation){const c=p.calculation;steps.push(["战斗部",`${c.base_damage_dp} + floor(${c.die_roll}÷${c.damage_divisor}) = ${c.raw_damage_dp} DP`]);steps.push(["舰体修正",`${c.raw_damage_dp} × ${100+c.target_damage_modifier_percent}% = ${c.result_damage_dp} DP · 累计 ${c.target_new_damage_dp}/${c.sunk_threshold_dp}`]);}
+  if(p.hit&&p.critical_hit_resolution){const c=p.critical_hit_resolution;steps.push(["致命损伤",`伤害比率 ${c.damage_ratio_lookup?.coordinates?.damage_ratio_row||"—"} · 附加 ${c.missile_airframe_lookup?.result||0} · 结果：${(c.results||[]).join("、")||"无"}`]);}
+  return steps;
+}
+function renderEventCard(event,isLatest){
+  const p=event.payload||{}; const tone=event.event_type==="weapon_adjudicated"?(p.hit?"hit":"miss"):(event.random_record?"random":""); const steps=resolutionSteps(event);
+  return `<article class="event-card ${tone}"><span class="event-meta">T${event.turn} · ${escapeHtml(app.phaseNames[event.phase]||event.phase)} · ${escapeHtml(event.event_id)}</span><h3>${escapeHtml(eventName(event.event_type))}</h3><p>${escapeHtml(event.actors.join(" → ")||"系统事件")}</p><div class="event-outcome"><strong>${escapeHtml(eventOutcome(event))}</strong>${event.random_record?`<code>${escapeHtml(event.random_record.kind.toUpperCase())} ${escapeHtml(diceText(event.random_record))}</code>`:""}</div>${steps.length?`<div class="resolution-steps">${steps.map(([title,text],i)=>`<div class="resolution-step"><i>${i+1}</i><div><strong>${escapeHtml(title)}</strong>${escapeHtml(text)}</div></div>`).join("")}</div>`:""}<details ${isLatest&&event.event_type==="weapon_adjudicated"?"open":""}><summary>${steps.length?"展开全部原始字段":"查看结算明细"}</summary><div class="trace-grid">${flattenTrace(p).map(([key,value])=>`<div><b>${escapeHtml(key)}</b><span>${escapeHtml(value)}</span></div>`).join("")||"<div><span>此事件没有额外数值输入</span></div>"}</div><div class="event-rules">规则：${escapeHtml(event.rule_ids.join(" · ")||"想定胜负条件")}</div></details></article>`;
+}
+function showCombatFeedback(event){
+  if(event.event_id===app.lastFeedbackEventId)return; app.lastFeedbackEventId=event.event_id;
+  const p=event.payload||{}; const node=$("#combat-feedback"); node.className=`combat-feedback ${p.hit?"hit":"miss"}`;
+  node.innerHTML=`<small>WEAPON RESOLUTION · ${escapeHtml(event.actors.join(" → "))}</small><strong>${p.hit?"命中！":"诱饵奏效 · 导弹脱靶"}</strong><p>${escapeHtml(eventOutcome(event))}${p.hit?`；累计损伤 ${p.calculation?.target_new_damage_dp||0}/${p.calculation?.sunk_threshold_dp||0} DP`:"；目标未受损"}</p>`;
+  requestAnimationFrame(()=>node.classList.add("show")); clearTimeout(app.feedbackTimer); app.feedbackTimer=setTimeout(()=>node.classList.remove("show"),3200);
 }
 
 function eventName(type){return ({orders_locked:"双方命令锁定",unit_moved:"单位移动结算",weapon_launched:"武器发射",weapon_arrival_requires_adjudication:"武器抵达待裁决",weapon_adjudicated:"命中与损伤裁决",contact_solution_report:"接触与火控解报告",readiness_transition_started:"战备转换查表",attack_word_check:"攻击命令检定",victory:"胜负判定",launch_rejected_at_resolution:"发射被拒绝"})[type]||type;}
 function flattenTrace(value,prefix="") { const rows=[]; Object.entries(value||{}).forEach(([key,item])=>{const label=prefix?`${prefix}.${key}`:key;if(item&&typeof item==="object"&&!Array.isArray(item))rows.push(...flattenTrace(item,label));else rows.push([label,Array.isArray(item)?item.join(", "):String(item)]);});return rows; }
 
 function selectUnit(unitId) { app.selectedUnit=unitId; renderMap(); renderUnits(); renderActions(); activateTab("units",false); if(app.tutorial.active&&app.tutorial.step===1&&unitId==="poolster-a835")setTutorialStep(2);if(app.tutorial.active&&app.tutorial.step===8&&unitId==="uss-copeland-ffg25")setTutorialStep(9); }
-function activateTab(name,teach=true) { $$(".tab").forEach(t=>t.classList.toggle("active",t.dataset.tab===name)); $$(".tab-content").forEach(v=>v.classList.toggle("active",v.id===`${name.slice(0,-1)}-view`)); if(teach&&app.tutorial.active&&app.tutorial.step===2&&name==="actions")setTutorialStep(3);if(teach&&app.tutorial.active&&app.tutorial.step===9&&name==="actions")setTutorialStep(10); }
+function activateTab(name,teach=true) { const viewId=name==="staff"?"staff-view":`${name.slice(0,-1)}-view`; $$(".tab").forEach(t=>t.classList.toggle("active",t.dataset.tab===name)); $$(".tab-content").forEach(v=>v.classList.toggle("active",v.id===viewId)); if(teach&&app.tutorial.active&&app.tutorial.step===2&&name==="actions")setTutorialStep(3);if(teach&&app.tutorial.active&&app.tutorial.step===9&&name==="actions")setTutorialStep(10); }
 
 function openAction(actionId) {
   const action=app.actions.find(a=>a.action_id===actionId); if(!action) return; app.selectedAction=action;
@@ -190,14 +284,24 @@ async function tutorialNext() {
 }
 function exitTutorial(){app.tutorial.active=false;app.tutorial.step=-1;renderTutorial();toast("已退出教学模式");}
 
-$$(".side-button").forEach(button=>button.onclick=()=>{if(app.tutorial.active||app.aiOpponent)return;app.side=button.dataset.side;app.selectedUnit=null;refresh(false);});
 $$(".tab").forEach(button=>button.onclick=()=>activateTab(button.dataset.tab));
 $("#lock-button").onclick=()=>app.aiOpponent?lockTutorialPlayer():mutate("/api/lock",{side_id:app.side},"本方命令已锁定");
 $("#resolve-button").onclick=()=>mutate("/api/resolve",{},"阶段已推进");
-$("#reset-button").onclick=()=>{if(confirm("确定重置 Tattletail 想定？当前对局将被清空。"))mutate("/api/reset",{},"想定已重置");};
+$("#reset-button").onclick=()=>{if(confirm("确定重置当前想定？当前对局将被清空。"))mutate("/api/reset",{},"想定已重置");};
 $("#dialog-close").onclick=$("#dialog-cancel").onclick=()=>$("#action-dialog").close();
 $("#action-form").addEventListener("submit",submitAction);
 $("#tutorial-next").onclick=tutorialNext;
 $("#tutorial-exit").onclick=exitTutorial;
 $("#tutorial-toggle").onclick=()=>{app.tutorial.step=0;app.tutorial.active=false;renderTutorial();};
-refresh(false);
+$("#staff-intent-form").addEventListener("submit",submitStaffIntent);
+$("#control-mode").onchange=event=>{app.controlMode=event.target.value;if(app.controlMode==="staff")activateTab("staff");renderStaff();};
+$("#scenario-select").onchange=async event=>{try{await api("/api/scenarios/load",{method:"POST",body:JSON.stringify({scenario_id:event.target.value})});const entry=app.scenarios.find(item=>item.scenario_id===event.target.value);app.side=entry.sides[0];app.staffPlan=null;app.staffApprovals=[];app.staffBriefing=null;resetMapView();await refresh(false);renderSideButtons();toast("想定已切换");}catch(error){toast(error.message,true);}};
+const mapNode=$("#map");
+mapNode.addEventListener("wheel",event=>{event.preventDefault();setMapZoom(app.mapView.zoom*Math.exp(-event.deltaY*.0012),event.clientX,event.clientY);},{passive:false});
+mapNode.addEventListener("pointerdown",event=>{if(event.target.closest("button,.tutorial-panel"))return;const v=app.mapView;Object.assign(v,{dragging:true,pointerId:event.pointerId,startX:event.clientX,startY:event.clientY,originX:v.x,originY:v.y});mapNode.classList.add("dragging");mapNode.setPointerCapture(event.pointerId);});
+mapNode.addEventListener("pointermove",event=>{const v=app.mapView;if(!v.dragging||v.pointerId!==event.pointerId)return;v.x=v.originX+event.clientX-v.startX;v.y=v.originY+event.clientY-v.startY;applyMapTransform();});
+function endMapDrag(event){const v=app.mapView;if(v.pointerId!==event.pointerId)return;v.dragging=false;v.pointerId=null;mapNode.classList.remove("dragging");}
+mapNode.addEventListener("pointerup",endMapDrag); mapNode.addEventListener("pointercancel",endMapDrag);
+mapNode.addEventListener("dblclick",event=>{if(!event.target.closest("button"))resetMapView();});
+$("#map-zoom-in").onclick=()=>setMapZoom(app.mapView.zoom*1.25); $("#map-zoom-out").onclick=()=>setMapZoom(app.mapView.zoom/1.25); $("#map-reset").onclick=resetMapView;
+initializeScenarios().catch(error=>toast(error.message,true));
