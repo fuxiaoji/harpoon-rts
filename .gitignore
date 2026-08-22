@@ -13,10 +13,18 @@ resources/processed/rendered/
 tmp/
 __pycache__/
 *.pyc
+.venv/
+.uv-cache/
+.pytest_cache/
+.pytest-tmp/
+.mypy_cache/
+.ruff_cache/
+dist/
+build/
+
 
 # IDE / OS
 .idea/
 .vscode/
 Thumbs.db
 .DS_Store
-
