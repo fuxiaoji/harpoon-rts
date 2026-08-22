@@ -12,7 +12,7 @@ from urllib.parse import parse_qs, urlparse
 from pydantic import ValidationError
 
 from harpoon.adapters import default_scenario_path, load_saved_game, load_scenario
-from harpoon.controllers.scripted import FireFirstController
+from harpoon.controllers.scripted import FireFirstController, WaitController
 from harpoon.domain.models import Command
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -44,7 +44,7 @@ class GameApplication:
         if side_id in self.game.state.locked_sides:
             return []
         observation = self.game.observe(side_id)
-        controller = FireFirstController()
+        controller = FireFirstController() if self.game.state.turn == 0 else WaitController()
         commands = controller.choose(observation, self.game.list_actions(side_id))
         results = []
         for command in commands:
@@ -54,6 +54,46 @@ class GameApplication:
             results.append(result.model_dump(mode="json"))
         self.game.lock(side_id)
         return results
+
+    def prepare_tutorial_salvo(self) -> list[dict[str, Any]]:
+        observation = self.game.observe("nato")
+        option = next(
+            item
+            for item in self.game.list_actions("nato", "uss-copeland-ffg25")
+            if item.action_type == "fire" and item.available
+        )
+        results = []
+        for index in range(4):
+            result = self.game.submit(
+                Command(
+                    command_id=f"tutorial-salvo-{self.game.state.turn}-{index + 1}",
+                    side_id="nato",
+                    action_id=option.action_id,
+                    observation_version=observation.version,
+                    parameters={"target_id": option.candidate_targets[0]},
+                )
+            )
+            if not result.accepted:
+                raise RuntimeError("教学齐射无法提交：" + "；".join(result.errors))
+            results.append(result.model_dump(mode="json"))
+        return results
+
+    def adjudicate_tutorial_arrivals(self, owner_side_id: str) -> list[dict[str, Any]]:
+        arrivals = [
+            weapon
+            for weapon in self.game.state.in_flight_weapons
+            if weapon.awaiting_adjudication and weapon.owner_side_id == owner_side_id
+        ]
+        if not arrivals:
+            raise RuntimeError("当前没有该方待裁决的抵达武器")
+        return [
+            self.game.adjudicate_arrival(
+                weapon.entity_id,
+                hit=True,
+                adjudication_basis="tutorial_referee_fixed_hit_not_a_verified_hit_roll",
+            ).model_dump(mode="json")
+            for weapon in arrivals
+        ]
 
     def view(self, side_id: str) -> dict[str, Any]:
         if side_id == "referee":
@@ -82,7 +122,9 @@ class GameApplication:
             "in_flight_weapons": [
                 weapon.model_dump(mode="json")
                 for weapon in self.game.state.in_flight_weapons
-                if side_id == "referee" or weapon.owner_side_id == side_id
+                if side_id == "referee"
+                or weapon.owner_side_id == side_id
+                or self.game.state.units[weapon.target_id].side_id == side_id
             ],
             "pending_commands": len(self.game._commands) if side_id == "referee" else None,
         }
@@ -144,6 +186,14 @@ class Handler(BaseHTTPRequestHandler):
             return {"reset": True}
         if path == "/api/tutorial/opponent":
             return {"commands": self.server.app.run_tutorial_opponent(), "locked": True}
+        if path == "/api/tutorial/salvo":
+            return {"commands": self.server.app.prepare_tutorial_salvo()}
+        if path == "/api/tutorial/adjudicate":
+            return {
+                "events": self.server.app.adjudicate_tutorial_arrivals(
+                    str(payload["owner_side_id"])
+                )
+            }
         raise KeyError("未知 API")
 
     def serve_asset(self, request_path: str) -> None:

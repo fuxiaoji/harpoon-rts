@@ -217,6 +217,8 @@ class GameEngine:
             created.extend(self._resolve_movement())
         elif self.state.phase == Phase.PLANNED_FIRE:
             created.extend(self._resolve_fire())
+        elif self.state.phase == Phase.DETECTION:
+            created.extend(self._resolve_detection())
         elif self.state.phase == Phase.RESOLUTION:
             created.extend(self._resolve_resolution())
         self.events.extend(created)
@@ -233,14 +235,25 @@ class GameEngine:
         self.state = self.state.model_copy(update=update)
         return tuple(created)
 
-    def adjudicate_arrival(self, entity_id: str, hit: bool, referee_side: str = "referee") -> Event:
+    def adjudicate_arrival(
+        self,
+        entity_id: str,
+        hit: bool,
+        referee_side: str = "referee",
+        adjudication_basis: str = "referee_ruling_unverified_hit_table",
+    ) -> Event:
         weapon_entity = next(
             x
             for x in self.state.in_flight_weapons
             if x.entity_id == entity_id and x.awaiting_adjudication
         )
         weapon = self.weapons[weapon_entity.weapon_id]
-        payload: dict[str, Any] = {"hit": hit, "target_id": weapon_entity.target_id}
+        payload: dict[str, Any] = {
+            "hit": hit,
+            "target_id": weapon_entity.target_id,
+            "adjudication_basis": adjudication_basis,
+            "hit_table_status": "blocked_pending_authoritative_table_verification",
+        }
         random_record = None
         units = dict(self.state.units)
         if hit:
@@ -257,6 +270,17 @@ class GameEngine:
                 }
             )
             payload["damage_dp"] = damage
+            payload["calculation"] = {
+                "formula": "base_damage_dp + floor(D6 / damage_divisor)",
+                "base_damage_dp": weapon.base_damage_dp,
+                "die_roll": die,
+                "damage_divisor": weapon.damage_divisor,
+                "result_damage_dp": damage,
+                "target_previous_damage_dp": target.damage_dp,
+                "target_new_damage_dp": new_dp,
+                "crippled_threshold_dp": math.ceil(maximum / 2),
+                "sunk_threshold_dp": maximum,
+            }
         remaining = tuple(x for x in self.state.in_flight_weapons if x.entity_id != entity_id)
         self.state = self.state.model_copy(
             update={
@@ -367,9 +391,47 @@ class GameEngine:
             units[unit_id] = unit.model_copy(
                 update={"position": pos, "speed_knots": speed, "course_deg": course}
             )
+            events.append(
+                self._event(
+                    "unit_moved",
+                    (unit_id,),
+                    ("H5-3.1-MOVE",),
+                    {
+                        "from": unit.position.model_dump(mode="json"),
+                        "to": pos.model_dump(mode="json"),
+                        "calculation": {
+                            "formula": "distance_nm = speed_knots × 3 / 60",
+                            "speed_knots": speed,
+                            "tactical_turn_minutes": 3,
+                            "distance_nm": distance,
+                            "course_deg": course,
+                        },
+                    },
+                )
+            )
         self.state = self.state.model_copy(
             update={"units": units, "in_flight_weapons": tuple(weapons)}
         )
+        return events
+
+    def _resolve_detection(self) -> list[Event]:
+        events: list[Event] = []
+        for side_id, contacts in sorted(self.state.contacts.items()):
+            for contact in contacts:
+                events.append(
+                    self._event(
+                        "contact_solution_report",
+                        (contact.target_unit_id,) if contact.target_unit_id else (),
+                        ("H5-5-DETECT", "H5-6-FCS"),
+                        {
+                            "contact_id": contact.contact_id,
+                            "quality": contact.quality,
+                            "source": "scenario_provided_initial_solution",
+                            "automatic_detection_roll": False,
+                            "reason": "完整传感器探测表尚未 verified；本想定直接给定 Good 火控解",
+                        },
+                    ).model_copy(update={"visibility": Visibility.SIDE, "side_id": side_id})
+                )
         return events
 
     def _resolve_fire(self) -> list[Event]:
@@ -422,6 +484,22 @@ class GameEngine:
                     {"weapon_id": weapon_id, "range_nm": distance, "eta_turns": eta},
                 )
             )
+            events[-1] = events[-1].model_copy(
+                update={
+                    "payload": {
+                        **events[-1].payload,
+                        "calculation": {
+                            "range_formula": "sqrt((target_x-shooter_x)^2 + (target_y-shooter_y)^2)",
+                            "minimum_range_nm": weapon.minimum_range_nm,
+                            "maximum_range_nm": weapon.maximum_range_nm,
+                            "range_gate_passed": True,
+                            "eta_formula": "ceil(range_nm / (speed_knots × 3 / 60))",
+                            "weapon_speed_knots": weapon.speed_knots,
+                            "eta_turns": eta,
+                        },
+                    }
+                }
+            )
             soviet_attack = soviet_attack or shooter.side_id == "soviet"
         if soviet_attack:
             for unit_id, unit in sorted(units.items()):
@@ -446,6 +524,16 @@ class GameEngine:
                         {"turns": turns},
                         random_record=record,
                     )
+                )
+                events[-1] = events[-1].model_copy(
+                    update={
+                        "payload": {
+                            **events[-1].payload,
+                            "table_lookup": "D6 1–3 → 1 回合；D6 4–6 → 2 回合",
+                            "die_roll": roll,
+                            "result_turns": turns,
+                        }
+                    }
                 )
         self.state = self.state.model_copy(
             update={"units": units, "in_flight_weapons": tuple(inflight)}

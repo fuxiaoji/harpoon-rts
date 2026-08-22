@@ -82,3 +82,40 @@ def test_tutorial_opponent_submits_legal_attack_and_locks() -> None:
         assert len(result["commands"]) == 1
         assert result["commands"][0]["accepted"]
         assert "soviet" in state["locked_sides"]
+
+
+def test_tutorial_salvo_can_complete_a_full_battle() -> None:
+    with running_server() as base:
+        post_json(f"{base}/api/lock", {"side_id": "nato"})
+        post_json(f"{base}/api/tutorial/opponent", {})
+        for _ in range(6):
+            post_json(f"{base}/api/resolve", {})
+
+        salvo = post_json(f"{base}/api/tutorial/salvo", {})
+        assert len(salvo["commands"]) == 4
+        post_json(f"{base}/api/lock", {"side_id": "nato"})
+        post_json(f"{base}/api/tutorial/opponent", {})
+        post_json(f"{base}/api/resolve", {})
+        post_json(f"{base}/api/resolve", {})
+        post_json(
+            f"{base}/api/tutorial/adjudicate", {"owner_side_id": "soviet"}
+        )
+        for _ in range(4):
+            post_json(f"{base}/api/resolve", {})
+
+        post_json(f"{base}/api/lock", {"side_id": "nato"})
+        post_json(f"{base}/api/tutorial/opponent", {})
+        post_json(f"{base}/api/resolve", {})
+        post_json(f"{base}/api/resolve", {})
+        damage = post_json(
+            f"{base}/api/tutorial/adjudicate", {"owner_side_id": "nato"}
+        )
+        assert len(damage["events"]) == 4
+        calculation = damage["events"][0]["payload"]["calculation"]
+        assert calculation["formula"] == "base_damage_dp + floor(D6 / damage_divisor)"
+        assert calculation["result_damage_dp"] >= 40
+        for _ in range(4):
+            post_json(f"{base}/api/resolve", {})
+        state = get_json(f"{base}/api/state?side=nato")
+        assert state["winner"] == "nato_decisive"
+        assert any(event["event_type"] == "contact_solution_report" for event in state["events"])
