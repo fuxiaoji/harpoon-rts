@@ -10,6 +10,7 @@ dev = ["hypothesis>=6.120", "mypy>=1.14", "pytest>=8.3", "ruff>=0.9"]
 
 [project.scripts]
 harpoon = "harpoon.cli:main"
+harpoon-ui = "harpoon.web:main"
 
 [build-system]
 requires = ["hatchling"]
@@ -21,7 +22,7 @@ packages = ["src/harpoon"]
 [tool.pytest.ini_options]
 pythonpath = ["src"]
 testpaths = ["tests"]
-addopts = "--basetemp=.pytest-tmp"
+addopts = "-p no:cacheprovider"
 
 [tool.ruff]
 line-length = 100

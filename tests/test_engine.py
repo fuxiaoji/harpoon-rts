@@ -138,7 +138,7 @@ def test_same_seed_and_commands_produce_identical_events() -> None:
     assert run() == run()
 
 
-def test_save_restore_preserves_hash_and_random_progress(tmp_path: Path) -> None:
+def test_save_restore_preserves_hash_and_random_progress() -> None:
     game = load_scenario(SCENARIO)
     command = Command(
         command_id="pending",
@@ -147,7 +147,8 @@ def test_save_restore_preserves_hash_and_random_progress(tmp_path: Path) -> None
         observation_version=0,
     )
     assert game.submit(command).accepted
-    path = tmp_path / "save.json"
+    path = Path("tmp/tests/save-restore.json")
+    path.parent.mkdir(parents=True, exist_ok=True)
     game.save(path)
     restored = load_saved_game(path)
     assert restored.state.state_hash() == game.state.state_hash()
