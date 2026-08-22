@@ -72,3 +72,13 @@ def test_server_type_is_explicit() -> None:
         assert isinstance(server, GameServer)
     finally:
         server.server_close()
+
+
+def test_tutorial_opponent_submits_legal_attack_and_locks() -> None:
+    with running_server() as base:
+        result = post_json(f"{base}/api/tutorial/opponent", {})
+        state = get_json(f"{base}/api/state?side=referee")
+        assert result["locked"]
+        assert len(result["commands"]) == 1
+        assert result["commands"][0]["accepted"]
+        assert "soviet" in state["locked_sides"]

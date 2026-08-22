@@ -12,6 +12,7 @@ from urllib.parse import parse_qs, urlparse
 from pydantic import ValidationError
 
 from harpoon.adapters import default_scenario_path, load_saved_game, load_scenario
+from harpoon.controllers.scripted import FireFirstController
 from harpoon.domain.models import Command
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -37,6 +38,22 @@ class GameApplication:
         if self.state_path:
             self.state_path.parent.mkdir(parents=True, exist_ok=True)
             self.game.save(self.state_path)
+
+    def run_tutorial_opponent(self) -> list[dict[str, Any]]:
+        side_id = "soviet"
+        if side_id in self.game.state.locked_sides:
+            return []
+        observation = self.game.observe(side_id)
+        controller = FireFirstController()
+        commands = controller.choose(observation, self.game.list_actions(side_id))
+        results = []
+        for command in commands:
+            result = self.game.submit(command)
+            if not result.accepted:
+                raise RuntimeError("教学 AI 无法提交合法命令：" + "；".join(result.errors))
+            results.append(result.model_dump(mode="json"))
+        self.game.lock(side_id)
+        return results
 
     def view(self, side_id: str) -> dict[str, Any]:
         if side_id == "referee":
@@ -125,6 +142,8 @@ class Handler(BaseHTTPRequestHandler):
         if path == "/api/reset":
             self.server.app.reset()
             return {"reset": True}
+        if path == "/api/tutorial/opponent":
+            return {"commands": self.server.app.run_tutorial_opponent(), "locked": True}
         raise KeyError("未知 API")
 
     def serve_asset(self, request_path: str) -> None:

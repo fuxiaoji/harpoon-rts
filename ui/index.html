@@ -22,6 +22,7 @@
         <span class="status-dot online"></span><span>LOCAL ENGINE</span>
         <code id="hash-label">HASH —</code>
       </div>
+      <button id="tutorial-toggle" class="tutorial-toggle">新手教学</button>
     </header>
 
     <aside class="left-rail panel">
@@ -71,6 +72,14 @@
         <div class="north">N<br><span>↑</span></div>
         <div class="scale">5 NM</div>
         <div id="map-entities"></div>
+        <section id="tutorial-panel" class="tutorial-panel" aria-live="polite">
+          <div class="tutorial-progress"><span id="tutorial-step-label">入门训练</span><i id="tutorial-progress-bar"></i></div>
+          <p id="tutorial-kicker">第一次担任舰队指挥官？</p>
+          <h2 id="tutorial-title">从零学习一次完整战术回合</h2>
+          <p id="tutorial-copy">你将固定指挥 NATO 舰队。苏方由确定性 AI 操控，每一步都会解释你在做什么、为什么这样做。</p>
+          <button id="tutorial-next" class="primary-button">开始教学 · 约 5 分钟</button>
+          <button id="tutorial-exit" class="tutorial-exit">暂不教学</button>
+        </section>
       </div>
       <div class="map-footer"><span>海况 4</span><span>风 070° / 20 KT</span><span>夜间能见度 5%</span><span>水深 INT II</span></div>
     </main>
