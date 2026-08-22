@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import threading
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -11,7 +12,15 @@ from urllib.parse import parse_qs, urlparse
 
 from pydantic import ValidationError
 
-from harpoon.adapters import default_scenario_path, load_saved_game, load_scenario
+from harpoon.adapters import (
+    default_scenario_path,
+    load_saved_game,
+    load_scenario,
+    scenario_catalog,
+    scenario_path,
+)
+from harpoon.ai import CommanderIntent, CommandStaff, DeepSeekChatProvider
+from harpoon.ai.command_staff import StaffProvider
 from harpoon.controllers.scripted import FireFirstController, WaitController
 from harpoon.domain.models import Command
 
@@ -20,7 +29,12 @@ UI_ROOT = ROOT / "ui"
 
 
 class GameApplication:
-    def __init__(self, scenario: Path, state_path: Path | None = None) -> None:
+    def __init__(
+        self,
+        scenario: Path,
+        state_path: Path | None = None,
+        staff_provider: StaffProvider | None = None,
+    ) -> None:
         self.scenario_path = scenario
         self.state_path = state_path
         self.game = (
@@ -28,11 +42,62 @@ class GameApplication:
             if state_path and state_path.exists()
             else load_scenario(scenario)
         )
+        self.staff_provider = staff_provider
+        self.staff = CommandStaff(staff_provider)
+        self.active_plans: dict[str, str] = {}
         self.lock = threading.RLock()
 
     def reset(self) -> None:
         self.game = load_scenario(self.scenario_path)
+        self.staff = CommandStaff(self.staff_provider)
+        self.active_plans.clear()
         self.persist()
+
+    def load_named_scenario(self, scenario_id: str) -> None:
+        self.scenario_path = scenario_path(scenario_id)
+        self.reset()
+
+    def issue_staff_intent(self, payload: dict[str, Any]) -> dict[str, Any]:
+        intent = CommanderIntent.model_validate(payload)
+        observation = self.game.observe(intent.side_id)
+        plan = self.staff.issue_intent(intent, observation, self.game.list_actions(intent.side_id))
+        self.active_plans[intent.side_id] = plan.plan_id
+        return plan.model_dump(mode="json")
+
+    def approve_staff_plan(self, side_id: str, plan_id: str) -> dict[str, Any]:
+        plan = self.staff.approve_plan(plan_id, side_id)
+        return plan.model_dump(mode="json")
+
+    def execute_staff_plan(self, side_id: str) -> dict[str, Any]:
+        plan_id = self.active_plans[side_id]
+        observation = self.game.observe(side_id)
+        proposals = self.staff.propose(plan_id, observation, self.game.list_actions(side_id))
+        commands, approvals = self.staff.commands_or_approvals(proposals)
+        results = [self.game.submit(command).model_dump(mode="json") for command in commands]
+        return {
+            "proposals": [item.model_dump(mode="json") for item in proposals],
+            "submitted": results,
+            "approvals": [item.model_dump(mode="json") for item in approvals],
+        }
+
+    def approve_staff_action(self, side_id: str, approval_id: str) -> dict[str, Any]:
+        request = self.staff.approvals[approval_id]
+        if request.proposal.side_id != side_id:
+            raise ValueError("不能批准其他阵营行动")
+        observation = self.game.observe(side_id)
+        if request.proposal.observation_version != observation.version:
+            raise ValueError("行动提议已过期，请重新生成")
+        approved = request.model_copy(update={"status": "approved"})
+        self.staff.approvals[approval_id] = approved
+        commands, _ = self.staff.commands_or_approvals(
+            (request.proposal,), frozenset({approval_id})
+        )
+        result = self.game.submit(commands[0])
+        return {"approval": approved.model_dump(mode="json"), "result": result.model_dump(mode="json")}
+
+    def staff_briefing(self, side_id: str) -> dict[str, Any]:
+        plan_id = self.active_plans.get(side_id)
+        return self.staff.briefing(self.game.observe(side_id), plan_id).model_dump(mode="json")
 
     def persist(self) -> None:
         if self.state_path:
@@ -123,6 +188,8 @@ class GameApplication:
                 or self.game.state.units[weapon.target_id].side_id == side_id
             ],
             "pending_commands": len(self.game._commands) if side_id == "referee" else None,
+            "available_sides": sorted(self.game.objectives),
+            "staff_plan_id": self.active_plans.get(side_id),
         }
 
 
@@ -134,6 +201,13 @@ class Handler(BaseHTTPRequestHandler):
         if parsed.path == "/api/state":
             side = parse_qs(parsed.query).get("side", ["nato"])[0]
             self.json_response(self.server.app.view(side))
+            return
+        if parsed.path == "/api/scenarios":
+            self.json_response([item.model_dump(mode="json") for item in scenario_catalog()])
+            return
+        if parsed.path == "/api/staff/briefing":
+            side = parse_qs(parsed.query).get("side", [""])[0]
+            self.json_response(self.server.app.staff_briefing(side))
             return
         if parsed.path == "/api/actions":
             query = parse_qs(parsed.query)
@@ -180,6 +254,21 @@ class Handler(BaseHTTPRequestHandler):
         if path == "/api/reset":
             self.server.app.reset()
             return {"reset": True}
+        if path == "/api/scenarios/load":
+            self.server.app.load_named_scenario(str(payload["scenario_id"]))
+            return {"scenario_id": self.server.app.game.state.scenario_id, "loaded": True}
+        if path == "/api/staff/intent":
+            return self.server.app.issue_staff_intent(payload)
+        if path == "/api/staff/plan/approve":
+            return self.server.app.approve_staff_plan(
+                str(payload["side_id"]), str(payload["plan_id"])
+            )
+        if path == "/api/staff/execute":
+            return self.server.app.execute_staff_plan(str(payload["side_id"]))
+        if path == "/api/staff/action/approve":
+            return self.server.app.approve_staff_action(
+                str(payload["side_id"]), str(payload["approval_id"])
+            )
         if path == "/api/tutorial/opponent":
             return {"commands": self.server.app.run_tutorial_opponent(), "locked": True}
         if path == "/api/tutorial/salvo":
@@ -243,8 +332,9 @@ def create_server(
     port: int = 8897,
     scenario: Path | None = None,
     state_path: Path | None = None,
+    staff_provider: StaffProvider | None = None,
 ) -> GameServer:
-    app = GameApplication(scenario or default_scenario_path(), state_path)
+    app = GameApplication(scenario or default_scenario_path(), state_path, staff_provider)
     return GameServer((host, port), app)
 
 
@@ -254,8 +344,16 @@ def main() -> None:
     parser.add_argument("--port", type=int, default=8897)
     parser.add_argument("--scenario", type=Path, default=default_scenario_path())
     parser.add_argument("--state", type=Path, default=Path("tmp/ui-session.json"))
+    parser.add_argument("--llm-provider", choices=("deterministic", "deepseek"), default="deterministic")
+    parser.add_argument("--llm-model", default="deepseek-v4-flash")
     args = parser.parse_args()
-    server = create_server(args.host, args.port, args.scenario, args.state)
+    provider: StaffProvider | None = None
+    if args.llm_provider == "deepseek":
+        api_key = os.environ.get("DEEPSEEK_API_KEY", "")
+        if not api_key:
+            raise SystemExit("使用 DeepSeek 时必须在进程环境提供 DEEPSEEK_API_KEY")
+        provider = DeepSeekChatProvider(api_key=api_key, model=args.llm_model)
+    server = create_server(args.host, args.port, args.scenario, args.state, provider)
     print(f"Harpoon UI: http://{args.host}:{args.port}", flush=True)
     try:
         server.serve_forever()

@@ -31,6 +31,34 @@ class ScenarioDocument(BaseModel):
     contacts: dict[str, list[Contact]]
 
 
+class ScenarioCatalogEntry(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    scenario_id: str
+    title: str
+    description: str
+    path: str
+    sides: list[str]
+    status: str
+
+
+def scenario_catalog() -> tuple[ScenarioCatalogEntry, ...]:
+    root = Path(__file__).resolve().parents[3]
+    raw = json.loads((root / "data" / "scenarios" / "catalog.json").read_text(encoding="utf-8"))
+    return tuple(ScenarioCatalogEntry.model_validate(item) for item in raw["scenarios"])
+
+
+def scenario_path(scenario_id: str) -> Path:
+    root = Path(__file__).resolve().parents[3]
+    entry = next((item for item in scenario_catalog() if item.scenario_id == scenario_id), None)
+    if entry is None:
+        raise KeyError(f"未知想定：{scenario_id}")
+    candidate = (root / entry.path).resolve()
+    scenario_root = (root / "data" / "scenarios").resolve()
+    if scenario_root not in candidate.parents:
+        raise ValueError("想定路径越界")
+    return candidate
+
+
 def load_scenario(path: Path) -> GameEngine:
     raw = json.loads(path.read_text(encoding="utf-8"))
     document = ScenarioDocument.model_validate(raw)

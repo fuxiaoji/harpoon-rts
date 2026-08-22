@@ -110,9 +110,18 @@ class GameEngine:
         ]
         options: list[ActionOption] = []
         for unit in sorted(units, key=lambda x: x.unit_id):
+            platform = self.platforms[unit.platform_id]
             alive = not unit.sunk
             planning = self.state.phase == Phase.PLOTTING and side_id not in self.state.locked_sides
-            base_ok = alive and planning
+            verified_platform = bool(platform.verified)
+            base_ok = alive and planning and verified_platform
+            base_reason = (
+                None
+                if base_ok
+                else "平台数据库条目尚未逐页核验，禁止执行"
+                if not verified_platform
+                else "仅存活单位可在未锁定的计划阶段行动"
+            )
             options.append(
                 ActionOption(
                     action_id=f"move:{unit.unit_id}",
@@ -127,7 +136,7 @@ class GameEngine:
                         "required": ["course_deg", "speed_knots"],
                     },
                     available=base_ok,
-                    unavailable_reason=None if base_ok else "仅存活单位可在未锁定的计划阶段机动",
+                    unavailable_reason=base_reason,
                     rule=explain("H5-3.1-MOVE"),
                 )
             )
@@ -136,7 +145,7 @@ class GameEngine:
                 for c in self.state.contacts.get(side_id, ())
                 if c.quality == "good_fcs" and c.target_unit_id
             )
-            for weapon_id in self.platforms[unit.platform_id].weapons:
+            for weapon_id in platform.weapons:
                 ammo = unit.ammunition.get(weapon_id, 0)
                 fire_ok = base_ok and ammo > 0 and bool(targets)
                 reason = None if fire_ok else "需要计划阶段、可用弹药和 Good 火控解"
@@ -164,7 +173,7 @@ class GameEngine:
                     action_type="wait",
                     unit_id=unit.unit_id,
                     available=base_ok,
-                    unavailable_reason=None if base_ok else "仅计划阶段可等待",
+                    unavailable_reason=base_reason,
                     rule=explain("H5-2.4-PLOT"),
                 )
             )
@@ -671,6 +680,8 @@ class GameEngine:
         return events
 
     def _winner(self, units: dict[str, UnitState]) -> str | None:
+        if self.state.scenario_id != "tattletail-1991-strict":
+            return None
         soviet = units["smyshlennyy-mod-kashin"]
         poolster = units["poolster-a835"]
         nato_crippled = sum(u.crippled for u in units.values() if u.side_id == "nato")

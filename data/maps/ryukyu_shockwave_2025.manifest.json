@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0.0",
+  "map_id": "ryukyu-shockwave-2025",
+  "bounds_wgs84": {"south":22.0,"west":122.0,"north":29.0,"east":131.0},
+  "projection": "EPSG:3857",
+  "layers": [
+    {
+      "layer_id":"sentinel-2-imagery",
+      "kind":"satellite",
+      "source":"Copernicus Sentinel-2",
+      "licence_url":"https://cds.climate.copernicus.eu/licences/ec-sentinel",
+      "attribution":"Contains modified Copernicus Sentinel data",
+      "status":"download_pending_product_selection",
+      "local_template":"resources/maps/ryukyu/sentinel/{z}/{x}/{y}.webp"
+    },
+    {
+      "layer_id":"gebco-bathymetry",
+      "kind":"bathymetry",
+      "source":"GEBCO Grid",
+      "licence_url":"https://www.gebco.net/data-products/gridded-bathymetry/terms-of-use",
+      "attribution":"GEBCO Compilation Group; not for navigation",
+      "status":"download_pending_subset_export",
+      "local_template":"resources/maps/ryukyu/gebco/{z}/{x}/{y}.webp"
+    }
+  ],
+  "offline_policy":"Only clipped scenario bounds and selected zoom levels may be cached. Record product IDs and SHA-256 after download."
+}

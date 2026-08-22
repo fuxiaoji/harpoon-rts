@@ -1,0 +1,19 @@
+{
+  "schema_version":"1.0.0",
+  "scenario_id":"ryukyu-shockwave-2025",
+  "seed":20251017,
+  "start":"2025-10-17T20:00:00+08:00",
+  "objectives":{"china":["压制嘉手纳、那霸与普天间航空设施","重创里根号航母打击群","在12小时内保存核心编队并撤离"],"usa":["保护里根号与琉球航空基地","发现并阻止中方联合突击","对中方核心编队造成不可接受损失"]},
+  "weapons":[],
+  "platforms":[
+    {"platform_id":"liaoning-2025-provisional","name":"辽宁号 16","side_id":"china","maximum_dp":1,"maximum_speed_knots":0,"weapons":[],"sensors":[],"source":"China's Navy 1 Dec 25 PDF p.10; awaiting visual table verification","verified":false},
+    {"platform_id":"shandong-2025-provisional","name":"山东号 17","side_id":"china","maximum_dp":1,"maximum_speed_knots":0,"weapons":[],"sensors":[],"source":"China's Navy 1 Dec 25; exact table page awaiting visual verification","verified":false},
+    {"platform_id":"ronald-reagan-2025-provisional","name":"USS Ronald Reagan CVN-76","side_id":"usa","maximum_dp":1,"maximum_speed_knots":0,"weapons":[],"sensors":[],"source":"America's Navy 1 Dec 25 PDF p.7; awaiting visual table verification","verified":false}
+  ],
+  "units":[
+    {"unit_id":"liaoning-cv16","platform_id":"liaoning-2025-provisional","side_id":"china","position":{"x_nm":-210,"y_nm":-80},"course_deg":90,"speed_knots":0},
+    {"unit_id":"shandong-cv17","platform_id":"shandong-2025-provisional","side_id":"china","position":{"x_nm":-235,"y_nm":-115},"course_deg":90,"speed_knots":0},
+    {"unit_id":"uss-ronald-reagan-cvn76","platform_id":"ronald-reagan-2025-provisional","side_id":"usa","position":{"x_nm":80,"y_nm":15},"course_deg":180,"speed_knots":0}
+  ],
+  "contacts":{"china":[{"contact_id":"china-prior-csg-area","observer_side_id":"china","quality":"detected","last_known_position":{"x_nm":80,"y_nm":15}}],"usa":[]}
+}

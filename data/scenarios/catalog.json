@@ -1,0 +1,7 @@
+{
+  "schema_version": "1.0.0",
+  "scenarios": [
+    {"scenario_id":"tattletail-1991-strict","title":"Tattletail 1991","description":"六舰严格规则教学与回归想定","path":"data/scenarios/tattletail.json","sides":["nato","soviet"],"status":"playable_verified_subset"},
+    {"scenario_id":"ryukyu-shockwave-2025","title":"琉球震潮 2025","description":"中方双航母、岸基航空兵和火箭军对里根号编队与琉球基地的联合突袭","path":"data/scenarios/ryukyu_shockwave_2025.json","sides":["china","usa"],"status":"data_verification_in_progress"}
+  ]
+}
