@@ -46,3 +46,21 @@ uv run harpoon --state tmp/session.json replay --jsonl tmp/session.jsonl
 
 当前为严格规则子集：Tattletail 的六舰数据、反舰导弹射程/飞行/损伤、战备转换、DP 阈值和胜负规则已启用；未核验命中表由裁判裁决，其他章节能力会在行动列表中显示为不可用并解释原因。详见 `data/rules/coverage.json`，不得把接口存在误报为规则已完成。
 
+## 本地游戏界面
+
+```powershell
+$env:UV_CACHE_DIR='.uv-cache'
+uv sync --extra dev
+uv run harpoon-ui
+```
+
+浏览器打开 `http://127.0.0.1:8897/`。默认存档位于 `tmp/ui-session.json`，刷新页面不会丢失进度。
+
+操作流程：
+
+1. 选择 NATO，点击单位，在“行动”页提交机动或等待命令，然后锁定本方。
+2. 切换苏方，选择 `Smyshlennyy`，提交导弹攻击并锁定。
+3. 切换裁判，逐次点击“推进当前阶段”。
+4. 导弹在下一回合移动阶段抵达后，裁判点击海图上的导弹进行命中裁决。
+5. “重置想定”会清空当前 UI 对局并重新载入 Tattletail。
+
