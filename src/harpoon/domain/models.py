@@ -51,6 +51,10 @@ class WeaponDefinition(FrozenModel):
     base_damage_dp: int
     damage_die: int = 6
     damage_divisor: int = 1
+    seeker_generation: int | None = None
+    signature: str | None = None
+    penetration: int | None = None
+    missile_impact_criticals: bool = False
     rule_id: str
     source: str
     verified: bool = True
@@ -62,6 +66,14 @@ class PlatformDefinition(FrozenModel):
     side_id: str
     maximum_dp: int
     maximum_speed_knots: float
+    size_class: str = ""
+    target_signature: str = ""
+    ecm_generation: int | None = None
+    countermeasure: Literal["base", "jamming", "decoy", "jamming_and_decoy"] = "base"
+    damage_modifier_percent: int = 0
+    damage_breakpoints_dp: tuple[int, ...] = ()
+    speed_breakpoints_knots: tuple[float, ...] = ()
+    fire_flooding_thresholds_percent: tuple[int, ...] = ()
     weapons: tuple[str, ...] = ()
     sensors: tuple[str, ...] = ()
     source: str
@@ -82,6 +94,8 @@ class UnitState(FrozenModel):
     active_sensors: tuple[str, ...] = ()
     crippled: bool = False
     sunk: bool = False
+    critical_hits: tuple[str, ...] = ()
+    fire_critical_count: int = 0
 
 
 class Contact(FrozenModel):
