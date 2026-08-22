@@ -1,0 +1,22 @@
+# Source material is large, licensed, and immutable. Keep it outside Git.
+*.pdf
+*.zip
+*.xls
+*.xlsx
+*.exe
+*.dat
+*.png
+
+# Generated extraction and local tooling output
+resources/processed/text/
+resources/processed/rendered/
+tmp/
+__pycache__/
+*.pyc
+
+# IDE / OS
+.idea/
+.vscode/
+Thumbs.db
+.DS_Store
+

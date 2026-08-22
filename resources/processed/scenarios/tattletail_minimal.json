@@ -1,0 +1,18 @@
+{
+  "schema_version": "0.1.0",
+  "scenario_id": "tattletail-1991-minimal",
+  "source": {"document": "【20260405】鱼叉5（本体+中美俄数据库）/19.（典型想定）Tattletail_10_Aug_24.pdf", "rules_page": 2, "status": "transcribed-not-platform-validated"},
+  "clock": {"start": "1991-05-15T03:00:00", "latest_soviet_attack": "1991-05-15T03:15:00", "tactical_turn_seconds": 180},
+  "environment": {"area": "Norwegian Sea", "sea_state": 4, "wind_from_deg": 70, "wind_speed_knots": 20, "visibility_percent": 5, "weather": "light rain at night", "water_depth_band": "intermediate_ii"},
+  "sides": [
+    {"id": "nato", "units": ["uss-copeland-ffg25", "emden-f210", "hms-ariadne-f72", "van-kinsbergen-f809", "poolster-a835"], "initial_readiness": "condition_iii", "roe": "self_or_task_force_defense_only"},
+    {"id": "soviet", "units": ["smyshlennyy-mod-kashin"], "primary_target": "poolster-a835"}
+  ],
+  "initial_state": {
+    "speed_knots": 12, "course_deg": 0, "radars": "active", "sonars": "passive", "fire_control_solution": "good",
+    "nato_formation": {"center": "poolster-a835", "escort_range_yards": [2000, 10000], "escort_sector_bounds_deg": [[315, 45], [45, 135], [135, 225], [225, 315]]},
+    "soviet_placement": {"relative_bearing_sector_deg": [90, 270], "minimum_range_from_each_escort_yards": 2000, "maximum_range": "smyshlennyy_radar_horizon"}
+  },
+  "profile_limits": {"helicopters_enabled": false, "submarine_warfare_enabled": false, "mine_warfare_enabled": false, "initial_detection_resolution_required": false},
+  "unresolved": ["Exact initial coordinates require a deterministic placement policy.", "Platform records and weapon inventories must be independently validated.", "The referee message-roll needs a turn-zero interpretation test."]
+}
