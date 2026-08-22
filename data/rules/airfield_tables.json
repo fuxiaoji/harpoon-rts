@@ -1,0 +1,38 @@
+{
+  "schema_version": "1.0.0",
+  "source": {
+    "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+    "version": "2026-01-01",
+    "pdf_page": 117,
+    "printed_page": "11-2",
+    "visual_verification": "verified-2026-08-22"
+  },
+  "runway_use": {
+    "table_id": "H5-11-2-RUNWAY-USE",
+    "lengths_m": [500, 1000, 2000, 3000, 4000, 5000],
+    "cuts": {
+      "1": ["small", "medium", "large", "large", "large", "large"],
+      "2": ["small", "medium", "medium", "medium", "medium", "large"],
+      "3": ["stol", "small", "medium", "medium", "medium", "medium"],
+      "4": ["stol", "small", "small", "medium", "medium", "medium"],
+      "5": ["none", "stol", "small", "small", "small", "small"],
+      "6": ["none", "stol", "stol", "small", "small", "small"],
+      "7": ["none", "none", "stol", "stol", "stol", "stol"],
+      "8": ["none", "none", "none", "stol", "stol", "stol"],
+      "9": ["none", "none", "none", "none", "stol", "stol"],
+      "10": ["none", "none", "none", "none", "none", "stol"]
+    },
+    "notes": ["Fully loaded aircraft assumed.", "Lightly loaded aircraft count as one size class smaller."]
+  },
+  "air_base_component_d100": {
+    "table_id": "H5-11-2-AIR-BASE-COMPONENT",
+    "ranges": [
+      {"minimum": 1, "maximum": 20, "component": "runways"},
+      {"minimum": 21, "maximum": 40, "component": "aircraft_storage"},
+      {"minimum": 41, "maximum": 50, "component": "buildings"},
+      {"minimum": 51, "maximum": 55, "component": "taxiways"},
+      {"minimum": 56, "maximum": 60, "component": "defenses"},
+      {"minimum": 61, "maximum": 100, "component": "empty_space"}
+    ]
+  }
+}
