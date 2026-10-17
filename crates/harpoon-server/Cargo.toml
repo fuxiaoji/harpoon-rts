@@ -1,0 +1,14 @@
+[package]
+name = "harpoon-server"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Authoritative HTTP/WebSocket server for the harpoon-core engine"
+
+[dependencies]
+harpoon-core = { path = "../harpoon-core" }
+serde = { workspace = true }
+serde_json = { workspace = true }
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "time", "signal", "sync"] }
+axum = { version = "0.7", features = ["ws"] }
+tower-http = { version = "0.5", features = ["fs", "cors"] }
