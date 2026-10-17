@@ -1,0 +1,24 @@
+{
+  "id": "gunnery_dual",
+  "name": "Gunnery Dual (server smoke)",
+  "description": "Two surface combatants close and fight a gun/SSM duel. Minimal scenario for server and selfplay smoke tests.",
+  "duration_s": 3600,
+  "weather": { "visibility_nm": 12, "jam": [0, 0] },
+  "day_night": "Day",
+  "seed": 20251018,
+  "victory": { "target_vp": 0 },
+  "units": [
+    {
+      "side": "Blue", "class": "ddg_aegis", "name": "BLUE-01 Aegis",
+      "pos": [0, 0], "course_deg": 45, "speed_kts": 18, "fire_on": true
+    },
+    {
+      "side": "Red", "class": "mgb", "name": "RED-01 Missile Boat",
+      "pos": [40, 40], "course_deg": 225, "speed_kts": 24, "fire_on": true
+    },
+    {
+      "side": "Red", "class": "mgb", "name": "RED-02 Missile Boat",
+      "pos": [48, 32], "course_deg": 225, "speed_kts": 24, "fire_on": true
+    }
+  ]
+}
