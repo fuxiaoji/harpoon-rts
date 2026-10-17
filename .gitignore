@@ -5,12 +5,13 @@
 *.xlsx
 *.exe
 *.dat
-*.png
+
+# Legacy Python prototype relocated to ./鱼叉 (stays local, not tracked)
+/鱼叉/
+.v2c/
+.hypothesis/
 
 # Generated extraction and local tooling output
-resources/processed/text/
-resources/processed/rendered/
-resources/rag/harpoon_rules.sqlite3
 tmp/
 __pycache__/
 *.pyc
@@ -24,6 +25,14 @@ dist/
 build/
 artifacts/
 
+# Rust
+/target/
+**/*.rs.bk
+Cargo.lock.bak
+
+# Node (web UI tooling)
+node_modules/
+web/dist/
 
 # IDE / OS
 .idea/
