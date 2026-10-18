@@ -7,7 +7,7 @@
   <meta name="theme-color" content="#050d16">
   <title>HARPOON // Fleet Command</title>
   <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="training.css?v=guided-20261018-3">
+  <link rel="stylesheet" href="training.css?v=combat-20261018-1">
 </head>
 <body data-side="Blue">
   <div id="app">
@@ -35,6 +35,7 @@
       <div class="topbar-block">
         <span class="field-label">TRAINING</span>
         <button id="btn-tutorial" type="button" class="pill-button" title="Start the guided tutorial" aria-label="Start the guided tutorial">TUTORIAL</button>
+        <button id="btn-operator-help" type="button" class="pill-button" title="Pause and explain firing, detection and automatic actions">HOW TO PLAY</button>
       </div>
       <div class="topbar-block language-block" data-i18n-native>
         <label class="field-label" for="language-select">中文 / English</label>
@@ -232,8 +233,8 @@
               <div class="chip-row" id="target-tags"></div>
 
               <div class="target-actions">
-                <button type="button" class="btn btn--secondary" id="btn-assign">ASSIGN TARGET</button>
-                <button type="button" class="btn btn--ghost" id="btn-clear-target">CLEAR</button>
+                <button type="button" class="btn btn--secondary" id="btn-assign">AUTO-ENGAGE TARGET</button>
+                <button type="button" class="btn btn--ghost" id="btn-clear-target">CANCEL ASSIGNMENT</button>
               </div>
 
               <div class="fire-controls">
@@ -242,7 +243,7 @@
                   <select id="fire-weapon" aria-label="Weapon to fire" disabled>
                     <option>Select a unit</option>
                   </select>
-                  <button type="button" class="btn btn--fire" id="btn-fire" disabled>FIRE</button>
+                  <button type="button" class="btn btn--fire" id="btn-fire" disabled>FIRE 1 ROUND</button>
                 </div>
                 <div class="fire-note" id="fire-note">Select a friendly unit and a contact to open the firing solution.</div>
               </div>
@@ -252,11 +253,11 @@
           <section class="panel" id="orders-panel" hidden>
             <div class="panel-head">
               <span class="kicker">COMMAND</span>
-              <span class="weapons-state-chip" id="weapons-state-chip">WEAPONS HOLD</span>
+              <span class="weapons-state-chip" id="weapons-state-chip">AUTO SELECT OFF</span>
             </div>
             <div class="order-grid">
               <button type="button" class="command-btn" id="btn-weapons-free">
-                <b>WEAPONS FREE</b>
+                <b>AUTO TARGET &amp; FIRE</b>
                 <small id="weapons-free-state">HOLD</small>
               </button>
               <button type="button" class="command-btn" id="btn-chaff">
@@ -273,6 +274,7 @@
               </button>
             </div>
             <div class="assigned-line" id="assigned-target">NO TARGET ASSIGNED</div>
+            <p id="engagement-explanation" class="engagement-explanation" data-i18n-native></p>
           </section>
 
           <section class="panel" id="weapons-panel" hidden>
@@ -340,8 +342,9 @@
     </section>
   </div>
 
-  <script src="i18n.js?v=academy-20261018" defer></script>
-  <script src="app.js?v=guided-20261018-3" defer></script>
+  <script src="i18n.js?v=combat-20261018-1" defer></script>
+  <script src="combat-help.js?v=combat-20261018-1" defer></script>
+  <script src="app.js?v=combat-20261018-1" defer></script>
   <script src="training-guide.js?v=guided-20261018-3" defer></script>
   <script src="tutorial.js?v=guided-20261018-3" defer></script>
 </body>

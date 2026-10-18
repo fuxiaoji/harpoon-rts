@@ -1,8 +1,34 @@
 /* A quiet chart workspace with a distinct, readable training operations board. */
+.operator-overlay { position: fixed; inset: 0; z-index: 135; display: grid; place-items: center; padding: 24px; background: #010a12df; }
+.operator-overlay[hidden] { display: none; }
+.operator-dialog { width: min(900px,100%); max-height: 92vh; overflow: auto; padding: 28px 32px; border: 1px solid #527184; border-radius: 8px; background: #0b2435; color: #eaf3f7; box-shadow: 0 24px 80px #0009; font: 15px/1.75 "Microsoft YaHei", "Segoe UI", sans-serif; }
+.operator-dialog header { display: flex; align-items: center; gap: 12px; }
+.operator-dialog h1 { flex: 1; font-size: 25px; margin: 0; }
+.operator-dialog h2 { margin: 26px 0 12px; font-size: 18px; color: #c4e9f5; }
+.operator-dialog p { margin: 12px 0; }
+.operator-dialog button, .operator-dialog select { border: 1px solid #54788e; border-radius: 4px; background: #14394e; color: #f0f6f9; padding: 7px 12px; font: inherit; cursor: pointer; }
+.operator-dialog select { height: auto; min-height: 36px; line-height: 1.4; }
+.operator-dialog button:hover { background: #23546c; }
+.operator-dialog :focus-visible { outline: 2px solid #f2c66d; outline-offset: 3px; }
+.operator-dialog table { width: 100%; border-collapse: collapse; text-align: left; }
+.operator-dialog th, .operator-dialog td { border: 1px solid #355569; padding: 12px 14px; vertical-align: top; }
+.operator-dialog th { background: #153b50; }
+.operator-dialog td:first-child { width: 29%; color: #f3d695; }
+.operator-dialog li { margin: 10px 0; }
+.operator-dialog .operator-pause { color: #f3d695; padding: 8px 12px; border-left: 3px solid #d9b663; background: #213944; }
+.operator-dialog .operator-source { color: #9db8c8; font-size: 12px; }
+.operator-dialog footer { margin-top: 20px; text-align: right; }
+.engagement-explanation { padding: 9px 11px; margin: 10px 0 0; background: #173d4d; border-left: 2px solid #dfbd72; color: #f3dba4; font: 12px/1.65 "Microsoft YaHei", "Segoe UI", sans-serif; }
+.event-meaning { margin-top: 5px; color: #aac5d2; font: 12px/1.6 "Microsoft YaHei", "Segoe UI", sans-serif; }
+.event-audit p { font: 13px/1.7 "Microsoft YaHei", "Segoe UI", sans-serif; color: #c8dce7; }
+.trace-raw { margin-top: 7px; color: #9cb7c8; }
+.trace-raw pre { white-space: pre-wrap; overflow-wrap: anywhere; font: 11px/1.6 Consolas, monospace; }
+@media (max-width: 700px) { .operator-overlay { padding: 10px; } .operator-dialog { padding: 16px; } .operator-dialog h1 { font-size: 20px; } .operator-dialog th, .operator-dialog td { padding: 8px; } }
 .language-block select { min-width: 105px; font: 13px/1.4 "Microsoft YaHei", sans-serif; padding: 5px 8px; }
 html[lang="zh-CN"] .field-label, html[lang="zh-CN"] .panel-kicker { font-size: 11px; letter-spacing: .04em; }
 .nav-panel { padding: 12px; }
 .selection-list { display: flex; gap: 5px; flex-wrap: wrap; margin: 8px 0; }
+#contact-list { max-height: 180px; overflow: auto; align-content: start; }
 .selection-list button { padding: 6px 8px; font-size: 12px; }
 .selection-list button[aria-pressed="true"] { background: #164a64; border-color: #63c3e7; }
 .nav-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }

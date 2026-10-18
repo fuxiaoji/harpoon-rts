@@ -687,10 +687,10 @@
     let started = false;
 
     try {
-      await postJson('/api/game', { scenario: id, seed: 123, speed: 60 });
+      await postJson('/api/game', { scenario: id, seed: 123, speed: 0 });
 
       state.scenarioId = id;
-      state.speed = 60;
+      state.speed = 0;
       renderSpeedControls();
 
       resetRuntime();
@@ -1156,7 +1156,7 @@
 
     const chips = [];
     chips.push(`<span class="chip chip--accent">${escapeHtml(state.side.toUpperCase())}</span>`);
-    chips.push(`<span class="chip ${unit.fire_on ? 'chip--warn' : ''}">FIRE ${unit.fire_on ? 'FREE' : 'HOLD'}</span>`);
+    chips.push(`<span class="chip ${unit.fire_on ? 'chip--warn' : ''}">${unit.fire_on ? 'AUTO SELECT ON' : 'AUTO SELECT OFF'}</span>`);
     if (unit.assigned !== null && unit.assigned !== undefined) {
       chips.push(`<span class="chip chip--warn">LOCK C${escapeHtml(unit.assigned)}</span>`);
     }
@@ -1175,8 +1175,13 @@
     dom.btnWeaponsFree.classList.toggle('is-on', !!unit.fire_on);
     dom.btnWeaponsFree.setAttribute('aria-pressed', String(!!unit.fire_on));
     dom.weaponsFreeState.textContent = unit.fire_on ? 'ACTIVE' : 'HOLD';
-    dom.weaponsStateChip.textContent = unit.fire_on ? 'WEAPONS FREE' : 'WEAPONS HOLD';
+    dom.weaponsStateChip.textContent = unit.fire_on ? 'AUTO SELECT ON' : 'AUTO SELECT OFF';
     dom.weaponsStateChip.classList.toggle('is-free', !!unit.fire_on);
+    dom.btnWeaponsFree.title = 'Toggle automatic target selection. Assigned targets are engaged independently.';
+    dom.btnFire.title = 'One order for one round; wait for cooldown. A queued order is not a confirmed shot.';
+    dom.btnAssign.title = 'Standing order: automatically engage this target, even when automatic target selection is off.';
+    const explanation = $('engagement-explanation');
+    if (explanation) explanation.textContent = window.HarpoonCombat.firingState(unit, window.HarpoonI18n.language);
 
     dom.chaffCount.textContent = String(numberOr(unit.chaff, 0));
     dom.btnChaff.disabled = disabled || numberOr(unit.chaff, 0) <= 0;
@@ -1395,7 +1400,7 @@
     const assigned = unit && unit.assigned !== null && unit.assigned !== undefined
       && Number(unit.assigned) === Number(contact.id);
     dom.btnAssign.disabled = !unit || over;
-    dom.btnAssign.textContent = assigned ? 'TARGET ASSIGNED' : 'ASSIGN TARGET';
+    dom.btnAssign.textContent = assigned ? 'AUTO-ENGAGING TARGET' : 'AUTO-ENGAGE TARGET';
     dom.btnAssign.classList.toggle('is-on', !!assigned);
     dom.btnClearTarget.disabled = !unit || unit.assigned === null || unit.assigned === undefined || over;
 
@@ -1954,19 +1959,37 @@
 
   function buildEventNode(event) {
     const info = formatEvent(event);
+    const I = window.HarpoonI18n;
+    const en = I.language === 'en';
+    const report = event.event === 'rules_event' ? window.HarpoonCombat.ruleReport(event, I.language) : null;
+    const note = window.HarpoonCombat.eventNote(event, I.language);
     const node = document.createElement('article');
     node.className = `event-row event-row--${info.tone || 'status'}`;
     node.dataset.seq = String(event.seq);
+    node.dataset.i18nNative = '';
     node.innerHTML = `
       <span class="event-time">${escapeHtml(fmtEventTick(event.tick))}</span>
       <i class="event-marker" aria-hidden="true"></i>
       <div class="event-copy">
-        <div class="event-headline">${escapeHtml(info.headline)}</div>
-        <div class="event-detail">${escapeHtml(info.detail)}</div>
-        ${info.audit ? `<details class="event-audit"><summary>Adjudication trace</summary><p>${escapeHtml(info.audit)}</p></details>` : ''}
+        <div class="event-headline">${escapeHtml(report ? report.title : I.text(info.headline))}</div>
+        <div class="event-detail">${escapeHtml(report ? report.meaning : I.text(info.detail))}</div>
+        ${note ? `<div class="event-meaning">${escapeHtml(note)}</div>` : ''}
+        ${report ? `<details class="event-audit"><summary>${en ? 'Adjudication details' : '裁决详情与关键数值'}</summary><p>${escapeHtml(report.detail || (en ? 'No trace available.' : '本条格式暂未提供中文数值解释，请展开原始记录核对。'))}</p>${!en && event.detail ? `<details class="trace-raw"><summary>原始记录（英文）</summary><pre lang="en">${escapeHtml(event.detail)}</pre></details>` : ''}</details>` : ''}
       </div>
-      <span class="event-vis">${escapeHtml(eventVisibilityLabel(event))}</span>`;
+      <span class="event-vis">${escapeHtml(I.text(eventVisibilityLabel(event)))}</span>`;
     return node;
+  }
+
+  function repaintEventLanguage() {
+    const opened = new Set([...dom.eventList.querySelectorAll('details[open]')].map(detail =>
+      `${detail.closest('[data-seq]').dataset.seq}:${detail.className}`));
+    const top = dom.eventLog.scrollTop;
+    dom.eventList.replaceChildren(...[...state.eventMap.values()]
+      .sort((a,b) => Number(b.seq)-Number(a.seq)).map(buildEventNode));
+    for (const detail of dom.eventList.querySelectorAll('details')) {
+      detail.open = opened.has(`${detail.closest('[data-seq]').dataset.seq}:${detail.className}`);
+    }
+    dom.eventLog.scrollTop = top;
   }
 
   function mergeEvents(events) {
@@ -3510,6 +3533,9 @@
       if (presentation) { option.textContent = presentation.title; option.title = presentation.summary; }
     }
     updateMapBrief(state.observation);
+    const unit = selectedUnit();
+    if (unit) renderOrders(unit, !!state.observation?.over);
+    repaintEventLanguage();
     map.lastScaleKey = '';
   }
   window.addEventListener('harpoon:language', localizePresentation);

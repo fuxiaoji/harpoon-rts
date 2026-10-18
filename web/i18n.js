@@ -11,6 +11,18 @@ Red|红方
 SCENARIO|想定
 TRAINING|训练
 TUTORIAL|训练中心
+HOW TO PLAY|怎么玩
+Pause and explain firing, detection and automatic actions|暂停并查看开火、探测与自主行动说明
+AUTO-ENGAGE TARGET|指定目标自动交战
+AUTO-ENGAGING TARGET|正在指定目标自动交战
+CANCEL ASSIGNMENT|取消指派
+FIRE 1 ROUND|人工射击1发
+AUTO TARGET & FIRE|自动选敌开火
+AUTO SELECT ON|自动选敌：开
+AUTO SELECT OFF|自动选敌：关
+One order for one round; wait for cooldown. A queued order is not a confirmed shot.|单次命令，每次1发；请等冷却。命令排队不等于成功发射。
+Standing order: automatically engage this target, even when automatic target selection is off.|持续命令：自动攻击此目标；关闭自动选敌仍会攻击指派目标。
+Toggle automatic target selection. Assigned targets are engaged independently.|切换自动选敌；指派目标仍会独立持续交战。
 TIME CONTROL|时间控制
 TICK|模拟秒
 ACTIVE SCENARIO|当前任务
