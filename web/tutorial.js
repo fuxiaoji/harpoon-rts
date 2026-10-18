@@ -157,14 +157,10 @@
       </article></div>`;
     if (focusSelector) modal.querySelector(focusSelector)?.focus();
   }
-  function removeHighlight() { document.querySelectorAll('.training-focus').forEach(el => el.classList.remove('training-focus')); }
+  function removeHighlight() { window.HarpoonTrainingGuide?.update(null); }
   function focusTarget(scroll = false) {
-    removeHighlight();
-    const selector = currentStep()?.focus;
-    if (!selector || !/^#[a-z0-9-]+$/.test(selector)) return;
-    const element = document.querySelector(selector);
-    element?.classList.add('training-focus');
-    if (scroll) element?.scrollIntoView({ block: 'center', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
+    window.HarpoonTrainingGuide?.update({ session: view.session, step: currentStep() });
+    if (scroll) window.HarpoonTrainingGuide?.locate();
   }
   function renderPanel() {
     if (!panel) {
@@ -202,10 +198,15 @@
       return;
     }
     if (!step) return;
+    const objectiveKey = `${session.attempt}:${session.step}`;
+    if (panel.dataset.objective !== objectiveKey) {
+      minimized = !['ack','report','question'].includes(step.objective);
+      panel.dataset.objective = objectiveKey;
+    }
     const manual = ['ack','report'].includes(step.objective);
     panel.classList.toggle('is-minimized', minimized);
     panel.innerHTML = `
-      <header class="training-heading"><div><span>${String(c.number).padStart(2,'0')} / ${esc(text(c.title))}</span><h2>${session.step+1}. ${esc(text(step.title))}</h2></div><div class="training-heading-actions"><span>${session.step} / ${session.step_count}</span><button data-training="minimize" aria-expanded="${!minimized}">${minimized ? b('展开指导','Show guidance') : b('收起','Minimize')}</button><button data-training="catalogue">${b('课程目录','Courses')}</button></div></header>
+      <header class="training-heading"><div><span>${String(c.number).padStart(2,'0')} / ${esc(text(c.title))}</span><h2>${session.step+1}. ${esc(text(step.title))}</h2></div><div class="training-heading-actions"><span>${session.step} / ${session.step_count}</span><button data-training="focus">${b('显示操作高光','Show action highlight')}</button><button data-training="minimize" aria-expanded="${!minimized}">${minimized ? b('展开讲解','Show explanation') : b('收起讲解','Hide explanation')}</button><button data-training="catalogue">${b('课程目录','Courses')}</button></div></header>
       <div class="training-progress" role="progressbar" aria-label="${b('课程进度','Lesson progress')}" aria-valuenow="${session.step}" aria-valuemin="0" aria-valuemax="${session.step_count}"><i style="width:${100*session.step/session.step_count}%"></i></div>
       <div class="training-body" ${minimized ? 'hidden' : ''}><div class="training-instruction"><p class="training-objective">${esc(text(step.body))}</p>
         <div id="training-connection" class="training-alert" role="status" hidden></div>

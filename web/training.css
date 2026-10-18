@@ -81,15 +81,42 @@ html[lang="zh-CN"] .field-label, html[lang="zh-CN"] .panel-kicker { font-size: 1
 .training-alert { color: #f4d19a; padding: 8px 10px; border: 1px solid #9d7b45; background: #473a26; font-size: 13px; }
 .training-answers { display: grid; gap: 6px; margin: 12px 0; }
 .training-answers button { text-align: left; }
-.training-focus { outline: 2px solid #e9bd77 !important; outline-offset: 4px; }
+.training-focus { outline: 3px solid #ffd27a !important; outline-offset: 3px; }
 .training-result { display: flex; gap: 24px; align-items: center; padding: 24px 28px; }
 .training-pass { color: #9cd2b8; font-size: 46px; }
 .training-result h2 { font-size: 22px; margin: 4px 0; }
 .training-result p { margin: 6px 0; color: #bdced7; }
 .training-result-actions { display: grid; gap: 7px; margin-left: auto; }
-.training-active .workspace { min-height: 350px; }
+.training-active .workspace { min-height: 0; }
 .training-active .sidebar-scroll { padding-top: 12px; }
-.training-active #app { overflow: auto; }
+.training-active #app { grid-template-rows: auto auto minmax(260px,1fr) clamp(100px,14vh,150px); overflow: auto; }
+.training-active .training-body { max-height: min(180px,22vh); }
+.training-active .training-heading { padding-top: 8px; padding-bottom: 6px; }
+.training-active .training-toolbar { padding-top: 7px; padding-bottom: 7px; }
+.training-active .log-dock { min-height: 0; }
+#training-guide { position: fixed; inset: 0; z-index: 90; overflow: hidden; pointer-events: none; }
+#training-guide[hidden] { display: none; }
+.guide-ring { position: fixed; z-index: 1; border: 3px solid #ffd27a; border-radius: 8px; box-shadow: 0 0 0 9999px #010a14b3, 0 0 20px #ffd27a80; pointer-events: none; }
+.guide-ring::after { content: ''; position: absolute; inset: -8px; border: 1px solid #ffd27a99; border-radius: 12px; animation: guide-arrival 700ms ease-out 2; }
+.guide-leader { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 2; overflow: visible; }
+.guide-leader path { stroke: #ffd27a; stroke-width: 2; fill: none; }
+.guide-leader circle { fill: #ffd27a; stroke: #102234; stroke-width: 2; }
+.guide-card { position: fixed; z-index: 3; width: min(340px,calc(100vw - 24px)); max-height: calc(100dvh - 24px); overflow: auto; color: #edf7fb; background: #102a3d; border: 1px solid #ffd27a; border-top: 4px solid #ffd27a; border-radius: 7px; box-shadow: 0 12px 42px #0009; padding: 14px 17px 16px; pointer-events: auto; font: 14px/1.65 "Microsoft YaHei", "Segoe UI", sans-serif; }
+.guide-card header { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.guide-instructor { color: #ffd27a; font-size: 13px; font-weight: 600; }
+.guide-card header button { color: #bdd0da; font-size: 22px; padding: 0 4px; line-height: 1.1; }
+.guide-stage { color: #a6c2d3; font-size: 12px; margin: 7px 0 5px; }
+.guide-card h2 { font-size: 18px; line-height: 1.45; margin: 0 0 8px; color: #fff; }
+.guide-card p { margin: 0 0 10px; }
+.guide-card .guide-status { color: #b8d7e4; border-top: 1px solid #375368; padding-top: 9px; font-size: 12px; margin-bottom: 12px; }
+.guide-status[data-disabled="true"], .guide-card .guide-error { color: #ffd27a; }
+.guide-card footer { display: flex; flex-wrap: wrap; gap: 8px; }
+.guide-card footer button { border: 1px solid #537b93; background: #193e55; border-radius: 4px; padding: 7px 10px; color: #edf7fb; font-size: 13px; }
+.guide-card footer [data-guide="next"] { color: #102234; background: #ffd27a; border-color: #ffd27a; font-weight: 600; }
+.guide-card button:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+@keyframes guide-arrival { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(1.12); } }
+@media(prefers-reduced-motion: reduce) { .guide-ring::after { animation: none; } }
+@media(max-width: 940px) { .training-active #app { overflow: visible; } }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
 :is(.academy-dialog,#training-panel,.nav-panel) button:focus-visible { outline: 3px solid #f0c982; outline-offset: 3px; }
 @media(min-width: 761px) and (max-height: 800px) {

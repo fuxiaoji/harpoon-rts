@@ -1550,7 +1550,11 @@
 
   async function postCommand(command, label, options = {}) {
     const { quiet = false } = options;
+    const generation = state.gameGeneration;
     const result = await sendCommandRaw(command);
+    if (generation === state.gameGeneration) window.dispatchEvent(new CustomEvent('harpoon:command-result', { detail: {
+      command, ok: result.ok, message: result.message,
+    } }));
     if (result.ok) {
       if (!quiet) {
         const paused = state.speed === 0 ? ' · SIMULATION PAUSED' : '';
@@ -3432,9 +3436,9 @@
         if (!contact) return;
         missionBody = { mission: 'strike', contact: Number(contact.id) };
       } else if (mission === 'asw') {
-        missionBody = { mission: 'asw', area: [Number(unit.pos.x.toFixed(2)), Number(unit.pos.y.toFixed(2))], radius_nm: 12 };
+        missionBody = { mission: 'asw', area: { x: Number(unit.pos.x.toFixed(2)), y: Number(unit.pos.y.toFixed(2)) }, radius_nm: 12 };
       } else {
-        missionBody = { mission: 'cap', station: [Number(unit.pos.x.toFixed(2)), Number(unit.pos.y.toFixed(2))], radius_nm: 25 };
+        missionBody = { mission: 'cap', station: { x: Number(unit.pos.x.toFixed(2)), y: Number(unit.pos.y.toFixed(2)) }, radius_nm: 25 };
       }
       void postCommand({
         cmd: 'launch_aircraft',
