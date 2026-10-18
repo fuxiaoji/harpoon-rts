@@ -95,12 +95,17 @@ pub fn fire_control_scan(world: &mut World) {
             if ammo == 0 || cooldown > 0.0 {
                 continue;
             }
+            // Weapon-target compatibility gate: a weapon only engages target
+            // kinds its `targets` table admits (e.g. SLCM never shoots at
+            // ships; SAM never at surface contacts).
+            if !def.targets.accepts(target_kind) {
+                continue;
+            }
             let dist = shooter.pos.range_to(world.entity(target_id).map(|t| t.pos).unwrap_or_default());
             let engaged = match def.kind {
                 WeaponKind::Ciws => false, // CIWS engages inside the terminal chain
                 WeaponKind::Gun => {
-                    def.targets.accepts(target_kind)
-                        && dist <= def.range_nm
+                    dist <= def.range_nm
                         && dist >= def.min_range_nm
                         && !matches!(target_kind, PlatformKind::Aircraft | PlatformKind::Missile | PlatformKind::Sub)
                 }
@@ -115,8 +120,7 @@ pub fn fire_control_scan(world: &mut World) {
                         && dist >= def.min_range_nm
                 }
                 WeaponKind::Torpedo | WeaponKind::Lwt => {
-                    def.targets.accepts(target_kind)
-                        && dist <= def.range_nm
+                    dist <= def.range_nm
                         && shooter.assigned.is_some() // torpedoes are fired deliberately
                 }
                 WeaponKind::AswRocket => {
@@ -390,6 +394,12 @@ pub fn launch(
 /// Manual Fire command (routed from sim.rs command processing).
 pub fn manual_fire(world: &mut World, side: Side, unit: EntityId, contact: ContactId, weapon_id: &str, rounds: u8) -> bool {
     let Some(eid) = resolve_contact(world, side, contact) else { return false };
+    // Fire-control solution gate: manual shots need a usable track
+    // (rules §6.3.1 — a firing solution requires a quality contact).
+    let solution_quality = world.contact(side, contact).map(|c| c.quality).unwrap_or(0.0);
+    if solution_quality < 0.3 {
+        return false;
+    }
     let Some(e) = world.entity(unit) else { return false };
     if e.side != side {
         return false;

@@ -1239,12 +1239,30 @@
       return;
     }
 
+    const over = !!(state.observation && state.observation.over);
+    const contact = selectedContact();
     const lines = [];
     const ready = Array.isArray(unit.deck.ready) ? unit.deck.ready : [];
     const cycling = Array.isArray(unit.deck.cycling) ? unit.deck.cycling : [];
     for (const entry of ready) {
       if (!Array.isArray(entry)) continue;
-      lines.push(`<div class="deck-line"><span>${escapeHtml(aircraftName(entry[0]))}</span><b>×${escapeHtml(entry[1])} READY</b></div>`);
+      const cls = String(entry[0]);
+      const count = numberOr(entry[1], 0);
+      const mission = cls.includes('helo') ? 'asw' : 'cap';
+      const missionLabel = mission === 'asw' ? 'ASW SWEEP' : 'CAP';
+      const strike = cls.includes('striker') || cls.includes('bomber') || cls.includes('fighter');
+      lines.push(
+        `<div class="deck-line"><span>${escapeHtml(aircraftName(cls))}</span>` +
+        `<b>×${escapeHtml(entry[1])} READY</b>` +
+        `<span style="display:flex;gap:4px;margin-left:8px">` +
+        (count > 0 && !over
+          ? `<button class="cmd-btn" data-deck-launch="1" data-class="${escapeHtml(cls)}" data-count="${Math.min(2, count)}" data-mission="${mission}" style="font-size:8px;padding:2px 5px">${missionLabel}</button>` +
+            (strike && contact
+              ? `<button class="cmd-btn" data-deck-launch="1" data-class="${escapeHtml(cls)}" data-count="${Math.min(2, count)}" data-mission="strike" style="font-size:8px;padding:2px 5px">STRIKE</button>`
+              : '')
+          : '') +
+        `</span></div>`,
+      );
     }
     for (const entry of cycling) {
       if (!Array.isArray(entry)) continue;
@@ -3328,6 +3346,36 @@
     dom.btnAssign.addEventListener('click', () => void issueAssignTarget());
     dom.btnClearTarget.addEventListener('click', () => void issueClearTarget());
     dom.btnFire.addEventListener('click', () => void issueFire());
+
+    // Flight-deck scramble buttons (delegated: rows re-render each frame).
+    dom.deckList.addEventListener('click', (event) => {
+      const btn = event.target && event.target.closest
+        ? event.target.closest('[data-deck-launch]')
+        : null;
+      if (!btn) return;
+      const unit = selectedUnit();
+      if (!unit || !unit.deck) return;
+      const cls = btn.getAttribute('data-class');
+      const count = Number(btn.getAttribute('data-count')) || 1;
+      const mission = btn.getAttribute('data-mission') || 'cap';
+      let missionBody;
+      if (mission === 'strike') {
+        const contact = selectedContact();
+        if (!contact) return;
+        missionBody = { mission: 'strike', contact: Number(contact.id) };
+      } else if (mission === 'asw') {
+        missionBody = { mission: 'asw', area: [Number(unit.pos.x.toFixed(2)), Number(unit.pos.y.toFixed(2))], radius_nm: 12 };
+      } else {
+        missionBody = { mission: 'cap', station: [Number(unit.pos.x.toFixed(2)), Number(unit.pos.y.toFixed(2))], radius_nm: 25 };
+      }
+      void postCommand({
+        cmd: 'launch_aircraft',
+        unit: Number(unit.id),
+        class: cls,
+        count,
+        mission: missionBody,
+      }, 'LAUNCH ' + String(cls).toUpperCase());
+    });
 
     dom.fireWeapon.addEventListener('change', () => {
       state.fireWeaponId = dom.fireWeapon.value || null;
