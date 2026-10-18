@@ -273,8 +273,8 @@ async fn time_get(State(state): State<AppState>) -> Json<serde_json::Value> {
     Json(json!({"speed": g.speed, "over": over, "tick": tick}))
 }
 
-async fn db_handler() -> impl IntoResponse {
-    Json(Database::built_in())
+async fn db_handler(State(state): State<AppState>) -> impl IntoResponse {
+    Json((*state.db).clone())
 }
 
 /// AI interface: ask the configured command staff to decide orders for a side
