@@ -2158,3 +2158,26 @@ select option {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ---- tutorial ---- */
+#btn-tutorial { cursor: pointer; }
+.tutorial-card {
+  position: fixed; left: 18px; bottom: 132px; z-index: 60;
+  width: 330px; max-width: calc(100vw - 36px);
+  background: rgba(6, 16, 27, 0.94);
+  border: 1px solid rgba(102, 209, 255, 0.45);
+  border-left: 3px solid #66d1ff;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.5);
+  padding: 12px 14px; color: #dbeaf2;
+  font-family: inherit;
+}
+.tutorial-head { display: flex; justify-content: space-between; align-items: baseline; }
+.tutorial-kicker { font-size: 9px; letter-spacing: 2px; color: #66d1ff; }
+.tutorial-step { font-size: 9px; color: rgba(219, 234, 242, 0.6); }
+.tutorial-title { margin: 6px 0 6px; font-size: 13px; color: #effaff; }
+.tutorial-text { font-size: 11px; line-height: 1.55; color: rgba(219, 234, 242, 0.88); }
+.tutorial-text b { color: #8fe0ff; }
+.tutorial-hint { margin-top: 8px; font-size: 10px; color: #f2b660; }
+.tutorial-actions { margin-top: 10px; display: flex; gap: 6px; }
+.tutorial-actions .cmd-btn { font-size: 9px; }
+.tutorial-skip { opacity: 0.65; }
