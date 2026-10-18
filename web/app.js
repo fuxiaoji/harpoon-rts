@@ -433,8 +433,8 @@
       for (const scenario of scenarios) {
         const option = document.createElement('option');
         option.value = scenario.id;
-        option.textContent = scenario.name || scenario.id;
-        option.title = scenario.description || scenario.id;
+        option.textContent = window.HarpoonI18n?.scenario(scenario.id)?.title || scenario.name || scenario.id;
+        option.title = window.HarpoonI18n?.scenario(scenario.id)?.summary || scenario.description || scenario.id;
         dom.scenarioSelect.appendChild(option);
       }
 
@@ -908,19 +908,20 @@
 
   function updateMapBrief(obs) {
     const scenario = state.scenarios.find((sc) => sc.id === (obs ? obs.scenario_id : state.scenarioId));
-    const title = obs && obs.scenario_name
+    const presentation = window.HarpoonI18n?.scenario(obs?.scenario_id || state.scenarioId);
+    const title = presentation?.title || (obs && obs.scenario_name
       ? obs.scenario_name
       : scenario
         ? scenario.name || scenario.id
-        : 'No scenario';
+        : 'No scenario');
     dom.mapScenario.textContent = title;
     dom.mapScenario.title = title;
 
-    const description = scenario && scenario.description
+    const description = presentation?.summary || (scenario && scenario.description
       ? scenario.description
       : obs
         ? ''
-        : 'Awaiting deployment orders.';
+        : 'Awaiting deployment orders.');
     dom.mapDesc.textContent = description || 'Double-blind tactical picture.';
     dom.mapDesc.title = description;
 
@@ -1076,6 +1077,34 @@
     }
 
     renderTargetPanel(unit, contact, obs);
+    renderNavigation(unit, obs);
+    window.dispatchEvent(new CustomEvent('harpoon:selection', { detail: {
+      unit: state.selectedUnitId, contact: state.selectedContactId,
+    } }));
+  }
+
+  function renderNavigation(unit, obs) {
+    const friendlyHtml = (obs?.units || []).filter(u => !['Missile', 'Torpedo'].includes(u.kind)).map(u =>
+      `<button type="button" data-select-unit="${Number(u.id)}" aria-pressed="${Number(u.id) === state.selectedUnitId}">${escapeHtml(u.name || `#${u.id}`)}</button>`).join('');
+    const contactHtml = (obs?.contacts || []).map(c =>
+      `<button type="button" data-select-contact="${Number(c.id)}" aria-pressed="${Number(c.id) === state.selectedContactId}">C${c.id} · ${escapeHtml(categoryInfo(c.category).label)}${c.stale ? ' · STALE' : ''}</button>`).join('');
+    const friendlyKey = JSON.stringify([state.selectedUnitId, ...(obs?.units || []).map(u => [u.id,u.name])]);
+    const contactKey = JSON.stringify([state.selectedContactId, ...(obs?.contacts || []).map(c => [c.id,c.category,c.stale])]);
+    if ($('friendly-list').dataset.renderKey !== friendlyKey) { $('friendly-list').innerHTML = friendlyHtml; $('friendly-list').dataset.renderKey = friendlyKey; }
+    if ($('contact-list').dataset.renderKey !== contactKey) { $('contact-list').innerHTML = contactHtml; $('contact-list').dataset.renderKey = contactKey; }
+    $('nav-inputs').hidden = !unit;
+    if (!unit) return;
+    const platform = platformForUnit(unit);
+    $('nav-speed').max = platform?.max_speed_kts || 1000;
+    $('nav-depth').max = platform?.max_depth_m || 250;
+    $('nav-depth').disabled = unit.kind !== 'Sub';
+    $('nav-altitude').disabled = unit.kind !== 'Aircraft';
+    for (const button of $('nav-controls').querySelectorAll('[data-nav]')) {
+      const action = button.dataset.nav;
+      button.disabled = !!obs?.over || (action === 'depth' && unit.kind !== 'Sub')
+        || (action === 'altitude' && unit.kind !== 'Aircraft')
+        || (action.startsWith('sonar') && !unit.sensors?.some(s => s.sensor.startsWith('sonar_a')));
+    }
   }
 
   function renderUnitDetails(unit, obs) {
@@ -1900,6 +1929,8 @@
         };
       case 'base_destroyed':
         return { headline: `BASE DESTROYED · ${event.base_name || unitRef(event.base)}`, detail: 'Facility removed from the order of battle.', tone: 'loss' };
+      case 'rules_event':
+        return { headline: `RULES EVENT · ${String(event.domain || '').toUpperCase()}`, detail: titleCaseWords(event.rule || 'Rule'), audit: event.detail, tone: 'status' };
       case 'scenario_ended':
         return {
           headline: `SCENARIO ENDED · ${event.winner ? `${String(event.winner).toUpperCase()} VICTORY` : 'DRAW'}`,
@@ -1928,6 +1959,7 @@
       <div class="event-copy">
         <div class="event-headline">${escapeHtml(info.headline)}</div>
         <div class="event-detail">${escapeHtml(info.detail)}</div>
+        ${info.audit ? `<details class="event-audit"><summary>Adjudication trace</summary><p>${escapeHtml(info.audit)}</p></details>` : ''}
       </div>
       <span class="event-vis">${escapeHtml(eventVisibilityLabel(event))}</span>`;
     return node;
@@ -2028,6 +2060,7 @@
   function startRenderLoop() {
     if (map.ctx) return;
     map.ctx = dom.mapCanvas.getContext('2d');
+    window.HarpoonI18n?.bindCanvas(map.ctx);
     if (!map.ctx) return;
     requestAnimationFrame(renderFrame);
   }
@@ -2423,6 +2456,14 @@
     drawRangeRings(ctx, selected);
     drawRoutes(ctx, selected);
     drawAssignmentLine(ctx, selected);
+    const goal = window.HarpoonTraining?.goalPoint?.();
+    if (goal) {
+      const point = worldToScreen(goal[0], goal[1]);
+      ctx.save(); ctx.strokeStyle = '#f2b660'; ctx.fillStyle = 'rgba(242,182,96,0.12)';
+      ctx.setLineDash([5, 4]); ctx.beginPath(); ctx.arc(point.x, point.y, Math.max(8, map.view.scale * 0.25), 0, Math.PI * 2);
+      ctx.fill(); ctx.stroke(); ctx.setLineDash([]); ctx.fillStyle = '#f2b660'; ctx.font = `12px ${MONO}`;
+      ctx.fillText('TRAINING', point.x + 12, point.y - 12); ctx.restore();
+    }
     drawContacts(ctx, obs, now);
     drawUnits(ctx, obs, selected, now);
     drawHoverPreview(ctx, selected);
@@ -3310,6 +3351,33 @@
   }
 
   function bindUi() {
+    $('nav-controls').addEventListener('click', event => {
+      const selected = event.target.closest('[data-select-unit],[data-select-contact]');
+      if (selected) {
+        if (selected.dataset.selectUnit) state.selectedUnitId = Number(selected.dataset.selectUnit);
+        if (selected.dataset.selectContact) state.selectedContactId = Number(selected.dataset.selectContact);
+        renderSidebar(); return;
+      }
+      const button = event.target.closest('[data-nav]');
+      const unit = selectedUnit();
+      if (!button || !unit) return;
+      const action = button.dataset.nav;
+      const commands = {
+        speed: () => ({ cmd: 'set_speed', speed_kts: Number($('nav-speed').value) }),
+        course: () => ({ cmd: 'set_course', course_deg: Number($('nav-course').value) }),
+        depth: () => ({ cmd: 'set_depth', depth_m: Number($('nav-depth').value) }),
+        altitude: () => ({ cmd: 'set_altitude', altitude_m: Number($('nav-altitude').value) }),
+        'sonar-on': () => ({ cmd: 'set_sonar', active: true }),
+        'sonar-off': () => ({ cmd: 'set_sonar', active: false }),
+        goto: () => ({ cmd: 'goto', waypoints: [{ x: Number($('nav-x').value), y: Number($('nav-y').value) }] }),
+      };
+      const command = commands[action]?.();
+      const input = action === 'goto' ? [$('nav-x'), $('nav-y')] : [$('nav-' + action)].filter(Boolean);
+      if (!command) return;
+      const invalid = input.find(el => !el.checkValidity() || el.value === '');
+      if (invalid) { invalid.required = true; invalid.reportValidity(); return; }
+      void postCommand({ ...command, unit: Number(unit.id) }, 'ORDER');
+    });
     dom.sideToggle.addEventListener('click', (event) => {
       const button = event.target.closest('button[data-side]');
       if (!button) return;
@@ -3421,6 +3489,27 @@
     startRenderLoop();
     await bootstrap();
   }
+
+  // Only the already-masked client observation is exposed to the training UI.
+  window.HarpoonUI = {
+    snapshot: () => ({ observation: state.observation, unit: state.selectedUnitId, contact: state.selectedContactId, speed: state.speed }),
+    async adoptTraining() {
+      setSide('Blue'); resetRuntime(); await loadScenarios(); restartTransport();
+      await refreshState(); await syncTime();
+    },
+    async refresh() { await refreshState(); await syncTime(); },
+    setSpeed,
+  };
+  function localizePresentation() {
+    for (const option of dom.scenarioSelect.options) {
+      const presentation = window.HarpoonI18n?.scenario(option.value);
+      if (presentation) { option.textContent = presentation.title; option.title = presentation.summary; }
+    }
+    updateMapBrief(state.observation);
+    map.lastScaleKey = '';
+  }
+  window.addEventListener('harpoon:language', localizePresentation);
+  window.addEventListener('harpoon:catalogue', localizePresentation);
 
   void init();
 })();

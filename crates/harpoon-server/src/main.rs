@@ -7,6 +7,7 @@
 //! - POST /api/selfplay runs a fully deterministic headless rollout.
 
 mod ai;
+mod tutorial;
 
 use axum::{
     extract::{
@@ -28,6 +29,7 @@ use serde::Deserialize;
 use ai::CommandStaff;
 use serde_json::json;
 use std::collections::HashMap;
+use std::collections::BTreeSet;
 use std::path::PathBuf;
 use std::sync::atomic::{AtomicU64, Ordering};
 use std::sync::{Arc, Mutex};
@@ -46,11 +48,26 @@ struct Game {
     speed: f64,
     accumulator: f64,
     inbox: Vec<(Side, Command)>,
+    training: Option<tutorial::Session>,
+    training_completed: BTreeSet<String>,
+    progress_saved: bool,
 }
 
 impl Game {
     fn new() -> Self {
-        Self { world: None, speed: 0.0, accumulator: 0.0, inbox: Vec::new() }
+        Self { world: None, speed: 0.0, accumulator: 0.0, inbox: Vec::new(),
+            training: None, training_completed: tutorial::load_progress(), progress_saved: true }
+    }
+    fn training_view(&self) -> serde_json::Value {
+        json!({"session": self.training.as_ref().zip(self.world.as_ref()).map(|(s,w)| s.view(w)),
+            "completed": self.training_completed, "progress_saved": self.progress_saved})
+    }
+    fn record_training(&mut self) {
+        if let Some(session) = &self.training {
+            if session.status == "completed" && self.training_completed.insert(session.course.id.clone()) {
+                self.progress_saved = tutorial::save_progress(&self.training_completed).is_ok();
+            }
+        }
     }
 }
 
@@ -83,19 +100,28 @@ fn run_loop(state: AppState) {
             let mut poked = false;
             if let Some((n, cmds)) = work {
                 let mut g = state.game.lock().unwrap();
-                if let Some(world) = g.world.as_mut() {
+                let mut pause_training = false;
+                let Game { world, training, .. } = &mut *g;
+                if let Some(world) = world.as_mut() {
                     // Commands apply once on the first tick (orders persist
                     // as entity state afterwards).
                     let empty: Vec<(Side, Command)> = Vec::new();
                     for i in 0..n {
-                        let c: &[(Side, Command)] = if i == 0 { &cmds } else { &empty };
-                        harpoon_core::sim::tick(world, c);
+                        let mut c = if i == 0 { cmds.clone() } else { empty.clone() };
+                        if let Some(session) = training.as_mut() { c.extend(session.opponent_commands(world)); }
+                        harpoon_core::sim::tick(world, &c);
+                        if training.as_mut().is_some_and(|session| session.after_tick(world, &c)) {
+                            pause_training = true;
+                            break;
+                        }
                         if world.over {
                             break;
                         }
                     }
                     poked = true;
                 }
+                if pause_training { g.speed = 0.0; g.accumulator = 0.0; }
+                g.record_training();
             }
             if poked {
                 let _ = state.update_tx.send(());
@@ -182,7 +208,9 @@ async fn new_game(
     let tick = world.tick;
     let name = world.scenario_name.clone();
     let mut g = state.game.lock().unwrap();
-    *g = Game { world: Some(world), speed: req.speed, accumulator: 0.0, inbox: Vec::new() };
+    let completed = g.training_completed.clone();
+    *g = Game { world: Some(world), speed: req.speed, accumulator: 0.0, inbox: Vec::new(),
+        training: None, training_completed: completed, progress_saved: true };
     Ok(Json(json!({"started": true, "scenario": name, "seeded_at_tick": tick})))
 }
 
@@ -225,6 +253,11 @@ struct TimeReq {
 async fn time_handler(State(state): State<AppState>, Json(req): Json<TimeReq>) -> Json<serde_json::Value> {
     let mut g = state.game.lock().unwrap();
     g.speed = req.speed.clamp(0.0, 512.0);
+    let Game { world, training, .. } = &mut *g;
+    if let (Some(world), Some(session)) = (world.as_ref(), training.as_mut()) {
+        session.time_action(world, req.speed);
+    }
+    g.record_training();
     g.accumulator = 0.0;
     Json(json!({"speed": g.speed}))
 }
@@ -237,6 +270,63 @@ async fn time_get(State(state): State<AppState>) -> Json<serde_json::Value> {
         .map(|w| (w.over, w.tick))
         .unwrap_or((false, 0));
     Json(json!({"speed": g.speed, "over": over, "tick": tick}))
+}
+
+async fn training_catalog() -> Json<tutorial::Catalog> { Json(tutorial::catalog()) }
+async fn training_status(State(state): State<AppState>) -> Json<serde_json::Value> {
+    Json(state.game.lock().unwrap().training_view())
+}
+#[derive(Deserialize)]
+struct TrainingStart { course: String }
+static TRAINING_ATTEMPT: AtomicU64 = AtomicU64::new(1);
+async fn training_start(State(state): State<AppState>, Json(req): Json<TrainingStart>)
+    -> Result<Json<serde_json::Value>, (StatusCode, String)>
+{
+    let course = tutorial::catalog().courses.into_iter().find(|c| c.id == req.course)
+        .ok_or((StatusCode::NOT_FOUND, "unknown_course".into()))?;
+    let source = std::fs::read_to_string(state.scenario_dir.join(format!("{}.json", course.scenario)))
+        .map_err(|e| (StatusCode::NOT_FOUND, e.to_string()))?;
+    let scenario = scenario_from_json(&source).map_err(|e| (StatusCode::BAD_REQUEST, e.to_string()))?;
+    let mut world = load_scenario(scenario, Database::built_in()).map_err(|e| (StatusCode::BAD_REQUEST, e))?;
+    let session = tutorial::Session::new(course, TRAINING_ATTEMPT.fetch_add(1, Ordering::Relaxed), &mut world)
+        .map_err(|e| (StatusCode::BAD_REQUEST, e))?;
+    let mut g = state.game.lock().unwrap();
+    g.world = Some(world); g.training = Some(session); g.speed = 0.0; g.accumulator = 0.0; g.inbox.clear();
+    let _ = state.update_tx.send(());
+    Ok(Json(g.training_view()))
+}
+async fn training_action(State(state): State<AppState>, Json(req): Json<tutorial::Action>)
+    -> Result<Json<serde_json::Value>, (StatusCode, String)>
+{
+    let mut g = state.game.lock().unwrap();
+    let mut session = g.training.take().ok_or((StatusCode::CONFLICT, "no_training_session".into()))?;
+    if let Err(reason) = session.validate_action(&req) {
+        g.training = Some(session); return Err((StatusCode::CONFLICT, reason.into()));
+    }
+    if req.action == "exit" {
+        g.speed = 0.0; g.accumulator = 0.0; g.inbox.clear();
+    } else if req.action == "step" {
+        if session.status != "active" {
+            g.training = Some(session);
+            return Err((StatusCode::CONFLICT, "not_active".into()));
+        }
+        let mut commands = std::mem::take(&mut g.inbox);
+        if let Some(world) = g.world.as_mut() {
+            commands.extend(session.opponent_commands(world));
+            harpoon_core::sim::tick(world, &commands);
+            session.after_tick(world, &commands);
+        }
+        g.speed = 0.0; g.accumulator = 0.0; g.training = Some(session);
+    } else {
+        let result = session.action(g.world.as_mut().unwrap(), &req);
+        g.training = Some(session);
+        if let Err(reason) = result { return Err((StatusCode::CONFLICT, reason.into())); }
+        g.speed = 0.0; g.accumulator = 0.0;
+        if req.action == "retry" { g.inbox.clear(); }
+    }
+    g.record_training();
+    let _ = state.update_tx.send(());
+    Ok(Json(g.training_view()))
 }
 
 async fn db_handler() -> impl IntoResponse {
@@ -460,6 +550,10 @@ async fn main() {
         .route("/api/state", get(state_handler))
         .route("/api/command", post(command_handler))
         .route("/api/time", post(time_handler).get(time_get))
+        .route("/api/tutorial/catalog", get(training_catalog))
+        .route("/api/tutorial/status", get(training_status))
+        .route("/api/tutorial/start", post(training_start))
+        .route("/api/tutorial/action", post(training_action))
         .route("/api/db", get(db_handler))
         .route("/api/ai/step/:side", post(ai_step))
         .route("/api/selfplay", post(selfplay_handler))

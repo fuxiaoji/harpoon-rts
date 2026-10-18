@@ -1,0 +1,2092 @@
+{
+  "version": 1,
+  "courses": [
+    {
+      "id": "bridge",
+      "number": 1,
+      "title": {
+        "zh": "第一次值更",
+        "en": "First watch"
+      },
+      "summary": {
+        "zh": "认识舰桥、暂停、倍速与命令执行。",
+        "en": "Learn the bridge, pause, time compression and command execution."
+      },
+      "scenario": "academy_bridge",
+      "duration": 4,
+      "level": "foundation",
+      "source_refs": [
+        "Harpoon V, 2026-01-01 English digital rules, Chapter 2 (turns and plotting), printed p. 2-5 / PDF p. 21.",
+        "Execution: docs/design/adaptations.md and the existing harpoon-core RTS engine. Coordinates, target values, initial posture and training objectives are scenario design; no new rule-table constants are introduced."
+      ],
+      "steps": [
+        {
+          "id": "brief",
+          "objective": "ack",
+          "title": {
+            "zh": "任务简报",
+            "en": "Mission briefing"
+          },
+          "body": {
+            "zh": "本课只练习值更流程：接管蓝方训练舰，启动时间，再主动暂停。你的舰艇从静止开始，没有安排敌方威胁。先找到上方时间控制与右侧己方单位列表。",
+            "en": "Practise the watch routine: take command of the blue training ship, start time, then pause it yourself. Your ship starts stationary with no scheduled enemy threat. Locate the time controls above and the friendly-unit list on the right."
+          },
+          "why": {
+            "zh": "这里练习指挥流程。命中、损伤与飞行仍使用现有RTS引擎，不保证每次结果相同。",
+            "en": "We are practising command procedure. Hits, damage and flight use the current RTS engine; tactical outcomes are not guaranteed."
+          },
+          "focus": "",
+          "hints": [
+            {
+              "zh": "阅读简报中的训练目标和本课安排。",
+              "en": "Read the briefing objectives and training setup."
+            },
+            {
+              "zh": "先确认当前暂停状态，找到本课要使用的控制区域。",
+              "en": "Check that time is paused and locate the controls used in this lesson."
+            },
+            {
+              "zh": "准备好后点击“我已阅读，继续”。之后的操作目标需要真实执行才能通过。",
+              "en": "When ready, acknowledge and continue. Subsequent practical objectives require real execution to pass."
+            }
+          ]
+        },
+        {
+          "id": "select",
+          "objective": "select_unit",
+          "title": {
+            "zh": "接管训练单位",
+            "en": "Take command"
+          },
+          "body": {
+            "zh": "选择蓝方训练单位。观察舰名、实际航速、命令航速、武器和传感器。",
+            "en": "Select the blue training unit. Find its name, actual and ordered speed, weapons and sensors."
+          },
+          "why": {
+            "zh": "选择对象决定命令发给谁，先选舰再下令能减少误操作。",
+            "en": "Selection determines who receives the next order."
+          },
+          "focus": "#unit-panel",
+          "hints": [
+            {
+              "zh": "在右侧“机动”区域寻找“训练指挥单位”，也可点击海图上的己方符号。",
+              "en": "Find TRAINING COMMAND in the MANOEUVRE list on the right, or click its friendly map symbol."
+            },
+            {
+              "zh": "单击己方单位后，详情应出现舰名、航速和武器。",
+              "en": "After selecting the friendly unit, its name, speed and weapons should appear."
+            },
+            {
+              "zh": "若点击后仍未完成，确认选中的是蓝方单位，而不是接触；可按“定位控件”返回单位列表。",
+              "en": "If the objective remains open, check that you selected the blue unit rather than a contact. Locate control returns you to the unit list."
+            }
+          ]
+        },
+        {
+          "id": "run",
+          "objective": "running",
+          "title": {
+            "zh": "让时间前进",
+            "en": "Let time advance"
+          },
+          "body": {
+            "zh": "点击15×，观察模拟时钟。",
+            "en": "Choose 15× and watch the simulation clock."
+          },
+          "why": {
+            "zh": "倍速只压缩等待。每一秒仍由服务端裁决。",
+            "en": "Time compression shortens waiting; the server still resolves each simulated second."
+          },
+          "focus": "#speed-group",
+          "hints": [
+            {
+              "zh": "上方和教学栏都有15×按钮。它会让模拟时钟开始前进。",
+              "en": "The top bar and lesson toolbar both have a 15× button. It starts the simulation clock."
+            },
+            {
+              "zh": "点击15×后，观察模拟秒数是否增加；仅下达时间请求还不算完成。",
+              "en": "After clicking 15×, watch the tick counter increase. Sending the request alone is insufficient."
+            },
+            {
+              "zh": "本步通过后时间继续运行。下一步请亲自点击暂停，建立决策窗口。",
+              "en": "Time keeps running after this objective. In the next step, click Pause yourself to create a decision window."
+            }
+          ]
+        },
+        {
+          "id": "pause",
+          "objective": "paused",
+          "title": {
+            "zh": "掌握决策窗口",
+            "en": "Create a decision window"
+          },
+          "body": {
+            "zh": "点击暂停 II，时钟停止后查看态势。",
+            "en": "Press II to pause, then inspect the tactical picture."
+          },
+          "why": {
+            "zh": "暂停适合规划。它不会替你执行已排队命令。",
+            "en": "Pause is for planning; queued orders do not execute by themselves."
+          },
+          "focus": "#speed-group",
+          "hints": [
+            {
+              "zh": "暂停按钮是上方时间控制中的 II，也可用教学栏“暂停”。",
+              "en": "Use II in the top time controls, or Pause in the lesson toolbar."
+            },
+            {
+              "zh": "点击暂停后应看到时间停止，当前课程会进入知识检查。",
+              "en": "After pausing, the clock should stop and the lesson should move to its knowledge check."
+            },
+            {
+              "zh": "暂停时可以检查详情、调整命令；命令在下一次模拟推进时执行。",
+              "en": "While paused, inspect details and queue orders. Orders execute on the next simulation advance."
+            }
+          ]
+        },
+        {
+          "id": "check",
+          "objective": "question",
+          "title": {
+            "zh": "暂停时命令会怎样？",
+            "en": "What happens to orders while paused?"
+          },
+          "body": {
+            "zh": "选择与当前RTS执行方式一致的说明。",
+            "en": "Choose the statement matching this RTS implementation."
+          },
+          "why": {
+            "zh": "答案错误可以继续思考，不会消耗弹药或推进模拟。",
+            "en": "A wrong answer lets you try again without consuming ammunition or simulation time."
+          },
+          "focus": "",
+          "hints": [
+            {
+              "zh": "先回想本课刚才实际执行的指挥过程。",
+              "en": "Recall the command procedure you just executed."
+            },
+            {
+              "zh": "展开“为什么要这样做”，对照操作与结果之间的区别。",
+              "en": "Expand Why does this matter? and compare the action with its actual result."
+            },
+            {
+              "zh": "答错可重答，不会清除已完成的操作目标。选择最符合实际证据的说法。",
+              "en": "You may retry an incorrect answer without losing completed practical objectives. Choose the statement best supported by actual evidence."
+            }
+          ],
+          "answer": "1",
+          "options": [
+            {
+              "id": "0",
+              "text": {
+                "zh": "立即执行并消耗弹药",
+                "en": "They execute immediately and consume ammunition"
+              }
+            },
+            {
+              "id": "1",
+              "text": {
+                "zh": "等待下一模拟秒执行",
+                "en": "They wait for the next simulated second"
+              }
+            },
+            {
+              "id": "2",
+              "text": {
+                "zh": "全部被永久丢弃",
+                "en": "They are all permanently discarded"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "navigation",
+      "number": 2,
+      "title": {
+        "zh": "舰艇机动与航路",
+        "en": "Ship handling and routes"
+      },
+      "summary": {
+        "zh": "下达航速和航向，驶入指定区域，再停车。",
+        "en": "Order speed and heading, reach a designated area, then stop."
+      },
+      "scenario": "academy_navigation",
+      "duration": 7,
+      "level": "foundation",
+      "source_refs": [
+        "Harpoon V, 2026-01-01 English digital rules, Chapter 3 (ship/submarine movement), printed p. 3-1 / PDF p. 23; plotting p. 2-5 / PDF p. 21.",
+        "Execution: docs/design/adaptations.md and the existing harpoon-core RTS engine. Coordinates, target values, initial posture and training objectives are scenario design; no new rule-table constants are introduced."
+      ],
+      "steps": [
+        {
+          "id": "brief",
+          "objective": "ack",
+          "title": {
+            "zh": "任务简报",
+            "en": "Mission briefing"
+          },
+          "body": {
+            "zh": "本课驾驶一艘静止的驱逐舰：先下令12节、090°，再驶向东侧 X=1、Y=0 海里的训练圈并停车。海图北向为上；航速和航向命令需要推进模拟才能执行。",
+            "en": "Handle a stationary destroyer: order 12 knots and 090°, then reach the training circle at X=1, Y=0 nautical miles and stop. North is up. Speed and heading orders execute when simulation time advances."
+          },
+          "why": {
+            "zh": "这里练习指挥流程。命中、损伤与飞行仍使用现有RTS引擎，不保证每次结果相同。",
+            "en": "We are practising command procedure. Hits, damage and flight use the current RTS engine; tactical outcomes are not guaranteed."
+          },
+          "focus": "",
+          "hints": [
+            {
+              "zh": "阅读简报中的训练目标和本课安排。",
+              "en": "Read the briefing objectives and training setup."
+            },
+            {
+              "zh": "先确认当前暂停状态，找到本课要使用的控制区域。",
+              "en": "Check that time is paused and locate the controls used in this lesson."
+            },
+            {
+              "zh": "准备好后点击“我已阅读，继续”。之后的操作目标需要真实执行才能通过。",
+              "en": "When ready, acknowledge and continue. Subsequent practical objectives require real execution to pass."
+            }
+          ]
+        },
+        {
+          "id": "select",
+          "objective": "select_unit",
+          "title": {
+            "zh": "接管训练单位",
+            "en": "Take command"
+          },
+          "body": {
+            "zh": "选择蓝方训练单位。观察舰名、实际航速、命令航速、武器和传感器。",
+            "en": "Select the blue training unit. Find its name, actual and ordered speed, weapons and sensors."
+          },
+          "why": {
+            "zh": "选择对象决定命令发给谁，先选舰再下令能减少误操作。",
+            "en": "Selection determines who receives the next order."
+          },
+          "focus": "#unit-panel",
+          "hints": [
+            {
+              "zh": "在右侧“机动”区域寻找“训练指挥单位”，也可点击海图上的己方符号。",
+              "en": "Find TRAINING COMMAND in the MANOEUVRE list on the right, or click its friendly map symbol."
+            },
+            {
+              "zh": "单击己方单位后，详情应出现舰名、航速和武器。",
+              "en": "After selecting the friendly unit, its name, speed and weapons should appear."
+            },
+            {
+              "zh": "若点击后仍未完成，确认选中的是蓝方单位，而不是接触；可按“定位控件”返回单位列表。",
+              "en": "If the objective remains open, check that you selected the blue unit rather than a contact. Locate control returns you to the unit list."
+            }
+          ]
+        },
+        {
+          "id": "speed",
+          "objective": "speed",
+          "title": {
+            "zh": "下令12节",
+            "en": "Order 12 knots"
+          },
+          "body": {
+            "zh": "在机动面板将航速设为12节，并执行命令。",
+            "en": "Order 12 knots in the manoeuvre panel and execute the order."
+          },
+          "why": {
+            "zh": "命令航速是目标，实际航速可能需要一段时间才能达到。",
+            "en": "Ordered speed is a target; actual speed may take time to reach it."
+          },
+          "focus": "#nav-controls",
+          "hints": [
+            {
+              "zh": "在右侧机动面板找到“航速”输入框。",
+              "en": "Find the SPEED input in the right-hand MANOEUVRE panel."
+            },
+            {
+              "zh": "填入本步骤要求的航速，点击该行“下达命令”。",
+              "en": "Enter the speed requested by this objective, then click Apply on that row."
+            },
+            {
+              "zh": "点击“单步执行1秒”，检查实际与命令航速。只改输入框或只排队都不算完成。",
+              "en": "Advance 1 second and inspect actual and ordered speed. Editing the field or queueing the order alone is insufficient."
+            }
+          ],
+          "target": 12
+        },
+        {
+          "id": "course",
+          "objective": "course",
+          "title": {
+            "zh": "向东转向",
+            "en": "Turn east"
+          },
+          "body": {
+            "zh": "将命令航向设为090°并执行。",
+            "en": "Order heading 090° and execute."
+          },
+          "why": {
+            "zh": "海图采用正北000°、正东090°的方位表达。",
+            "en": "The chart uses north as 000° and east as 090°."
+          },
+          "focus": "#nav-controls",
+          "hints": [
+            {
+              "zh": "航向从北方000°顺时针计，东方是090°。",
+              "en": "Headings run clockwise from north at 000°. East is 090°."
+            },
+            {
+              "zh": "在机动面板航向框输入90，再点击该行“下达命令”。",
+              "en": "Enter 90 in COURSE and click Apply on that row."
+            },
+            {
+              "zh": "执行一秒，确认命令航向为090°。下一步会使用航点驾驶到训练区域。",
+              "en": "Advance 1 second and check ordered heading is 090°. The next objective uses a waypoint to reach the training area."
+            }
+          ],
+          "target": 90
+        },
+        {
+          "id": "route",
+          "objective": "route",
+          "title": {
+            "zh": "规划检查点",
+            "en": "Plot the checkpoint"
+          },
+          "body": {
+            "zh": "驶向 X=1、Y=0 海里的训练点。可以使用坐标输入或海图航点。",
+            "en": "Plot the training point X=1, Y=0 nautical miles using the coordinate form or a chart waypoint."
+          },
+          "why": {
+            "zh": "航路表达你要去哪里；航向只是当前朝向。",
+            "en": "A route describes where to go; a heading describes the current direction."
+          },
+          "focus": "#nav-controls",
+          "hints": [
+            {
+              "zh": "使用右侧坐标输入可精确下达航点，避免海图点击误差。",
+              "en": "Use the coordinate inputs on the right to place an exact waypoint."
+            },
+            {
+              "zh": "确认X=1、Y=0，点击“驶向坐标”；综合考核还需先下令12节。",
+              "en": "Check X=1 and Y=0, then click Go to point. In the assessment, first order 12 knots."
+            },
+            {
+              "zh": "推进一秒后应出现航路线。这里只检查航路已执行，实际抵达会在下一目标检查。",
+              "en": "After 1 second, a route should appear. This objective checks route execution; actual arrival is assessed next."
+            }
+          ],
+          "point": [
+            1,
+            0
+          ],
+          "target": 12
+        },
+        {
+          "id": "arrive",
+          "objective": "arrive",
+          "title": {
+            "zh": "进入任务区域",
+            "en": "Enter the objective area"
+          },
+          "body": {
+            "zh": "保持12节并继续模拟，驶入 X=1、Y=0 周围0.25海里的训练圈。",
+            "en": "Continue at 12 knots until inside the training circle, within 0.25 nm of X=1, Y=0."
+          },
+          "why": {
+            "zh": "本圈是教学目标，不是规则定义的精度或攻击距离。",
+            "en": "This circle is a learning objective, not a rules-defined accuracy or attack range."
+          },
+          "focus": "#map-canvas",
+          "hints": [
+            {
+              "zh": "海图上的训练圈中心是X=1、Y=0，半径0.25海里。",
+              "en": "The training circle is centred at X=1, Y=0 with a radius of 0.25 nautical miles."
+            },
+            {
+              "zh": "保持12节并点击60×加快航行；教程会在实际进入圈内时自动暂停。",
+              "en": "Maintain 12 knots and use 60× to speed up the journey. Training pauses when the ship actually enters the circle."
+            },
+            {
+              "zh": "若船不动，确认已下达航速与航点，且时间不是暂停。可重试本检查点恢复起点。",
+              "en": "If the ship does not move, check speed and waypoint orders and ensure time is running. Retry checkpoint restores the start of this objective."
+            }
+          ],
+          "point": [
+            1,
+            0
+          ]
+        },
+        {
+          "id": "stop",
+          "objective": "stop",
+          "title": {
+            "zh": "停止航行",
+            "en": "Stop the ship"
+          },
+          "body": {
+            "zh": "点击停止航行并执行，检查实际和命令航速。",
+            "en": "Choose All stop, execute it, and check actual and ordered speed."
+          },
+          "why": {
+            "zh": "当前RTS停止命令也会清除航路与队位；这是本实现的操作语义。",
+            "en": "In this RTS build, Stop also clears the route and formation station."
+          },
+          "focus": "#btn-stop",
+          "hints": [
+            {
+              "zh": "在己方单位的指挥命令区找到“停止航行”。",
+              "en": "Find ALL STOP in the selected unit’s command panel."
+            },
+            {
+              "zh": "点击停止航行后，再推进一秒执行命令。",
+              "en": "Click ALL STOP, then advance 1 second to execute it."
+            },
+            {
+              "zh": "实际航速必须为0且航点队列清空才通过。仅把航速输入框改成0不算停船命令。",
+              "en": "Passing requires zero actual speed and an empty waypoint queue. Editing the speed field to zero is not an ALL STOP order."
+            }
+          ]
+        },
+        {
+          "id": "check",
+          "objective": "question",
+          "title": {
+            "zh": "航向与航路",
+            "en": "Heading versus route"
+          },
+          "body": {
+            "zh": "哪项最适合表达一条需要持续执行的航线？",
+            "en": "Which input best expresses a route that should persist?"
+          },
+          "why": {
+            "zh": "答案错误可以继续思考，不会消耗弹药或推进模拟。",
+            "en": "A wrong answer lets you try again without consuming ammunition or simulation time."
+          },
+          "focus": "",
+          "hints": [
+            {
+              "zh": "先回想本课刚才实际执行的指挥过程。",
+              "en": "Recall the command procedure you just executed."
+            },
+            {
+              "zh": "展开“为什么要这样做”，对照操作与结果之间的区别。",
+              "en": "Expand Why does this matter? and compare the action with its actual result."
+            },
+            {
+              "zh": "答错可重答，不会清除已完成的操作目标。选择最符合实际证据的说法。",
+              "en": "You may retry an incorrect answer without losing completed practical objectives. Choose the statement best supported by actual evidence."
+            }
+          ],
+          "answer": "2",
+          "options": [
+            {
+              "id": "0",
+              "text": {
+                "zh": "只选择单位",
+                "en": "Selecting a unit"
+              }
+            },
+            {
+              "id": "1",
+              "text": {
+                "zh": "只暂停时间",
+                "en": "Pausing time"
+              }
+            },
+            {
+              "id": "2",
+              "text": {
+                "zh": "规划一个或多个航点",
+                "en": "Plotting one or more waypoints"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sensors",
+      "number": 3,
+      "title": {
+        "zh": "发现与不确定情报",
+        "en": "Detection and uncertainty"
+      },
+      "summary": {
+        "zh": "操作主动声纳，获取并查看自己的接触。",
+        "en": "Operate active sonar, then acquire and inspect your own contact."
+      },
+      "scenario": "academy_sensors",
+      "duration": 5,
+      "level": "foundation",
+      "source_refs": [
+        "Harpoon V, 2026-01-01 English digital rules, 5.1 and 5.1.1 (sensor basics; active and passive sensors), printed p. 5-1 / PDF p. 40.",
+        "Execution: docs/design/adaptations.md and the existing harpoon-core RTS engine. Coordinates, target values, initial posture and training objectives are scenario design; no new rule-table constants are introduced."
+      ],
+      "steps": [
+        {
+          "id": "brief",
+          "objective": "ack",
+          "title": {
+            "zh": "任务简报",
+            "en": "Mission briefing"
+          },
+          "body": {
+            "zh": "本课把传感器操作和情报判断分开练习：开启主动声纳，再推进时间，等待己方形成水面接触并检查它。水面接触可能来自雷达或目视，不能仅因刚开启声纳就认定它由声纳发现。",
+            "en": "Practise sensor control and intelligence assessment separately: activate sonar, advance time, then wait for and inspect your own surface contact. Radar or lookouts may detect it; activating sonar does not prove sonar made that detection."
+          },
+          "why": {
+            "zh": "这里练习指挥流程。命中、损伤与飞行仍使用现有RTS引擎，不保证每次结果相同。",
+            "en": "We are practising command procedure. Hits, damage and flight use the current RTS engine; tactical outcomes are not guaranteed."
+          },
+          "focus": "",
+          "hints": [
+            {
+              "zh": "阅读简报中的训练目标和本课安排。",
+              "en": "Read the briefing objectives and training setup."
+            },
+            {
+              "zh": "先确认当前暂停状态，找到本课要使用的控制区域。",
+              "en": "Check that time is paused and locate the controls used in this lesson."
+            },
+            {
+              "zh": "准备好后点击“我已阅读，继续”。之后的操作目标需要真实执行才能通过。",
+              "en": "When ready, acknowledge and continue. Subsequent practical objectives require real execution to pass."
+            }
+          ]
+        },
+        {
+          "id": "select",
+          "objective": "select_unit",
+          "title": {
+            "zh": "接管训练单位",
+            "en": "Take command"
+          },
+          "body": {
+            "zh": "选择蓝方训练单位。观察舰名、实际航速、命令航速、武器和传感器。",
+            "en": "Select the blue training unit. Find its name, actual and ordered speed, weapons and sensors."
+          },
+          "why": {
+            "zh": "选择对象决定命令发给谁，先选舰再下令能减少误操作。",
+            "en": "Selection determines who receives the next order."
+          },
+          "focus": "#unit-panel",
+          "hints": [
+            {
+              "zh": "在右侧“机动”区域寻找“训练指挥单位”，也可点击海图上的己方符号。",
+              "en": "Find TRAINING COMMAND in the MANOEUVRE list on the right, or click its friendly map symbol."
+            },
+            {
+              "zh": "单击己方单位后，详情应出现舰名、航速和武器。",
+              "en": "After selecting the friendly unit, its name, speed and weapons should appear."
+            },
+            {
+              "zh": "若点击后仍未完成，确认选中的是蓝方单位，而不是接触；可按“定位控件”返回单位列表。",
+              "en": "If the objective remains open, check that you selected the blue unit rather than a contact. Locate control returns you to the unit list."
+            }
+          ]
+        },
+        {
+          "id": "sonar",
+          "objective": "sonar_on",
+          "title": {
+            "zh": "开启主动声纳",
+            "en": "Enable active sonar"
+          },
+          "body": {
+            "zh": "开启主动声纳并执行一秒，检查传感器状态。",
+            "en": "Enable active sonar, advance one second and inspect the sensor state."
+          },
+          "why": {
+            "zh": "主动发声有被对方听到的风险。此处不承诺一定探测成功。",
+            "en": "Active transmissions risk being heard by an opponent; detection is not guaranteed."
+          },
+          "focus": "#nav-controls",
+          "hints": [
+            {
+              "zh": "保持己方单位选中，找到机动面板的“主动声纳”。",
+              "en": "Keep your friendly unit selected and find Active sonar in MANOEUVRE."
+            },
+            {
+              "zh": "点击“开启”，再推进一秒执行命令。",
+              "en": "Click On, then advance 1 second to execute the order."
+            },
+            {
+              "zh": "查看传感器列表：主动声纳应变为启用状态。发射声波也可能使自己暴露。",
+              "en": "Inspect the sensor list: active sonar should be active. Emitting sound may reveal your own presence."
+            }
+          ]
+        },
+        {
+          "id": "detect",
+          "objective": "contact",
+          "title": {
+            "zh": "建立接触",
+            "en": "Acquire a contact"
+          },
+          "body": {
+            "zh": "继续模拟，等待己方获得非陈旧水面接触。",
+            "en": "Continue until your sensors hold a non-stale surface contact."
+          },
+          "why": {
+            "zh": "你看到的是己方估计，不是裁判掌握的敌舰真实位置。",
+            "en": "You see your side’s estimate, not the referee’s true enemy position."
+          },
+          "focus": "#map-canvas",
+          "hints": [
+            {
+              "zh": "推进时间，等待己方雷达或瞭望产生接触记录。",
+              "en": "Advance time and wait for a contact from your own radar or lookouts."
+            },
+            {
+              "zh": "右侧接触列表和海图会出现C1之类的接触编号。",
+              "en": "A contact such as C1 appears in the contact list and on the map."
+            },
+            {
+              "zh": "本步只接受非陈旧的水面接触。不要换边查看敌方真实位置。",
+              "en": "This objective requires a current surface contact. Do not switch sides to inspect the opponent’s true position."
+            }
+          ]
+        },
+        {
+          "id": "inspect",
+          "objective": "select_contact",
+          "title": {
+            "zh": "查看接触档案",
+            "en": "Inspect the contact"
+          },
+          "body": {
+            "zh": "选择一个水面接触，查看质量、估计航向和最后更新。",
+            "en": "Select a surface contact and inspect quality, estimated course and last update."
+          },
+          "why": {
+            "zh": "选择接触只改变查看对象。当前指派目标按钮可能授权自动交战，本课不使用它。",
+            "en": "Selection changes what you inspect. Assign target may authorize automatic engagement in this build; do not use it here."
+          },
+          "focus": "#target-panel",
+          "hints": [
+            {
+              "zh": "点击右侧接触列表中的C1，或点击海图接触符号。",
+              "en": "Click C1 in the contact list, or click its map symbol."
+            },
+            {
+              "zh": "检查“目标指派”区域中的估计位置、型号与质量。",
+              "en": "Inspect estimated position, class and quality in TARGET DESIGNATION."
+            },
+            {
+              "zh": "己方舰艇与接触可以同时选中。接触是传感器估计，不是敌方真值。",
+              "en": "You can select your own ship and a contact together. A contact is a sensor estimate, not enemy truth."
+            }
+          ]
+        },
+        {
+          "id": "check",
+          "objective": "question",
+          "title": {
+            "zh": "接触丢失意味着什么？",
+            "en": "What does a lost contact mean?"
+          },
+          "body": {
+            "zh": "选择能从现有情报合理推出的结论。",
+            "en": "Choose the conclusion supported by the available evidence."
+          },
+          "why": {
+            "zh": "答案错误可以继续思考，不会消耗弹药或推进模拟。",
+            "en": "A wrong answer lets you try again without consuming ammunition or simulation time."
+          },
+          "focus": "",
+          "hints": [
+            {
+              "zh": "先回想本课刚才实际执行的指挥过程。",
+              "en": "Recall the command procedure you just executed."
+            },
+            {
+              "zh": "展开“为什么要这样做”，对照操作与结果之间的区别。",
+              "en": "Expand Why does this matter? and compare the action with its actual result."
+            },
+            {
+              "zh": "答错可重答，不会清除已完成的操作目标。选择最符合实际证据的说法。",
+              "en": "You may retry an incorrect answer without losing completed practical objectives. Choose the statement best supported by actual evidence."
+            }
+          ],
+          "answer": "0",
+          "options": [
+            {
+              "id": "0",
+              "text": {
+                "zh": "己方暂时不能维持这条接触",
+                "en": "Our side cannot currently maintain this track"
+              }
+            },
+            {
+              "id": "1",
+              "text": {
+                "zh": "敌舰肯定已经沉没",
+                "en": "The enemy has definitely sunk"
+              }
+            },
+            {
+              "id": "2",
+              "text": {
+                "zh": "敌舰真实位置就是最后估计点",
+                "en": "The last estimate must be the exact current position"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "gunnery",
+      "number": 4,
+      "title": {
+        "zh": "一次可追溯的炮击",
+        "en": "A traceable gun engagement"
+      },
+      "summary": {
+        "zh": "从接触选择到真实舰炮射击，再阅读结果。",
+        "en": "Move from contact selection to a real gun salvo and review its result."
+      },
+      "scenario": "academy_gunnery",
+      "duration": 6,
+      "level": "foundation",
+      "source_refs": [
+        "Harpoon V, 2026-01-01 English digital rules, Chapter 6 (combat systems), printed p. 6-1 / PDF p. 69; Chapter 8 gunfire, printed p. 8-13 / PDF p. 93.",
+        "Execution: docs/design/adaptations.md and the existing harpoon-core RTS engine. Coordinates, target values, initial posture and training objectives are scenario design; no new rule-table constants are introduced."
+      ],
+      "steps": [
+        {
+          "id": "brief",
+          "objective": "ack",
+          "title": {
+            "zh": "任务简报",
+            "en": "Mission briefing"
+          },
+          "body": {
+            "zh": "本课从己方接触出发完成一次人工炮击。训练对手停在附近；先等待型号识别，再选择目标和5英寸舰炮。保持限制开火，不要按“指派目标”，以免自动交战抢先执行。命中或寻靶落空都能完成操作训练。",
+            "en": "Execute a manual gun salvo using your own contact picture. A training opponent is nearby. Wait for class identification, then select its contact and the 5in Gun. Keep weapons on hold and do not assign the target, which enables automatic engagement. Hits and misses both count as valid procedure."
+          },
+          "why": {
+            "zh": "这里练习指挥流程。命中、损伤与飞行仍使用现有RTS引擎，不保证每次结果相同。",
+            "en": "We are practising command procedure. Hits, damage and flight use the current RTS engine; tactical outcomes are not guaranteed."
+          },
+          "focus": "",
+          "hints": [
+            {
+              "zh": "阅读简报中的训练目标和本课安排。",
+              "en": "Read the briefing objectives and training setup."
+            },
+            {
+              "zh": "先确认当前暂停状态，找到本课要使用的控制区域。",
+              "en": "Check that time is paused and locate the controls used in this lesson."
+            },
+            {
+              "zh": "准备好后点击“我已阅读，继续”。之后的操作目标需要真实执行才能通过。",
+              "en": "When ready, acknowledge and continue. Subsequent practical objectives require real execution to pass."
+            }
+          ]
+        },
+        {
+          "id": "select",
+          "objective": "select_unit",
+          "title": {
+            "zh": "接管训练单位",
+            "en": "Take command"
+          },
+          "body": {
+            "zh": "选择蓝方训练单位。观察舰名、实际航速、命令航速、武器和传感器。",
+            "en": "Select the blue training unit. Find its name, actual and ordered speed, weapons and sensors."
+          },
+          "why": {
+            "zh": "选择对象决定命令发给谁，先选舰再下令能减少误操作。",
+            "en": "Selection determines who receives the next order."
+          },
+          "focus": "#unit-panel",
+          "hints": [
+            {
+              "zh": "在右侧“机动”区域寻找“训练指挥单位”，也可点击海图上的己方符号。",
+              "en": "Find TRAINING COMMAND in the MANOEUVRE list on the right, or click its friendly map symbol."
+            },
+            {
+              "zh": "单击己方单位后，详情应出现舰名、航速和武器。",
+              "en": "After selecting the friendly unit, its name, speed and weapons should appear."
+            },
+            {
+              "zh": "若点击后仍未完成，确认选中的是蓝方单位，而不是接触；可按“定位控件”返回单位列表。",
+              "en": "If the objective remains open, check that you selected the blue unit rather than a contact. Locate control returns you to the unit list."
+            }
+          ]
+        },
+        {
+          "id": "detect",
+          "objective": "identified_contact",
+          "title": {
+            "zh": "获取射击对象",
+            "en": "Acquire the target"
+          },
+          "body": {
+            "zh": "继续模拟，等待己方接触显示已识别型号，再进入射击练习。",
+            "en": "Continue until your side has an identified surface contact, then begin the firing exercise."
+          },
+          "why": {
+            "zh": "存在目标不代表已经获得足够的火控条件。",
+            "en": "A target existing does not mean a valid fire-control solution exists."
+          },
+          "focus": "#map-canvas",
+          "hints": [
+            {
+              "zh": "先推进时间建立接触，再等待继续识别。第一次发现可能还没有型号。",
+              "en": "Advance time to detect a contact, then allow more observation. The first detection may not identify its class."
+            },
+            {
+              "zh": "查看接触详情中的型号与质量；本训练要等到型号出现后才暂停。",
+              "en": "Inspect contact class and quality. This exercise pauses when class identification is available."
+            },
+            {
+              "zh": "使用15×或单步推进。不要提前指派自动交战目标；随后需要你亲自炮击。",
+              "en": "Use 15× or single-step. Avoid assigning an automatic engagement target; a manual gun shot is required next."
+            }
+          ]
+        },
+        {
+          "id": "inspect",
+          "objective": "select_contact",
+          "title": {
+            "zh": "查看射击条件",
+            "en": "Inspect firing conditions"
+          },
+          "body": {
+            "zh": "选择接触，检查估计距离、武器、弹药和冷却提示。",
+            "en": "Select the contact and inspect estimated range, weapons, ammunition and cooldown."
+          },
+          "why": {
+            "zh": "本课练习人工单次开火，不点击指派目标，避免自动射击代做。",
+            "en": "This lesson requires a manual shot; avoid Assign target so automation cannot do the task for you."
+          },
+          "focus": "#target-panel",
+          "hints": [
+            {
+              "zh": "点击右侧接触列表中的C1，或点击海图接触符号。",
+              "en": "Click C1 in the contact list, or click its map symbol."
+            },
+            {
+              "zh": "检查“目标指派”区域中的估计位置、型号与质量。",
+              "en": "Inspect estimated position, class and quality in TARGET DESIGNATION."
+            },
+            {
+              "zh": "己方舰艇与接触可以同时选中。接触是传感器估计，不是敌方真值。",
+              "en": "You can select your own ship and a contact together. A contact is a sensor estimate, not enemy truth."
+            }
+          ]
+        },
+        {
+          "id": "fire",
+          "objective": "gun_fire",
+          "title": {
+            "zh": "发射一轮舰炮",
+            "en": "Fire a gun salvo"
+          },
+          "body": {
+            "zh": "选择5英寸舰炮并点击开火，再推进模拟。命中或脱靶都可以完成操作目标。",
+            "en": "Choose 5in Gun, click Fire, then advance. Either a hit or miss can satisfy the procedural objective."
+          },
+          "why": {
+            "zh": "只有本次学员命令产生真实舰炮事件才计分；历史战报和自动射击不算。",
+            "en": "Only an actual gun event caused by this attempt’s manual command counts; old reports and automatic fire do not."
+          },
+          "focus": "#btn-fire",
+          "hints": [
+            {
+              "zh": "保持己方舰艇选中，再选中水面接触。不要打开自由开火或指派自动目标。",
+              "en": "Keep your own ship selected, then select the surface contact. Do not enable weapons free or assign an automatic target."
+            },
+            {
+              "zh": "在射击区选择“5英寸舰炮”，点击射击，再推进一秒。",
+              "en": "Choose 5in Gun in the firing controls, click Fire, then advance 1 second."
+            },
+            {
+              "zh": "查看“舰炮射击”战报。本目标需要人工命令与真实炮击事件；命中或落空都通过。若被拒绝，检查识别、射程和冷却。",
+              "en": "Look for a GUN ACTION report. Passing requires a manual order and actual gun event; hits and misses both count. If rejected, check identification, range and cooldown."
+            }
+          ]
+        },
+        {
+          "id": "review",
+          "objective": "report",
+          "title": {
+            "zh": "阅读战报，完成复盘",
+            "en": "Review the evidence"
+          },
+          "body": {
+            "zh": "阅读当前训练产生的作战记录。区分命令、执行和战术结果，再确认完成。",
+            "en": "Read the reports produced during this lesson. Distinguish an order, its execution and its tactical outcome before confirming."
+          },
+          "why": {
+            "zh": "战报是复盘证据。敌情消失并不能单凭这一点证明击沉。",
+            "en": "Reports provide evidence. A contact disappearing alone does not prove a kill."
+          },
+          "focus": "#event-log",
+          "hints": [
+            {
+              "zh": "查看下方“作战记录”中的本课事件。",
+              "en": "Review this lesson’s events in EVENT FEED below."
+            },
+            {
+              "zh": "展开“裁决详情”可查看原始裁决记录；区分排队回执、执行事件和命中结果。",
+              "en": "Expand Adjudication trace for original records. Distinguish queued orders, execution events and hit results."
+            },
+            {
+              "zh": "读完后点击“我已阅读，继续”。此步骤是战报复盘，下一步是知识检查。",
+              "en": "After reviewing, acknowledge and continue. This step is report review; a knowledge check follows."
+            }
+          ]
+        },
+        {
+          "id": "check",
+          "objective": "question",
+          "title": {
+            "zh": "收到命令与完成射击",
+            "en": "Receiving an order versus firing"
+          },
+          "body": {
+            "zh": "命令回执显示已排队，能证明什么？",
+            "en": "What does an order being queued prove?"
+          },
+          "why": {
+            "zh": "答案错误可以继续思考，不会消耗弹药或推进模拟。",
+            "en": "A wrong answer lets you try again without consuming ammunition or simulation time."
+          },
+          "focus": "",
+          "hints": [
+            {
+              "zh": "先回想本课刚才实际执行的指挥过程。",
+              "en": "Recall the command procedure you just executed."
+            },
+            {
+              "zh": "展开“为什么要这样做”，对照操作与结果之间的区别。",
+              "en": "Expand Why does this matter? and compare the action with its actual result."
+            },
+            {
+              "zh": "答错可重答，不会清除已完成的操作目标。选择最符合实际证据的说法。",
+              "en": "You may retry an incorrect answer without losing completed practical objectives. Choose the statement best supported by actual evidence."
+            }
+          ],
+          "answer": "1",
+          "options": [
+            {
+              "id": "0",
+              "text": {
+                "zh": "保证命中敌人",
+                "en": "A hit is guaranteed"
+              }
+            },
+            {
+              "id": "1",
+              "text": {
+                "zh": "服务端收到命令，仍需检查执行结果",
+                "en": "The server received it; execution still needs verification"
+              }
+            },
+            {
+              "id": "2",
+              "text": {
+                "zh": "目标已经被摧毁",
+                "en": "The target has been destroyed"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "defence",
+      "number": 5,
+      "title": {
+        "zh": "来袭与箔条防御",
+        "en": "Incoming threats and chaff"
+      },
+      "summary": {
+        "zh": "在真实来袭后亲自释放箔条，观察防御链。",
+        "en": "Respond to a real incoming threat with manual chaff and inspect the defence chain."
+      },
+      "scenario": "academy_defence",
+      "duration": 6,
+      "level": "foundation",
+      "source_refs": [
+        "Harpoon V, 2026-01-01 English digital rules, Chapter 12 (electronic warfare and chaff concepts), printed p. 12-1 / PDF p. 119. This lesson uses the existing RTS short-range countermeasure implementation, not the long-range-chaff procedure.",
+        "Execution: docs/design/adaptations.md and the existing harpoon-core RTS engine. Coordinates, target values, initial posture and training objectives are scenario design; no new rule-table constants are introduced."
+      ],
+      "steps": [
+        {
+          "id": "brief",
+          "objective": "ack",
+          "title": {
+            "zh": "任务简报",
+            "en": "Mission briefing"
+          },
+          "body": {
+            "zh": "本课练习接报、判断、反制：训练对手会通过自己的传感器发现并向你发射一枚反舰导弹。你的舰艇仍保留正常点防御，本课关闭自动箔条以练习手动释放；释放成功不等于必定避弹。",
+            "en": "Practise warning, assessment and countermeasures: the training opponent must detect you with its own sensors before launching one anti-ship missile. Your normal point defence remains available. Automatic chaff is off for this manual exercise; successful deployment does not guarantee a miss."
+          },
+          "why": {
+            "zh": "这里练习指挥流程。命中、损伤与飞行仍使用现有RTS引擎，不保证每次结果相同。",
+            "en": "We are practising command procedure. Hits, damage and flight use the current RTS engine; tactical outcomes are not guaranteed."
+          },
+          "focus": "",
+          "hints": [
+            {
+              "zh": "阅读简报中的训练目标和本课安排。",
+              "en": "Read the briefing objectives and training setup."
+            },
+            {
+              "zh": "先确认当前暂停状态，找到本课要使用的控制区域。",
+              "en": "Check that time is paused and locate the controls used in this lesson."
+            },
+            {
+              "zh": "准备好后点击“我已阅读，继续”。之后的操作目标需要真实执行才能通过。",
+              "en": "When ready, acknowledge and continue. Subsequent practical objectives require real execution to pass."
+            }
+          ]
+        },
+        {
+          "id": "select",
+          "objective": "select_unit",
+          "title": {
+            "zh": "接管训练单位",
+            "en": "Take command"
+          },
+          "body": {
+            "zh": "选择蓝方训练单位。观察舰名、实际航速、命令航速、武器和传感器。",
+            "en": "Select the blue training unit. Find its name, actual and ordered speed, weapons and sensors."
+          },
+          "why": {
+            "zh": "选择对象决定命令发给谁，先选舰再下令能减少误操作。",
+            "en": "Selection determines who receives the next order."
+          },
+          "focus": "#unit-panel",
+          "hints": [
+            {
+              "zh": "在右侧“机动”区域寻找“训练指挥单位”，也可点击海图上的己方符号。",
+              "en": "Find TRAINING COMMAND in the MANOEUVRE list on the right, or click its friendly map symbol."
+            },
+            {
+              "zh": "单击己方单位后，详情应出现舰名、航速和武器。",
+              "en": "After selecting the friendly unit, its name, speed and weapons should appear."
+            },
+            {
+              "zh": "若点击后仍未完成，确认选中的是蓝方单位，而不是接触；可按“定位控件”返回单位列表。",
+              "en": "If the objective remains open, check that you selected the blue unit rather than a contact. Locate control returns you to the unit list."
+            }
+          ]
+        },
+        {
+          "id": "ready",
+          "objective": "ack",
+          "title": {
+            "zh": "准备接敌",
+            "en": "Ready for the threat"
+          },
+          "body": {
+            "zh": "自动箔条在本课关闭。准备好后确认，再推进时间；来袭被探测时训练自动暂停。",
+            "en": "Automatic chaff is disabled. Confirm when ready, then advance time; training pauses when an incoming weapon is detected."
+          },
+          "why": {
+            "zh": "对手按己方接触发射训练波次，不会直接读取你的隐藏情报。",
+            "en": "The opponent launches its training wave from its own contact picture, not from your hidden information."
+          },
+          "focus": "#speed-group",
+          "hints": [
+            {
+              "zh": "阅读简报中的训练目标和本课安排。",
+              "en": "Read the briefing objectives and training setup."
+            },
+            {
+              "zh": "先确认当前暂停状态，找到本课要使用的控制区域。",
+              "en": "Check that time is paused and locate the controls used in this lesson."
+            },
+            {
+              "zh": "准备好后点击“我已阅读，继续”。之后的操作目标需要真实执行才能通过。",
+              "en": "When ready, acknowledge and continue. Subsequent practical objectives require real execution to pass."
+            }
+          ]
+        },
+        {
+          "id": "incoming",
+          "objective": "incoming",
+          "title": {
+            "zh": "识别真实来袭",
+            "en": "Recognize an actual threat"
+          },
+          "body": {
+            "zh": "运行模拟，等待来袭事件。确认是哪一条接触构成威胁。",
+            "en": "Run until an Incoming report appears and identify its contact."
+          },
+          "why": {
+            "zh": "这里检测真实事件，不用倒计时动画伪装发射或命中。",
+            "en": "This objective requires a real event, not a scripted animation pretending a launch or hit."
+          },
+          "focus": "#event-log",
+          "hints": [
+            {
+              "zh": "推进时间，让训练对手按自己的接触情报发射导弹。",
+              "en": "Advance time so the training opponent can launch using its own contact picture."
+            },
+            {
+              "zh": "等待“来袭”记录；一个普通水面接触不等于导弹警报。",
+              "en": "Wait for an INCOMING report. An ordinary surface contact is not a missile warning."
+            },
+            {
+              "zh": "15×或单步都可以。探测到来袭会自动暂停；若训练波次未形成机会，按提示重试检查点。",
+              "en": "Use 15× or single-step. An incoming detection pauses training. If the training wave provides no opportunity, retry the checkpoint as prompted."
+            }
+          ]
+        },
+        {
+          "id": "chaff",
+          "objective": "chaff",
+          "title": {
+            "zh": "人工释放箔条",
+            "en": "Deploy chaff manually"
+          },
+          "body": {
+            "zh": "点击释放箔条，再执行一秒。检查剩余数量和新增战报。",
+            "en": "Choose Deploy chaff, then advance one second. Inspect remaining inventory and the new report."
+          },
+          "why": {
+            "zh": "手动命令和真实释放事件必须关联。释放成功不等于保证导弹脱靶。",
+            "en": "The manual command must produce an actual deployment event. Deployment does not guarantee a miss."
+          },
+          "focus": "#btn-chaff",
+          "hints": [
+            {
+              "zh": "先确认选中己方舰艇，找到“释放箔条”。",
+              "en": "Select your own ship and find DEPLOY CHAFF."
+            },
+            {
+              "zh": "点击释放箔条，然后单步一秒，查看剩余数量与释放记录。",
+              "en": "Deploy chaff, advance 1 second, then inspect the remaining count and deployment report."
+            },
+            {
+              "zh": "本课关闭自动箔条以便确认人工操作。完成本步只说明已释放，不能据此断言导弹必然被诱偏。",
+              "en": "Automatic chaff is off so your manual action can be verified. Passing proves deployment, not guaranteed missile diversion."
+            }
+          ]
+        },
+        {
+          "id": "review",
+          "objective": "report",
+          "title": {
+            "zh": "阅读战报，完成复盘",
+            "en": "Review the evidence"
+          },
+          "body": {
+            "zh": "阅读当前训练产生的作战记录。区分命令、执行和战术结果，再确认完成。",
+            "en": "Read the reports produced during this lesson. Distinguish an order, its execution and its tactical outcome before confirming."
+          },
+          "why": {
+            "zh": "战报是复盘证据。敌情消失并不能单凭这一点证明击沉。",
+            "en": "Reports provide evidence. A contact disappearing alone does not prove a kill."
+          },
+          "focus": "#event-log",
+          "hints": [
+            {
+              "zh": "查看下方“作战记录”中的本课事件。",
+              "en": "Review this lesson’s events in EVENT FEED below."
+            },
+            {
+              "zh": "展开“裁决详情”可查看原始裁决记录；区分排队回执、执行事件和命中结果。",
+              "en": "Expand Adjudication trace for original records. Distinguish queued orders, execution events and hit results."
+            },
+            {
+              "zh": "读完后点击“我已阅读，继续”。此步骤是战报复盘，下一步是知识检查。",
+              "en": "After reviewing, acknowledge and continue. This step is report review; a knowledge check follows."
+            }
+          ]
+        },
+        {
+          "id": "check",
+          "objective": "question",
+          "title": {
+            "zh": "防御结果与操作能力",
+            "en": "Defence outcome versus procedure"
+          },
+          "body": {
+            "zh": "已经合法释放箔条，但仍被命中，哪项解释合理？",
+            "en": "Chaff was legally deployed, yet a hit occurred. Which explanation is reasonable?"
+          },
+          "why": {
+            "zh": "答案错误可以继续思考，不会消耗弹药或推进模拟。",
+            "en": "A wrong answer lets you try again without consuming ammunition or simulation time."
+          },
+          "focus": "",
+          "hints": [
+            {
+              "zh": "先回想本课刚才实际执行的指挥过程。",
+              "en": "Recall the command procedure you just executed."
+            },
+            {
+              "zh": "展开“为什么要这样做”，对照操作与结果之间的区别。",
+              "en": "Expand Why does this matter? and compare the action with its actual result."
+            },
+            {
+              "zh": "答错可重答，不会清除已完成的操作目标。选择最符合实际证据的说法。",
+              "en": "You may retry an incorrect answer without losing completed practical objectives. Choose the statement best supported by actual evidence."
+            }
+          ],
+          "answer": "2",
+          "options": [
+            {
+              "id": "0",
+              "text": {
+                "zh": "引擎必须自动改骰让玩家获胜",
+                "en": "The engine must change the dice to make us win"
+              }
+            },
+            {
+              "id": "1",
+              "text": {
+                "zh": "释放命令肯定没执行",
+                "en": "The deployment order definitely failed"
+              }
+            },
+            {
+              "id": "2",
+              "text": {
+                "zh": "合法操作不保证概率性防御成功",
+                "en": "A legal action does not guarantee a probabilistic defence succeeds"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "submarine",
+      "number": 6,
+      "title": {
+        "zh": "水下操纵与静默",
+        "en": "Underwater control and silence"
+      },
+      "summary": {
+        "zh": "管理航速、实际潜深与主动声纳。",
+        "en": "Manage speed, actual depth and active sonar."
+      },
+      "scenario": "academy_submarine",
+      "duration": 6,
+      "level": "foundation",
+      "source_refs": [
+        "Harpoon V, 2026-01-01 English digital rules, Chapter 3 (submarine movement), printed p. 3-1 / PDF p. 23; 5.1.1 (active/passive sensors), printed p. 5-1 / PDF p. 40.",
+        "Execution: docs/design/adaptations.md and the existing harpoon-core RTS engine. Coordinates, target values, initial posture and training objectives are scenario design; no new rule-table constants are introduced."
+      ],
+      "steps": [
+        {
+          "id": "brief",
+          "objective": "ack",
+          "title": {
+            "zh": "任务简报",
+            "en": "Mission briefing"
+          },
+          "body": {
+            "zh": "本课驾驶常规潜艇：先用6节航速，再下潜到60米，最后开启并关闭主动声纳。观察实际潜深逐渐接近命令潜深。训练不安排鱼雷攻击，重点是操纵与辐射状态。",
+            "en": "Handle a conventional submarine: order 6 knots, descend to 60 metres, then activate and deactivate sonar. Watch actual depth approach ordered depth over time. No torpedo attack is scheduled; focus on handling and emission state."
+          },
+          "why": {
+            "zh": "这里练习指挥流程。命中、损伤与飞行仍使用现有RTS引擎，不保证每次结果相同。",
+            "en": "We are practising command procedure. Hits, damage and flight use the current RTS engine; tactical outcomes are not guaranteed."
+          },
+          "focus": "",
+          "hints": [
+            {
+              "zh": "阅读简报中的训练目标和本课安排。",
+              "en": "Read the briefing objectives and training setup."
+            },
+            {
+              "zh": "先确认当前暂停状态，找到本课要使用的控制区域。",
+              "en": "Check that time is paused and locate the controls used in this lesson."
+            },
+            {
+              "zh": "准备好后点击“我已阅读，继续”。之后的操作目标需要真实执行才能通过。",
+              "en": "When ready, acknowledge and continue. Subsequent practical objectives require real execution to pass."
+            }
+          ]
+        },
+        {
+          "id": "select",
+          "objective": "select_unit",
+          "title": {
+            "zh": "接管训练单位",
+            "en": "Take command"
+          },
+          "body": {
+            "zh": "选择蓝方训练单位。观察舰名、实际航速、命令航速、武器和传感器。",
+            "en": "Select the blue training unit. Find its name, actual and ordered speed, weapons and sensors."
+          },
+          "why": {
+            "zh": "选择对象决定命令发给谁，先选舰再下令能减少误操作。",
+            "en": "Selection determines who receives the next order."
+          },
+          "focus": "#unit-panel",
+          "hints": [
+            {
+              "zh": "在右侧“机动”区域寻找“训练指挥单位”，也可点击海图上的己方符号。",
+              "en": "Find TRAINING COMMAND in the MANOEUVRE list on the right, or click its friendly map symbol."
+            },
+            {
+              "zh": "单击己方单位后，详情应出现舰名、航速和武器。",
+              "en": "After selecting the friendly unit, its name, speed and weapons should appear."
+            },
+            {
+              "zh": "若点击后仍未完成，确认选中的是蓝方单位，而不是接触；可按“定位控件”返回单位列表。",
+              "en": "If the objective remains open, check that you selected the blue unit rather than a contact. Locate control returns you to the unit list."
+            }
+          ]
+        },
+        {
+          "id": "speed",
+          "objective": "speed",
+          "title": {
+            "zh": "控制航速",
+            "en": "Control speed"
+          },
+          "body": {
+            "zh": "下令6节并执行。",
+            "en": "Order 6 knots and execute."
+          },
+          "why": {
+            "zh": "潜艇操纵与声学态势互相关联。具体探测效果由当前规则配置裁决。",
+            "en": "Submarine handling and the acoustic picture interact; the active rules profile adjudicates the effect."
+          },
+          "focus": "#nav-controls",
+          "hints": [
+            {
+              "zh": "在右侧机动面板找到“航速”输入框。",
+              "en": "Find the SPEED input in the right-hand MANOEUVRE panel."
+            },
+            {
+              "zh": "填入本步骤要求的航速，点击该行“下达命令”。",
+              "en": "Enter the speed requested by this objective, then click Apply on that row."
+            },
+            {
+              "zh": "点击“单步执行1秒”，检查实际与命令航速。只改输入框或只排队都不算完成。",
+              "en": "Advance 1 second and inspect actual and ordered speed. Editing the field or queueing the order alone is insufficient."
+            }
+          ],
+          "target": 6
+        },
+        {
+          "id": "depth",
+          "objective": "depth",
+          "title": {
+            "zh": "改变实际潜深",
+            "en": "Change actual depth"
+          },
+          "body": {
+            "zh": "下令潜深60米并继续模拟，直到实际潜深接近60米。",
+            "en": "Order 60 metres and continue until actual depth approaches 60 metres."
+          },
+          "why": {
+            "zh": "只改变命令值不算抵达深度。服务端核验实际状态。",
+            "en": "Changing only the ordered value is insufficient; the server checks actual depth."
+          },
+          "focus": "#nav-controls",
+          "hints": [
+            {
+              "zh": "机动面板的“深度”输入框只在潜艇选中时启用。",
+              "en": "The DEPTH control is enabled when your submarine is selected."
+            },
+            {
+              "zh": "输入60并下达命令，再用15×或60×推进。实际潜深需要时间变化。",
+              "en": "Enter 60, apply the order, then advance at 15× or 60×. Actual depth takes time to change."
+            },
+            {
+              "zh": "本步要等实际潜深接近60米才暂停。只有命令潜深显示60米还不够。",
+              "en": "The lesson pauses when actual depth approaches 60 metres. An ordered depth of 60 alone is insufficient."
+            }
+          ],
+          "target": 60
+        },
+        {
+          "id": "on",
+          "objective": "sonar_on",
+          "title": {
+            "zh": "主动搜索",
+            "en": "Search actively"
+          },
+          "body": {
+            "zh": "开启主动声纳并执行，查看状态。",
+            "en": "Enable active sonar and execute; inspect the state."
+          },
+          "why": {
+            "zh": "主动模式意味着发声，并不等同于被动监听。",
+            "en": "Active mode transmits; it is different from passive listening."
+          },
+          "focus": "#nav-controls",
+          "hints": [
+            {
+              "zh": "保持己方单位选中，找到机动面板的“主动声纳”。",
+              "en": "Keep your friendly unit selected and find Active sonar in MANOEUVRE."
+            },
+            {
+              "zh": "点击“开启”，再推进一秒执行命令。",
+              "en": "Click On, then advance 1 second to execute the order."
+            },
+            {
+              "zh": "查看传感器列表：主动声纳应变为启用状态。发射声波也可能使自己暴露。",
+              "en": "Inspect the sensor list: active sonar should be active. Emitting sound may reveal your own presence."
+            }
+          ]
+        },
+        {
+          "id": "off",
+          "objective": "sonar_off",
+          "title": {
+            "zh": "恢复静默",
+            "en": "Return to silence"
+          },
+          "body": {
+            "zh": "关闭主动声纳并执行，确认不再主动发声。",
+            "en": "Disable active sonar, execute, and confirm active transmissions stop."
+          },
+          "why": {
+            "zh": "关闭主动声纳并不意味着己方所有被动传感器也停止工作。",
+            "en": "Turning off active sonar does not imply all passive sensors stop working."
+          },
+          "focus": "#nav-controls",
+          "hints": [
+            {
+              "zh": "保持己方单位选中，找到机动面板的“主动声纳”。",
+              "en": "Keep your friendly unit selected and find Active sonar in MANOEUVRE."
+            },
+            {
+              "zh": "点击“关闭”，再推进一秒执行命令。",
+              "en": "Click Off, then advance 1 second to execute the order."
+            },
+            {
+              "zh": "查看传感器列表：主动声纳应变为待机状态。关闭主动声纳不等于关闭其他传感器。",
+              "en": "Inspect the sensor list: active sonar should be on standby. Deactivating active sonar does not disable other sensors."
+            }
+          ]
+        },
+        {
+          "id": "check",
+          "objective": "question",
+          "title": {
+            "zh": "命令潜深与实际潜深",
+            "en": "Ordered versus actual depth"
+          },
+          "body": {
+            "zh": "判断机动是否完成，应看什么？",
+            "en": "What should determine whether the manoeuvre is complete?"
+          },
+          "why": {
+            "zh": "答案错误可以继续思考，不会消耗弹药或推进模拟。",
+            "en": "A wrong answer lets you try again without consuming ammunition or simulation time."
+          },
+          "focus": "",
+          "hints": [
+            {
+              "zh": "先回想本课刚才实际执行的指挥过程。",
+              "en": "Recall the command procedure you just executed."
+            },
+            {
+              "zh": "展开“为什么要这样做”，对照操作与结果之间的区别。",
+              "en": "Expand Why does this matter? and compare the action with its actual result."
+            },
+            {
+              "zh": "答错可重答，不会清除已完成的操作目标。选择最符合实际证据的说法。",
+              "en": "You may retry an incorrect answer without losing completed practical objectives. Choose the statement best supported by actual evidence."
+            }
+          ],
+          "answer": "0",
+          "options": [
+            {
+              "id": "0",
+              "text": {
+                "zh": "实际潜深达到目标",
+                "en": "Actual depth reaches the target"
+              }
+            },
+            {
+              "id": "1",
+              "text": {
+                "zh": "刚输入了60米",
+                "en": "The value 60 was just typed"
+              }
+            },
+            {
+              "id": "2",
+              "text": {
+                "zh": "界面显示了已排队",
+                "en": "The interface says queued"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "aviation",
+      "number": 7,
+      "title": {
+        "zh": "从放飞到回收",
+        "en": "Launch to recovery"
+      },
+      "summary": {
+        "zh": "出动反潜直升机，召回并确认真实回收。",
+        "en": "Launch an ASW helicopter, recall it and verify actual recovery."
+      },
+      "scenario": "academy_aviation",
+      "duration": 7,
+      "level": "intermediate",
+      "source_refs": [
+        "Harpoon V, 2026-01-01 English digital rules, 4.6 (aircraft launching and landing), printed p. 4-3 / PDF p. 35.",
+        "Execution: docs/design/adaptations.md and the existing harpoon-core RTS engine. Coordinates, target values, initial posture and training objectives are scenario design; no new rule-table constants are introduced."
+      ],
+      "steps": [
+        {
+          "id": "brief",
+          "objective": "ack",
+          "title": {
+            "zh": "任务简报",
+            "en": "Mission briefing"
+          },
+          "body": {
+            "zh": "本课指挥航母完成一次反潜直升机勤务循环：在飞行甲板放飞，保持选中母舰后召回，再等到真实回收记录。下令召回只代表开始返航，不能直接算作已经回到甲板。",
+            "en": "Command an ASW helicopter cycle from a carrier: launch from the flight deck, keep the carrier selected to recall it, then wait for actual recovery evidence. A recall order begins the return journey; it does not prove the aircraft is already aboard."
+          },
+          "why": {
+            "zh": "这里练习指挥流程。命中、损伤与飞行仍使用现有RTS引擎，不保证每次结果相同。",
+            "en": "We are practising command procedure. Hits, damage and flight use the current RTS engine; tactical outcomes are not guaranteed."
+          },
+          "focus": "",
+          "hints": [
+            {
+              "zh": "阅读简报中的训练目标和本课安排。",
+              "en": "Read the briefing objectives and training setup."
+            },
+            {
+              "zh": "先确认当前暂停状态，找到本课要使用的控制区域。",
+              "en": "Check that time is paused and locate the controls used in this lesson."
+            },
+            {
+              "zh": "准备好后点击“我已阅读，继续”。之后的操作目标需要真实执行才能通过。",
+              "en": "When ready, acknowledge and continue. Subsequent practical objectives require real execution to pass."
+            }
+          ]
+        },
+        {
+          "id": "select",
+          "objective": "select_unit",
+          "title": {
+            "zh": "接管训练单位",
+            "en": "Take command"
+          },
+          "body": {
+            "zh": "选择蓝方训练单位。观察舰名、实际航速、命令航速、武器和传感器。",
+            "en": "Select the blue training unit. Find its name, actual and ordered speed, weapons and sensors."
+          },
+          "why": {
+            "zh": "选择对象决定命令发给谁，先选舰再下令能减少误操作。",
+            "en": "Selection determines who receives the next order."
+          },
+          "focus": "#unit-panel",
+          "hints": [
+            {
+              "zh": "在右侧“机动”区域寻找“训练指挥单位”，也可点击海图上的己方符号。",
+              "en": "Find TRAINING COMMAND in the MANOEUVRE list on the right, or click its friendly map symbol."
+            },
+            {
+              "zh": "单击己方单位后，详情应出现舰名、航速和武器。",
+              "en": "After selecting the friendly unit, its name, speed and weapons should appear."
+            },
+            {
+              "zh": "若点击后仍未完成，确认选中的是蓝方单位，而不是接触；可按“定位控件”返回单位列表。",
+              "en": "If the objective remains open, check that you selected the blue unit rather than a contact. Locate control returns you to the unit list."
+            }
+          ]
+        },
+        {
+          "id": "launch",
+          "objective": "launch",
+          "title": {
+            "zh": "甲板出动",
+            "en": "Launch from the deck"
+          },
+          "body": {
+            "zh": "在飞行甲板选择反潜直升机出动，再执行一秒。",
+            "en": "Launch an ASW helicopter from the flight-deck panel and advance one second."
+          },
+          "why": {
+            "zh": "机型与数量受甲板库存约束。下达命令不等于完成起飞。",
+            "en": "Deck inventory constrains aircraft type and count; issuing an order is not proof of a launch."
+          },
+          "focus": "#deck-panel",
+          "hints": [
+            {
+              "zh": "保持航母选中，向下查看“飞行甲板”。",
+              "en": "Keep the carrier selected and scroll down to FLIGHT DECK."
+            },
+            {
+              "zh": "找到反潜直升机，点击其放飞按钮；不要选择战斗机或预警机。",
+              "en": "Find ASW Helicopter and use its launch button, rather than a fighter or AEW aircraft."
+            },
+            {
+              "zh": "推进一秒，确认“航空器放飞”记录和新增己方航空器。本目标检查真实出动。",
+              "en": "Advance 1 second and check the AIR LAUNCH report and new friendly aircraft. This objective requires an actual launch."
+            }
+          ]
+        },
+        {
+          "id": "recall",
+          "objective": "recall",
+          "title": {
+            "zh": "召回附近舰载机",
+            "en": "Recall nearby aircraft"
+          },
+          "body": {
+            "zh": "保留航母选择，点击召回舰载机并执行。",
+            "en": "Keep the carrier selected, choose Recover aircraft and execute."
+          },
+          "why": {
+            "zh": "当前召回命令面向本航母附近的己方飞机，不能等同于任意远方单机返航。",
+            "en": "This build recalls friendly aircraft near the carrier; it is not a universal individual-aircraft RTB order."
+          },
+          "focus": "#btn-recover",
+          "hints": [
+            {
+              "zh": "召回指令应由母舰下达，保持航母选中。",
+              "en": "Recall is ordered from the parent ship. Keep the carrier selected."
+            },
+            {
+              "zh": "点击“召回航空器”并推进一秒。",
+              "en": "Click RECOVER AIR and advance 1 second."
+            },
+            {
+              "zh": "召回后航空器进入返航；若它已经在母舰附近，也可能同秒回收。后续仍会检查真实回收记录。",
+              "en": "Recall starts return-to-base. An aircraft already near the carrier may recover in the same second; the next objective still checks actual recovery evidence."
+            }
+          ]
+        },
+        {
+          "id": "recover",
+          "objective": "recovered",
+          "title": {
+            "zh": "确认实际回收",
+            "en": "Verify actual recovery"
+          },
+          "body": {
+            "zh": "继续推进时间，等到服务端产生本航母的回收事件。",
+            "en": "Continue until the server emits a recovery event for this carrier."
+          },
+          "why": {
+            "zh": "返航、着舰和再次整备是不同阶段。已回收不代表立即可以再次出动。",
+            "en": "Returning, landing and rearming are distinct stages; recovery does not imply immediate readiness."
+          },
+          "focus": "#event-log",
+          "hints": [
+            {
+              "zh": "继续推进时间，等待航空器返回母舰。",
+              "en": "Continue advancing time while the aircraft returns to its carrier."
+            },
+            {
+              "zh": "查看航空器状态及“航空器回收”记录；不要把返航状态当作已经回收。",
+              "en": "Inspect aircraft state and the AIR RECOVERED report. Returning is not the same as recovered."
+            },
+            {
+              "zh": "只有己方真实回收事件才通过。若召回时已经立即回收，再推进一秒即可核验该证据。",
+              "en": "Only an actual friendly recovery event passes. If recovery occurred immediately on recall, advance once more to verify that evidence."
+            }
+          ]
+        },
+        {
+          "id": "review",
+          "objective": "report",
+          "title": {
+            "zh": "阅读战报，完成复盘",
+            "en": "Review the evidence"
+          },
+          "body": {
+            "zh": "阅读当前训练产生的作战记录。区分命令、执行和战术结果，再确认完成。",
+            "en": "Read the reports produced during this lesson. Distinguish an order, its execution and its tactical outcome before confirming."
+          },
+          "why": {
+            "zh": "战报是复盘证据。敌情消失并不能单凭这一点证明击沉。",
+            "en": "Reports provide evidence. A contact disappearing alone does not prove a kill."
+          },
+          "focus": "#event-log",
+          "hints": [
+            {
+              "zh": "查看下方“作战记录”中的本课事件。",
+              "en": "Review this lesson’s events in EVENT FEED below."
+            },
+            {
+              "zh": "展开“裁决详情”可查看原始裁决记录；区分排队回执、执行事件和命中结果。",
+              "en": "Expand Adjudication trace for original records. Distinguish queued orders, execution events and hit results."
+            },
+            {
+              "zh": "读完后点击“我已阅读，继续”。此步骤是战报复盘，下一步是知识检查。",
+              "en": "After reviewing, acknowledge and continue. This step is report review; a knowledge check follows."
+            }
+          ]
+        },
+        {
+          "id": "check",
+          "objective": "question",
+          "title": {
+            "zh": "返航命令是否代表着舰？",
+            "en": "Does recall mean landing is complete?"
+          },
+          "body": {
+            "zh": "选择正确的判断依据。",
+            "en": "Choose the correct evidence."
+          },
+          "why": {
+            "zh": "答案错误可以继续思考，不会消耗弹药或推进模拟。",
+            "en": "A wrong answer lets you try again without consuming ammunition or simulation time."
+          },
+          "focus": "",
+          "hints": [
+            {
+              "zh": "先回想本课刚才实际执行的指挥过程。",
+              "en": "Recall the command procedure you just executed."
+            },
+            {
+              "zh": "展开“为什么要这样做”，对照操作与结果之间的区别。",
+              "en": "Expand Why does this matter? and compare the action with its actual result."
+            },
+            {
+              "zh": "答错可重答，不会清除已完成的操作目标。选择最符合实际证据的说法。",
+              "en": "You may retry an incorrect answer without losing completed practical objectives. Choose the statement best supported by actual evidence."
+            }
+          ],
+          "answer": "1",
+          "options": [
+            {
+              "id": "0",
+              "text": {
+                "zh": "按钮点击成功就是着舰",
+                "en": "A successful button click is a landing"
+              }
+            },
+            {
+              "id": "1",
+              "text": {
+                "zh": "实际航空器回收事件才证明着舰",
+                "en": "An actual aircraft recovery event proves the landing"
+              }
+            },
+            {
+              "id": "2",
+              "text": {
+                "zh": "地图上看不到飞机就证明回收",
+                "en": "An aircraft disappearing from the map proves recovery"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "assessment",
+      "number": 8,
+      "title": {
+        "zh": "独立值更考核",
+        "en": "Independent watch assessment"
+      },
+      "summary": {
+        "zh": "减少提示，独立完成机动、发现、人工射击和停船。",
+        "en": "With fewer prompts, independently navigate, detect, fire manually and stop."
+      },
+      "scenario": "academy_assessment",
+      "duration": 9,
+      "level": "assessment",
+      "source_refs": [
+        "Harpoon V, 2026-01-01 English digital rules, plotting p. 2-5 / PDF p. 21; ship movement p. 3-1 / PDF p. 23; detection p. 5-1 / PDF p. 40; combat systems p. 6-1 / PDF p. 69.",
+        "Execution: docs/design/adaptations.md and the existing harpoon-core RTS engine. Coordinates, target values, initial posture and training objectives are scenario design; no new rule-table constants are introduced."
+      ],
+      "steps": [
+        {
+          "id": "brief",
+          "objective": "ack",
+          "title": {
+            "zh": "任务简报",
+            "en": "Mission briefing"
+          },
+          "body": {
+            "zh": "这是综合值更考核。你要独立设置12节、驶入东侧训练圈、建立可识别的水面接触、人工炮击并停船。默认指导更少，仍可请求提示或重试检查点；考核检查指挥流程，不要求随机交战必胜。",
+            "en": "This is your independent watch assessment. Order 12 knots, reach the eastern training circle, identify a surface contact, fire manually and stop. Guidance is shorter, but hints and checkpoint retries remain available. You are assessed on command procedure, not guaranteed combat success."
+          },
+          "why": {
+            "zh": "这里练习指挥流程。命中、损伤与飞行仍使用现有RTS引擎，不保证每次结果相同。",
+            "en": "We are practising command procedure. Hits, damage and flight use the current RTS engine; tactical outcomes are not guaranteed."
+          },
+          "focus": "",
+          "hints": [
+            {
+              "zh": "阅读简报中的训练目标和本课安排。",
+              "en": "Read the briefing objectives and training setup."
+            },
+            {
+              "zh": "先确认当前暂停状态，找到本课要使用的控制区域。",
+              "en": "Check that time is paused and locate the controls used in this lesson."
+            },
+            {
+              "zh": "准备好后点击“我已阅读，继续”。之后的操作目标需要真实执行才能通过。",
+              "en": "When ready, acknowledge and continue. Subsequent practical objectives require real execution to pass."
+            }
+          ]
+        },
+        {
+          "id": "select",
+          "objective": "select_unit",
+          "title": {
+            "zh": "接管训练单位",
+            "en": "Take command"
+          },
+          "body": {
+            "zh": "选择蓝方训练单位。观察舰名、实际航速、命令航速、武器和传感器。",
+            "en": "Select the blue training unit. Find its name, actual and ordered speed, weapons and sensors."
+          },
+          "why": {
+            "zh": "选择对象决定命令发给谁，先选舰再下令能减少误操作。",
+            "en": "Selection determines who receives the next order."
+          },
+          "focus": "#unit-panel",
+          "hints": [
+            {
+              "zh": "在右侧“机动”区域寻找“训练指挥单位”，也可点击海图上的己方符号。",
+              "en": "Find TRAINING COMMAND in the MANOEUVRE list on the right, or click its friendly map symbol."
+            },
+            {
+              "zh": "单击己方单位后，详情应出现舰名、航速和武器。",
+              "en": "After selecting the friendly unit, its name, speed and weapons should appear."
+            },
+            {
+              "zh": "若点击后仍未完成，确认选中的是蓝方单位，而不是接触；可按“定位控件”返回单位列表。",
+              "en": "If the objective remains open, check that you selected the blue unit rather than a contact. Locate control returns you to the unit list."
+            }
+          ]
+        },
+        {
+          "id": "route",
+          "objective": "route",
+          "title": {
+            "zh": "前往训练点",
+            "en": "Plot the training point"
+          },
+          "body": {
+            "zh": "设置12节，规划至 X=1、Y=0 的航路并执行。",
+            "en": "Order 12 knots and plot X=1, Y=0, then execute."
+          },
+          "why": {
+            "zh": "综合考核沿用相同操作，不给予隐藏优势或固定命中。",
+            "en": "The assessment uses normal commands with no hidden advantage or forced hits."
+          },
+          "focus": "#nav-controls",
+          "hints": [
+            {
+              "zh": "使用右侧坐标输入可精确下达航点，避免海图点击误差。",
+              "en": "Use the coordinate inputs on the right to place an exact waypoint."
+            },
+            {
+              "zh": "确认X=1、Y=0，点击“驶向坐标”；综合考核还需先下令12节。",
+              "en": "Check X=1 and Y=0, then click Go to point. In the assessment, first order 12 knots."
+            },
+            {
+              "zh": "推进一秒后应出现航路线。这里只检查航路已执行，实际抵达会在下一目标检查。",
+              "en": "After 1 second, a route should appear. This objective checks route execution; actual arrival is assessed next."
+            }
+          ],
+          "point": [
+            1,
+            0
+          ],
+          "target": 12
+        },
+        {
+          "id": "arrive",
+          "objective": "arrive",
+          "title": {
+            "zh": "抵达检查点",
+            "en": "Reach the checkpoint"
+          },
+          "body": {
+            "zh": "驶入训练点周围0.25海里范围。",
+            "en": "Enter the area within 0.25 nm of the training point."
+          },
+          "why": {
+            "zh": "必须实际抵达，不能仅提交航路。",
+            "en": "You must actually arrive; submitting a route is not enough."
+          },
+          "focus": "#map-canvas",
+          "hints": [
+            {
+              "zh": "海图上的训练圈中心是X=1、Y=0，半径0.25海里。",
+              "en": "The training circle is centred at X=1, Y=0 with a radius of 0.25 nautical miles."
+            },
+            {
+              "zh": "保持12节并点击60×加快航行；教程会在实际进入圈内时自动暂停。",
+              "en": "Maintain 12 knots and use 60× to speed up the journey. Training pauses when the ship actually enters the circle."
+            },
+            {
+              "zh": "若船不动，确认已下达航速与航点，且时间不是暂停。可重试本检查点恢复起点。",
+              "en": "If the ship does not move, check speed and waypoint orders and ensure time is running. Retry checkpoint restores the start of this objective."
+            }
+          ],
+          "point": [
+            1,
+            0
+          ]
+        },
+        {
+          "id": "detect",
+          "objective": "identified_contact",
+          "title": {
+            "zh": "获取接触",
+            "en": "Acquire a contact"
+          },
+          "body": {
+            "zh": "继续模拟，等待己方接触显示已识别型号，再进入射击练习。",
+            "en": "Continue until your side has an identified surface contact, then begin the firing exercise."
+          },
+          "why": {
+            "zh": "选择接触按钮可以查看当前合法获得的航迹。",
+            "en": "Contact buttons show tracks your side has legally acquired."
+          },
+          "focus": "#target-panel",
+          "hints": [
+            {
+              "zh": "先推进时间建立接触，再等待继续识别。第一次发现可能还没有型号。",
+              "en": "Advance time to detect a contact, then allow more observation. The first detection may not identify its class."
+            },
+            {
+              "zh": "查看接触详情中的型号与质量；本训练要等到型号出现后才暂停。",
+              "en": "Inspect contact class and quality. This exercise pauses when class identification is available."
+            },
+            {
+              "zh": "使用15×或单步推进。不要提前指派自动交战目标；随后需要你亲自炮击。",
+              "en": "Use 15× or single-step. Avoid assigning an automatic engagement target; a manual gun shot is required next."
+            }
+          ]
+        },
+        {
+          "id": "fire",
+          "objective": "gun_fire",
+          "title": {
+            "zh": "完成一次人工射击",
+            "en": "Complete a manual shot"
+          },
+          "body": {
+            "zh": "选择己舰和接触，发射一轮5英寸炮，验证执行。",
+            "en": "Select the ship and contact, fire a 5-inch gun salvo and verify execution."
+          },
+          "why": {
+            "zh": "考核操作因果链，不把随机命中当作唯一学习成绩。",
+            "en": "The assessment checks the causal command chain, not a guaranteed random hit."
+          },
+          "focus": "#btn-fire",
+          "hints": [
+            {
+              "zh": "保持己方舰艇选中，再选中水面接触。不要打开自由开火或指派自动目标。",
+              "en": "Keep your own ship selected, then select the surface contact. Do not enable weapons free or assign an automatic target."
+            },
+            {
+              "zh": "在射击区选择“5英寸舰炮”，点击射击，再推进一秒。",
+              "en": "Choose 5in Gun in the firing controls, click Fire, then advance 1 second."
+            },
+            {
+              "zh": "查看“舰炮射击”战报。本目标需要人工命令与真实炮击事件；命中或落空都通过。若被拒绝，检查识别、射程和冷却。",
+              "en": "Look for a GUN ACTION report. Passing requires a manual order and actual gun event; hits and misses both count. If rejected, check identification, range and cooldown."
+            }
+          ]
+        },
+        {
+          "id": "stop",
+          "objective": "stop",
+          "title": {
+            "zh": "结束巡逻",
+            "en": "Secure the watch"
+          },
+          "body": {
+            "zh": "停止航行并执行，然后完成最后的知识检查。",
+            "en": "Stop the ship and execute, then complete the final knowledge check."
+          },
+          "why": {
+            "zh": "完成后会生成结业记录，可重试或直接进入自由指挥。",
+            "en": "Completion creates a training record; you can retry or return to free play."
+          },
+          "focus": "#btn-stop",
+          "hints": [
+            {
+              "zh": "在己方单位的指挥命令区找到“停止航行”。",
+              "en": "Find ALL STOP in the selected unit’s command panel."
+            },
+            {
+              "zh": "点击停止航行后，再推进一秒执行命令。",
+              "en": "Click ALL STOP, then advance 1 second to execute it."
+            },
+            {
+              "zh": "实际航速必须为0且航点队列清空才通过。仅把航速输入框改成0不算停船命令。",
+              "en": "Passing requires zero actual speed and an empty waypoint queue. Editing the speed field to zero is not an ALL STOP order."
+            }
+          ]
+        },
+        {
+          "id": "check",
+          "objective": "question",
+          "title": {
+            "zh": "值更员的证据链",
+            "en": "The watch officer’s evidence chain"
+          },
+          "body": {
+            "zh": "下列哪一项完整描述了可靠的指挥流程？",
+            "en": "Which sequence describes a reliable command process?"
+          },
+          "why": {
+            "zh": "答案错误可以继续思考，不会消耗弹药或推进模拟。",
+            "en": "A wrong answer lets you try again without consuming ammunition or simulation time."
+          },
+          "focus": "",
+          "hints": [
+            {
+              "zh": "先回想本课刚才实际执行的指挥过程。",
+              "en": "Recall the command procedure you just executed."
+            },
+            {
+              "zh": "展开“为什么要这样做”，对照操作与结果之间的区别。",
+              "en": "Expand Why does this matter? and compare the action with its actual result."
+            },
+            {
+              "zh": "答错可重答，不会清除已完成的操作目标。选择最符合实际证据的说法。",
+              "en": "You may retry an incorrect answer without losing completed practical objectives. Choose the statement best supported by actual evidence."
+            }
+          ],
+          "answer": "2",
+          "options": [
+            {
+              "id": "0",
+              "text": {
+                "zh": "知道敌人存在→直接读取真值→保证命中",
+                "en": "Know an enemy exists → read truth → guarantee a hit"
+              }
+            },
+            {
+              "id": "1",
+              "text": {
+                "zh": "点击按钮→看动画→宣告获胜",
+                "en": "Click a button → watch an animation → declare victory"
+              }
+            },
+            {
+              "id": "2",
+              "text": {
+                "zh": "观察情报→下达合法命令→核验执行→复盘结果",
+                "en": "Observe → issue a legal order → verify execution → review the result"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
