@@ -229,30 +229,41 @@ fn gun_salvo(
 ) {
     let shooter_name = world.entity(shooter_id).map(|e| e.name.clone()).unwrap_or_default();
     let side = world.entity(shooter_id).map(|e| e.side).unwrap_or(Side::Blue);
-    let (dist, aspect) = world
+    let (dist, aspect_mult) = world
         .entity(shooter_id)
         .zip(world.entity(target_id))
         .map(|(s, t)| {
             let bearing_from_target = t.pos.bearing_to(s.pos);
             let rel = crate::geom::angle_diff(t.course_deg, bearing_from_target).abs();
+            // Official range-band base hit rates (75/55/25/15%) with bearing
+            // as an additive penalty, approximated multiplicatively.
             let band = if (45.0..=135.0).contains(&rel) {
-                1.0 // beam
+                1.00 // beam: no penalty
             } else if (20.0..45.0).contains(&rel) || (135.0..160.0).contains(&rel) {
-                0.73 // quarter
+                0.90 // quarter: ~-1 on D100
             } else {
-                0.33 // bow/stern on
+                0.80 // bow/stern on: ~-2..-4
             };
             (s.pos.range_to(t.pos), band)
         })
         .unwrap_or((f64::MAX, 1.0));
-    let range_factor = if dist <= def.range_nm * 0.5 { 1.0 } else { 0.55 };
-    let pk = def.pk * aspect * range_factor;
+    let range_frac = dist / def.range_nm.max(1.0);
+    let range_base = if range_frac <= 0.25 {
+        0.75
+    } else if range_frac <= 0.5 {
+        0.55
+    } else if range_frac <= 0.75 {
+        0.25
+    } else {
+        0.15
+    };
+    let pk = range_base * def.pk * aspect_mult;
     let mut rng = world.scope_rng(shooter_id, "gun");
     let mut hits = 0u8;
     for _ in 0..rounds {
         if rng.chance(pk) {
             hits += 1;
-            damage::apply_hit(world, target_id, def);
+            damage::apply_hit(world, target_id, def, false);
         }
     }
     world.emit(
@@ -331,6 +342,7 @@ pub fn launch(
         chaff_active_s: 0.0,
         endurance_s: None,
         burn_s: 0.0,
+        flooding_s: 0.0,
         deck: None,
         mission: None,
         station: None,
@@ -362,9 +374,16 @@ pub fn launch(
         },
         Visibility::Side(side),
     );
-    // Launch plume gives the enemy an approximate fix (ESM/visual flash).
-    let is_big = matches!(def.kind, WeaponKind::Ascm | WeaponKind::Slcm);
-    sensors::flash_detection(world, shooter_id, "launch flash", if is_big { 7.0 } else { 4.0 }, 0.55);
+    // Launch plume: only radar-missile launches expose the shooter
+    // (rules §5.3/§5.8 — torpedo and rocket launches are silent).
+    let silent = matches!(
+        def.kind,
+        WeaponKind::Torpedo | WeaponKind::Lwt | WeaponKind::AswRocket
+    );
+    if !silent {
+        let is_big = matches!(def.kind, WeaponKind::Ascm | WeaponKind::Slcm);
+        sensors::flash_detection(world, shooter_id, "launch flash", if is_big { 7.0 } else { 4.0 }, 0.45);
+    }
     Some(eid)
 }
 
@@ -606,7 +625,7 @@ fn advance_sea_skimmer(world: &mut World, id: EntityId, def: WeaponDef, mut data
         }
         let mut rng = world.scope_rng(id, "terminal");
         if rng.chance(pk) {
-            damage::apply_hit(world, target_id, &def);
+            damage::apply_hit(world, target_id, &def, false);
         }
         remove_projectile(world, id);
         return;
@@ -663,7 +682,8 @@ fn advance_homing_air(world: &mut World, id: EntityId, def: WeaponDef, mut data:
         if inbound >= 2 {
             pk *= 0.7;
         }
-        if target.chaff_active_s > 0.0 {
+        // Chaff only seduces radar seekers, never IR.
+        if !def.ir && target.chaff_active_s > 0.0 {
             pk *= 0.85;
         }
         let mut rng = world.scope_rng(id, "aam_terminal");
@@ -671,7 +691,7 @@ fn advance_homing_air(world: &mut World, id: EntityId, def: WeaponDef, mut data:
         let defender = target.side;
         let contact = world.find_contact(defender, id);
         if hit {
-            damage::apply_hit(world, target_id, &def);
+            damage::apply_hit(world, target_id, &def, false);
         }
         remove_projectile(world, id);
         world.emit(
@@ -738,7 +758,7 @@ fn advance_torpedo(world: &mut World, id: EntityId, def: WeaponDef, mut data: cr
 
     if data.enabled && data.passes == 0 {
         // Acquisition: cone ±40°, seeker range by guidance.
-        let cone = 40.0;
+        let cone = 60.0; // rules: ±60° acquisition cone
         let seeker = if matches!(def.guidance, Guidance::WakeHome) { 2.0 } else { 3.5 };
         let brg = world.entity(id).map(|e| e.pos.bearing_to(target.pos)).unwrap_or(0.0);
         let off = crate::geom::angle_diff(world.entity(id).map(|e| e.course_deg).unwrap_or(0.0), brg);
@@ -779,7 +799,7 @@ fn advance_torpedo(world: &mut World, id: EntityId, def: WeaponDef, mut data: cr
             let mut rng = world.scope_rng(id, "torp_terminal");
             let hit = rng.chance(pk);
             if hit {
-                damage::apply_hit(world, target_id, &def);
+                damage::apply_hit(world, target_id, &def, true);
             } else {
                 data.passes = 0; // miss, re-attack if fuel remains
             }
@@ -826,7 +846,7 @@ fn advance_asw_ballistic(world: &mut World, id: EntityId, def: WeaponDef, mut da
             if still_close {
                 let mut rng = world.scope_rng(id, "asw_rocket");
                 if rng.chance(def.pk) {
-                    damage::apply_hit(world, tid, &def);
+                    damage::apply_hit(world, tid, &def, true);
                 }
             }
         }

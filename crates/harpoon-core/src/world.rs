@@ -169,6 +169,9 @@ pub struct Entity {
     pub endurance_s: Option<f64>,
     /// Seconds of fire damage remaining.
     pub burn_s: f64,
+    /// Seconds of flooding damage remaining (drains HP faster than fire).
+    #[serde(default)]
+    pub flooding_s: f64,
     #[serde(default)]
     pub deck: Option<DeckState>,
     #[serde(default)]

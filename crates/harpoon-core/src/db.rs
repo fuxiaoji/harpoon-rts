@@ -30,6 +30,9 @@ pub struct WeaponDef {
     pub reload_s: f64,
     pub damage: f64,
     pub guidance: Guidance,
+    // Infrared seeker: immune to radar chaff.
+    #[serde(default)]
+    pub ir: bool,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -202,7 +205,7 @@ pub struct PlatformClass {
 }
 
 fn default_accel() -> f64 {
-    0.2
+    0.4
 }
 fn default_noise() -> f64 {
     50.0

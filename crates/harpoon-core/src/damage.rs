@@ -9,7 +9,8 @@ use crate::types::{EntityId, PlatformKind};
 use crate::world::World;
 
 /// Roll damage + criticals for a successful weapon hit on `target`.
-pub fn apply_hit(world: &mut World, target_id: EntityId, weapon: &WeaponDef) {
+/// `underwater` selects the torpedo/rocket critical column (flooding-heavy).
+pub fn apply_hit(world: &mut World, target_id: EntityId, weapon: &WeaponDef, underwater: bool) {
     let Some(t) = world.entities.get(&target_id).cloned() else { return };
     if !t.alive {
         return;
@@ -55,7 +56,7 @@ pub fn apply_hit(world: &mut World, target_id: EntityId, weapon: &WeaponDef) {
     bda_to_shooter(world, target_id, weapon, dmg, new_hp.max(0.0));
 
     if do_crit {
-        roll_critical(world, target_id, &mut rng);
+        roll_critical(world, target_id, &mut rng, underwater);
     }
     if new_hp <= 0.0 {
         sink(world, target_id);
@@ -107,27 +108,51 @@ fn bda_to_shooter(
     }
 }
 
-fn roll_critical(world: &mut World, target_id: EntityId, rng: &mut crate::rng::Rng) {
+fn roll_critical(world: &mut World, target_id: EntityId, rng: &mut crate::rng::Rng, underwater: bool) {
     let system;
     let side;
     {
         let Some(t) = world.entities.get_mut(&target_id) else { return };
-        // Weighted subsystem table (flavored from the critical-hit chapters).
+        // Surface column vs underwater column (torpedo/rocket hits are
+        // flooding/hull-pen dominated, mirroring the official tables).
         let roll = rng.next_f64();
-        let label = if roll < 0.25 {
+        let label = if underwater {
+            if roll < 0.30 {
+                t.flooding_s = (t.flooding_s + 120.0).min(300.0);
+                t.systems.mobility = (t.systems.mobility - 0.2).max(0.0);
+                "flooding"
+            } else if roll < 0.55 {
+                t.systems.mobility = (t.systems.mobility - rng.range(0.4, 1.0)).max(0.0);
+                t.speed_kts = t.speed_kts.min(t.speed_kts * t.systems.mobility);
+                "propulsion"
+            } else if roll < 0.75 {
+                // Hull penetration: immediate structural damage.
+                t.hp -= t.hp_max * 0.10;
+                "hull_penetration"
+            } else if roll < 0.85 {
+                t.systems.sonar = 0.0;
+                "sonar"
+            } else if roll < 0.95 {
+                t.systems.fire_control = (t.systems.fire_control - rng.range(0.5, 1.0)).max(0.0);
+                "fire_control"
+            } else {
+                t.flooding_s = (t.flooding_s + 90.0).min(300.0);
+                "flooding"
+            }
+        } else if roll < 0.20 {
             t.systems.mobility = (t.systems.mobility - rng.range(0.4, 1.0)).max(0.0);
             t.speed_kts = t.speed_kts.min(t.speed_kts * t.systems.mobility);
             "propulsion"
-        } else if roll < 0.45 {
+        } else if roll < 0.36 {
             t.systems.radar = 0.0;
             "radar"
-        } else if roll < 0.60 {
+        } else if roll < 0.48 {
             t.systems.sonar = 0.0;
             "sonar"
-        } else if roll < 0.75 {
+        } else if roll < 0.60 {
             t.systems.fire_control = (t.systems.fire_control - rng.range(0.5, 1.0)).max(0.0);
             "fire_control"
-        } else if roll < 0.90 {
+        } else if roll < 0.72 {
             // Knock out a weapon mount.
             let victim = t
                 .weapons
@@ -141,7 +166,12 @@ fn roll_critical(world: &mut World, target_id: EntityId, rng: &mut crate::rng::R
                 }
                 None => "superstructure",
             }
-        } else if roll < 0.97 {
+        } else if roll < 0.88 {
+            // Flooding: HP drain over time plus a mobility knock.
+            t.flooding_s = (t.flooding_s + 120.0).min(300.0);
+            t.systems.mobility = (t.systems.mobility - 0.2).max(0.0);
+            "flooding"
+        } else if roll < 0.98 {
             t.burn_s = (t.burn_s + 60.0).min(180.0);
             "fire"
         } else {
@@ -231,19 +261,26 @@ pub fn sink(world: &mut World, target_id: EntityId) {
     }
 }
 
-/// Fires burn HP over time.
+/// Fires burn and flooding drains HP over time.
 pub fn update_fires(world: &mut World) {
     let ids: Vec<EntityId> = world
         .entities
         .values()
-        .filter(|e| e.alive && e.burn_s > 0.0)
+        .filter(|e| e.alive && (e.burn_s > 0.0 || e.flooding_s > 0.0))
         .map(|e| e.id)
         .collect();
     for id in ids {
         let Some(t) = world.entities.get_mut(&id) else { continue };
-        t.burn_s -= crate::world::TICK_SECONDS;
-        t.hp -= 0.05;
+        if t.burn_s > 0.0 {
+            t.burn_s -= crate::world::TICK_SECONDS;
+            t.hp -= 0.05;
+        }
+        if t.flooding_s > 0.0 {
+            t.flooding_s -= crate::world::TICK_SECONDS;
+            t.hp -= 0.15;
+        }
         if t.hp <= 0.0 {
+            drop(t);
             sink(world, id);
         }
     }

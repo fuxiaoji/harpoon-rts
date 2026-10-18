@@ -79,8 +79,7 @@ fn effective_range(
                 return None;
             }
             let h = horizon_nm(def.alt_m, t.current_alt_for_horizon());
-            let cap = if t.kind == PlatformKind::Missile { base * 0.25 } else { base };
-            cap.min(h * 1.5) * (1.0 - weather_jam.clamp(0.0, 0.8))
+            base.min(h * 1.5) * (1.0 - weather_jam.clamp(0.0, 0.8))
         }
         SensorKind::Visual => {
             let vis = match day_night {
@@ -96,9 +95,10 @@ fn effective_range(
                 return None;
             }
             let speed_factor = (t.speed_kts / 10.0).clamp(0.3, 2.2);
-            // Torpedoes have no platform class; they are loud and fast.
+            // Torpedoes have no platform class; a running torpedo is loud but
+            // short-ranged (official "noisy torpedo" band, ~2-3 nm).
             if t.kind == PlatformKind::Torpedo {
-                return Some(base * 1.6 * speed_factor);
+                return Some(base.min(3.0));
             }
             let noise = target_class(t).map(|c| c.noise_db / 50.0).unwrap_or(1.0);
             match t.kind {
@@ -242,53 +242,75 @@ pub fn update_sensors(world: &mut World) {
                 }
                 consider(world, &world.entities[oid], def, &mut dets);
             }
-
-            // Active-sonar counter-detection: pinging reveals the pinger to
-            // any enemy passive set within PING_REVEAL_FACTOR.
-            for (active_flag, def) in &sensors {
-                if def.kind != SensorKind::SonarActive || !active_flag {
-                    continue;
-                }
-                let o = &world.entities[oid];
-                let reveal_range = def.sub_range_nm * PING_REVEAL_FACTOR;
-                let listeners: Vec<Entity> = world
-                    .entities
-                    .values()
-                    .filter(|t| {
-                        t.alive
-                            && t.side != side
-                            && t.kind == PlatformKind::Sub
-                            && t.sensors.iter().any(|s| {
-                                world
-                                    .db
-                                    .sensors
-                                    .get(&s.sensor)
-                                    .map(|d| d.kind == SensorKind::SonarPassive)
-                                    .unwrap_or(false)
-                            })
-                    })
-                    .cloned()
-                    .collect();
-                for t in listeners {
-                    if o.pos.range_to(t.pos) <= reveal_range && !dets.contains_key(&t.id) {
-                        dets.insert(
-                            t.id,
-                            DetObs {
-                                sensor: format!("{} ping echo", def.id),
-                                observer_pos: o.pos,
-                                true_bearing_deg: o.pos.bearing_to(t.pos),
-                                bearing_only: false,
-                                err_base_nm: 1.2,
-                                quality_cap: 0.9,
-                            },
-                        );
-                    }
-                }
-            }
         }
 
         // Phase B: apply to the side's contact book.
         pending.extend(apply_detections(world, side, &dets));
+    }
+
+    // Active-sonar counter-detection (rules §5.4): the LISTENER hears the
+    // ping — pinging exposes the pinger to every enemy passive set within
+    // PING_REVEAL_FACTOR of its own range.
+    let pingers: Vec<(EntityId, Vec2, f64, Side)> = world
+        .entities
+        .values()
+        .filter(|e| e.alive && !e.kind.is_projectile())
+        .filter_map(|e| {
+            let reveal = e
+                .sensors
+                .iter()
+                .filter_map(|s| {
+                    let d = world.db.sensors.get(&s.sensor)?;
+                    if d.kind == SensorKind::SonarActive && s.active {
+                        Some(d.sub_range_nm * PING_REVEAL_FACTOR)
+                    } else {
+                        None
+                    }
+                })
+                .fold(0.0f64, f64::max);
+            if reveal > 0.0 {
+                Some((e.id, e.pos, reveal, e.side))
+            } else {
+                None
+            }
+        })
+        .collect();
+    for (pid, ppos, reveal, pside) in pingers {
+        let listeners: Vec<Entity> = world
+            .entities
+            .values()
+            .filter(|t| {
+                t.alive
+                    && t.side != pside
+                    && !t.kind.is_projectile()
+                    && t.sensors.iter().any(|s| {
+                        world
+                            .db
+                            .sensors
+                            .get(&s.sensor)
+                            .map(|d| d.kind == SensorKind::SonarPassive)
+                            .unwrap_or(false)
+                    })
+            })
+            .cloned()
+            .collect();
+        for listener in listeners {
+            if listener.pos.range_to(ppos) <= reveal {
+                let mut m = BTreeMap::new();
+                m.insert(
+                    pid,
+                    DetObs {
+                        sensor: "passive sonar hears active ping".to_string(),
+                        observer_pos: listener.pos,
+                        true_bearing_deg: listener.pos.bearing_to(ppos),
+                        bearing_only: false,
+                        err_base_nm: 1.0,
+                        quality_cap: 0.9,
+                    },
+                );
+                pending.extend(apply_detections(world, listener.side, &m));
+            }
+        }
     }
 
     for side in [Side::Blue, Side::Red] {

@@ -186,7 +186,7 @@ pub const BUILT_IN: &str = r#"{
       "reload_s": 4, "damage": 25, "guidance": "HomingAir"
     },
     "aam_ir": {
-      "id": "aam_ir", "name": "IR AAM", "kind": "Aam",
+      "id": "aam_ir", "name": "IR AAM", "kind": "Aam", "ir": true,
       "targets": {"air": true},
       "range_nm": 15, "min_range_nm": 0.3, "speed_kts": 2000, "pk": 0.50, "salvo": 1,
       "reload_s": 3, "damage": 20, "guidance": "HomingAir"
