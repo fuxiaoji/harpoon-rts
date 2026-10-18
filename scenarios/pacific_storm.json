@@ -1,0 +1,33 @@
+{
+  "id": "pacific_storm",
+  "name": "Operation Pacific Storm (full joint campaign smoke)",
+  "map": { "width_nm": 100, "height_nm": 100 },
+  "description": "Eight-hour joint campaign in a 100x100 nm box. Blue CVN strike group (CVN, two Aegis DDGs, frigate, AEW) pushes north-east against Red's MIKO airfield fighter/bomber wing, KURE naval station, a three-boat missile-boat wolfpack, two diesel submarines (shallow ambush line + deep battery-limited hunter) and a Red AEW. Exercises the full engine plus the four rule extensions: AAW air-burst fragments and SAM director channels, ASW sound-layer propagation / towed array / sonobuoys / diesel batteries, 15-second dogfight passes with automatic violent maneuvering, damage-control fire & flooding closure, and base runway/radar operability.",
+  "duration_s": 28800,
+  "weather": { "visibility_nm": 14, "jam": [0, 0] },
+  "day_night": "Day",
+  "seed": 20251020,
+  "victory": { "target_vp": 0 },
+  "units": [
+    { "side": "Blue", "class": "cvn", "name": "CVN-76 REAGAN", "pos": [10, 10], "course_deg": 45, "speed_kts": 18, "fire_on": true,
+      "waypoints": [[24, 22], [38, 32], [50, 40], [58, 26], [42, 18], [24, 20]] },
+    { "side": "Blue", "class": "ddg_aegis", "name": "DDG-101 STETHEM", "pos": [8, 8], "course_deg": 45, "speed_kts": 18, "fire_on": true,
+      "follow": { "leader_name": "CVN-76 REAGAN", "bearing_rel_deg": 0, "distance_nm": 5 } },
+    { "side": "Blue", "class": "ddg_aegis", "name": "DDG-89 MUSTIN", "pos": [6, 12], "course_deg": 45, "speed_kts": 18, "fire_on": true,
+      "follow": { "leader_name": "CVN-76 REAGAN", "bearing_rel_deg": 300, "distance_nm": 5 } },
+    { "side": "Blue", "class": "ffg", "name": "FFG-58 INGRAHAM", "pos": [12, 6], "course_deg": 45, "speed_kts": 18, "fire_on": true,
+      "follow": { "leader_name": "CVN-76 REAGAN", "bearing_rel_deg": 180, "distance_nm": 5 } },
+    { "side": "Blue", "class": "aew", "name": "BLUE EAGLE EYE", "pos": [30, 60], "course_deg": 90, "speed_kts": 340, "altitude_m": 8500, "fire_on": false,
+      "waypoints": [[55, 62], [62, 48], [50, 38], [34, 46]] },
+
+    { "side": "Red", "class": "aew", "name": "RED SENTRY", "pos": [98, 98], "course_deg": 270, "speed_kts": 340, "altitude_m": 8500, "fire_on": false,
+      "waypoints": [[98, 98], [70, 98], [98, 72]] },
+    { "side": "Red", "class": "airfield", "name": "MIKO AIRFIELD", "pos": [82, 74], "course_deg": 0, "speed_kts": 0, "fire_on": true },
+    { "side": "Red", "class": "navsta", "name": "KURE NAVAL STATION", "pos": [90, 84], "course_deg": 0, "speed_kts": 0, "fire_on": true },
+    { "side": "Red", "class": "mgb", "name": "RED MGB-1", "pos": [58, 34], "course_deg": 225, "speed_kts": 24, "fire_on": true },
+    { "side": "Red", "class": "mgb", "name": "RED MGB-2", "pos": [63, 31], "course_deg": 225, "speed_kts": 24, "fire_on": true },
+    { "side": "Red", "class": "mgb", "name": "RED MGB-3", "pos": [55, 30], "course_deg": 225, "speed_kts": 24, "fire_on": true },
+    { "side": "Red", "class": "ssk", "name": "RED SSK-7", "pos": [32, 30], "course_deg": 240, "speed_kts": 3, "depth_m": 45, "fire_on": true },
+    { "side": "Red", "class": "ssk", "name": "RED SSK-9", "pos": [46, 18], "course_deg": 270, "speed_kts": 4, "depth_m": 180, "fire_on": true }
+  ]
+}
