@@ -27,7 +27,9 @@ pub fn step(world: &mut crate::world::World) {
     aircombat::step(world);
     strike::step(world);
     firectl::step(world);
+    torpedoes::step(world);
     unguided::step(world);
+    sensing::step(world);
 }
 
 /// Extra database entries merged at load.

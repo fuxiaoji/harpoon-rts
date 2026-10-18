@@ -7,11 +7,16 @@
 //!
 //! Rule sources:
 //! - §14.1.6 Effects of Armor (PDF `14-2.HpnV_Rules_1_Jan_26.pdf` p.130,
-//!   rule page 14-4): non-penetrating hits halve damage. The per-class
-//!   multiplier table below is the damage-extension RTS adaptation requested
-//!   by the damage workstream (large 0.85 / escort 0.90 / small craft 1.0);
-//!   the "torpedoes hurt more" side uses §14.1.7 (PDF p.131, 14-5) as the
-//!   motivation for the `2 - armor` underwater approximation.
+//!   rule page 14-4): belt/deck armor, partial armor, non-penetrating hits
+//!   halve damage. The engine has no armour-thickness or penetration fields,
+//!   so the transcribed multipliers live in
+//!   `rules::damage_tables::ZoneArmor` as an estimated per-location band
+//!   (capital 0.90 bow / 1.00 side / 0.80 stern; escort 0.95 / 0.90 / 0.85;
+//!   small craft 1.00). `armor_factor` now takes the incoming bearing
+//!   relative to the target's bow; `None` = broadside (legacy behaviour).
+//! - §14.1.7 Armor and Underwater Attack (PDF pp.130-131, 14-4/14-5):
+//!   torpedo protection systems, the `2 - plate` underwater approximation,
+//!   and the printed rule that extreme bow/stern torpedo hits halve damage.
 //! - §14.4 Fire & Flooding (PDF pp.133-134, 14-7/14-8): fires and flooding
 //!   are fought by damage-control parties over successive turns. The numerical
 //!   adaptation (0.8 progress chance per second, 60/120 s of effort) is the
@@ -22,15 +27,15 @@
 //! - Expanded critical tables 3-2 (PDF p.8): underwater column shares for
 //!   CIC/bridge/rudder (5% each) are applied in `crate::damage`.
 //!
-//! NOTE: this workstream also owns `crate::damage` (critical tables) and may
-//! extend roll_critical there; keep the surface of this module minimal.
+//! NOTE: this workstream also owns `crate::damage` (table-driven
+//! `roll_critical`) and `rules::damage_tables` (3-2 rows and armor bands);
+//! keep the surface of this module minimal.
 
-use crate::db::{WeaponDef, WeaponKind};
+use crate::db::WeaponDef;
 use crate::events::{EventKind, Visibility};
+use crate::rules::damage_tables;
 use crate::types::{EntityId, Side};
 use crate::world::{Entity, World};
-use std::collections::BTreeMap;
-use std::sync::OnceLock;
 
 /// Seconds of crew effort needed to put out a fire (60 "progress" ticks).
 pub const DC_FIRE_PROGRESS: f64 = 60.0;
@@ -46,50 +51,32 @@ pub const DC_REPAIR_INTERVAL_S: f64 = 60.0;
 /// Fraction of a damaged system restored per repair step.
 pub const DC_REPAIR_STEP: f64 = 0.2;
 
-/// Armor plates as damage multipliers (1.0 = unarmored / no data).
-///
-/// The task's armor tiers: large ship 0.85, escort/cruiser 0.90, small craft
-/// 1.0. Classes not listed here fall back to 1.0. Kept as a module table
-/// because `PlatformClass`/`SensorDef` have no armor field and adding a fake
-/// weapon would pollute the database (see workstream brief).
-fn armor_plates() -> &'static BTreeMap<&'static str, f64> {
-    static PLATES: OnceLock<BTreeMap<&'static str, f64>> = OnceLock::new();
-    PLATES.get_or_init(|| {
-        let mut m = BTreeMap::new();
-        m.insert("cvn", 0.85); // Fleet Carrier — large ship
-        m.insert("ddg_aegis", 0.90); // Aegis Destroyer — escort/cruiser tier
-        m.insert("mgb", 1.0); // Missile Boat — small craft
-        m.insert("pb", 1.0); // Patrol Boat — small craft
-        m
-    })
-}
-
 /// Extra DB (armor values, DC crew ratings).
 ///
-/// Armor lives in the module-level `armor_plates()` table instead of the
-/// database: neither `PlatformClass` nor `SensorDef` carries armor, and the
-/// brief allows `db()` to stay empty for this workstream.
+/// Armor lives in `rules::damage_tables::ZoneArmor` instead of the database:
+/// neither `PlatformClass` nor `SensorDef` carries armor, and the brief
+/// allows `db()` to stay empty for this workstream.
 pub fn db() -> crate::db::Database {
     crate::db::Database::default()
 }
 
-/// Armor mitigation multiplier for a hit by `weapon` on `target`
-/// (1.0 = no armor data; guns are mitigated, torpedoes less so).
+/// Armor mitigation multiplier for a hit by `weapon` on `target`, at an
+/// incoming bearing measured relative to the target's bow (`None` = unknown
+/// / broadside).
 ///
-/// Guns/other surface weapons use the plate value directly. Torpedoes use
-/// `2 - plate` to approximate the underwater-attack rule that a torpedo
-/// explosion is far less attenuated by belt/deck armor (§14.1.7, PDF p.131);
-/// e.g. a 0.90 plate becomes a 1.10 multiplier for torpedoes. This is an
-/// adaptation, marked "estimated" in the design notes.
-pub fn armor_factor(target: &Entity, weapon: &WeaponDef) -> f64 {
-    let plate = armor_plates()
-        .get(target.class.as_str())
-        .copied()
-        .unwrap_or(1.0);
-    match weapon.kind {
-        WeaponKind::Torpedo | WeaponKind::Lwt => 2.0 - plate,
-        _ => plate,
-    }
+/// The per-class, per-zone multipliers are in
+/// `rules::damage_tables::armor_factor` together with their §14.1.6/§14.1.7
+/// citations and the `estimated` marker for the numeric bands. Torpedoes and
+/// other underwater weapons use `2 - plate`, multiplied by the class's
+/// torpedo-protection factor (e.g. capital 0.75) and halved on an extreme
+/// bow/stern hit (§14.1.7, PDF p.130). Surface weapons use the zone plate
+/// directly.
+pub fn armor_factor(
+    target: &Entity,
+    weapon: &WeaponDef,
+    hit_bearing_rel_deg: Option<f64>,
+) -> f64 {
+    damage_tables::armor_factor(&target.class, weapon.kind, hit_bearing_rel_deg)
 }
 
 /// Per-tick damage-control behavior.
@@ -244,7 +231,7 @@ pub fn step(world: &mut World) {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::db::{Guidance, Targets};
+    use crate::db::{Guidance, Targets, WeaponKind};
     use crate::geom::Vec2;
     use crate::scenario::{Scenario, UnitSpawn};
     use crate::types::DayNight;
@@ -313,20 +300,37 @@ mod tests {
         let gun = weapon(WeaponKind::Gun, 10.0);
         let torp = weapon(WeaponKind::Torpedo, 10.0);
 
+        // Estimated work-order bands for the capital ship: bow 0.90 / side
+        // 1.00 / stern 0.80, torpedo protection 0.75. `None` (unknown
+        // bearing) is a broadside, preserving the legacy behaviour.
         let carrier = world_with("cvn");
         let target = carrier.entity(EntityId(1)).unwrap();
-        assert!((armor_factor(target, &gun) - 0.85).abs() < 1e-12);
-        assert!((armor_factor(target, &torp) - 1.15).abs() < 1e-12);
+        assert!((armor_factor(target, &gun, Some(0.0)) - 0.90).abs() < 1e-12);
+        assert!((armor_factor(target, &gun, Some(90.0)) - 1.00).abs() < 1e-12);
+        assert!((armor_factor(target, &gun, Some(180.0)) - 0.80).abs() < 1e-12);
+        assert!((armor_factor(target, &gun, None) - 1.00).abs() < 1e-12);
+        assert!((armor_factor(target, &torp, Some(90.0)) - 0.75).abs() < 1e-12);
+        // §14.1.7: extreme bow/stern underwater hits are halved:
+        // (2 - 0.90) * 0.75 * 0.5 = 0.4125.
+        assert!((armor_factor(target, &torp, Some(0.0)) - 0.4125).abs() < 1e-12);
+
+        // Escort: legacy side 0.90 preserved; no torpedo-bulge data (1.10).
+        let ddg = world_with("ddg_aegis");
+        let target = ddg.entity(EntityId(1)).unwrap();
+        assert!((armor_factor(target, &gun, Some(90.0)) - 0.90).abs() < 1e-12);
+        assert!((armor_factor(target, &torp, Some(90.0)) - 1.10).abs() < 1e-12);
 
         let boat = world_with("mgb");
         let target = boat.entity(EntityId(1)).unwrap();
-        assert_eq!(armor_factor(target, &gun), 1.0);
-        assert_eq!(armor_factor(target, &torp), 1.0);
+        assert_eq!(armor_factor(target, &gun, Some(0.0)), 1.0);
+        assert_eq!(armor_factor(target, &torp, Some(90.0)), 1.0);
+        // Extreme bow/stern torpedo hits halve even an unarmored hull.
+        assert_eq!(armor_factor(target, &torp, Some(0.0)), 0.5);
 
-        // ffg has no plate entry: "no data" falls back to 1.0.
+        // ffg has no band entry: "no data" falls back to 1.0.
         let no_data = world_with("ffg");
         let target = no_data.entity(EntityId(1)).unwrap();
-        assert_eq!(armor_factor(target, &gun), 1.0);
+        assert_eq!(armor_factor(target, &gun, Some(45.0)), 1.0);
     }
 
     #[test]

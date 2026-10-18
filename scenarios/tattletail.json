@@ -1,0 +1,103 @@
+{
+  "id": "tattletail_1991",
+  "name": "Tattletail (15 May 1991) — official introductory scenario",
+  "description": "Official Harpoon V introductory scenario 'Tattletail' (source: 19.（典型想定）Tattletail_10_Aug_24.pdf; all page numbers below are PDF pages, cover = p.1). Briefing/orders/setup: p.2. Six-ship force: NATO STANAVFORLANT (Copeland, Emden, Ariadne, Van Kinsbergen, Poolster) versus the Soviet Smyshlennyy (Mod Kashin DDG). NOTE: the printed Russian unit is a surface DDG, not a submarine; the PDF scenario contains no submarine, so no submarine contact is scripted (the ASW-search background in the text is context only). Location/time: Norwegian Sea, 0300 15 May 1991 (p.2). Environment: open ocean, sea state 4, wind 20 kt from 070 deg, night visibility 5% due to light rain, water depth Intermediate II (p.2). NATO setup: diamond formation centered on Poolster, one frigate in each 90-degree arc (315-45, 45-135, 135-225, 225-315), arcs from 2,000 to 10,000 yards from Poolster, formation course 000 / 12 kt, all radars active, all sonars passive, helicopters at Alert +15 (p.2). NATO orders: continue PIM to Bodo on course 025 / 12 kt, Condition III, return fire only in self/task-force defense (p.2). The PDF prints course 025 in the orders but course 000 in the setup; this file uses the setup's 000 as the initial course (discrepancy declared). Russian setup: Smyshlennyy astern of the formation on a relative bearing of 090-270 deg, no closer than 2,000 yards to any escort, no further than her radar horizon, same course/speed as NATO (p.2). All units begin with a Good fire-control solution (p.2). CLASS MAPPING (adaptation; no exact 1991 class exists in the merged built_in database, which ships 1980s-2020s classes): USS Copeland (O.H. Perry FFG, PDF p.7, 154 DP, SM-1MR area SAM, 8 Harpoon, 76 mm, 324 mm, SQS-56/SQR-18) -> uk_type45 (246 DP; area SAM + Harpoon + gun + LWT; nearest area-SAM escort, overstates displacement); Emden (Bremen FF, p.3, 177 DP, Sea Sparrow, Harpoon, 76 mm, 324 mm, DSQS-21B) -> uk_type23 (196 DP; frigate with point SAM, Harpoon, 324 mm, towed array); Ariadne (Leander Batch 3, p.6, 157 DP, Sea Cat, 4.5 in, Limbo, no Harpoon) -> ffg (175 DP generic frigate; no ASCM, point SAM, 5 in, ASW rocket; closest fit to the no-Harpoon Leander); Van Kinsbergen (Kortenaer FF, p.4, 175 DP, Sea Sparrow, Harpoon, 76 mm, 324 mm, DSQS-21B) -> uk_type23; Poolster (Poolster AO, p.5, 249 DP, 21 kt, Medium signature, only 2x20 mm + depth charges, 2 Lynx; the card prints 'A 385' while p.2 prints 'A 835' - this file follows p.2) -> uk_type26 (263 DP, Medium signature; no auxiliary/oiler class exists in the merged DB, so the closest large medium-signature hull is used and the unit is kept weapons-tight; her automatic CIWS is an acknowledged overstatement); Smyshlennyy (Mod Kashin DDG, p.8, 161 DP, 4 P-15M Termit, Volna SAM, 2x2 76 mm, 5x533 mm, RBU) -> ru_sovremenny (223 DP; Russian ASCM DDG; P-15M Termit -> generic rasl_km is a range/speed/damage overstatement, Volna -> sam_medium; 76 mm -> gun_130mm). Exact initial positions are not printed by the PDF: a deterministic placement policy is used - escorts at 4.0 nm (8,100 yards, mid-arc) on bearings 000/090/180/270 from Poolster, Smyshlennyy 9.5 nm dead astern (bearing 180) from Poolster, which satisfies the printed 2,000-10,000 yard escort band, the 090-270 deg aft sector, the >=2,000 yard escort separation, and the engine's 10.45 nm radar horizon of the mapped Soviet surface-search set. Scenario duration 2 h (7200 s); the official attack window is 0300-0315 (tick 600-900 at 1 s/tick). Engine gaps declared: sea state/wind/depth band are not fields in Weather (recorded under 'environment' for traceability); the 5% night visibility is carried as visibility_nm = 0.55 (5% of the 11 nm clear visual base, estimated) but the current visual chain applies only day/night + overcast/rain, not visibility_nm, so the exact 5% factor is not enforced; Condition III/GQ D6 transition, the referee 'any D6=6' release roll, the Good/Fair/Poor fire-control grades, and the official victory conditions (crippled counts) are not modelled by this engine. The driver instead keeps both sides weapons-tight until the Soviet attack, then frees the four NATO escorts (self-defense release), and checks the structural/official facts enumerated in its header.",
+  "source": {
+    "document": "19.（典型想定）Tattletail_10_Aug_24.pdf",
+    "briefing_page": 2,
+    "ship_card_pages": {
+      "Copeland (FFG-25)": 7,
+      "Emden (F 210)": 3,
+      "Ariadne (F 72)": 6,
+      "Van Kinsbergen (F 809)": 4,
+      "Poolster (A 835)": 5,
+      "Smyshlennyy (644)": 8
+    },
+    "aircraft_pages": "9-13 (SH-2F, Lynx Mk88, SH-14B/C, Wasp HAS.1, Ka-25PL); no air operations are scripted in this regression"
+  },
+  "clock": {
+    "start": "1991-05-15T03:00:00",
+    "tick_seconds": 1,
+    "official_attack_window": "0300-0315",
+    "attack_order_tick": 600,
+    "attack_order_time": "03:10"
+  },
+  "environment": {
+    "location": "Norwegian Sea",
+    "sea_state": 4,
+    "wind_from_deg": 70,
+    "wind_speed_kts": 20,
+    "visibility_percent": 5,
+    "weather": "night, light rain",
+    "water_depth_band": "intermediate_ii",
+    "engine_mapping": "Weather has only visibility_nm/jam/overcast/rain; sea state/wind/depth are recorded but not simulated. visibility_nm=0.55 is an estimated 5% of the 11 nm clear visual base, carried for traceability; the current visual chain uses day_night + overcast + rain only."
+  },
+  "map": { "width_nm": 100, "height_nm": 100 },
+  "duration_s": 7200,
+  "weather": { "visibility_nm": 0.55, "jam": [0, 0], "overcast": 0.6, "rain": 0.2 },
+  "day_night": "Night",
+  "seed": 19910515,
+  "victory": { "target_vp": 0 },
+  "units": [
+    {
+      "side": "Blue",
+      "class": "uk_type45",
+      "name": "USS COPELAND (FFG-25)",
+      "pos": [50.0, 54.0],
+      "course_deg": 0.0,
+      "speed_kts": 12.0,
+      "fire_on": false,
+      "source_note": "PDF p.2 (force list/orders/setup) and p.7 (O.H. Perry card). Mapped to uk_type45. North arc 315-45 at 4.0 nm (8,100 yd). Radars active, sonar passive, Condition III (weapons tight)."
+    },
+    {
+      "side": "Blue",
+      "class": "uk_type23",
+      "name": "EMDEN (F 210)",
+      "pos": [54.0, 50.0],
+      "course_deg": 0.0,
+      "speed_kts": 12.0,
+      "fire_on": false,
+      "source_note": "PDF p.2 and p.3 (Bremen card). Mapped to uk_type23. East arc 45-135 at 4.0 nm. Radars active, sonar passive, Condition III."
+    },
+    {
+      "side": "Blue",
+      "class": "ffg",
+      "name": "HMS ARIADNE (F 72)",
+      "pos": [50.0, 46.0],
+      "course_deg": 0.0,
+      "speed_kts": 12.0,
+      "fire_on": false,
+      "source_note": "PDF p.2 and p.6 (Leander Batch 3 card). Mapped to generic ffg (no ASCM, point SAM, 5 in, ASW rocket). South arc 135-225 at 4.0 nm. Radars active, sonar passive, Condition III."
+    },
+    {
+      "side": "Blue",
+      "class": "uk_type23",
+      "name": "VAN KINSBERGEN (F 809)",
+      "pos": [46.0, 50.0],
+      "course_deg": 0.0,
+      "speed_kts": 12.0,
+      "fire_on": false,
+      "source_note": "PDF p.2 and p.4 (Kortenaer card). Mapped to uk_type23. West arc 225-315 at 4.0 nm. Radars active, sonar passive, Condition III."
+    },
+    {
+      "side": "Blue",
+      "class": "uk_type26",
+      "name": "POOLSTER (A 835)",
+      "pos": [50.0, 50.0],
+      "course_deg": 0.0,
+      "speed_kts": 12.0,
+      "fire_on": false,
+      "source_note": "PDF p.2 (formation center; force list prints A 835) and p.5 (Poolster AO card, which prints 'A 385'). Mapped to uk_type26 as the closest large Medium-signature hull; kept weapons-tight because no auxiliary class exists. Formation center; 4.0 nm escort ring. Condition III."
+    },
+    {
+      "side": "Red",
+      "class": "ru_sovremenny",
+      "name": "SMYSHLENNYY (644)",
+      "pos": [50.0, 40.5],
+      "course_deg": 0.0,
+      "speed_kts": 12.0,
+      "fire_on": false,
+      "source_note": "PDF p.2 (Russian forces/setup) and p.8 (Mod Kashin card). Mapped to ru_sovremenny; P-15M Termit -> rasl_km. Placed 9.5 nm dead astern (bearing 180 from Poolster), 5.5 nm from the aft escort, within the mapped 10.45 nm surface-radar horizon. Radars active, sonar passive. Attack ordered at 03:10, inside the 0300-0315 window."
+    }
+  ]
+}

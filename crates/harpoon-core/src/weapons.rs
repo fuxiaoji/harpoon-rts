@@ -93,7 +93,7 @@ pub fn fire_control_scan(world: &mut World) {
                 .collect()
         };
 
-        for (idx, def, mounts_n, ammo, cooldown) in mounts {
+        for (idx, mut def, mounts_n, ammo, cooldown) in mounts {
             if ammo == 0 || cooldown > 0.0 {
                 continue;
             }
@@ -144,6 +144,20 @@ pub fn fire_control_scan(world: &mut World) {
                 continue;
             }
 
+            // Visual fire-control solution (§6.3.5, PDF p.6-5): if the target
+            // is held in the contact's visual channel, lookouts can spot and
+            // correct the fall of shot — guns get +15% Pk. The contact's
+            // `sensors` list is the engine's record of how the track was
+            // obtained (sensors.rs:218-225 stores the `visual` sensor id).
+            if def.kind == WeaponKind::Gun
+                && world
+                    .contact(shooter.side, contact_id)
+                    .map(|c| c.sensors.iter().any(|s| s == "visual"))
+                    .unwrap_or(false)
+            {
+                def.pk *= 1.15;
+            }
+
             match def.kind {
                 WeaponKind::Gun => {
                     let salvo = def.salvo.max(mounts_n.min(2));
@@ -170,6 +184,57 @@ pub fn fire_control_scan(world: &mut World) {
                     for _ in 0..salvo {
                         launch(world, shooter.id, &def, Some(target_id), None);
                     }
+
+                    // §8.1.8 (PDF p.8-10): a weapon fired in the increment a
+                    // unit arrives at (or adjacent to) a friendly unit can hit
+                    // that friend; the friendly's radar/visual return is much
+                    // larger than the missile's. Adapted to this engine's
+                    // air-defense geometry: when a friendly aircraft is within
+                    // 2.0 nm of the engaged air/missile target, there is a 5%
+                    // chance per engagement to damage the nearest friendly
+                    // aircraft at half weapon damage. (Estimated adaptation:
+                    // the rule text describes friendly ships; the ask scopes
+                    // the mechanic to same-side aircraft.)
+                    let nearest_friend = world.entity(target_id).map(|t| t.pos).and_then(|tpos| {
+                        world
+                            .entities
+                            .values()
+                            .filter(|f| {
+                                f.alive
+                                    && f.side == shooter.side
+                                    && f.kind == PlatformKind::Aircraft
+                                    && f.id != shooter.id
+                            })
+                            .map(|f| (f.pos.range_to(tpos), f.id))
+                            .filter(|(d, _)| *d <= 2.0)
+                            .min_by(|a, b| {
+                                a.0.partial_cmp(&b.0)
+                                    .unwrap_or(std::cmp::Ordering::Equal)
+                            })
+                    });
+                    if let Some((_dist, friend_id)) = nearest_friend {
+                        let mut rng = world.scope_rng(shooter.id, "friendly_fire");
+                        if rng.chance(0.05) {
+                            let mut half = def.clone();
+                            half.damage *= 0.5;
+                            damage::apply_hit(world, friend_id, &half, false);
+                            world.emit(
+                                EventKind::RulesEvent {
+                                    domain: "firectl".into(),
+                                    rule: "friendly_fire".into(),
+                                    side: Some(shooter.side),
+                                    unit: Some(friend_id),
+                                    contact: Some(contact_id),
+                                    detail: format!(
+                                        "SAM/AAM engagement by #{} within 2.0 nm of friendly aircraft #{}; 5% misidentification, half damage",
+                                        shooter.id.0, friend_id.0
+                                    ),
+                                },
+                                Visibility::Side(shooter.side),
+                            );
+                        }
+                    }
+
                     world.emit(
                         EventKind::SamShot {
                             side: shooter.side,
@@ -460,13 +525,9 @@ pub fn launch(
 
 /// Manual Fire command (routed from sim.rs command processing).
 pub fn manual_fire(world: &mut World, side: Side, unit: EntityId, contact: ContactId, weapon_id: &str, rounds: u8) -> bool {
-    let Some(eid) = resolve_contact(world, side, contact) else { return false };
-    // Fire-control solution gate: manual shots need a usable track
-    // (rules §6.3.1 — a firing solution requires a quality contact).
-    let solution_quality = world.contact(side, contact).map(|c| c.quality).unwrap_or(0.0);
-    if solution_quality < 0.3 {
-        return false;
-    }
+    // A contact record is required. A stale record is usable only for a BOL
+    // shot (§8.4.2); a normal fire-control solution needs a live target.
+    let Some(contact_rec) = world.contact(side, contact).cloned() else { return false };
     let Some(e) = world.entity(unit) else { return false };
     if e.side != side {
         return false;
@@ -479,29 +540,100 @@ pub fn manual_fire(world: &mut World, side: Side, unit: EntityId, contact: Conta
     if !ammo_ok || !cooldown_ok {
         return false;
     }
-    let def = match world.db.weapons.get(weapon_id) {
+    let Some(target) = world.entity(contact_rec.about) else { return false };
+    if !target.alive {
+        return false;
+    }
+    let (eid, target_pos, target_kind) = (target.id, target.pos, target.kind);
+    let mut def = match world.db.weapons.get(weapon_id) {
         Some(d) => d.clone(),
         None => return false,
     };
-    let dist = world
-        .entity(unit)
-        .zip(world.entity(eid))
-        .map(|(s, t)| s.pos.range_to(t.pos))
-        .unwrap_or(f64::MAX);
-    if dist > def.range_nm || dist < def.min_range_nm {
+
+    // Fire-control solution gate (§6.3.1 — a firing solution requires a
+    // quality contact). Bearing-only launch (§6.3.6 / §8.4.2) is the
+    // deliberate exception: a poor track (quality < 0.3, stale allowed) may
+    // still launch air-defense weapons with terminal homing.
+    let bol = contact_rec.quality < 0.3;
+    if !bol && contact_rec.stale {
         return false;
     }
-    let shooter_pos = world.entity(unit).map(|e| e.pos).unwrap_or_default();
-    let _ = shooter_pos;
+
+    let shooter_pos = world.entity(unit).map(|s| s.pos).unwrap_or_default();
+    // BOL is planned against the estimated position; a normal shot uses the
+    // live target position.
+    let firing_range = if bol {
+        shooter_pos.range_to(contact_rec.estimate_at(world.tick))
+    } else {
+        shooter_pos.range_to(target_pos)
+    };
+    if firing_range > def.range_nm || firing_range < def.min_range_nm {
+        return false;
+    }
+
     let n = rounds.min((ammo as u8).min(def.salvo.max(1) * 2));
-    let mut fired = 0;
+
+    if bol {
+        // BOL is scoped to air-defense weapons with terminal homing fired at
+        // air/missile contacts (§6.3.6 wording; §8.4.2 procedure). Because
+        // ProjectileData has no Pk field, the adaptation adjudicates the
+        // salvo immediately instead of spawning homing projectiles — the
+        // comment "BOL salvo does not guide home" records the choice. Each
+        // round's Pk is ×0.25.
+        let bol_capable = matches!(def.kind, WeaponKind::Sam | WeaponKind::Aam)
+            && matches!(contact_rec.category, PlatformKind::Aircraft | PlatformKind::Missile)
+            && matches!(def.guidance, Guidance::HomingAir)
+            && def.targets.accepts(target_kind);
+        if !bol_capable {
+            return false;
+        }
+        // Include the contact in the scope so two BOL calls by the same unit
+        // in one tick do not share a roll stream.
+        let bol_scope = format!("bol_terminal.{}", contact.0);
+        let mut rng = world.scope_rng(unit, &bol_scope);
+        let mut fired = 0u16;
+        for _ in 0..n {
+            if rng.chance(def.pk * 0.25) {
+                damage::apply_hit(world, eid, &def, false);
+            }
+            fired += 1;
+        }
+        if fired > 0 {
+            world.emit(
+                EventKind::RulesEvent {
+                    domain: "firectl".into(),
+                    rule: "bol_launch".into(),
+                    side: Some(side),
+                    unit: Some(unit),
+                    contact: Some(contact),
+                    detail: format!(
+                        "BOL launch: track q={:.2} < 0.30, {} round(s), Pk ×0.25, immediate unguided adjudication (adapted §8.4.2)",
+                        contact_rec.quality, fired
+                    ),
+                },
+                Visibility::Side(side),
+            );
+        }
+        let Some(e) = world.entity_mut(unit) else { return false };
+        let m = &mut e.weapons[idx];
+        m.ammo = m.ammo.saturating_sub(fired);
+        m.cooldown_s = def.reload_s;
+        return fired > 0;
+    }
+
+    // Visual fire-control solution (§6.3.5, PDF p.6-5): lookouts spotting /
+    // correcting the fall of shot gives a gun +15% Pk.
+    if def.kind == WeaponKind::Gun && contact_rec.sensors.iter().any(|s| s == "visual") {
+        def.pk *= 1.15;
+    }
+
+    let mut fired = 0u16;
     for _ in 0..n {
         if def.kind.is_gun_like() {
             // Guns adjudicate per salvo; manual fire = one salvo per round count.
-            let cid = contact;
-            gun_salvo(world, unit, cid, eid, &def, 1);
+            gun_salvo(world, unit, contact, eid, &def, 1);
             fired += 1;
-            if fired >= rounds {
+            if fired >= rounds as u16 {
                 break;
             }
         } else if launch(world, unit, &def, Some(eid), None).is_some() {
@@ -510,7 +642,7 @@ pub fn manual_fire(world: &mut World, side: Side, unit: EntityId, contact: Conta
     }
     let Some(e) = world.entity_mut(unit) else { return false };
     let m = &mut e.weapons[idx];
-    m.ammo = m.ammo.saturating_sub(fired as u16);
+    m.ammo = m.ammo.saturating_sub(fired);
     m.cooldown_s = def.reload_s;
     fired > 0
 }
@@ -945,5 +1077,345 @@ fn advance_asw_ballistic(world: &mut World, id: EntityId, def: WeaponDef, mut da
     }
     if data.live_s > 120.0 {
         remove_projectile(world, id);
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Tests
+// ---------------------------------------------------------------------------
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::db::Database;
+    use crate::rng::Rng;
+    use crate::scenario::{load_scenario, Scenario, UnitSpawn};
+    use crate::types::DayNight;
+    use crate::world::Contact;
+
+    fn scenario(units: Vec<UnitSpawn>) -> Scenario {
+        Scenario {
+            id: "weapons-test".into(),
+            name: "Weapons test".into(),
+            description: String::new(),
+            duration_s: 40_000,
+            weather: crate::world::Weather {
+                visibility_nm: 12.0,
+                jam: [0.0, 0.0],
+                overcast: 0.0,
+                rain: 0.0,
+            },
+            day_night: DayNight::Day,
+            seed: 11,
+            victory: Default::default(),
+            units,
+        }
+    }
+
+    fn world(units: Vec<UnitSpawn>) -> World {
+        load_scenario(scenario(units), Database::built_in()).unwrap()
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    fn unit(
+        side: Side,
+        class: &str,
+        name: &str,
+        x: f64,
+        y: f64,
+        course_deg: f64,
+        altitude_m: Option<f64>,
+        fire_on: bool,
+    ) -> UnitSpawn {
+        UnitSpawn {
+            side,
+            class: class.into(),
+            name: Some(name.into()),
+            pos: Vec2::new(x, y),
+            course_deg,
+            speed_kts: 0.0,
+            depth_m: None,
+            altitude_m,
+            waypoints: None,
+            follow: None,
+            sonar_active: false,
+            fire_on,
+        }
+    }
+
+    fn id_of(w: &World, name: &str) -> EntityId {
+        w.entities
+            .values()
+            .find(|e| e.name == name)
+            .map(|e| e.id)
+            .unwrap_or_else(|| panic!("no entity named {name}"))
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    fn seed_contact(
+        w: &mut World,
+        side: Side,
+        about: EntityId,
+        category: PlatformKind,
+        pos: Vec2,
+        quality: f64,
+        stale: bool,
+        sensors: Vec<&str>,
+    ) -> ContactId {
+        let state = &mut w.sides[side.index()];
+        state.next_contact += 1;
+        let cid = ContactId(state.next_contact);
+        state.contacts.insert(
+            cid,
+            Contact {
+                id: cid,
+                about,
+                category,
+                class_name: None,
+                estimate: pos,
+                est_course_deg: 0.0,
+                est_speed_kts: 0.0,
+                bearing_only: false,
+                quality,
+                last_update_tick: 0,
+                first_tick: 0,
+                stale,
+                sensors: sensors.into_iter().map(str::to_string).collect(),
+                offset: Vec2::zero(),
+                announced: true,
+            },
+        );
+        cid
+    }
+
+    fn rules_event_count(w: &World, rule: &str) -> usize {
+        w.events
+            .iter()
+            .filter(|e| {
+                matches!(
+                    &e.kind,
+                    EventKind::RulesEvent { domain, rule: r, .. }
+                        if domain == "firectl" && r == rule
+                )
+            })
+            .count()
+    }
+
+    fn gun_hits(w: &World) -> u32 {
+        w.events
+            .iter()
+            .filter_map(|e| match &e.kind {
+                EventKind::GunAction { hits, .. } => Some(*hits as u32),
+                _ => None,
+            })
+            .sum()
+    }
+
+    fn ammo_of(w: &World, unit: EntityId, weapon: &str) -> u16 {
+        w.entity(unit)
+            .unwrap()
+            .weapons
+            .iter()
+            .find(|m| m.weapon == weapon)
+            .unwrap()
+            .ammo
+    }
+
+    #[test]
+    fn bol_launch_allows_poor_air_track_for_sam() {
+        let mut w = world(vec![
+            unit(Side::Blue, "ddg_aegis", "BLUE DDG", 0.0, 0.0, 0.0, None, false),
+            unit(Side::Red, "fighter", "RED FIGHTER", 30.0, 0.0, 90.0, Some(5000.0), false),
+        ]);
+        let ddg = id_of(&w, "BLUE DDG");
+        let red = id_of(&w, "RED FIGHTER");
+        let cid = seed_contact(
+            &mut w,
+            Side::Blue,
+            red,
+            PlatformKind::Aircraft,
+            Vec2::new(30.0, 0.0),
+            0.20,
+            false,
+            vec!["radar_air_long"],
+        );
+
+        assert!(manual_fire(&mut w, Side::Blue, ddg, cid, "sam_long", 1));
+        assert_eq!(rules_event_count(&w, "bol_launch"), 1);
+        assert_eq!(ammo_of(&w, ddg, "sam_long"), 47);
+    }
+
+    #[test]
+    fn stale_air_track_can_still_bol() {
+        let mut w = world(vec![
+            unit(Side::Blue, "ddg_aegis", "BLUE DDG", 0.0, 0.0, 0.0, None, false),
+            unit(Side::Red, "fighter", "RED FIGHTER", 5.0, 0.0, 90.0, Some(5000.0), false),
+        ]);
+        let ddg = id_of(&w, "BLUE DDG");
+        let red = id_of(&w, "RED FIGHTER");
+        let cid = seed_contact(
+            &mut w,
+            Side::Blue,
+            red,
+            PlatformKind::Aircraft,
+            Vec2::new(5.0, 0.0),
+            0.10,
+            true,
+            vec![],
+        );
+
+        assert!(manual_fire(&mut w, Side::Blue, ddg, cid, "sam_point", 1));
+        assert_eq!(rules_event_count(&w, "bol_launch"), 1);
+    }
+
+    #[test]
+    fn poor_track_blocks_non_bol_and_surface_targets() {
+        let mut w = world(vec![
+            unit(Side::Blue, "ddg_aegis", "BLUE DDG", 0.0, 0.0, 0.0, None, false),
+            unit(Side::Red, "fighter", "RED FIGHTER", 5.0, 0.0, 90.0, Some(5000.0), false),
+            unit(Side::Red, "mgb", "RED MGB", 5.0, 5.0, 90.0, None, false),
+        ]);
+        let ddg = id_of(&w, "BLUE DDG");
+        let fighter = id_of(&w, "RED FIGHTER");
+        let mgb = id_of(&w, "RED MGB");
+        let fcid = seed_contact(
+            &mut w,
+            Side::Blue,
+            fighter,
+            PlatformKind::Aircraft,
+            Vec2::new(5.0, 0.0),
+            0.20,
+            false,
+            vec!["radar_air_long"],
+        );
+        let scid = seed_contact(
+            &mut w,
+            Side::Blue,
+            mgb,
+            PlatformKind::Ship,
+            Vec2::new(5.0, 5.0),
+            0.20,
+            false,
+            vec!["radar_surf_med"],
+        );
+
+        // A poor track does not relax the gate for guns...
+        assert!(!manual_fire(&mut w, Side::Blue, ddg, fcid, "gun_5in", 1));
+        // ...nor does BOL apply to a surface target.
+        assert!(!manual_fire(&mut w, Side::Blue, ddg, scid, "sam_long", 1));
+        assert_eq!(rules_event_count(&w, "bol_launch"), 0);
+        assert_eq!(ammo_of(&w, ddg, "sam_long"), 48);
+        assert_eq!(ammo_of(&w, ddg, "gun_5in"), 40);
+    }
+
+    #[test]
+    fn sam_fire_near_friendly_aircraft_can_misfire() {
+        let mut w = world(vec![
+            unit(Side::Blue, "ddg_aegis", "BLUE DDG", 0.0, 0.0, 0.0, None, false),
+            unit(Side::Red, "fighter", "RED FIGHTER", 30.0, 0.0, 90.0, Some(5000.0), false),
+            unit(Side::Blue, "fighter", "BLUE FIGHTER", 30.5, 0.5, 270.0, Some(5000.0), false),
+        ]);
+        let ddg = id_of(&w, "BLUE DDG");
+        let red = id_of(&w, "RED FIGHTER");
+        let friend = id_of(&w, "BLUE FIGHTER");
+        let cid = seed_contact(
+            &mut w,
+            Side::Blue,
+            red,
+            PlatformKind::Aircraft,
+            Vec2::new(30.0, 0.0),
+            0.90,
+            false,
+            vec!["radar_air_long"],
+        );
+        w.tick = 1;
+
+        // The per-shooter stream is order-independent: find a seed whose 5%
+        // roll succeeds, then let fire_control_scan consume that same roll.
+        let mut chosen: Option<u64> = None;
+        for seed in 0..100_000u64 {
+            w.rng = Rng::new(seed);
+            if w.scope_rng(ddg, "friendly_fire").chance(0.05) {
+                chosen = Some(seed);
+                break;
+            }
+        }
+        let seed = chosen.expect("no seed produced a 5% friendly-fire roll");
+        w.rng = Rng::new(seed);
+        w.entity_mut(ddg).unwrap().assigned = Some(cid);
+
+        fire_control_scan(&mut w);
+
+        let ev = w
+            .events
+            .iter()
+            .find(|e| {
+                matches!(
+                    &e.kind,
+                    EventKind::RulesEvent { domain, rule, .. }
+                        if domain == "firectl" && rule == "friendly_fire"
+                )
+            })
+            .expect("friendly-fire event");
+        match &ev.kind {
+            EventKind::RulesEvent { unit, contact, side, .. } => {
+                assert_eq!(*unit, Some(friend));
+                assert_eq!(*contact, Some(cid));
+                assert_eq!(*side, Some(Side::Blue));
+            }
+            _ => unreachable!(),
+        }
+        assert!(
+            w.entity(friend).unwrap().hp < w.entity(friend).unwrap().hp_max,
+            "nearest friendly aircraft must take half damage"
+        );
+    }
+
+    #[test]
+    fn visual_spotting_improves_gun_pk() {
+        // 2 nm, 90° crossing target: base Pk = 0.75 × 0.30 × 0.80 = 0.18;
+        // with the visual solution Pk = 0.207. Pick a roll in between.
+        let mut probe = world(vec![
+            unit(Side::Blue, "ddg_aegis", "BLUE DDG", 0.0, 0.0, 0.0, None, false),
+            unit(Side::Red, "mgb", "RED MGB", 2.0, 0.0, 90.0, None, false),
+        ]);
+        let ddg = id_of(&probe, "BLUE DDG");
+        let mut chosen = None;
+        for seed in 0..100_000u64 {
+            probe.rng = Rng::new(seed);
+            probe.tick = 0;
+            let roll = probe.scope_rng(ddg, "gun").next_f64();
+            if roll >= 0.18 && roll < 0.18 * 1.15 {
+                chosen = Some(seed);
+                break;
+            }
+        }
+        let seed = chosen.expect("no roll between the two Pk values");
+
+        let run = |sensors: Vec<&str>| {
+            let mut w = world(vec![
+                unit(Side::Blue, "ddg_aegis", "BLUE DDG", 0.0, 0.0, 0.0, None, false),
+                unit(Side::Red, "mgb", "RED MGB", 2.0, 0.0, 90.0, None, false),
+            ]);
+            let ddg = id_of(&w, "BLUE DDG");
+            let red = id_of(&w, "RED MGB");
+            let cid = seed_contact(
+                &mut w,
+                Side::Blue,
+                red,
+                PlatformKind::Ship,
+                Vec2::new(2.0, 0.0),
+                0.90,
+                false,
+                sensors,
+            );
+            w.rng = Rng::new(seed);
+            w.tick = 0;
+            assert!(manual_fire(&mut w, Side::Blue, ddg, cid, "gun_5in", 1));
+            gun_hits(&w)
+        };
+
+        assert_eq!(run(vec!["radar_surf_med"]), 0, "base Pk run must miss");
+        assert_eq!(run(vec!["visual"]), 1, "visual solution must hit");
     }
 }
