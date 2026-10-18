@@ -95,13 +95,15 @@ fn effective_range(
             if o.systems.sonar <= 0.05 {
                 return None;
             }
-            let Some(class) = target_class(t) else { return None };
             let speed_factor = (t.speed_kts / 10.0).clamp(0.3, 2.2);
-            let noise = class.noise_db / 50.0;
+            // Torpedoes have no platform class; they are loud and fast.
+            if t.kind == PlatformKind::Torpedo {
+                return Some(base * 1.6 * speed_factor);
+            }
+            let noise = target_class(t).map(|c| c.noise_db / 50.0).unwrap_or(1.0);
             match t.kind {
                 PlatformKind::Sub => base * speed_factor * noise,
                 PlatformKind::Ship => base * 0.35 * speed_factor * noise,
-                PlatformKind::Torpedo => base * 1.6,
                 _ => return None,
             }
         }

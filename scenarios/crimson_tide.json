@@ -1,0 +1,23 @@
+{
+  "id": "crimson_tide",
+  "name": "Operation Crimson Tide (full-mechanics smoke)",
+  "description": "Blue CV group pushes into the Ryukyu gap against Red missile boats, a diesel submarine, land-based air and a naval station. Exercises every engine mechanic: radar/ESM/visual/passive/active sonar detection, CAP interception, layered SAM defense, sea-skimmer vs chaff/CIWS chain, torpedo attack with decoys, ASW (dipping sonar, LWT, ASW rocket), gunnery firing arcs, deck cycles, recon, land strike, critical hits, fires, VP victory.",
+  "duration_s": 28800,
+  "weather": { "visibility_nm": 12, "jam": [0, 0] },
+  "day_night": "Day",
+  "seed": 20251018,
+  "victory": { "target_vp": 0 },
+  "units": [
+    { "side": "Blue", "class": "cvn", "name": "CV-72 FREEDOM", "pos": [0, 0], "course_deg": 45, "speed_kts": 20, "fire_on": true },
+    { "side": "Blue", "class": "ddg_aegis", "name": "DDG-101", "pos": [2, -2], "course_deg": 45, "speed_kts": 20, "fire_on": true, "follow": { "leader_name": "CV-72 FREEDOM", "bearing_rel_deg": 0, "distance_nm": 4 } },
+    { "side": "Blue", "class": "ffg", "name": "FFG-58", "pos": [-2, 2], "course_deg": 45, "speed_kts": 20, "fire_on": true, "follow": { "leader_name": "CV-72 FREEDOM", "bearing_rel_deg": 180, "distance_nm": 4 } },
+    { "side": "Blue", "class": "aew", "name": "BLUE EWN-1", "pos": [-10, -10], "course_deg": 45, "speed_kts": 340, "altitude_m": 8500, "fire_on": false },
+
+    { "side": "Red", "class": "aew", "name": "RED AEW-1", "pos": [52, 52], "course_deg": 45, "speed_kts": 340, "altitude_m": 8500, "fire_on": false },
+    { "side": "Red", "class": "airfield", "name": "MIKO AIRFIELD", "pos": [75, 62], "course_deg": 0, "speed_kts": 0, "fire_on": true },
+    { "side": "Red", "class": "navsta", "name": "KURE NAVAL STATION", "pos": [82, 74], "course_deg": 0, "speed_kts": 0, "fire_on": true },
+    { "side": "Red", "class": "mgb", "name": "RED MGB-1", "pos": [55, 45], "course_deg": 225, "speed_kts": 24, "fire_on": true },
+    { "side": "Red", "class": "mgb", "name": "RED MGB-2", "pos": [60, 40], "course_deg": 225, "speed_kts": 24, "fire_on": true },
+    { "side": "Red", "class": "ssk", "name": "RED SSK-7", "pos": [18, 12], "course_deg": 45, "speed_kts": 4, "depth_m": 60, "fire_on": true }
+  ]
+}

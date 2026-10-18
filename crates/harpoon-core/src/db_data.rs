@@ -23,7 +23,8 @@ pub const BUILT_IN: &str = r#"{
       ],
       "chaff": 60, "decoys": 14,
       "deck": {"capacity": 20, "cycle_s": 120, "wing": [
-        {"class": "fighter", "count": 10},
+        {"class": "fighter", "count": 8},
+        {"class": "striker", "count": 4},
         {"class": "helo_asw", "count": 4}
       ]}
     },
@@ -36,7 +37,8 @@ pub const BUILT_IN: &str = r#"{
         {"weapon": "sam_long", "mounts": 1, "ammo": 48},
         {"weapon": "sam_point", "mounts": 1, "ammo": 24},
         {"weapon": "ciws_30mm", "mounts": 1, "ammo": 60},
-        {"weapon": "gun_5in", "mounts": 1, "ammo": 40}
+        {"weapon": "gun_5in", "mounts": 1, "ammo": 40},
+        {"weapon": "slcm", "mounts": 2, "ammo": 1}
       ],
       "chaff": 50, "decoys": 12
     },
@@ -197,7 +199,7 @@ pub const BUILT_IN: &str = r#"{
     },
     "asm_air": {
       "id": "asm_air", "name": "Air-Launched ASM", "kind": "Ascm",
-      "targets": {"surface": true},
+      "targets": {"surface": true, "land": true},
       "range_nm": 45, "min_range_nm": 5, "speed_kts": 600, "pk": 0.50, "salvo": 1,
       "reload_s": 30, "damage": 40, "guidance": "SeaSkimmer"
     },
