@@ -280,7 +280,6 @@ pub fn update_fires(world: &mut World) {
             t.hp -= 0.15;
         }
         if t.hp <= 0.0 {
-            drop(t);
             sink(world, id);
         }
     }
