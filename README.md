@@ -4,6 +4,8 @@
 改造为**实时战略（RTS）**——连续时间轴、可随时调节时间快慢（暂停~512×），
 原"双盲人工裁判"由服务端**确定性裁决引擎**承担。
 
+完整实施路线与验收标准见 [规则、前端与教学交付计划](plan.md)：逐章核验全部规则，分别验收严格规则和 RTS 改编，补齐玩家操作与递进教学。计划中的待办尚未代表功能完成。
+
 ## 核心特性
 
 - **确定性引擎**（Rust）：`种子 + 想定 JSON + 指令日志 ⇒ 完全一致的终态与事件流`。
@@ -63,10 +65,11 @@ pip install maturin && maturin develop --manifest-path crates/harpoon-py/Cargo.t
 | `scenarios/` | 想定 JSON（`crimson_tide` = 全机制冒烟想定） |
 | `docs/design/adaptations.md` | 电子化改编声明（哪些桌面规则为何偏离） |
 | `docs/compliance/` | 独立规则合规审计报告 |
+| `plan.md` | 全规则范围、四联审计、前端命令覆盖、课程与阶段验收 |
 
 ## 工程纪律
 
 - 每个里程碑一个 git 提交并同步 GitHub（`fuxiaoji/harpoon-rts`，私有）。
 - 规则合规独立审计：审计员与实现者分离，违规项必须修复或补改编声明。
-- 冒烟门（`crimson_tide` example）必须全绿才能宣称引擎完成。
+- 冒烟门（`crimson_tide` example）是集成回归必要条件；完整规则、数据、交互和教学还须通过 `plan.md` 定义的逐项验收。
 - 授权资料（规则 PDF、数据库卷）不入库（见 `.gitignore`）。
