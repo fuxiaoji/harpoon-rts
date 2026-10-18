@@ -1,0 +1,1898 @@
+{
+  "platforms": {
+    "ru_a100": {
+      "id": "ru_a100",
+      "name": "A-100 Premier AEW (ceil 12500 m)",
+      "kind": "Aircraft",
+      "hp": 84,
+      "max_speed_kts": 440,
+      "cruise_speed_kts": 405,
+      "turn_rate_deg_s": 4,
+      "accel_kts_per_s": 2.0,
+      "rcs": "Large",
+      "vp_value": 34,
+      "endurance_s": 38533.0,
+      "sensors": [
+        "ru_radar_premier",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [],
+      "chaff": 16
+    },
+    "ru_a40": {
+      "id": "ru_a40",
+      "name": "A-40 [Mermaid] ASW Patrol (ceil 9700 m)",
+      "kind": "Aircraft",
+      "hp": 50,
+      "max_speed_kts": 410,
+      "cruise_speed_kts": 390,
+      "turn_rate_deg_s": 5,
+      "accel_kts_per_s": 2.0,
+      "rcs": "Large",
+      "vp_value": 20,
+      "endurance_s": 23308.0,
+      "sensors": [
+        "ru_radar_novella_2",
+        "ru_sonobuoy_p",
+        "ru_mad",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_apr3",
+          "mounts": 1,
+          "ammo": 3
+        },
+        {
+          "weapon": "ru_plab250",
+          "mounts": 1,
+          "ammo": 6
+        }
+      ],
+      "chaff": 10
+    },
+    "ru_a50": {
+      "id": "ru_a50",
+      "name": "A-50/50M/50U [Mainstay] AEW (ceil 12200 m)",
+      "kind": "Aircraft",
+      "hp": 84,
+      "max_speed_kts": 440,
+      "cruise_speed_kts": 405,
+      "turn_rate_deg_s": 4,
+      "accel_kts_per_s": 2.0,
+      "rcs": "Large",
+      "vp_value": 34,
+      "endurance_s": 30844.0,
+      "sensors": [
+        "ru_radar_shmel",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [],
+      "chaff": 10
+    },
+    "ru_an124": {
+      "id": "ru_an124",
+      "name": "An-124 Ruslan [Condor] Transport (ceil 9500 m)",
+      "kind": "Aircraft",
+      "hp": 112,
+      "max_speed_kts": 460,
+      "cruise_speed_kts": 405,
+      "turn_rate_deg_s": 3,
+      "accel_kts_per_s": 1.0,
+      "rcs": "Large",
+      "vp_value": 45,
+      "endurance_s": 65511.0,
+      "sensors": [
+        "radar_nav",
+        "visual"
+      ],
+      "weapons": [],
+      "chaff": 0
+    },
+    "ru_be12": {
+      "id": "ru_be12",
+      "name": "Be-12 [Mail] ASW Patrol (ceil 8000 m)",
+      "kind": "Aircraft",
+      "hp": 39,
+      "max_speed_kts": 255,
+      "cruise_speed_kts": 170,
+      "turn_rate_deg_s": 5,
+      "accel_kts_per_s": 1.2,
+      "rcs": "Large",
+      "vp_value": 16,
+      "endurance_s": 34941.0,
+      "sensors": [
+        "ru_radar_initsiativa_2b",
+        "ru_sonobuoy_p",
+        "ru_mad",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_at2",
+          "mounts": 1,
+          "ammo": 3
+        },
+        {
+          "weapon": "ru_plab250",
+          "mounts": 1,
+          "ammo": 8
+        }
+      ],
+      "chaff": 0
+    },
+    "ru_il38": {
+      "id": "ru_il38",
+      "name": "Il-38 [May] ASW Patrol (ceil 10000 m)",
+      "kind": "Aircraft",
+      "hp": 65,
+      "max_speed_kts": 355,
+      "cruise_speed_kts": 315,
+      "turn_rate_deg_s": 4,
+      "accel_kts_per_s": 1.5,
+      "rcs": "Large",
+      "vp_value": 26,
+      "endurance_s": 49829.0,
+      "sensors": [
+        "ru_radar_berkut",
+        "ru_sonobuoy_p",
+        "ru_mad",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_apr2",
+          "mounts": 1,
+          "ammo": 2
+        },
+        {
+          "weapon": "ru_plab250",
+          "mounts": 1,
+          "ammo": 10
+        }
+      ],
+      "chaff": 8
+    },
+    "ru_il76md90a": {
+      "id": "ru_il76md90a",
+      "name": "Il-76MD-90A [Candid] Transport (ceil 12100 m)",
+      "kind": "Aircraft",
+      "hp": 90,
+      "max_speed_kts": 460,
+      "cruise_speed_kts": 420,
+      "turn_rate_deg_s": 3,
+      "accel_kts_per_s": 1.0,
+      "rcs": "Large",
+      "vp_value": 36,
+      "endurance_s": 38186.0,
+      "sensors": [
+        "radar_nav",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [],
+      "chaff": 12
+    },
+    "ru_il78m90a": {
+      "id": "ru_il78m90a",
+      "name": "Il-78M-90A Tanker (ceil 12100 m)",
+      "kind": "Aircraft",
+      "hp": 90,
+      "max_speed_kts": 460,
+      "cruise_speed_kts": 420,
+      "turn_rate_deg_s": 3,
+      "accel_kts_per_s": 1.0,
+      "rcs": "Large",
+      "vp_value": 36,
+      "endurance_s": 53657.0,
+      "sensors": [
+        "radar_nav",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [],
+      "chaff": 12
+    },
+    "ru_ka27": {
+      "id": "ru_ka27",
+      "name": "Ka-27 [Helix A] ASW Patrol (ceil 5000 m)",
+      "kind": "Aircraft",
+      "hp": 18,
+      "max_speed_kts": 146,
+      "cruise_speed_kts": 124,
+      "turn_rate_deg_s": 25,
+      "accel_kts_per_s": 1.0,
+      "rcs": "Small",
+      "vp_value": 7,
+      "endurance_s": 7694.0,
+      "sensors": [
+        "ru_radar_osminog",
+        "ru_sonar_vgs3",
+        "ru_mad",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_umgt1",
+          "mounts": 1,
+          "ammo": 1
+        },
+        {
+          "weapon": "ru_plab250",
+          "mounts": 1,
+          "ammo": 8
+        }
+      ],
+      "chaff": 0,
+      "dipping_sonar": true
+    },
+    "ru_ka29": {
+      "id": "ru_ka29",
+      "name": "Ka-29 [Helix B] Transport/Assault (ceil 4300 m)",
+      "kind": "Aircraft",
+      "hp": 19,
+      "max_speed_kts": 150,
+      "cruise_speed_kts": 124,
+      "turn_rate_deg_s": 25,
+      "accel_kts_per_s": 1.0,
+      "rcs": "Small",
+      "vp_value": 8,
+      "endurance_s": 6532.0,
+      "sensors": [
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_s8",
+          "mounts": 4,
+          "ammo": 1
+        },
+        {
+          "weapon": "gun_30mm",
+          "mounts": 1,
+          "ammo": 100
+        }
+      ],
+      "chaff": 8
+    },
+    "ru_ka31": {
+      "id": "ru_ka31",
+      "name": "Ka-31 [Helix E] AEW (ceil 3500 m)",
+      "kind": "Aircraft",
+      "hp": 17,
+      "max_speed_kts": 120,
+      "cruise_speed_kts": 100,
+      "turn_rate_deg_s": 25,
+      "accel_kts_per_s": 1.0,
+      "rcs": "Small",
+      "vp_value": 7,
+      "endurance_s": 9180.0,
+      "sensors": [
+        "ru_radar_e801",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [],
+      "chaff": 0
+    },
+    "ru_ka52": {
+      "id": "ru_ka52",
+      "name": "Ka-52 Alligator [Hokum B] Attack (ceil 5000 m)",
+      "kind": "Aircraft",
+      "hp": 22,
+      "max_speed_kts": 160,
+      "cruise_speed_kts": 140,
+      "turn_rate_deg_s": 30,
+      "accel_kts_per_s": 1.2,
+      "rcs": "Small",
+      "vp_value": 9,
+      "endurance_s": 5271.0,
+      "sensors": [
+        "ru_radar_fh01",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_igla_v",
+          "mounts": 4,
+          "ammo": 1
+        },
+        {
+          "weapon": "ru_s8",
+          "mounts": 2,
+          "ammo": 1
+        },
+        {
+          "weapon": "gun_30mm",
+          "mounts": 1,
+          "ammo": 100
+        }
+      ],
+      "chaff": 12
+    },
+    "ru_mi14pl": {
+      "id": "ru_mi14pl",
+      "name": "Mi-14PL [Haze A] ASW (ceil 3500 m)",
+      "kind": "Aircraft",
+      "hp": 20,
+      "max_speed_kts": 130,
+      "cruise_speed_kts": 110,
+      "turn_rate_deg_s": 22,
+      "accel_kts_per_s": 1.0,
+      "rcs": "Medium",
+      "vp_value": 8,
+      "endurance_s": 9818.0,
+      "sensors": [
+        "ru_radar_initsiativa_2m",
+        "ru_sonar_vgs2",
+        "ru_mad",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_apr2",
+          "mounts": 1,
+          "ammo": 1
+        },
+        {
+          "weapon": "ru_plab250",
+          "mounts": 1,
+          "ammo": 8
+        }
+      ],
+      "chaff": 0,
+      "dipping_sonar": true
+    },
+    "ru_mi24v": {
+      "id": "ru_mi24v",
+      "name": "Mi-24V [Hind E] Attack (ceil 4500 m)",
+      "kind": "Aircraft",
+      "hp": 22,
+      "max_speed_kts": 180,
+      "cruise_speed_kts": 150,
+      "turn_rate_deg_s": 25,
+      "accel_kts_per_s": 1.2,
+      "rcs": "Medium",
+      "vp_value": 9,
+      "endurance_s": 4080.0,
+      "sensors": [
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_r60m",
+          "mounts": 2,
+          "ammo": 1
+        },
+        {
+          "weapon": "ru_s8",
+          "mounts": 4,
+          "ammo": 1
+        },
+        {
+          "weapon": "ru_fab250",
+          "mounts": 4,
+          "ammo": 1
+        }
+      ],
+      "chaff": 8
+    },
+    "ru_mi26": {
+      "id": "ru_mi26",
+      "name": "Mi-26 [Halo] Transport (ceil 4600 m)",
+      "kind": "Aircraft",
+      "hp": 30,
+      "max_speed_kts": 160,
+      "cruise_speed_kts": 137,
+      "turn_rate_deg_s": 20,
+      "accel_kts_per_s": 0.8,
+      "rcs": "Large",
+      "vp_value": 12,
+      "endurance_s": 8540.0,
+      "sensors": [
+        "visual"
+      ],
+      "weapons": [],
+      "chaff": 0
+    },
+    "ru_mi8mt": {
+      "id": "ru_mi8mt",
+      "name": "Mi-8MT [Hip H] Transport (ceil 5000 m)",
+      "kind": "Aircraft",
+      "hp": 19,
+      "max_speed_kts": 135,
+      "cruise_speed_kts": 120,
+      "turn_rate_deg_s": 22,
+      "accel_kts_per_s": 1.0,
+      "rcs": "Medium",
+      "vp_value": 8,
+      "endurance_s": 7800.0,
+      "sensors": [
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_s8",
+          "mounts": 4,
+          "ammo": 1
+        }
+      ],
+      "chaff": 0
+    },
+    "ru_mig29k": {
+      "id": "ru_mig29k",
+      "name": "MiG-29K [Fulcrum D] Fighter (ceil 17000 m)",
+      "kind": "Aircraft",
+      "hp": 33,
+      "max_speed_kts": 1242,
+      "cruise_speed_kts": 460,
+      "turn_rate_deg_s": 12,
+      "accel_kts_per_s": 5.0,
+      "rcs": "Small",
+      "vp_value": 13,
+      "endurance_s": 5322.0,
+      "sensors": [
+        "ru_radar_n010",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_kh31",
+          "mounts": 4,
+          "ammo": 1
+        },
+        {
+          "weapon": "ru_r73",
+          "mounts": 4,
+          "ammo": 1
+        },
+        {
+          "weapon": "ru_r27er",
+          "mounts": 2,
+          "ammo": 1
+        },
+        {
+          "weapon": "ru_kab500",
+          "mounts": 2,
+          "ammo": 1
+        },
+        {
+          "weapon": "ru_gun_gsh301",
+          "mounts": 1,
+          "ammo": 150
+        }
+      ],
+      "chaff": 10
+    },
+    "ru_mig29kr": {
+      "id": "ru_mig29kr",
+      "name": "MiG-29KR [Fulcrum D] Fighter (ceil 17500 m)",
+      "kind": "Aircraft",
+      "hp": 29,
+      "max_speed_kts": 1190,
+      "cruise_speed_kts": 460,
+      "turn_rate_deg_s": 12,
+      "accel_kts_per_s": 5.0,
+      "rcs": "Small",
+      "vp_value": 12,
+      "endurance_s": 5596.0,
+      "sensors": [
+        "ru_radar_n041",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_r77_1",
+          "mounts": 2,
+          "ammo": 1
+        },
+        {
+          "weapon": "ru_r73",
+          "mounts": 2,
+          "ammo": 1
+        },
+        {
+          "weapon": "ru_kh35",
+          "mounts": 2,
+          "ammo": 1
+        },
+        {
+          "weapon": "ru_gun_gsh301",
+          "mounts": 1,
+          "ammo": 150
+        }
+      ],
+      "chaff": 12
+    },
+    "ru_mig31bm": {
+      "id": "ru_mig31bm",
+      "name": "MiG-31BM [Foxhound C] Fighter (ceil 20600 m)",
+      "kind": "Aircraft",
+      "hp": 40,
+      "max_speed_kts": 860,
+      "cruise_speed_kts": 490,
+      "turn_rate_deg_s": 8,
+      "accel_kts_per_s": 5.0,
+      "rcs": "Medium",
+      "vp_value": 16,
+      "endurance_s": 7714.0,
+      "sensors": [
+        "ru_radar_n007am",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_r33",
+          "mounts": 4,
+          "ammo": 1
+        },
+        {
+          "weapon": "ru_r77_1",
+          "mounts": 2,
+          "ammo": 1
+        },
+        {
+          "weapon": "ru_r73",
+          "mounts": 2,
+          "ammo": 1
+        },
+        {
+          "weapon": "ru_gun_gsh623",
+          "mounts": 1,
+          "ammo": 260
+        }
+      ],
+      "chaff": 8
+    },
+    "ru_su24m": {
+      "id": "ru_su24m",
+      "name": "Su-24M [Fencer D] Attack (ceil 11500 m)",
+      "kind": "Aircraft",
+      "hp": 34,
+      "max_speed_kts": 785,
+      "cruise_speed_kts": 560,
+      "turn_rate_deg_s": 9,
+      "accel_kts_per_s": 5.0,
+      "rcs": "Medium",
+      "vp_value": 14,
+      "endurance_s": 4629.0,
+      "sensors": [
+        "ru_radar_orion_a",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_kh31",
+          "mounts": 3,
+          "ammo": 1
+        },
+        {
+          "weapon": "ru_r60m",
+          "mounts": 4,
+          "ammo": 1
+        },
+        {
+          "weapon": "ru_fab500",
+          "mounts": 4,
+          "ammo": 2
+        },
+        {
+          "weapon": "ru_gun_gsh623",
+          "mounts": 1,
+          "ammo": 500
+        }
+      ],
+      "chaff": 10
+    },
+    "ru_su24mr": {
+      "id": "ru_su24mr",
+      "name": "Su-24MR [Fencer E] Recon (ceil 11000 m)",
+      "kind": "Aircraft",
+      "hp": 34,
+      "max_speed_kts": 785,
+      "cruise_speed_kts": 560,
+      "turn_rate_deg_s": 9,
+      "accel_kts_per_s": 5.0,
+      "rcs": "Medium",
+      "vp_value": 14,
+      "endurance_s": 4564.0,
+      "sensors": [
+        "radar_surf_sm",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_r60m",
+          "mounts": 2,
+          "ammo": 1
+        }
+      ],
+      "chaff": 10
+    },
+    "ru_su25sm": {
+      "id": "ru_su25sm",
+      "name": "Su-25SM [Frogfoot] Attack (ceil 10000 m)",
+      "kind": "Aircraft",
+      "hp": 28,
+      "max_speed_kts": 540,
+      "cruise_speed_kts": 350,
+      "turn_rate_deg_s": 8,
+      "accel_kts_per_s": 3.0,
+      "rcs": "Small",
+      "vp_value": 11,
+      "endurance_s": 4834.0,
+      "sensors": [
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_fab500",
+          "mounts": 3,
+          "ammo": 2
+        },
+        {
+          "weapon": "ru_s8",
+          "mounts": 4,
+          "ammo": 1
+        },
+        {
+          "weapon": "ru_r73",
+          "mounts": 2,
+          "ammo": 1
+        },
+        {
+          "weapon": "ru_kab500",
+          "mounts": 2,
+          "ammo": 1
+        },
+        {
+          "weapon": "ru_gun_gsh302",
+          "mounts": 1,
+          "ammo": 250
+        }
+      ],
+      "chaff": 8
+    },
+    "ru_su27sm": {
+      "id": "ru_su27sm",
+      "name": "Su-27SM [Flanker B Mod 1] Fighter (ceil 18000 m)",
+      "kind": "Aircraft",
+      "hp": 35,
+      "max_speed_kts": 1350,
+      "cruise_speed_kts": 485,
+      "turn_rate_deg_s": 12,
+      "accel_kts_per_s": 5.0,
+      "rcs": "Medium",
+      "vp_value": 14,
+      "endurance_s": 10614.0,
+      "sensors": [
+        "ru_radar_n001v",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_r27er",
+          "mounts": 4,
+          "ammo": 1
+        },
+        {
+          "weapon": "ru_r73",
+          "mounts": 4,
+          "ammo": 1
+        },
+        {
+          "weapon": "ru_fab500",
+          "mounts": 4,
+          "ammo": 2
+        },
+        {
+          "weapon": "ru_gun_gsh301",
+          "mounts": 1,
+          "ammo": 150
+        }
+      ],
+      "chaff": 12
+    },
+    "ru_su30sm": {
+      "id": "ru_su30sm",
+      "name": "Su-30SM [Flanker H] Fighter (ceil 16100 m)",
+      "kind": "Aircraft",
+      "hp": 37,
+      "max_speed_kts": 1090,
+      "cruise_speed_kts": 490,
+      "turn_rate_deg_s": 12,
+      "accel_kts_per_s": 5.0,
+      "rcs": "Medium",
+      "vp_value": 15,
+      "endurance_s": 8706.0,
+      "sensors": [
+        "ru_radar_n011mr",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_kh31",
+          "mounts": 4,
+          "ammo": 1
+        },
+        {
+          "weapon": "ru_r27r",
+          "mounts": 4,
+          "ammo": 1
+        },
+        {
+          "weapon": "ru_r73",
+          "mounts": 2,
+          "ammo": 1
+        },
+        {
+          "weapon": "ru_gun_gsh301",
+          "mounts": 1,
+          "ammo": 150
+        }
+      ],
+      "chaff": 12
+    },
+    "ru_su33": {
+      "id": "ru_su33",
+      "name": "Su-33 [Flanker D] Fighter (ceil 17000 m)",
+      "kind": "Aircraft",
+      "hp": 35,
+      "max_speed_kts": 1240,
+      "cruise_speed_kts": 485,
+      "turn_rate_deg_s": 12,
+      "accel_kts_per_s": 5.0,
+      "rcs": "Medium",
+      "vp_value": 14,
+      "endurance_s": 8425.0,
+      "sensors": [
+        "ru_radar_n001",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_r27er",
+          "mounts": 4,
+          "ammo": 1
+        },
+        {
+          "weapon": "ru_r73",
+          "mounts": 4,
+          "ammo": 1
+        },
+        {
+          "weapon": "ru_fab500",
+          "mounts": 4,
+          "ammo": 2
+        },
+        {
+          "weapon": "ru_gun_gsh301",
+          "mounts": 1,
+          "ammo": 150
+        }
+      ],
+      "chaff": 12
+    },
+    "ru_su34": {
+      "id": "ru_su34",
+      "name": "Su-34 [Fullback] Attack (ceil 15700 m)",
+      "kind": "Aircraft",
+      "hp": 44,
+      "max_speed_kts": 920,
+      "cruise_speed_kts": 460,
+      "turn_rate_deg_s": 8,
+      "accel_kts_per_s": 5.0,
+      "rcs": "Small",
+      "vp_value": 18,
+      "endurance_s": 11817.0,
+      "sensors": [
+        "ru_radar_v004",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_kh35",
+          "mounts": 6,
+          "ammo": 1
+        },
+        {
+          "weapon": "ru_r77_1",
+          "mounts": 4,
+          "ammo": 1
+        },
+        {
+          "weapon": "ru_r73",
+          "mounts": 2,
+          "ammo": 1
+        },
+        {
+          "weapon": "ru_kab500",
+          "mounts": 3,
+          "ammo": 1
+        },
+        {
+          "weapon": "ru_gun_gsh301",
+          "mounts": 1,
+          "ammo": 180
+        }
+      ],
+      "chaff": 12
+    },
+    "ru_su35s": {
+      "id": "ru_su35s",
+      "name": "Su-35S [Flanker E Variant 2] Fighter (ceil 18000 m)",
+      "kind": "Aircraft",
+      "hp": 36,
+      "max_speed_kts": 1290,
+      "cruise_speed_kts": 460,
+      "turn_rate_deg_s": 12,
+      "accel_kts_per_s": 5.0,
+      "rcs": "Small",
+      "vp_value": 14,
+      "endurance_s": 10643.0,
+      "sensors": [
+        "ru_radar_n035",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_r77_1",
+          "mounts": 4,
+          "ammo": 1
+        },
+        {
+          "weapon": "ru_r73",
+          "mounts": 2,
+          "ammo": 1
+        },
+        {
+          "weapon": "ru_kh31",
+          "mounts": 1,
+          "ammo": 1
+        },
+        {
+          "weapon": "ru_r37m",
+          "mounts": 2,
+          "ammo": 1
+        },
+        {
+          "weapon": "ru_gun_gsh301",
+          "mounts": 1,
+          "ammo": 150
+        }
+      ],
+      "chaff": 16
+    },
+    "ru_su57": {
+      "id": "ru_su57",
+      "name": "Su-57 [Felon] Fighter (ceil 20000 m)",
+      "kind": "Aircraft",
+      "hp": 37,
+      "max_speed_kts": 1320,
+      "cruise_speed_kts": 530,
+      "turn_rate_deg_s": 14,
+      "accel_kts_per_s": 5.0,
+      "rcs": "VerySmall",
+      "vp_value": 15,
+      "endurance_s": 9000.0,
+      "sensors": [
+        "ru_radar_n036",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_r77_1",
+          "mounts": 4,
+          "ammo": 1
+        },
+        {
+          "weapon": "ru_r74m2",
+          "mounts": 2,
+          "ammo": 1
+        },
+        {
+          "weapon": "ru_kh35",
+          "mounts": 4,
+          "ammo": 1
+        },
+        {
+          "weapon": "ru_gun_gsh301",
+          "mounts": 1,
+          "ammo": 150
+        }
+      ],
+      "chaff": 20
+    },
+    "ru_tu142": {
+      "id": "ru_tu142",
+      "name": "Tu-142 [Bear F Mod 0-2] ASW Patrol (ceil 11000 m)",
+      "kind": "Aircraft",
+      "hp": 83,
+      "max_speed_kts": 450,
+      "cruise_speed_kts": 400,
+      "turn_rate_deg_s": 4,
+      "accel_kts_per_s": 1.0,
+      "rcs": "Large",
+      "vp_value": 33,
+      "endurance_s": 51120.0,
+      "sensors": [
+        "ru_radar_berkut",
+        "ru_sonobuoy_p",
+        "ru_mad",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_at2",
+          "mounts": 1,
+          "ammo": 3
+        },
+        {
+          "weapon": "ru_plab250",
+          "mounts": 1,
+          "ammo": 14
+        }
+      ],
+      "chaff": 4
+    },
+    "ru_tu142mz": {
+      "id": "ru_tu142mz",
+      "name": "Tu-142MZ [Bear F Mod 5] ASW Patrol (ceil 10700 m)",
+      "kind": "Aircraft",
+      "hp": 83,
+      "max_speed_kts": 450,
+      "cruise_speed_kts": 400,
+      "turn_rate_deg_s": 4,
+      "accel_kts_per_s": 1.0,
+      "rcs": "Large",
+      "vp_value": 33,
+      "endurance_s": 49140.0,
+      "sensors": [
+        "ru_radar_korshun",
+        "ru_sonobuoy_p",
+        "ru_mad",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_umgt1",
+          "mounts": 1,
+          "ammo": 3
+        },
+        {
+          "weapon": "ru_plab250",
+          "mounts": 1,
+          "ammo": 14
+        }
+      ],
+      "chaff": 16
+    },
+    "ru_tu160": {
+      "id": "ru_tu160",
+      "name": "Tu-160 [Blackjack A] Bomber (ceil 15600 m)",
+      "kind": "Aircraft",
+      "hp": 85,
+      "max_speed_kts": 1080,
+      "cruise_speed_kts": 440,
+      "turn_rate_deg_s": 6,
+      "accel_kts_per_s": 2.0,
+      "rcs": "Medium",
+      "vp_value": 34,
+      "endurance_s": 54818.0,
+      "sensors": [
+        "ru_radar_obzor_k",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_kh101",
+          "mounts": 6,
+          "ammo": 2
+        }
+      ],
+      "chaff": 16
+    },
+    "ru_tu22m3": {
+      "id": "ru_tu22m3",
+      "name": "Tu-22M-3 [Backfire C] Bomber (ceil 13300 m)",
+      "kind": "Aircraft",
+      "hp": 49,
+      "max_speed_kts": 1240,
+      "cruise_speed_kts": 485,
+      "turn_rate_deg_s": 5,
+      "accel_kts_per_s": 2.0,
+      "rcs": "Large",
+      "vp_value": 20,
+      "endurance_s": 23864.0,
+      "sensors": [
+        "ru_radar_pna",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_kh22",
+          "mounts": 3,
+          "ammo": 1
+        },
+        {
+          "weapon": "ru_fab500",
+          "mounts": 6,
+          "ammo": 3
+        },
+        {
+          "weapon": "ru_gun_gsh23",
+          "mounts": 1,
+          "ammo": 400
+        }
+      ],
+      "chaff": 10
+    },
+    "ru_tu95ms": {
+      "id": "ru_tu95ms",
+      "name": "Tu-95MS [Bear H] Bomber (ceil 10500 m)",
+      "kind": "Aircraft",
+      "hp": 91,
+      "max_speed_kts": 495,
+      "cruise_speed_kts": 400,
+      "turn_rate_deg_s": 4,
+      "accel_kts_per_s": 1.0,
+      "rcs": "Large",
+      "vp_value": 36,
+      "endurance_s": 61920.0,
+      "sensors": [
+        "ru_radar_obzor",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_kh101",
+          "mounts": 4,
+          "ammo": 2
+        }
+      ],
+      "chaff": 16
+    },
+    "ru_yak38": {
+      "id": "ru_yak38",
+      "name": "Yak-38/38M [Forger A] Attack (ceil 11000 m)",
+      "kind": "Aircraft",
+      "hp": 20,
+      "max_speed_kts": 560,
+      "cruise_speed_kts": 520,
+      "turn_rate_deg_s": 8,
+      "accel_kts_per_s": 3.0,
+      "rcs": "Small",
+      "vp_value": 8,
+      "endurance_s": 2250.0,
+      "sensors": [
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_r60m",
+          "mounts": 2,
+          "ammo": 1
+        },
+        {
+          "weapon": "ru_fab250",
+          "mounts": 2,
+          "ammo": 1
+        }
+      ],
+      "chaff": 4
+    },
+    "ru_yak41m": {
+      "id": "ru_yak41m",
+      "name": "Yak-41M [Freestyle] Fighter (ceil 15000 m)",
+      "kind": "Aircraft",
+      "hp": 23,
+      "max_speed_kts": 970,
+      "cruise_speed_kts": 460,
+      "turn_rate_deg_s": 14,
+      "accel_kts_per_s": 5.0,
+      "rcs": "Small",
+      "vp_value": 9,
+      "endurance_s": 3835.0,
+      "sensors": [
+        "ru_radar_n002",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_r77",
+          "mounts": 2,
+          "ammo": 1
+        },
+        {
+          "weapon": "ru_r73",
+          "mounts": 2,
+          "ammo": 1
+        },
+        {
+          "weapon": "ru_kh31",
+          "mounts": 2,
+          "ammo": 1
+        },
+        {
+          "weapon": "ru_gun_gsh301",
+          "mounts": 1,
+          "ammo": 120
+        }
+      ],
+      "chaff": 8
+    }
+  },
+  "weapons": {
+    "ru_apr2": {
+      "id": "ru_apr2",
+      "name": "APR-2 Yastreb",
+      "kind": "Lwt",
+      "targets": {
+        "sub": true
+      },
+      "range_nm": 0.8,
+      "speed_kts": 62,
+      "pk": 0.5,
+      "salvo": 1,
+      "reload_s": 20,
+      "damage": 58,
+      "guidance": "TorpedoActive",
+      "enable_range_nm": 0.3
+    },
+    "ru_apr3": {
+      "id": "ru_apr3",
+      "name": "APR-3 Orel",
+      "kind": "Lwt",
+      "targets": {
+        "sub": true
+      },
+      "range_nm": 1.1,
+      "speed_kts": 65,
+      "pk": 0.55,
+      "salvo": 1,
+      "reload_s": 20,
+      "damage": 57,
+      "guidance": "TorpedoActive",
+      "enable_range_nm": 0.4
+    },
+    "ru_at2": {
+      "id": "ru_at2",
+      "name": "AT-2M",
+      "kind": "Lwt",
+      "targets": {
+        "sub": true
+      },
+      "range_nm": 1.9,
+      "speed_kts": 40,
+      "pk": 0.5,
+      "salvo": 1,
+      "reload_s": 20,
+      "damage": 62,
+      "guidance": "TorpedoActive",
+      "enable_range_nm": 0.4
+    },
+    "ru_fab250": {
+      "id": "ru_fab250",
+      "name": "FAB-250M54 Bomb",
+      "kind": "Bomb",
+      "targets": {
+        "surface": true,
+        "land": true
+      },
+      "range_nm": 0.8,
+      "speed_kts": 0,
+      "pk": 0.3,
+      "salvo": 1,
+      "reload_s": 180,
+      "damage": 39,
+      "guidance": "BallisticGun"
+    },
+    "ru_fab500": {
+      "id": "ru_fab500",
+      "name": "FAB-500M54 Bomb",
+      "kind": "Bomb",
+      "targets": {
+        "surface": true,
+        "land": true
+      },
+      "range_nm": 0.8,
+      "speed_kts": 0,
+      "pk": 0.35,
+      "salvo": 1,
+      "reload_s": 180,
+      "damage": 49,
+      "guidance": "BallisticGun"
+    },
+    "ru_gun_gsh23": {
+      "id": "ru_gun_gsh23",
+      "name": "GSh-23 23mm",
+      "kind": "Gun",
+      "targets": {
+        "air": true,
+        "surface": true
+      },
+      "range_nm": 1.5,
+      "speed_kts": 0,
+      "pk": 0.2,
+      "salvo": 3,
+      "reload_s": 4,
+      "damage": 3,
+      "guidance": "BallisticGun"
+    },
+    "ru_gun_gsh301": {
+      "id": "ru_gun_gsh301",
+      "name": "GSh-30-1 30mm",
+      "kind": "Gun",
+      "targets": {
+        "air": true,
+        "surface": true
+      },
+      "range_nm": 1.5,
+      "speed_kts": 0,
+      "pk": 0.25,
+      "salvo": 3,
+      "reload_s": 4,
+      "damage": 3,
+      "guidance": "BallisticGun"
+    },
+    "ru_gun_gsh302": {
+      "id": "ru_gun_gsh302",
+      "name": "GSh-30-2 30mm",
+      "kind": "Gun",
+      "targets": {
+        "air": true,
+        "surface": true
+      },
+      "range_nm": 1.5,
+      "speed_kts": 0,
+      "pk": 0.25,
+      "salvo": 3,
+      "reload_s": 4,
+      "damage": 3,
+      "guidance": "BallisticGun"
+    },
+    "ru_gun_gsh623": {
+      "id": "ru_gun_gsh623",
+      "name": "GSh-6-23 23mm",
+      "kind": "Gun",
+      "targets": {
+        "air": true,
+        "surface": true
+      },
+      "range_nm": 1.5,
+      "speed_kts": 0,
+      "pk": 0.22,
+      "salvo": 3,
+      "reload_s": 4,
+      "damage": 3,
+      "guidance": "BallisticGun"
+    },
+    "ru_igla_v": {
+      "id": "ru_igla_v",
+      "name": "9M39 Igla-V [SA-18 Grouse]",
+      "kind": "Aam",
+      "targets": {
+        "air": true
+      },
+      "range_nm": 2.0,
+      "speed_kts": 1107,
+      "pk": 0.4,
+      "salvo": 1,
+      "reload_s": 6,
+      "damage": 8,
+      "guidance": "HomingAir",
+      "min_range_nm": 0.2,
+      "ir": true
+    },
+    "ru_kab500": {
+      "id": "ru_kab500",
+      "name": "KAB-500Kr Guided Bomb",
+      "kind": "Bomb",
+      "targets": {
+        "surface": true,
+        "land": true
+      },
+      "range_nm": 4.9,
+      "speed_kts": 528,
+      "pk": 0.55,
+      "salvo": 1,
+      "reload_s": 180,
+      "damage": 41,
+      "guidance": "BallisticGun",
+      "min_range_nm": 1.6
+    },
+    "ru_kh101": {
+      "id": "ru_kh101",
+      "name": "Kh-101 [AS-23a Kodiak]",
+      "kind": "Slcm",
+      "targets": {
+        "land": true
+      },
+      "range_nm": 2160.0,
+      "speed_kts": 400,
+      "pk": 0.75,
+      "salvo": 1,
+      "reload_s": 90,
+      "damage": 52,
+      "guidance": "SeaSkimmer",
+      "min_range_nm": 15.0
+    },
+    "ru_kh22": {
+      "id": "ru_kh22",
+      "name": "Kh-22M Burya [AS-4 Kitchen]",
+      "kind": "Ascm",
+      "targets": {
+        "surface": true
+      },
+      "range_nm": 189.0,
+      "speed_kts": 2003,
+      "pk": 0.6,
+      "salvo": 1,
+      "reload_s": 60,
+      "damage": 77,
+      "guidance": "SeaSkimmer",
+      "min_range_nm": 70.0
+    },
+    "ru_kh31": {
+      "id": "ru_kh31",
+      "name": "Kh-31AM [AS-17 Krypton]",
+      "kind": "Ascm",
+      "targets": {
+        "surface": true
+      },
+      "range_nm": 86.4,
+      "speed_kts": 1690,
+      "pk": 0.55,
+      "salvo": 1,
+      "reload_s": 45,
+      "damage": 38,
+      "guidance": "SeaSkimmer",
+      "min_range_nm": 5.4
+    },
+    "ru_kh35": {
+      "id": "ru_kh35",
+      "name": "Kh-35U Uran [AS-20 Kayak]",
+      "kind": "Ascm",
+      "targets": {
+        "surface": true
+      },
+      "range_nm": 140.4,
+      "speed_kts": 560,
+      "pk": 0.55,
+      "salvo": 1,
+      "reload_s": 45,
+      "damage": 38,
+      "guidance": "SeaSkimmer",
+      "min_range_nm": 3.8
+    },
+    "ru_plab250": {
+      "id": "ru_plab250",
+      "name": "PLAB-250-120 Depth Charge",
+      "kind": "Bomb",
+      "targets": {
+        "sub": true
+      },
+      "range_nm": 0.8,
+      "speed_kts": 0,
+      "pk": 0.3,
+      "salvo": 1,
+      "reload_s": 180,
+      "damage": 9,
+      "guidance": "BallisticGun"
+    },
+    "ru_r27er": {
+      "id": "ru_r27er",
+      "name": "R-27ER [AA-10 Alamo C]",
+      "kind": "Aam",
+      "targets": {
+        "air": true
+      },
+      "range_nm": 39.9,
+      "speed_kts": 2295,
+      "pk": 0.5,
+      "salvo": 1,
+      "reload_s": 4,
+      "damage": 25,
+      "guidance": "HomingAir",
+      "min_range_nm": 0.5
+    },
+    "ru_r27r": {
+      "id": "ru_r27r",
+      "name": "R-27R [AA-10 Alamo A]",
+      "kind": "Aam",
+      "targets": {
+        "air": true
+      },
+      "range_nm": 32.4,
+      "speed_kts": 2008,
+      "pk": 0.46,
+      "salvo": 1,
+      "reload_s": 4,
+      "damage": 25,
+      "guidance": "HomingAir",
+      "min_range_nm": 0.5
+    },
+    "ru_r33": {
+      "id": "ru_r33",
+      "name": "R-33 [AA-9 Amos]",
+      "kind": "Aam",
+      "targets": {
+        "air": true
+      },
+      "range_nm": 46.2,
+      "speed_kts": 2008,
+      "pk": 0.5,
+      "salvo": 1,
+      "reload_s": 5,
+      "damage": 30,
+      "guidance": "HomingAir",
+      "min_range_nm": 2.0
+    },
+    "ru_r37m": {
+      "id": "ru_r37m",
+      "name": "R-37M [AA-13 Axehead]",
+      "kind": "Aam",
+      "targets": {
+        "air": true
+      },
+      "range_nm": 139.0,
+      "speed_kts": 3442,
+      "pk": 0.62,
+      "salvo": 1,
+      "reload_s": 6,
+      "damage": 35,
+      "guidance": "HomingAir",
+      "min_range_nm": 3.0
+    },
+    "ru_r60m": {
+      "id": "ru_r60m",
+      "name": "R-60M [AA-8 Aphid]",
+      "kind": "Aam",
+      "targets": {
+        "air": true
+      },
+      "range_nm": 4.3,
+      "speed_kts": 1721,
+      "pk": 0.42,
+      "salvo": 1,
+      "reload_s": 3,
+      "damage": 12,
+      "guidance": "HomingAir",
+      "min_range_nm": 0.3,
+      "ir": true
+    },
+    "ru_r73": {
+      "id": "ru_r73",
+      "name": "R-73 [AA-11 Archer]",
+      "kind": "Aam",
+      "targets": {
+        "air": true
+      },
+      "range_nm": 8.1,
+      "speed_kts": 1434,
+      "pk": 0.54,
+      "salvo": 1,
+      "reload_s": 3,
+      "damage": 15,
+      "guidance": "HomingAir",
+      "min_range_nm": 0.3,
+      "ir": true
+    },
+    "ru_r74m2": {
+      "id": "ru_r74m2",
+      "name": "R-74M2",
+      "kind": "Aam",
+      "targets": {
+        "air": true
+      },
+      "range_nm": 14.5,
+      "speed_kts": 1434,
+      "pk": 0.58,
+      "salvo": 1,
+      "reload_s": 3,
+      "damage": 16,
+      "guidance": "HomingAir",
+      "min_range_nm": 0.3,
+      "ir": true
+    },
+    "ru_r77": {
+      "id": "ru_r77",
+      "name": "R-77 [AA-12 Adder]",
+      "kind": "Aam",
+      "targets": {
+        "air": true
+      },
+      "range_nm": 36.7,
+      "speed_kts": 1721,
+      "pk": 0.54,
+      "salvo": 1,
+      "reload_s": 4,
+      "damage": 22,
+      "guidance": "HomingAir",
+      "min_range_nm": 0.3
+    },
+    "ru_r77_1": {
+      "id": "ru_r77_1",
+      "name": "R-77-1 [AA-12 Adder]",
+      "kind": "Aam",
+      "targets": {
+        "air": true
+      },
+      "range_nm": 44.6,
+      "speed_kts": 1721,
+      "pk": 0.58,
+      "salvo": 1,
+      "reload_s": 4,
+      "damage": 22,
+      "guidance": "HomingAir",
+      "min_range_nm": 0.3
+    },
+    "ru_s8": {
+      "id": "ru_s8",
+      "name": "S-8 80mm Rocket",
+      "kind": "Rocket",
+      "targets": {
+        "surface": true,
+        "land": true
+      },
+      "range_nm": 3.0,
+      "speed_kts": 0,
+      "pk": 0.25,
+      "salvo": 4,
+      "reload_s": 180,
+      "damage": 13,
+      "guidance": "BallisticGun"
+    },
+    "ru_umgt1": {
+      "id": "ru_umgt1",
+      "name": "UMGT-1 Orlan",
+      "kind": "Lwt",
+      "targets": {
+        "sub": true
+      },
+      "range_nm": 4.3,
+      "speed_kts": 41,
+      "pk": 0.55,
+      "salvo": 1,
+      "reload_s": 20,
+      "damage": 50,
+      "guidance": "TorpedoActive",
+      "enable_range_nm": 0.5
+    }
+  },
+  "sensors": {
+    "ru_mad": {
+      "id": "ru_mad",
+      "name": "MAD [Magnetic Anomaly Detector]",
+      "kind": "Magnetic",
+      "air_range_nm": 0,
+      "surface_range_nm": 0,
+      "sub_range_nm": 0.5,
+      "missile_range_nm": 0,
+      "alt_m": 100
+    },
+    "ru_radar_berkut": {
+      "id": "ru_radar_berkut",
+      "name": "Berkut [Wet Eye I]",
+      "kind": "Radar",
+      "air_range_nm": 51,
+      "surface_range_nm": 89,
+      "sub_range_nm": 0,
+      "missile_range_nm": 28,
+      "alt_m": 8000,
+      "radar_class": "SS"
+    },
+    "ru_radar_e801": {
+      "id": "ru_radar_e801",
+      "name": "E-801 Oko",
+      "kind": "Radar",
+      "air_range_nm": 120,
+      "surface_range_nm": 71,
+      "sub_range_nm": 0,
+      "missile_range_nm": 34,
+      "alt_m": 3500,
+      "radar_class": "LAS"
+    },
+    "ru_radar_fh01": {
+      "id": "ru_radar_fh01",
+      "name": "FH-01 Myech-1U",
+      "kind": "Radar",
+      "air_range_nm": 12,
+      "surface_range_nm": 9.6,
+      "sub_range_nm": 0,
+      "missile_range_nm": 3.4,
+      "alt_m": 3000,
+      "radar_class": "LAS"
+    },
+    "ru_radar_initsiativa_2b": {
+      "id": "ru_radar_initsiativa_2b",
+      "name": "Initsiativa-2B [Short Horn]",
+      "kind": "Radar",
+      "air_range_nm": 44,
+      "surface_range_nm": 76,
+      "sub_range_nm": 0,
+      "missile_range_nm": 24,
+      "alt_m": 5000,
+      "radar_class": "SS"
+    },
+    "ru_radar_initsiativa_2m": {
+      "id": "ru_radar_initsiativa_2m",
+      "name": "Initsiativa-2M [Short Horn]",
+      "kind": "Radar",
+      "air_range_nm": 37,
+      "surface_range_nm": 65,
+      "sub_range_nm": 0,
+      "missile_range_nm": 21,
+      "alt_m": 5000,
+      "radar_class": "SS"
+    },
+    "ru_radar_korshun": {
+      "id": "ru_radar_korshun",
+      "name": "Korshun [Wet Eye II]",
+      "kind": "Radar",
+      "air_range_nm": 61,
+      "surface_range_nm": 106,
+      "sub_range_nm": 0,
+      "missile_range_nm": 34,
+      "alt_m": 8000,
+      "radar_class": "SS"
+    },
+    "ru_radar_n001": {
+      "id": "ru_radar_n001",
+      "name": "N-001 Meych [Slot Back II]",
+      "kind": "Radar",
+      "air_range_nm": 75,
+      "surface_range_nm": 57,
+      "sub_range_nm": 0,
+      "missile_range_nm": 23,
+      "alt_m": 10000,
+      "radar_class": "LAS"
+    },
+    "ru_radar_n001v": {
+      "id": "ru_radar_n001v",
+      "name": "N-001V/VM Meych",
+      "kind": "Radar",
+      "air_range_nm": 114,
+      "surface_range_nm": 81,
+      "sub_range_nm": 0,
+      "missile_range_nm": 33,
+      "alt_m": 10000,
+      "radar_class": "LAS"
+    },
+    "ru_radar_n002": {
+      "id": "ru_radar_n002",
+      "name": "N-002 Zhuk",
+      "kind": "Radar",
+      "air_range_nm": 64,
+      "surface_range_nm": 34,
+      "sub_range_nm": 0,
+      "missile_range_nm": 18,
+      "alt_m": 10000,
+      "radar_class": "LAS"
+    },
+    "ru_radar_n007am": {
+      "id": "ru_radar_n007am",
+      "name": "RP-31AM Zaslon-AM [Flash Dance]",
+      "kind": "Radar",
+      "air_range_nm": 129,
+      "surface_range_nm": 92,
+      "sub_range_nm": 0,
+      "missile_range_nm": 37,
+      "alt_m": 20000,
+      "radar_class": "LAS"
+    },
+    "ru_radar_n010": {
+      "id": "ru_radar_n010",
+      "name": "N-010 Zhuk",
+      "kind": "Radar",
+      "air_range_nm": 34,
+      "surface_range_nm": 29,
+      "sub_range_nm": 0,
+      "missile_range_nm": 10,
+      "alt_m": 10000,
+      "radar_class": "LAS"
+    },
+    "ru_radar_n011mr": {
+      "id": "ru_radar_n011mr",
+      "name": "N-011MR Bars-R",
+      "kind": "Radar",
+      "air_range_nm": 111,
+      "surface_range_nm": 130,
+      "sub_range_nm": 0,
+      "missile_range_nm": 32,
+      "alt_m": 10000,
+      "radar_class": "LAS"
+    },
+    "ru_radar_n035": {
+      "id": "ru_radar_n035",
+      "name": "N-035 Irbis",
+      "kind": "Radar",
+      "air_range_nm": 151,
+      "surface_range_nm": 164,
+      "sub_range_nm": 0,
+      "missile_range_nm": 43,
+      "alt_m": 10000,
+      "radar_class": "LAS"
+    },
+    "ru_radar_n036": {
+      "id": "ru_radar_n036",
+      "name": "N-036 Byelka",
+      "kind": "Radar",
+      "air_range_nm": 136,
+      "surface_range_nm": 189,
+      "sub_range_nm": 0,
+      "missile_range_nm": 39,
+      "alt_m": 12000,
+      "radar_class": "LAS"
+    },
+    "ru_radar_n041": {
+      "id": "ru_radar_n041",
+      "name": "N-041 Zhuk-M1",
+      "kind": "Radar",
+      "air_range_nm": 104,
+      "surface_range_nm": 52,
+      "sub_range_nm": 0,
+      "missile_range_nm": 30,
+      "alt_m": 10000,
+      "radar_class": "LAS"
+    },
+    "ru_radar_novella_2": {
+      "id": "ru_radar_novella_2",
+      "name": "Novella 2 [Sea Dragon 2]",
+      "kind": "Radar",
+      "air_range_nm": 71,
+      "surface_range_nm": 95,
+      "sub_range_nm": 0,
+      "missile_range_nm": 31,
+      "alt_m": 8000,
+      "radar_class": "SS"
+    },
+    "ru_radar_obzor": {
+      "id": "ru_radar_obzor",
+      "name": "Obzor [Clam Pipe]",
+      "kind": "Radar",
+      "air_range_nm": 101,
+      "surface_range_nm": 177,
+      "sub_range_nm": 0,
+      "missile_range_nm": 57,
+      "alt_m": 10000,
+      "radar_class": "SS"
+    },
+    "ru_radar_obzor_k": {
+      "id": "ru_radar_obzor_k",
+      "name": "Obzor-K [Clam Pipe]",
+      "kind": "Radar",
+      "air_range_nm": 164,
+      "surface_range_nm": 200,
+      "sub_range_nm": 0,
+      "missile_range_nm": 92,
+      "alt_m": 12000,
+      "radar_class": "SS"
+    },
+    "ru_radar_orion_a": {
+      "id": "ru_radar_orion_a",
+      "name": "Orion-A [Drop Kick]",
+      "kind": "Radar",
+      "air_range_nm": 40,
+      "surface_range_nm": 71,
+      "sub_range_nm": 0,
+      "missile_range_nm": 23,
+      "alt_m": 8000,
+      "radar_class": "SS"
+    },
+    "ru_radar_osminog": {
+      "id": "ru_radar_osminog",
+      "name": "Osminog [Splash Drop]",
+      "kind": "Radar",
+      "air_range_nm": 51,
+      "surface_range_nm": 90,
+      "sub_range_nm": 0,
+      "missile_range_nm": 29,
+      "alt_m": 5000,
+      "radar_class": "SS"
+    },
+    "ru_radar_pna": {
+      "id": "ru_radar_pna",
+      "name": "PNA Rubin [Down Beat]",
+      "kind": "Radar",
+      "air_range_nm": 108,
+      "surface_range_nm": 188,
+      "sub_range_nm": 0,
+      "missile_range_nm": 60,
+      "alt_m": 10000,
+      "radar_class": "SS"
+    },
+    "ru_radar_premier": {
+      "id": "ru_radar_premier",
+      "name": "Premier",
+      "kind": "Radar",
+      "air_range_nm": 350,
+      "surface_range_nm": 219,
+      "sub_range_nm": 0,
+      "missile_range_nm": 129,
+      "alt_m": 9000,
+      "radar_class": "LAS"
+    },
+    "ru_radar_shmel": {
+      "id": "ru_radar_shmel",
+      "name": "Shmel [Squash Dome]",
+      "kind": "Radar",
+      "air_range_nm": 175,
+      "surface_range_nm": 123,
+      "sub_range_nm": 0,
+      "missile_range_nm": 50,
+      "alt_m": 8500,
+      "radar_class": "LAS"
+    },
+    "ru_radar_v004": {
+      "id": "ru_radar_v004",
+      "name": "V-004",
+      "kind": "Radar",
+      "air_range_nm": 71,
+      "surface_range_nm": 74,
+      "sub_range_nm": 0,
+      "missile_range_nm": 20,
+      "alt_m": 10000,
+      "radar_class": "LAS"
+    },
+    "ru_sonar_vgs2": {
+      "id": "ru_sonar_vgs2",
+      "name": "VGS-2 Oka [Stork Tail] Dipping Sonar",
+      "kind": "SonarActive",
+      "air_range_nm": 0,
+      "surface_range_nm": 0,
+      "sub_range_nm": 1.7,
+      "missile_range_nm": 0,
+      "alt_m": 0
+    },
+    "ru_sonar_vgs3": {
+      "id": "ru_sonar_vgs3",
+      "name": "VGS-3 Ros-V [Lamb Tail] Dipping Sonar",
+      "kind": "SonarActive",
+      "air_range_nm": 0,
+      "surface_range_nm": 0,
+      "sub_range_nm": 2.5,
+      "missile_range_nm": 0,
+      "alt_m": 0
+    },
+    "ru_sonobuoy_p": {
+      "id": "ru_sonobuoy_p",
+      "name": "Sonobuoy Field (passive)",
+      "kind": "SonarPassive",
+      "air_range_nm": 0,
+      "surface_range_nm": 0,
+      "sub_range_nm": 3.4,
+      "missile_range_nm": 0,
+      "alt_m": 0
+    }
+  }
+}

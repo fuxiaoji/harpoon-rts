@@ -1,0 +1,3709 @@
+{
+  "platforms": {
+    "uk_qe": {
+      "id": "uk_qe",
+      "name": "Queen Elizabeth (ii) CV (65,000 t fl)",
+      "kind": "Ship",
+      "hp": 1052,
+      "max_speed_kts": 27,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 1.2,
+      "accel_kts_per_s": 0.4,
+      "rcs": "Large",
+      "noise_db": 58,
+      "visual_factor": 1.0,
+      "vp_value": 70,
+      "sensors": [
+        "radar_air_long",
+        "radar_surf_med",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 3,
+          "ammo": 15
+        }
+      ],
+      "chaff": 40,
+      "decoys": 12,
+      "deck": {
+        "capacity": 40,
+        "cycle_s": 120,
+        "wing": [
+          {
+            "class": "cw_f35b",
+            "count": 24
+          },
+          {
+            "class": "cw_merlin_hm2",
+            "count": 10
+          },
+          {
+            "class": "cw_wildcat_hma2",
+            "count": 6
+          }
+        ]
+      }
+    },
+    "uk_illustrious": {
+      "id": "uk_illustrious",
+      "name": "Illustrious (Invincible class) CVH",
+      "kind": "Ship",
+      "hp": 563,
+      "max_speed_kts": 28,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 1.3,
+      "accel_kts_per_s": 0.4,
+      "rcs": "Medium",
+      "noise_db": 56,
+      "visual_factor": 0.8,
+      "vp_value": 55,
+      "sensors": [
+        "radar_air_med",
+        "radar_surf_med",
+        "esm_std",
+        "visual",
+        "sonar_p_hull"
+      ],
+      "weapons": [
+        {
+          "weapon": "cw_seadart",
+          "mounts": 1,
+          "ammo": 22
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 3,
+          "ammo": 15
+        },
+        {
+          "weapon": "cw_20mm",
+          "mounts": 2,
+          "ammo": 10
+        }
+      ],
+      "chaff": 30,
+      "decoys": 10,
+      "deck": {
+        "capacity": 20,
+        "cycle_s": 120,
+        "wing": [
+          {
+            "class": "cw_sea_harrier_fa2",
+            "count": 8
+          },
+          {
+            "class": "cw_sea_king_has6",
+            "count": 9
+          },
+          {
+            "class": "cw_sea_king_asac7",
+            "count": 3
+          }
+        ]
+      }
+    },
+    "uk_ocean": {
+      "id": "uk_ocean",
+      "name": "Ocean LPH",
+      "kind": "Ship",
+      "hp": 504,
+      "max_speed_kts": 19,
+      "cruise_speed_kts": 14,
+      "turn_rate_deg_s": 1.3,
+      "accel_kts_per_s": 0.4,
+      "rcs": "Medium",
+      "noise_db": 56,
+      "visual_factor": 0.9,
+      "vp_value": 40,
+      "sensors": [
+        "radar_air_med",
+        "radar_surf_med",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 3,
+          "ammo": 15
+        },
+        {
+          "weapon": "gun_30mm",
+          "mounts": 3,
+          "ammo": 20
+        },
+        {
+          "weapon": "cw_762mm",
+          "mounts": 4,
+          "ammo": 10
+        }
+      ],
+      "chaff": 20,
+      "decoys": 8,
+      "deck": {
+        "capacity": 18,
+        "cycle_s": 120,
+        "wing": [
+          {
+            "class": "cw_merlin_hm2",
+            "count": 12
+          },
+          {
+            "class": "cw_wildcat_hma2",
+            "count": 6
+          }
+        ]
+      }
+    },
+    "uk_albion": {
+      "id": "uk_albion",
+      "name": "Albion (ii) LPD",
+      "kind": "Ship",
+      "hp": 382,
+      "max_speed_kts": 18,
+      "cruise_speed_kts": 14,
+      "turn_rate_deg_s": 1.4,
+      "accel_kts_per_s": 0.4,
+      "rcs": "Medium",
+      "noise_db": 56,
+      "visual_factor": 0.9,
+      "vp_value": 30,
+      "sensors": [
+        "radar_air_med",
+        "radar_surf_med",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 2,
+          "ammo": 15
+        },
+        {
+          "weapon": "cw_20mm",
+          "mounts": 2,
+          "ammo": 10
+        }
+      ],
+      "chaff": 20,
+      "decoys": 8,
+      "deck": {
+        "capacity": 3,
+        "cycle_s": 120,
+        "wing": [
+          {
+            "class": "cw_merlin_hm2",
+            "count": 3
+          }
+        ]
+      }
+    },
+    "uk_bay": {
+      "id": "uk_bay",
+      "name": "Bay class LSD (Largs Bay)",
+      "kind": "Ship",
+      "hp": 293,
+      "max_speed_kts": 18,
+      "cruise_speed_kts": 14,
+      "turn_rate_deg_s": 1.4,
+      "accel_kts_per_s": 0.4,
+      "rcs": "Medium",
+      "noise_db": 56,
+      "visual_factor": 0.9,
+      "vp_value": 22,
+      "sensors": [
+        "radar_nav",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 2,
+          "ammo": 15
+        },
+        {
+          "weapon": "gun_30mm",
+          "mounts": 2,
+          "ammo": 20
+        }
+      ],
+      "chaff": 16,
+      "decoys": 6,
+      "deck": {
+        "capacity": 2,
+        "cycle_s": 120,
+        "wing": [
+          {
+            "class": "cw_merlin_hm2",
+            "count": 2
+          }
+        ]
+      }
+    },
+    "uk_vanguard": {
+      "id": "uk_vanguard",
+      "name": "Vanguard SSBN",
+      "kind": "Sub",
+      "hp": 271,
+      "max_speed_kts": 25,
+      "cruise_speed_kts": 10,
+      "turn_rate_deg_s": 1.8,
+      "accel_kts_per_s": 0.4,
+      "rcs": "Small",
+      "noise_db": 30,
+      "visual_factor": 0.12,
+      "vp_value": 45,
+      "sensors": [
+        "sonar_p_hull",
+        "sonar_p_tow",
+        "sonar_a_hull",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "torp_homing",
+          "mounts": 4,
+          "ammo": 4
+        }
+      ],
+      "chaff": 0,
+      "decoys": 12,
+      "max_depth_m": 300
+    },
+    "uk_astute": {
+      "id": "uk_astute",
+      "name": "Astute SSN",
+      "kind": "Sub",
+      "hp": 162,
+      "max_speed_kts": 29,
+      "cruise_speed_kts": 10,
+      "turn_rate_deg_s": 2.2,
+      "accel_kts_per_s": 0.4,
+      "rcs": "Small",
+      "noise_db": 22,
+      "visual_factor": 0.12,
+      "vp_value": 32,
+      "sensors": [
+        "sonar_p_hull",
+        "sonar_p_tow",
+        "sonar_a_hull",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "torp_homing",
+          "mounts": 6,
+          "ammo": 4
+        },
+        {
+          "weapon": "slcm",
+          "mounts": 1,
+          "ammo": 14
+        }
+      ],
+      "chaff": 0,
+      "decoys": 22,
+      "max_depth_m": 450
+    },
+    "uk_trafalgar": {
+      "id": "uk_trafalgar",
+      "name": "Trafalgar SSN",
+      "kind": "Sub",
+      "hp": 130,
+      "max_speed_kts": 29,
+      "cruise_speed_kts": 8,
+      "turn_rate_deg_s": 2.2,
+      "accel_kts_per_s": 0.4,
+      "rcs": "VerySmall",
+      "noise_db": 30,
+      "visual_factor": 0.12,
+      "vp_value": 30,
+      "sensors": [
+        "sonar_p_hull",
+        "sonar_p_tow",
+        "sonar_a_hull",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "torp_homing",
+          "mounts": 4,
+          "ammo": 3
+        },
+        {
+          "weapon": "slcm",
+          "mounts": 1,
+          "ammo": 12
+        }
+      ],
+      "chaff": 0,
+      "decoys": 16,
+      "max_depth_m": 400
+    },
+    "uk_resolution": {
+      "id": "uk_resolution",
+      "name": "Resolution SSBN",
+      "kind": "Sub",
+      "hp": 176,
+      "max_speed_kts": 23,
+      "cruise_speed_kts": 8,
+      "turn_rate_deg_s": 1.8,
+      "accel_kts_per_s": 0.4,
+      "rcs": "Small",
+      "noise_db": 42,
+      "visual_factor": 0.12,
+      "vp_value": 42,
+      "sensors": [
+        "sonar_p_hull",
+        "sonar_p_tow",
+        "sonar_a_hull",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "torp_homing",
+          "mounts": 4,
+          "ammo": 4
+        }
+      ],
+      "chaff": 0,
+      "decoys": 8,
+      "max_depth_m": 300
+    },
+    "uk_swiftsure": {
+      "id": "uk_swiftsure",
+      "name": "Swiftsure (ii) SSN",
+      "kind": "Sub",
+      "hp": 123,
+      "max_speed_kts": 30,
+      "cruise_speed_kts": 8,
+      "turn_rate_deg_s": 2.1,
+      "accel_kts_per_s": 0.4,
+      "rcs": "VerySmall",
+      "noise_db": 30,
+      "visual_factor": 0.12,
+      "vp_value": 26,
+      "sensors": [
+        "sonar_p_hull",
+        "sonar_p_tow",
+        "sonar_a_hull",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "torp_homing",
+          "mounts": 4,
+          "ammo": 4
+        },
+        {
+          "weapon": "slcm",
+          "mounts": 1,
+          "ammo": 8
+        }
+      ],
+      "chaff": 0,
+      "decoys": 12,
+      "max_depth_m": 350
+    },
+    "uk_upholder": {
+      "id": "uk_upholder",
+      "name": "Upholder SS",
+      "kind": "Sub",
+      "hp": 78,
+      "max_speed_kts": 20,
+      "cruise_speed_kts": 8,
+      "turn_rate_deg_s": 2.4,
+      "accel_kts_per_s": 0.4,
+      "rcs": "VerySmall",
+      "noise_db": 30,
+      "visual_factor": 0.12,
+      "vp_value": 18,
+      "sensors": [
+        "sonar_p_hull",
+        "sonar_p_tow",
+        "sonar_a_hull",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "torp_homing",
+          "mounts": 4,
+          "ammo": 3
+        },
+        {
+          "weapon": "ascm_std",
+          "mounts": 1,
+          "ammo": 4
+        }
+      ],
+      "chaff": 0,
+      "decoys": 8,
+      "max_depth_m": 250
+    },
+    "uk_type45": {
+      "id": "uk_type45",
+      "name": "Type 45 (Daring) DDG",
+      "kind": "Ship",
+      "hp": 246,
+      "max_speed_kts": 31,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 2.0,
+      "accel_kts_per_s": 0.4,
+      "rcs": "Small",
+      "noise_db": 42,
+      "visual_factor": 0.5,
+      "vp_value": 30,
+      "sensors": [
+        "radar_air_xlong",
+        "radar_surf_med",
+        "esm_std",
+        "sonar_p_hull",
+        "sonar_a_hull",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cw_aster15",
+          "mounts": 1,
+          "ammo": 16
+        },
+        {
+          "weapon": "cw_aster30",
+          "mounts": 1,
+          "ammo": 32
+        },
+        {
+          "weapon": "cw_4_5in",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "gun_30mm",
+          "mounts": 2,
+          "ammo": 20
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 2,
+          "ammo": 15
+        },
+        {
+          "weapon": "cw_762mm",
+          "mounts": 2,
+          "ammo": 10
+        },
+        {
+          "weapon": "ascm_std",
+          "mounts": 2,
+          "ammo": 4
+        }
+      ],
+      "chaff": 32,
+      "decoys": 12
+    },
+    "uk_type42_3": {
+      "id": "uk_type42_3",
+      "name": "Type 42/3 (Manchester) DDG",
+      "kind": "Ship",
+      "hp": 212,
+      "max_speed_kts": 31,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 2.3,
+      "accel_kts_per_s": 0.4,
+      "rcs": "Small",
+      "noise_db": 54,
+      "visual_factor": 0.5,
+      "vp_value": 20,
+      "sensors": [
+        "radar_air_med",
+        "radar_surf_sm",
+        "esm_std",
+        "sonar_p_hull",
+        "sonar_a_hull",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cw_seadart",
+          "mounts": 1,
+          "ammo": 22
+        },
+        {
+          "weapon": "cw_4_5in",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 2,
+          "ammo": 15
+        },
+        {
+          "weapon": "cw_50cal",
+          "mounts": 4,
+          "ammo": 10
+        },
+        {
+          "weapon": "lwt",
+          "mounts": 2,
+          "ammo": 3
+        }
+      ],
+      "chaff": 16,
+      "decoys": 8
+    },
+    "uk_type42_12": {
+      "id": "uk_type42_12",
+      "name": "Type 42/1 & 42/2 DDG",
+      "kind": "Ship",
+      "hp": 198,
+      "max_speed_kts": 29,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 2.4,
+      "accel_kts_per_s": 0.4,
+      "rcs": "Small",
+      "noise_db": 54,
+      "visual_factor": 0.5,
+      "vp_value": 18,
+      "sensors": [
+        "radar_air_med",
+        "radar_surf_sm",
+        "esm_std",
+        "sonar_p_hull",
+        "sonar_a_hull",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cw_seadart",
+          "mounts": 1,
+          "ammo": 22
+        },
+        {
+          "weapon": "cw_4_5in",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 2,
+          "ammo": 15
+        },
+        {
+          "weapon": "cw_50cal",
+          "mounts": 4,
+          "ammo": 10
+        },
+        {
+          "weapon": "lwt",
+          "mounts": 2,
+          "ammo": 3
+        }
+      ],
+      "chaff": 16,
+      "decoys": 8
+    },
+    "uk_type82": {
+      "id": "uk_type82",
+      "name": "Type 82 (Bristol) DDG",
+      "kind": "Ship",
+      "hp": 270,
+      "max_speed_kts": 30,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 2.2,
+      "accel_kts_per_s": 0.4,
+      "rcs": "Medium",
+      "noise_db": 56,
+      "visual_factor": 0.7,
+      "vp_value": 20,
+      "sensors": [
+        "radar_air_med",
+        "radar_surf_med",
+        "sonar_p_hull",
+        "sonar_a_hull",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cw_seadart",
+          "mounts": 1,
+          "ammo": 38
+        },
+        {
+          "weapon": "cw_ikara",
+          "mounts": 1,
+          "ammo": 23
+        },
+        {
+          "weapon": "cw_4_5in",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "cw_20mm",
+          "mounts": 2,
+          "ammo": 10
+        },
+        {
+          "weapon": "asw_rocket",
+          "mounts": 1,
+          "ammo": 17
+        }
+      ],
+      "chaff": 8,
+      "decoys": 4
+    },
+    "uk_type31": {
+      "id": "uk_type31",
+      "name": "Type 31 (Inspiration) FF",
+      "kind": "Ship",
+      "hp": 231,
+      "max_speed_kts": 26,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 2.5,
+      "accel_kts_per_s": 0.4,
+      "rcs": "Small",
+      "noise_db": 54,
+      "visual_factor": 0.5,
+      "vp_value": 20,
+      "sensors": [
+        "radar_air_med",
+        "radar_surf_sm",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cw_seaceptor",
+          "mounts": 2,
+          "ammo": 6
+        },
+        {
+          "weapon": "cw_57mm",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "cw_40mm",
+          "mounts": 2,
+          "ammo": 20
+        }
+      ],
+      "chaff": 16,
+      "decoys": 8
+    },
+    "uk_type26": {
+      "id": "uk_type26",
+      "name": "Type 26 (City) FFG",
+      "kind": "Ship",
+      "hp": 263,
+      "max_speed_kts": 28,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 2.3,
+      "accel_kts_per_s": 0.4,
+      "rcs": "Medium",
+      "noise_db": 44,
+      "visual_factor": 0.6,
+      "vp_value": 28,
+      "sensors": [
+        "radar_air_med",
+        "radar_surf_sm",
+        "esm_std",
+        "sonar_p_hull",
+        "sonar_p_tow",
+        "sonar_a_hull",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cw_seaceptor",
+          "mounts": 8,
+          "ammo": 6
+        },
+        {
+          "weapon": "cw_5in_mk45",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "gun_30mm",
+          "mounts": 2,
+          "ammo": 20
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 2,
+          "ammo": 15
+        }
+      ],
+      "chaff": 32,
+      "decoys": 12
+    },
+    "uk_type23": {
+      "id": "uk_type23",
+      "name": "Type 23 (Duke) FF (LIFEX)",
+      "kind": "Ship",
+      "hp": 196,
+      "max_speed_kts": 30,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 2.4,
+      "accel_kts_per_s": 0.4,
+      "rcs": "VerySmall",
+      "noise_db": 42,
+      "visual_factor": 0.4,
+      "vp_value": 20,
+      "sensors": [
+        "radar_air_med",
+        "radar_surf_sm",
+        "esm_std",
+        "sonar_p_hull",
+        "sonar_p_tow",
+        "sonar_a_hull",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cw_seaceptor",
+          "mounts": 4,
+          "ammo": 8
+        },
+        {
+          "weapon": "cw_4_5in",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "gun_30mm",
+          "mounts": 2,
+          "ammo": 20
+        },
+        {
+          "weapon": "cw_762mm",
+          "mounts": 2,
+          "ammo": 10
+        },
+        {
+          "weapon": "ascm_std",
+          "mounts": 2,
+          "ammo": 2
+        },
+        {
+          "weapon": "lwt",
+          "mounts": 2,
+          "ammo": 12
+        }
+      ],
+      "chaff": 32,
+      "decoys": 12
+    },
+    "uk_type22_3": {
+      "id": "uk_type22_3",
+      "name": "Type 22/3 (Cornwall) FF",
+      "kind": "Ship",
+      "hp": 225,
+      "max_speed_kts": 30,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 2.4,
+      "accel_kts_per_s": 0.4,
+      "rcs": "Small",
+      "noise_db": 42,
+      "visual_factor": 0.5,
+      "vp_value": 18,
+      "sensors": [
+        "radar_air_med",
+        "radar_surf_sm",
+        "esm_std",
+        "sonar_p_hull",
+        "sonar_p_tow",
+        "sonar_a_hull",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ascm_std",
+          "mounts": 2,
+          "ammo": 4
+        },
+        {
+          "weapon": "cw_seawolf",
+          "mounts": 2,
+          "ammo": 6
+        },
+        {
+          "weapon": "cw_4_5in",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 1,
+          "ammo": 15
+        },
+        {
+          "weapon": "gun_30mm",
+          "mounts": 2,
+          "ammo": 20
+        },
+        {
+          "weapon": "lwt",
+          "mounts": 2,
+          "ammo": 18
+        }
+      ],
+      "chaff": 24,
+      "decoys": 10
+    },
+    "uk_type22_2": {
+      "id": "uk_type22_2",
+      "name": "Type 22/2 (Boxer) FF",
+      "kind": "Ship",
+      "hp": 224,
+      "max_speed_kts": 30,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 2.4,
+      "accel_kts_per_s": 0.4,
+      "rcs": "Small",
+      "noise_db": 42,
+      "visual_factor": 0.5,
+      "vp_value": 16,
+      "sensors": [
+        "radar_air_med",
+        "radar_surf_sm",
+        "esm_std",
+        "sonar_p_hull",
+        "sonar_p_tow",
+        "sonar_a_hull",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cw_exocet",
+          "mounts": 2,
+          "ammo": 2
+        },
+        {
+          "weapon": "cw_seawolf",
+          "mounts": 2,
+          "ammo": 6
+        },
+        {
+          "weapon": "gun_30mm",
+          "mounts": 2,
+          "ammo": 20
+        },
+        {
+          "weapon": "cw_50cal",
+          "mounts": 4,
+          "ammo": 10
+        },
+        {
+          "weapon": "lwt",
+          "mounts": 2,
+          "ammo": 3
+        }
+      ],
+      "chaff": 24,
+      "decoys": 10
+    },
+    "uk_type21": {
+      "id": "uk_type21",
+      "name": "Type 21 (Amazon) FF",
+      "kind": "Ship",
+      "hp": 154,
+      "max_speed_kts": 30,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 2.6,
+      "accel_kts_per_s": 0.4,
+      "rcs": "Small",
+      "noise_db": 54,
+      "visual_factor": 0.5,
+      "vp_value": 14,
+      "sensors": [
+        "radar_air_med",
+        "radar_surf_sm",
+        "sonar_p_hull",
+        "sonar_a_hull",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cw_exocet",
+          "mounts": 2,
+          "ammo": 2
+        },
+        {
+          "weapon": "cw_seacat",
+          "mounts": 1,
+          "ammo": 4
+        },
+        {
+          "weapon": "cw_4_5in",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "cw_50cal",
+          "mounts": 4,
+          "ammo": 10
+        },
+        {
+          "weapon": "lwt",
+          "mounts": 2,
+          "ammo": 3
+        }
+      ],
+      "chaff": 12,
+      "decoys": 6
+    },
+    "uk_leander_3": {
+      "id": "uk_leander_3",
+      "name": "Leander/3 (Broad-Beamed) FF",
+      "kind": "Ship",
+      "hp": 157,
+      "max_speed_kts": 28,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 2.5,
+      "accel_kts_per_s": 0.4,
+      "rcs": "Small",
+      "noise_db": 54,
+      "visual_factor": 0.5,
+      "vp_value": 12,
+      "sensors": [
+        "radar_air_med",
+        "radar_surf_sm",
+        "esm_std",
+        "sonar_p_hull",
+        "sonar_a_hull",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cw_seacat",
+          "mounts": 1,
+          "ammo": 4
+        },
+        {
+          "weapon": "cw_4_5in",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "cw_20mm",
+          "mounts": 2,
+          "ammo": 10
+        },
+        {
+          "weapon": "asw_rocket",
+          "mounts": 1,
+          "ammo": 17
+        }
+      ],
+      "chaff": 12,
+      "decoys": 6
+    },
+    "uk_leander_2": {
+      "id": "uk_leander_2",
+      "name": "Leander/2 (Exocet) FF",
+      "kind": "Ship",
+      "hp": 169,
+      "max_speed_kts": 28,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 2.5,
+      "accel_kts_per_s": 0.4,
+      "rcs": "Small",
+      "noise_db": 54,
+      "visual_factor": 0.5,
+      "vp_value": 12,
+      "sensors": [
+        "radar_air_med",
+        "radar_surf_sm",
+        "esm_std",
+        "sonar_p_hull",
+        "sonar_a_hull",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cw_exocet",
+          "mounts": 2,
+          "ammo": 2
+        },
+        {
+          "weapon": "cw_seacat",
+          "mounts": 3,
+          "ammo": 4
+        },
+        {
+          "weapon": "cw_40mm",
+          "mounts": 2,
+          "ammo": 10
+        },
+        {
+          "weapon": "lwt",
+          "mounts": 2,
+          "ammo": 3
+        }
+      ],
+      "chaff": 12,
+      "decoys": 6
+    },
+    "uk_county_2": {
+      "id": "uk_county_2",
+      "name": "County (Batch 2) DDG",
+      "kind": "Ship",
+      "hp": 264,
+      "max_speed_kts": 30,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 2.2,
+      "accel_kts_per_s": 0.4,
+      "rcs": "Small",
+      "noise_db": 54,
+      "visual_factor": 0.6,
+      "vp_value": 18,
+      "sensors": [
+        "radar_air_med",
+        "radar_surf_med",
+        "esm_std",
+        "sonar_p_hull",
+        "sonar_a_hull",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cw_seaslug",
+          "mounts": 1,
+          "ammo": 24
+        },
+        {
+          "weapon": "cw_seacat",
+          "mounts": 2,
+          "ammo": 4
+        },
+        {
+          "weapon": "cw_4_5in",
+          "mounts": 2,
+          "ammo": 40
+        },
+        {
+          "weapon": "cw_20mm",
+          "mounts": 2,
+          "ammo": 10
+        },
+        {
+          "weapon": "lwt",
+          "mounts": 2,
+          "ammo": 12
+        }
+      ],
+      "chaff": 12,
+      "decoys": 6
+    },
+    "uk_county_1": {
+      "id": "uk_county_1",
+      "name": "County (Batch 1) DDG",
+      "kind": "Ship",
+      "hp": 258,
+      "max_speed_kts": 30,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 2.2,
+      "accel_kts_per_s": 0.4,
+      "rcs": "Small",
+      "noise_db": 54,
+      "visual_factor": 0.6,
+      "vp_value": 16,
+      "sensors": [
+        "radar_air_med",
+        "radar_surf_med",
+        "esm_std",
+        "sonar_p_hull",
+        "sonar_a_hull",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cw_seaslug_mk1",
+          "mounts": 1,
+          "ammo": 24
+        },
+        {
+          "weapon": "cw_seacat",
+          "mounts": 2,
+          "ammo": 4
+        },
+        {
+          "weapon": "cw_4_5in",
+          "mounts": 2,
+          "ammo": 40
+        },
+        {
+          "weapon": "cw_20mm",
+          "mounts": 2,
+          "ammo": 10
+        },
+        {
+          "weapon": "lwt",
+          "mounts": 2,
+          "ammo": 12
+        }
+      ],
+      "chaff": 12,
+      "decoys": 6
+    },
+    "uk_river_b2": {
+      "id": "uk_river_b2",
+      "name": "River (ii) Batch 2 PB",
+      "kind": "Ship",
+      "hp": 103,
+      "max_speed_kts": 24,
+      "cruise_speed_kts": 16,
+      "turn_rate_deg_s": 2.8,
+      "accel_kts_per_s": 0.4,
+      "rcs": "Small",
+      "noise_db": 54,
+      "visual_factor": 0.5,
+      "vp_value": 8,
+      "sensors": [
+        "radar_surf_sm",
+        "radar_nav",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "gun_30mm",
+          "mounts": 1,
+          "ammo": 20
+        },
+        {
+          "weapon": "cw_762mm",
+          "mounts": 2,
+          "ammo": 10
+        }
+      ],
+      "chaff": 8,
+      "decoys": 4,
+      "deck": {
+        "capacity": 1,
+        "cycle_s": 120,
+        "wing": [
+          {
+            "class": "cw_wildcat_hma2",
+            "count": 1
+          }
+        ]
+      }
+    },
+    "uk_hunt": {
+      "id": "uk_hunt",
+      "name": "Hunt MHS",
+      "kind": "Ship",
+      "hp": 56,
+      "max_speed_kts": 17,
+      "cruise_speed_kts": 12,
+      "turn_rate_deg_s": 3.0,
+      "accel_kts_per_s": 0.4,
+      "rcs": "Small",
+      "noise_db": 42,
+      "visual_factor": 0.4,
+      "vp_value": 6,
+      "sensors": [
+        "radar_nav",
+        "sonar_a_hull",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "gun_30mm",
+          "mounts": 1,
+          "ammo": 20
+        }
+      ],
+      "chaff": 8,
+      "decoys": 4
+    },
+    "uk_sandown": {
+      "id": "uk_sandown",
+      "name": "Sandown MHS",
+      "kind": "Ship",
+      "hp": 45,
+      "max_speed_kts": 13,
+      "cruise_speed_kts": 10,
+      "turn_rate_deg_s": 3.2,
+      "accel_kts_per_s": 0.4,
+      "rcs": "Small",
+      "noise_db": 42,
+      "visual_factor": 0.4,
+      "vp_value": 5,
+      "sensors": [
+        "radar_nav",
+        "sonar_a_hull",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "gun_30mm",
+          "mounts": 1,
+          "ammo": 20
+        }
+      ],
+      "chaff": 8,
+      "decoys": 4
+    },
+    "uk_fort_victoria": {
+      "id": "uk_fort_victoria",
+      "name": "Fort Victoria AOR",
+      "kind": "Ship",
+      "hp": 363,
+      "max_speed_kts": 20,
+      "cruise_speed_kts": 16,
+      "turn_rate_deg_s": 1.6,
+      "accel_kts_per_s": 0.4,
+      "rcs": "Medium",
+      "noise_db": 56,
+      "visual_factor": 0.8,
+      "vp_value": 15,
+      "sensors": [
+        "radar_surf_sm",
+        "radar_nav",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 2,
+          "ammo": 15
+        },
+        {
+          "weapon": "cw_20mm",
+          "mounts": 2,
+          "ammo": 10
+        }
+      ],
+      "chaff": 16,
+      "decoys": 6,
+      "deck": {
+        "capacity": 5,
+        "cycle_s": 120,
+        "wing": [
+          {
+            "class": "cw_merlin_hm2",
+            "count": 4
+          }
+        ]
+      }
+    },
+    "uk_tide_later": {
+      "id": "uk_tide_later",
+      "name": "Tide (Later) AO",
+      "kind": "Ship",
+      "hp": 346,
+      "max_speed_kts": 26,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 1.7,
+      "accel_kts_per_s": 0.4,
+      "rcs": "Medium",
+      "noise_db": 56,
+      "visual_factor": 0.8,
+      "vp_value": 12,
+      "sensors": [
+        "radar_nav",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cw_40mm",
+          "mounts": 3,
+          "ammo": 10
+        }
+      ],
+      "chaff": 12,
+      "decoys": 4,
+      "deck": {
+        "capacity": 2,
+        "cycle_s": 120,
+        "wing": [
+          {
+            "class": "cw_wessex_mk31",
+            "count": 2
+          }
+        ]
+      }
+    },
+    "uk_wave_knight": {
+      "id": "uk_wave_knight",
+      "name": "Wave Knight AO",
+      "kind": "Ship",
+      "hp": 320,
+      "max_speed_kts": 19,
+      "cruise_speed_kts": 15,
+      "turn_rate_deg_s": 1.7,
+      "accel_kts_per_s": 0.4,
+      "rcs": "Medium",
+      "noise_db": 44,
+      "visual_factor": 0.8,
+      "vp_value": 12,
+      "sensors": [
+        "radar_nav",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "gun_30mm",
+          "mounts": 2,
+          "ammo": 20
+        }
+      ],
+      "chaff": 12,
+      "decoys": 4,
+      "deck": {
+        "capacity": 1,
+        "cycle_s": 120,
+        "wing": [
+          {
+            "class": "cw_merlin_hm2",
+            "count": 1
+          }
+        ]
+      }
+    },
+    "uk_endurance_2": {
+      "id": "uk_endurance_2",
+      "name": "Endurance (ii) PS",
+      "kind": "Ship",
+      "hp": 200,
+      "max_speed_kts": 12,
+      "cruise_speed_kts": 10,
+      "turn_rate_deg_s": 2.0,
+      "accel_kts_per_s": 0.4,
+      "rcs": "Small",
+      "noise_db": 54,
+      "visual_factor": 0.5,
+      "vp_value": 6,
+      "sensors": [
+        "radar_nav",
+        "visual"
+      ],
+      "weapons": [],
+      "chaff": 4,
+      "decoys": 2,
+      "deck": {
+        "capacity": 2,
+        "cycle_s": 120,
+        "wing": [
+          {
+            "class": "cw_lynx_has3",
+            "count": 2
+          }
+        ]
+      }
+    },
+    "au_melbourne": {
+      "id": "au_melbourne",
+      "name": "Melbourne CVL",
+      "kind": "Ship",
+      "hp": 406,
+      "max_speed_kts": 24,
+      "cruise_speed_kts": 16,
+      "turn_rate_deg_s": 1.4,
+      "accel_kts_per_s": 0.4,
+      "rcs": "Medium",
+      "noise_db": 62,
+      "visual_factor": 0.8,
+      "vp_value": 35,
+      "sensors": [
+        "radar_air_med",
+        "radar_surf_med",
+        "esm_std",
+        "visual",
+        "sonar_p_hull",
+        "sonar_a_hull"
+      ],
+      "weapons": [
+        {
+          "weapon": "cw_40mm",
+          "mounts": 8,
+          "ammo": 10
+        }
+      ],
+      "chaff": 8,
+      "decoys": 4,
+      "deck": {
+        "capacity": 24,
+        "cycle_s": 120,
+        "wing": [
+          {
+            "class": "cw_a4g_skyhawk",
+            "count": 14
+          },
+          {
+            "class": "cw_s2e_tracker",
+            "count": 4
+          },
+          {
+            "class": "cw_wessex_mk31",
+            "count": 6
+          }
+        ]
+      }
+    },
+    "au_collins": {
+      "id": "au_collins",
+      "name": "Collins SS",
+      "kind": "Sub",
+      "hp": 96,
+      "max_speed_kts": 21,
+      "cruise_speed_kts": 10,
+      "turn_rate_deg_s": 2.4,
+      "accel_kts_per_s": 0.4,
+      "rcs": "VerySmall",
+      "noise_db": 30,
+      "visual_factor": 0.12,
+      "vp_value": 20,
+      "sensors": [
+        "sonar_p_hull",
+        "sonar_p_tow",
+        "sonar_a_hull",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "torp_homing",
+          "mounts": 6,
+          "ammo": 3
+        },
+        {
+          "weapon": "ascm_std",
+          "mounts": 1,
+          "ammo": 4
+        }
+      ],
+      "chaff": 0,
+      "decoys": 12,
+      "max_depth_m": 250
+    },
+    "au_hobart": {
+      "id": "au_hobart",
+      "name": "Hobart DDG (AWD)",
+      "kind": "Ship",
+      "hp": 262,
+      "max_speed_kts": 28,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 2.1,
+      "accel_kts_per_s": 0.4,
+      "rcs": "VerySmall",
+      "noise_db": 42,
+      "visual_factor": 0.4,
+      "vp_value": 30,
+      "sensors": [
+        "radar_air_xlong",
+        "radar_surf_med",
+        "esm_std",
+        "sonar_p_hull",
+        "sonar_a_hull",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cw_sm2mr",
+          "mounts": 1,
+          "ammo": 32
+        },
+        {
+          "weapon": "cw_essm",
+          "mounts": 1,
+          "ammo": 64
+        },
+        {
+          "weapon": "ascm_std",
+          "mounts": 2,
+          "ammo": 4
+        },
+        {
+          "weapon": "cw_5in_mk45",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 1,
+          "ammo": 15
+        },
+        {
+          "weapon": "cw_25mm",
+          "mounts": 2,
+          "ammo": 20
+        },
+        {
+          "weapon": "lwt",
+          "mounts": 2,
+          "ammo": 2
+        }
+      ],
+      "chaff": 32,
+      "decoys": 12
+    },
+    "au_anzac_asmd": {
+      "id": "au_anzac_asmd",
+      "name": "Anzac (ASMD) FF",
+      "kind": "Ship",
+      "hp": 189,
+      "max_speed_kts": 27,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 2.5,
+      "accel_kts_per_s": 0.4,
+      "rcs": "Small",
+      "noise_db": 42,
+      "visual_factor": 0.5,
+      "vp_value": 18,
+      "sensors": [
+        "radar_air_med",
+        "radar_surf_med",
+        "esm_std",
+        "sonar_p_hull",
+        "sonar_a_hull",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cw_essm",
+          "mounts": 1,
+          "ammo": 32
+        },
+        {
+          "weapon": "ascm_std",
+          "mounts": 2,
+          "ammo": 4
+        },
+        {
+          "weapon": "cw_5in_mk45",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "lwt",
+          "mounts": 2,
+          "ammo": 3
+        },
+        {
+          "weapon": "cw_50cal",
+          "mounts": 6,
+          "ammo": 10
+        }
+      ],
+      "chaff": 24,
+      "decoys": 10
+    },
+    "au_anzac": {
+      "id": "au_anzac",
+      "name": "Anzac (Aust svc) FF",
+      "kind": "Ship",
+      "hp": 189,
+      "max_speed_kts": 27,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 2.5,
+      "accel_kts_per_s": 0.4,
+      "rcs": "Small",
+      "noise_db": 42,
+      "visual_factor": 0.5,
+      "vp_value": 16,
+      "sensors": [
+        "radar_air_med",
+        "radar_surf_med",
+        "esm_std",
+        "sonar_p_hull",
+        "sonar_a_hull",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cw_seasparrow",
+          "mounts": 1,
+          "ammo": 8
+        },
+        {
+          "weapon": "cw_5in_mk45",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "lwt",
+          "mounts": 2,
+          "ammo": 3
+        },
+        {
+          "weapon": "cw_50cal",
+          "mounts": 4,
+          "ammo": 10
+        }
+      ],
+      "chaff": 24,
+      "decoys": 10
+    },
+    "au_perry": {
+      "id": "au_perry",
+      "name": "O.H. Perry (FFG UP) FFG",
+      "kind": "Ship",
+      "hp": 166,
+      "max_speed_kts": 29,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 2.6,
+      "accel_kts_per_s": 0.4,
+      "rcs": "Small",
+      "noise_db": 42,
+      "visual_factor": 0.5,
+      "vp_value": 18,
+      "sensors": [
+        "radar_air_med",
+        "radar_surf_sm",
+        "esm_std",
+        "sonar_p_hull",
+        "sonar_a_hull",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cw_sm1mr",
+          "mounts": 1,
+          "ammo": 32
+        },
+        {
+          "weapon": "cw_essm",
+          "mounts": 1,
+          "ammo": 32
+        },
+        {
+          "weapon": "ascm_std",
+          "mounts": 1,
+          "ammo": 8
+        },
+        {
+          "weapon": "cw_76mm",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 1,
+          "ammo": 15
+        },
+        {
+          "weapon": "cw_50cal",
+          "mounts": 4,
+          "ammo": 10
+        },
+        {
+          "weapon": "lwt",
+          "mounts": 2,
+          "ammo": 9
+        }
+      ],
+      "chaff": 24,
+      "decoys": 10
+    },
+    "au_canberra": {
+      "id": "au_canberra",
+      "name": "Canberra LHD",
+      "kind": "Ship",
+      "hp": 418,
+      "max_speed_kts": 20,
+      "cruise_speed_kts": 15,
+      "turn_rate_deg_s": 1.4,
+      "accel_kts_per_s": 0.4,
+      "rcs": "Large",
+      "noise_db": 46,
+      "visual_factor": 0.9,
+      "vp_value": 35,
+      "sensors": [
+        "radar_air_med",
+        "radar_surf_med",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cw_25mm",
+          "mounts": 4,
+          "ammo": 20
+        },
+        {
+          "weapon": "cw_50cal",
+          "mounts": 2,
+          "ammo": 10
+        }
+      ],
+      "chaff": 20,
+      "decoys": 8,
+      "deck": {
+        "capacity": 18,
+        "cycle_s": 120,
+        "wing": [
+          {
+            "class": "cw_mrh90",
+            "count": 10
+          }
+        ]
+      }
+    },
+    "au_tobruk_2": {
+      "id": "au_tobruk_2",
+      "name": "Tobruk (ii) LST",
+      "kind": "Ship",
+      "hp": 100,
+      "max_speed_kts": 18,
+      "cruise_speed_kts": 14,
+      "turn_rate_deg_s": 1.8,
+      "accel_kts_per_s": 0.4,
+      "rcs": "Small",
+      "noise_db": 54,
+      "visual_factor": 0.6,
+      "vp_value": 10,
+      "sensors": [
+        "radar_nav",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cw_40mm",
+          "mounts": 2,
+          "ammo": 10
+        },
+        {
+          "weapon": "cw_50cal",
+          "mounts": 4,
+          "ammo": 10
+        }
+      ],
+      "chaff": 8,
+      "decoys": 4,
+      "deck": {
+        "capacity": 1,
+        "cycle_s": 120,
+        "wing": [
+          {
+            "class": "cw_wessex_mk31",
+            "count": 1
+          }
+        ]
+      }
+    },
+    "au_arafura": {
+      "id": "au_arafura",
+      "name": "Arafura PB",
+      "kind": "Ship",
+      "hp": 119,
+      "max_speed_kts": 22,
+      "cruise_speed_kts": 16,
+      "turn_rate_deg_s": 2.8,
+      "accel_kts_per_s": 0.4,
+      "rcs": "Small",
+      "noise_db": 54,
+      "visual_factor": 0.4,
+      "vp_value": 6,
+      "sensors": [
+        "radar_surf_sm",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "gun_30mm",
+          "mounts": 1,
+          "ammo": 20
+        },
+        {
+          "weapon": "cw_50cal",
+          "mounts": 2,
+          "ammo": 10
+        }
+      ],
+      "chaff": 8,
+      "decoys": 4
+    },
+    "au_huon": {
+      "id": "au_huon",
+      "name": "Huon MHC",
+      "kind": "Ship",
+      "hp": 56,
+      "max_speed_kts": 14,
+      "cruise_speed_kts": 10,
+      "turn_rate_deg_s": 3.0,
+      "accel_kts_per_s": 0.4,
+      "rcs": "Small",
+      "noise_db": 42,
+      "visual_factor": 0.4,
+      "vp_value": 5,
+      "sensors": [
+        "radar_nav",
+        "sonar_a_hull",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "gun_30mm",
+          "mounts": 1,
+          "ammo": 20
+        }
+      ],
+      "chaff": 4,
+      "decoys": 2
+    },
+    "au_largs_bay": {
+      "id": "au_largs_bay",
+      "name": "Largs Bay (Choules) LSD",
+      "kind": "Ship",
+      "hp": 293,
+      "max_speed_kts": 18,
+      "cruise_speed_kts": 14,
+      "turn_rate_deg_s": 1.5,
+      "accel_kts_per_s": 0.4,
+      "rcs": "Medium",
+      "noise_db": 56,
+      "visual_factor": 0.8,
+      "vp_value": 20,
+      "sensors": [
+        "radar_nav",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 1,
+          "ammo": 15
+        },
+        {
+          "weapon": "cw_50cal",
+          "mounts": 6,
+          "ammo": 10
+        }
+      ],
+      "chaff": 16,
+      "decoys": 6
+    },
+    "au_supply": {
+      "id": "au_supply",
+      "name": "Supply AOR (ii)",
+      "kind": "Ship",
+      "hp": 230,
+      "max_speed_kts": 20,
+      "cruise_speed_kts": 15,
+      "turn_rate_deg_s": 1.7,
+      "accel_kts_per_s": 0.4,
+      "rcs": "Medium",
+      "noise_db": 56,
+      "visual_factor": 0.8,
+      "vp_value": 10,
+      "sensors": [
+        "radar_nav",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 1,
+          "ammo": 15
+        },
+        {
+          "weapon": "cw_25mm",
+          "mounts": 2,
+          "ammo": 20
+        },
+        {
+          "weapon": "cw_50cal",
+          "mounts": 4,
+          "ammo": 10
+        }
+      ],
+      "chaff": 12,
+      "decoys": 4,
+      "deck": {
+        "capacity": 2,
+        "cycle_s": 120,
+        "wing": [
+          {
+            "class": "cw_mrh90",
+            "count": 2
+          }
+        ]
+      }
+    },
+    "ca_bonaventure": {
+      "id": "ca_bonaventure",
+      "name": "Ex-UK Majestic CVL (Bonaventure)",
+      "kind": "Ship",
+      "hp": 406,
+      "max_speed_kts": 24,
+      "cruise_speed_kts": 16,
+      "turn_rate_deg_s": 1.4,
+      "accel_kts_per_s": 0.4,
+      "rcs": "Medium",
+      "noise_db": 62,
+      "visual_factor": 0.8,
+      "vp_value": 30,
+      "sensors": [
+        "radar_air_med",
+        "radar_surf_med",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cw_40mm",
+          "mounts": 4,
+          "ammo": 10
+        }
+      ],
+      "chaff": 8,
+      "decoys": 4,
+      "deck": {
+        "capacity": 22,
+        "cycle_s": 120,
+        "wing": [
+          {
+            "class": "cw_s2e_tracker",
+            "count": 8
+          },
+          {
+            "class": "cw_ch124_sea_king",
+            "count": 13
+          }
+        ]
+      }
+    },
+    "ca_victoria": {
+      "id": "ca_victoria",
+      "name": "Victoria (ex-Upholder) SS",
+      "kind": "Sub",
+      "hp": 78,
+      "max_speed_kts": 20,
+      "cruise_speed_kts": 8,
+      "turn_rate_deg_s": 2.4,
+      "accel_kts_per_s": 0.4,
+      "rcs": "VerySmall",
+      "noise_db": 30,
+      "visual_factor": 0.12,
+      "vp_value": 18,
+      "sensors": [
+        "sonar_p_hull",
+        "sonar_p_tow",
+        "sonar_a_hull",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "torp_homing",
+          "mounts": 4,
+          "ammo": 4
+        }
+      ],
+      "chaff": 0,
+      "decoys": 8,
+      "max_depth_m": 250
+    },
+    "ca_iroquois_trump": {
+      "id": "ca_iroquois_trump",
+      "name": "Iroquois (TRUMP) DDG",
+      "kind": "Ship",
+      "hp": 210,
+      "max_speed_kts": 29,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 2.3,
+      "accel_kts_per_s": 0.4,
+      "rcs": "Small",
+      "noise_db": 54,
+      "visual_factor": 0.5,
+      "vp_value": 20,
+      "sensors": [
+        "radar_air_med",
+        "radar_surf_sm",
+        "esm_std",
+        "sonar_p_hull",
+        "sonar_p_tow",
+        "sonar_a_hull",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cw_sm2mr",
+          "mounts": 1,
+          "ammo": 29
+        },
+        {
+          "weapon": "cw_76mm",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 1,
+          "ammo": 15
+        },
+        {
+          "weapon": "cw_50cal",
+          "mounts": 4,
+          "ammo": 10
+        },
+        {
+          "weapon": "lwt",
+          "mounts": 2,
+          "ammo": 9
+        }
+      ],
+      "chaff": 16,
+      "decoys": 8
+    },
+    "ca_halifax": {
+      "id": "ca_halifax",
+      "name": "Halifax FF",
+      "kind": "Ship",
+      "hp": 226,
+      "max_speed_kts": 29,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 2.4,
+      "accel_kts_per_s": 0.4,
+      "rcs": "Small",
+      "noise_db": 42,
+      "visual_factor": 0.5,
+      "vp_value": 18,
+      "sensors": [
+        "radar_air_med",
+        "radar_surf_sm",
+        "esm_std",
+        "sonar_p_hull",
+        "sonar_p_tow",
+        "sonar_a_hull",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cw_seasparrow",
+          "mounts": 2,
+          "ammo": 8
+        },
+        {
+          "weapon": "ascm_std",
+          "mounts": 2,
+          "ammo": 4
+        },
+        {
+          "weapon": "cw_57mm",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 1,
+          "ammo": 15
+        },
+        {
+          "weapon": "cw_50cal",
+          "mounts": 6,
+          "ammo": 10
+        },
+        {
+          "weapon": "lwt",
+          "mounts": 2,
+          "ammo": 12
+        }
+      ],
+      "chaff": 24,
+      "decoys": 10
+    },
+    "ca_halifax_felex": {
+      "id": "ca_halifax_felex",
+      "name": "Halifax FELEX FF",
+      "kind": "Ship",
+      "hp": 226,
+      "max_speed_kts": 29,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 2.4,
+      "accel_kts_per_s": 0.4,
+      "rcs": "Small",
+      "noise_db": 42,
+      "visual_factor": 0.5,
+      "vp_value": 18,
+      "sensors": [
+        "radar_air_med",
+        "radar_surf_med",
+        "esm_std",
+        "sonar_p_hull",
+        "sonar_p_tow",
+        "sonar_a_hull",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cw_essm",
+          "mounts": 2,
+          "ammo": 8
+        },
+        {
+          "weapon": "ascm_std",
+          "mounts": 2,
+          "ammo": 4
+        },
+        {
+          "weapon": "cw_57mm",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 1,
+          "ammo": 15
+        },
+        {
+          "weapon": "cw_50cal",
+          "mounts": 6,
+          "ammo": 10
+        },
+        {
+          "weapon": "lwt",
+          "mounts": 2,
+          "ammo": 12
+        }
+      ],
+      "chaff": 24,
+      "decoys": 12
+    },
+    "ca_kingston": {
+      "id": "ca_kingston",
+      "name": "Kingston MM",
+      "kind": "Ship",
+      "hp": 64,
+      "max_speed_kts": 15,
+      "cruise_speed_kts": 10,
+      "turn_rate_deg_s": 3.0,
+      "accel_kts_per_s": 0.4,
+      "rcs": "Small",
+      "noise_db": 54,
+      "visual_factor": 0.4,
+      "vp_value": 5,
+      "sensors": [
+        "radar_nav",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cw_40mm",
+          "mounts": 1,
+          "ammo": 10
+        },
+        {
+          "weapon": "cw_50cal",
+          "mounts": 2,
+          "ammo": 10
+        }
+      ],
+      "chaff": 4,
+      "decoys": 2
+    },
+    "ca_harry_dewolf": {
+      "id": "ca_harry_dewolf",
+      "name": "Harry DeWolf AOPS",
+      "kind": "Ship",
+      "hp": 247,
+      "max_speed_kts": 17,
+      "cruise_speed_kts": 14,
+      "turn_rate_deg_s": 1.8,
+      "accel_kts_per_s": 0.4,
+      "rcs": "Medium",
+      "noise_db": 56,
+      "visual_factor": 0.8,
+      "vp_value": 12,
+      "sensors": [
+        "radar_surf_sm",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "gun_30mm",
+          "mounts": 1,
+          "ammo": 20
+        },
+        {
+          "weapon": "cw_50cal",
+          "mounts": 2,
+          "ammo": 10
+        }
+      ],
+      "chaff": 12,
+      "decoys": 4,
+      "deck": {
+        "capacity": 1,
+        "cycle_s": 120,
+        "wing": [
+          {
+            "class": "cw_ch148_cyclone",
+            "count": 1
+          }
+        ]
+      }
+    },
+    "ca_protecteur_2": {
+      "id": "ca_protecteur_2",
+      "name": "Protecteur (ii) AOR",
+      "kind": "Ship",
+      "hp": 236,
+      "max_speed_kts": 20,
+      "cruise_speed_kts": 15,
+      "turn_rate_deg_s": 1.7,
+      "accel_kts_per_s": 0.4,
+      "rcs": "Large",
+      "noise_db": 58,
+      "visual_factor": 0.8,
+      "vp_value": 12,
+      "sensors": [
+        "radar_air_med",
+        "radar_nav",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 2,
+          "ammo": 15
+        },
+        {
+          "weapon": "cw_50cal",
+          "mounts": 4,
+          "ammo": 10
+        }
+      ],
+      "chaff": 12,
+      "decoys": 4,
+      "deck": {
+        "capacity": 2,
+        "cycle_s": 120,
+        "wing": [
+          {
+            "class": "cw_ch148_cyclone",
+            "count": 2
+          }
+        ]
+      }
+    },
+    "ca_asterix": {
+      "id": "ca_asterix",
+      "name": "Astérix AOR",
+      "kind": "Ship",
+      "hp": 186,
+      "max_speed_kts": 20,
+      "cruise_speed_kts": 15,
+      "turn_rate_deg_s": 1.7,
+      "accel_kts_per_s": 0.4,
+      "rcs": "Large",
+      "noise_db": 58,
+      "visual_factor": 0.8,
+      "vp_value": 8,
+      "sensors": [
+        "radar_nav",
+        "visual"
+      ],
+      "weapons": [],
+      "chaff": 6,
+      "decoys": 2,
+      "deck": {
+        "capacity": 2,
+        "cycle_s": 120,
+        "wing": [
+          {
+            "class": "cw_ch148_cyclone",
+            "count": 2
+          }
+        ]
+      }
+    },
+    "nz_anzac_fsu": {
+      "id": "nz_anzac_fsu",
+      "name": "Anzac (FSU) FF",
+      "kind": "Ship",
+      "hp": 185,
+      "max_speed_kts": 28,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 2.5,
+      "accel_kts_per_s": 0.4,
+      "rcs": "Small",
+      "noise_db": 42,
+      "visual_factor": 0.5,
+      "vp_value": 18,
+      "sensors": [
+        "radar_air_med",
+        "radar_surf_sm",
+        "esm_std",
+        "sonar_p_hull",
+        "sonar_p_tow",
+        "sonar_a_hull",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cw_seaceptor",
+          "mounts": 1,
+          "ammo": 20
+        },
+        {
+          "weapon": "cw_5in_mk45",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 1,
+          "ammo": 15
+        },
+        {
+          "weapon": "cw_50cal",
+          "mounts": 6,
+          "ammo": 10
+        },
+        {
+          "weapon": "lwt",
+          "mounts": 2,
+          "ammo": 3
+        }
+      ],
+      "chaff": 20,
+      "decoys": 8
+    },
+    "nz_anzac": {
+      "id": "nz_anzac",
+      "name": "Anzac (NZ svc) FF",
+      "kind": "Ship",
+      "hp": 185,
+      "max_speed_kts": 28,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 2.5,
+      "accel_kts_per_s": 0.4,
+      "rcs": "Small",
+      "noise_db": 42,
+      "visual_factor": 0.5,
+      "vp_value": 16,
+      "sensors": [
+        "radar_air_med",
+        "radar_surf_med",
+        "esm_std",
+        "sonar_p_hull",
+        "sonar_a_hull",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cw_seasparrow",
+          "mounts": 1,
+          "ammo": 8
+        },
+        {
+          "weapon": "cw_5in_mk45",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 1,
+          "ammo": 15
+        },
+        {
+          "weapon": "cw_50cal",
+          "mounts": 6,
+          "ammo": 10
+        },
+        {
+          "weapon": "lwt",
+          "mounts": 2,
+          "ammo": 3
+        }
+      ],
+      "chaff": 20,
+      "decoys": 8
+    },
+    "nz_aotearoa": {
+      "id": "nz_aotearoa",
+      "name": "Aotearoa AOR",
+      "kind": "Ship",
+      "hp": 486,
+      "max_speed_kts": 20,
+      "cruise_speed_kts": 15,
+      "turn_rate_deg_s": 1.5,
+      "accel_kts_per_s": 0.4,
+      "rcs": "Large",
+      "noise_db": 58,
+      "visual_factor": 0.9,
+      "vp_value": 15,
+      "sensors": [
+        "radar_nav",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cw_50cal",
+          "mounts": 6,
+          "ammo": 10
+        }
+      ],
+      "chaff": 10,
+      "decoys": 4,
+      "deck": {
+        "capacity": 1,
+        "cycle_s": 120,
+        "wing": [
+          {
+            "class": "cw_sh2g",
+            "count": 1
+          }
+        ]
+      }
+    },
+    "nz_canterbury": {
+      "id": "nz_canterbury",
+      "name": "Canterbury (ii) AX",
+      "kind": "Ship",
+      "hp": 219,
+      "max_speed_kts": 19,
+      "cruise_speed_kts": 15,
+      "turn_rate_deg_s": 1.8,
+      "accel_kts_per_s": 0.4,
+      "rcs": "Medium",
+      "noise_db": 44,
+      "visual_factor": 0.7,
+      "vp_value": 10,
+      "sensors": [
+        "radar_nav",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cw_25mm",
+          "mounts": 1,
+          "ammo": 20
+        },
+        {
+          "weapon": "cw_50cal",
+          "mounts": 2,
+          "ammo": 10
+        }
+      ],
+      "chaff": 8,
+      "decoys": 4,
+      "deck": {
+        "capacity": 2,
+        "cycle_s": 120,
+        "wing": [
+          {
+            "class": "cw_sh2g",
+            "count": 2
+          }
+        ]
+      }
+    },
+    "nz_endeavour_3": {
+      "id": "nz_endeavour_3",
+      "name": "Endeavour (iii) AOR",
+      "kind": "Ship",
+      "hp": 174,
+      "max_speed_kts": 14,
+      "cruise_speed_kts": 11,
+      "turn_rate_deg_s": 2.0,
+      "accel_kts_per_s": 0.4,
+      "rcs": "Medium",
+      "noise_db": 56,
+      "visual_factor": 0.7,
+      "vp_value": 6,
+      "sensors": [
+        "radar_nav",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cw_20mm",
+          "mounts": 2,
+          "ammo": 10
+        }
+      ],
+      "chaff": 4,
+      "decoys": 2
+    },
+    "nz_otago": {
+      "id": "nz_otago",
+      "name": "Otago (Protector) PS",
+      "kind": "Ship",
+      "hp": 105,
+      "max_speed_kts": 22,
+      "cruise_speed_kts": 16,
+      "turn_rate_deg_s": 2.8,
+      "accel_kts_per_s": 0.4,
+      "rcs": "Small",
+      "noise_db": 54,
+      "visual_factor": 0.4,
+      "vp_value": 6,
+      "sensors": [
+        "radar_nav",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cw_25mm",
+          "mounts": 1,
+          "ammo": 20
+        },
+        {
+          "weapon": "cw_50cal",
+          "mounts": 2,
+          "ammo": 10
+        }
+      ],
+      "chaff": 6,
+      "decoys": 2,
+      "deck": {
+        "capacity": 1,
+        "cycle_s": 120,
+        "wing": [
+          {
+            "class": "cw_sh2g",
+            "count": 1
+          }
+        ]
+      }
+    },
+    "cw_f35b": {
+      "id": "cw_f35b",
+      "name": "Lightning (F-35B) STOVL fighter (ceiling 15240 m)",
+      "kind": "Aircraft",
+      "hp": 24,
+      "max_speed_kts": 920,
+      "cruise_speed_kts": 580,
+      "turn_rate_deg_s": 6.0,
+      "accel_kts_per_s": 8.0,
+      "rcs": "VerySmall",
+      "noise_db": 0,
+      "visual_factor": 0.3,
+      "vp_value": 20,
+      "sensors": [
+        "radar_air_long",
+        "cw_irst",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cw_amraam",
+          "mounts": 2,
+          "ammo": 1
+        },
+        {
+          "weapon": "cw_paveway_iv",
+          "mounts": 2,
+          "ammo": 1
+        }
+      ],
+      "chaff": 0,
+      "decoys": 0,
+      "endurance_s": 6000
+    },
+    "cw_merlin_hm2": {
+      "id": "cw_merlin_hm2",
+      "name": "Merlin HM.2 ASW (ceiling 4600 m)",
+      "kind": "Aircraft",
+      "hp": 23,
+      "max_speed_kts": 150,
+      "cruise_speed_kts": 140,
+      "turn_rate_deg_s": 5.0,
+      "accel_kts_per_s": 2.0,
+      "rcs": "Medium",
+      "noise_db": 0,
+      "visual_factor": 0.5,
+      "vp_value": 12,
+      "sensors": [
+        "radar_surf_sm",
+        "sonar_dipping",
+        "cw_sonobuoy",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "lwt",
+          "mounts": 2,
+          "ammo": 1
+        }
+      ],
+      "chaff": 0,
+      "decoys": 0,
+      "endurance_s": 12000,
+      "dipping_sonar": true
+    },
+    "cw_wildcat_hma2": {
+      "id": "cw_wildcat_hma2",
+      "name": "Wildcat HMA.2 ASW (ceiling 3050 m)",
+      "kind": "Aircraft",
+      "hp": 16,
+      "max_speed_kts": 157,
+      "cruise_speed_kts": 115,
+      "turn_rate_deg_s": 5.0,
+      "accel_kts_per_s": 3.0,
+      "rcs": "Small",
+      "noise_db": 0,
+      "visual_factor": 0.3,
+      "vp_value": 8,
+      "sensors": [
+        "radar_surf_sm",
+        "esm_std",
+        "cw_irst",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "lwt",
+          "mounts": 2,
+          "ammo": 1
+        }
+      ],
+      "chaff": 0,
+      "decoys": 0,
+      "endurance_s": 7600
+    },
+    "cw_lynx_has3": {
+      "id": "cw_lynx_has3",
+      "name": "Lynx HAS.3 ASW (ceiling 3663 m)",
+      "kind": "Aircraft",
+      "hp": 15,
+      "max_speed_kts": 150,
+      "cruise_speed_kts": 120,
+      "turn_rate_deg_s": 5.0,
+      "accel_kts_per_s": 3.0,
+      "rcs": "Small",
+      "noise_db": 0,
+      "visual_factor": 0.3,
+      "vp_value": 7,
+      "sensors": [
+        "radar_surf_sm",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "lwt",
+          "mounts": 2,
+          "ammo": 1
+        }
+      ],
+      "chaff": 0,
+      "decoys": 0,
+      "endurance_s": 6750
+    },
+    "cw_sea_harrier_fa2": {
+      "id": "cw_sea_harrier_fa2",
+      "name": "Sea Harrier FA.2 (ceiling 15600 m)",
+      "kind": "Aircraft",
+      "hp": 19,
+      "max_speed_kts": 650,
+      "cruise_speed_kts": 450,
+      "turn_rate_deg_s": 5.0,
+      "accel_kts_per_s": 6.0,
+      "rcs": "Small",
+      "noise_db": 0,
+      "visual_factor": 0.3,
+      "vp_value": 12,
+      "sensors": [
+        "radar_air_med",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cw_amraam",
+          "mounts": 2,
+          "ammo": 1
+        },
+        {
+          "weapon": "cw_sea_eagle",
+          "mounts": 2,
+          "ammo": 1
+        }
+      ],
+      "chaff": 0,
+      "decoys": 0,
+      "endurance_s": 4000
+    },
+    "cw_sea_king_has6": {
+      "id": "cw_sea_king_has6",
+      "name": "Sea King HAS.6 ASW (ceiling 3087 m)",
+      "kind": "Aircraft",
+      "hp": 17,
+      "max_speed_kts": 131,
+      "cruise_speed_kts": 112,
+      "turn_rate_deg_s": 5.0,
+      "accel_kts_per_s": 2.0,
+      "rcs": "Small",
+      "noise_db": 0,
+      "visual_factor": 0.3,
+      "vp_value": 8,
+      "sensors": [
+        "radar_surf_sm",
+        "sonar_dipping",
+        "cw_sonobuoy",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "lwt",
+          "mounts": 4,
+          "ammo": 1
+        }
+      ],
+      "chaff": 0,
+      "decoys": 0,
+      "endurance_s": 16000,
+      "dipping_sonar": true
+    },
+    "cw_sea_king_asac7": {
+      "id": "cw_sea_king_asac7",
+      "name": "Sea King ASaC.7 AEW (ceiling 3050 m)",
+      "kind": "Aircraft",
+      "hp": 17,
+      "max_speed_kts": 110,
+      "cruise_speed_kts": 90,
+      "turn_rate_deg_s": 5.0,
+      "accel_kts_per_s": 2.0,
+      "rcs": "Small",
+      "noise_db": 0,
+      "visual_factor": 0.3,
+      "vp_value": 10,
+      "sensors": [
+        "radar_air_long",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [],
+      "chaff": 0,
+      "decoys": 0,
+      "endurance_s": 15000
+    },
+    "cw_s2e_tracker": {
+      "id": "cw_s2e_tracker",
+      "name": "S-2E Tracker ASW (ceiling 6400 m)",
+      "kind": "Aircraft",
+      "hp": 29,
+      "max_speed_kts": 197,
+      "cruise_speed_kts": 144,
+      "turn_rate_deg_s": 3.0,
+      "accel_kts_per_s": 3.0,
+      "rcs": "Medium",
+      "noise_db": 0,
+      "visual_factor": 0.5,
+      "vp_value": 10,
+      "sensors": [
+        "radar_surf_med",
+        "cw_mad",
+        "cw_sonobuoy",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "lwt",
+          "mounts": 2,
+          "ammo": 1
+        },
+        {
+          "weapon": "cw_depth_charge",
+          "mounts": 4,
+          "ammo": 1
+        }
+      ],
+      "chaff": 0,
+      "decoys": 0,
+      "endurance_s": 22000
+    },
+    "cw_a4g_skyhawk": {
+      "id": "cw_a4g_skyhawk",
+      "name": "A-4G Skyhawk attack (ceiling 12802 m)",
+      "kind": "Aircraft",
+      "hp": 17,
+      "max_speed_kts": 586,
+      "cruise_speed_kts": 420,
+      "turn_rate_deg_s": 5.0,
+      "accel_kts_per_s": 6.0,
+      "rcs": "Small",
+      "noise_db": 0,
+      "visual_factor": 0.3,
+      "vp_value": 8,
+      "sensors": [
+        "radar_surf_sm",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "aam_ir",
+          "mounts": 4,
+          "ammo": 1
+        },
+        {
+          "weapon": "cw_mk82",
+          "mounts": 6,
+          "ammo": 1
+        }
+      ],
+      "chaff": 0,
+      "decoys": 0,
+      "endurance_s": 6800
+    },
+    "cw_wessex_mk31": {
+      "id": "cw_wessex_mk31",
+      "name": "Wessex Mk31A/B ASW (ceiling 3658 m)",
+      "kind": "Aircraft",
+      "hp": 13,
+      "max_speed_kts": 114,
+      "cruise_speed_kts": 105,
+      "turn_rate_deg_s": 5.0,
+      "accel_kts_per_s": 2.0,
+      "rcs": "Small",
+      "noise_db": 0,
+      "visual_factor": 0.3,
+      "vp_value": 6,
+      "sensors": [
+        "sonar_dipping",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "lwt",
+          "mounts": 2,
+          "ammo": 1
+        }
+      ],
+      "chaff": 0,
+      "decoys": 0,
+      "endurance_s": 6300,
+      "dipping_sonar": true
+    },
+    "cw_ch148_cyclone": {
+      "id": "cw_ch148_cyclone",
+      "name": "CH-148 Cyclone ASW (ceiling 4572 m)",
+      "kind": "Aircraft",
+      "hp": 19,
+      "max_speed_kts": 155,
+      "cruise_speed_kts": 135,
+      "turn_rate_deg_s": 5.0,
+      "accel_kts_per_s": 2.0,
+      "rcs": "Medium",
+      "noise_db": 0,
+      "visual_factor": 0.4,
+      "vp_value": 10,
+      "sensors": [
+        "radar_surf_sm",
+        "sonar_dipping",
+        "cw_sonobuoy",
+        "esm_std",
+        "cw_irst",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "lwt",
+          "mounts": 2,
+          "ammo": 1
+        }
+      ],
+      "chaff": 0,
+      "decoys": 0,
+      "endurance_s": 12600,
+      "dipping_sonar": true
+    },
+    "cw_sh2g": {
+      "id": "cw_sh2g",
+      "name": "SH-2G Super Seasprite (ceiling 6401 m)",
+      "kind": "Aircraft",
+      "hp": 15,
+      "max_speed_kts": 150,
+      "cruise_speed_kts": 130,
+      "turn_rate_deg_s": 5.0,
+      "accel_kts_per_s": 3.0,
+      "rcs": "Small",
+      "noise_db": 0,
+      "visual_factor": 0.3,
+      "vp_value": 7,
+      "sensors": [
+        "radar_surf_sm",
+        "esm_std",
+        "cw_irst",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "lwt",
+          "mounts": 2,
+          "ammo": 1
+        }
+      ],
+      "chaff": 0,
+      "decoys": 0,
+      "endurance_s": 5400
+    },
+    "cw_ch124_sea_king": {
+      "id": "cw_ch124_sea_king",
+      "name": "CH-124 Sea King ASW (ceiling 3688 m)",
+      "kind": "Aircraft",
+      "hp": 17,
+      "max_speed_kts": 133,
+      "cruise_speed_kts": 100,
+      "turn_rate_deg_s": 5.0,
+      "accel_kts_per_s": 2.0,
+      "rcs": "Small",
+      "noise_db": 0,
+      "visual_factor": 0.3,
+      "vp_value": 7,
+      "sensors": [
+        "radar_surf_sm",
+        "sonar_dipping",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "lwt",
+          "mounts": 4,
+          "ammo": 1
+        }
+      ],
+      "chaff": 0,
+      "decoys": 0,
+      "endurance_s": 14000,
+      "dipping_sonar": true
+    },
+    "cw_mrh90": {
+      "id": "cw_mrh90",
+      "name": "MRH90 Taipan transport (ceiling 3300 m)",
+      "kind": "Aircraft",
+      "hp": 18,
+      "max_speed_kts": 157,
+      "cruise_speed_kts": 140,
+      "turn_rate_deg_s": 5.0,
+      "accel_kts_per_s": 2.0,
+      "rcs": "Small",
+      "noise_db": 0,
+      "visual_factor": 0.3,
+      "vp_value": 8,
+      "sensors": [
+        "radar_surf_sm",
+        "cw_irst",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [],
+      "chaff": 0,
+      "decoys": 0,
+      "endurance_s": 9500
+    }
+  },
+  "weapons": {
+    "cw_aster15": {
+      "id": "cw_aster15",
+      "name": "Aster 15 (GWS45 Sea Viper)",
+      "kind": "Sam",
+      "targets": {
+        "air": true,
+        "missile": true
+      },
+      "range_nm": 18.6,
+      "min_range_nm": 0.9,
+      "speed_kts": 1725,
+      "enable_range_nm": 0,
+      "pk": 0.65,
+      "salvo": 2,
+      "reload_s": 4,
+      "damage": 21,
+      "guidance": "HomingAir",
+      "ir": false,
+      "directors": 8
+    },
+    "cw_aster30": {
+      "id": "cw_aster30",
+      "name": "Aster 30 Blk 0 (GWS45 Sea Viper)",
+      "kind": "Sam",
+      "targets": {
+        "air": true,
+        "missile": true
+      },
+      "range_nm": 74.5,
+      "min_range_nm": 1.6,
+      "speed_kts": 2590,
+      "enable_range_nm": 0,
+      "pk": 0.65,
+      "salvo": 2,
+      "reload_s": 5,
+      "damage": 25,
+      "guidance": "HomingAir",
+      "ir": false,
+      "directors": 8
+    },
+    "cw_seaceptor": {
+      "id": "cw_seaceptor",
+      "name": "Sea Ceptor (GWS35)",
+      "kind": "Sam",
+      "targets": {
+        "air": true,
+        "missile": true
+      },
+      "range_nm": 13.5,
+      "min_range_nm": 0.4,
+      "speed_kts": 1978.5,
+      "enable_range_nm": 0,
+      "pk": 0.6,
+      "salvo": 2,
+      "reload_s": 3,
+      "damage": 16,
+      "guidance": "HomingAir",
+      "ir": false,
+      "directors": 4
+    },
+    "cw_seawolf": {
+      "id": "cw_seawolf",
+      "name": "Sea Wolf (GWS25/26)",
+      "kind": "Sam",
+      "targets": {
+        "air": true,
+        "missile": true
+      },
+      "range_nm": 4.0,
+      "min_range_nm": 0.3,
+      "speed_kts": 1320,
+      "enable_range_nm": 0,
+      "pk": 0.55,
+      "salvo": 2,
+      "reload_s": 4,
+      "damage": 17,
+      "guidance": "HomingAir",
+      "ir": false,
+      "directors": 2
+    },
+    "cw_seadart": {
+      "id": "cw_seadart",
+      "name": "Sea Dart Mod 2/3 (GWS30)",
+      "kind": "Sam",
+      "targets": {
+        "air": true,
+        "missile": true
+      },
+      "range_nm": 80.0,
+      "min_range_nm": 3.5,
+      "speed_kts": 1650,
+      "enable_range_nm": 0,
+      "pk": 0.55,
+      "salvo": 2,
+      "reload_s": 6,
+      "damage": 24,
+      "guidance": "HomingAir",
+      "ir": false,
+      "directors": 2
+    },
+    "cw_seaslug_mk1": {
+      "id": "cw_seaslug_mk1",
+      "name": "Seaslug Mk1 (GWS1)",
+      "kind": "Sam",
+      "targets": {
+        "air": true
+      },
+      "range_nm": 15.0,
+      "min_range_nm": 5.0,
+      "speed_kts": 1188,
+      "enable_range_nm": 0,
+      "pk": 0.45,
+      "salvo": 1,
+      "reload_s": 30,
+      "damage": 22,
+      "guidance": "HomingAir",
+      "ir": false,
+      "directors": 1
+    },
+    "cw_seaslug": {
+      "id": "cw_seaslug",
+      "name": "Seaslug Mk2 (GWS2)",
+      "kind": "Sam",
+      "targets": {
+        "air": true
+      },
+      "range_nm": 25.0,
+      "min_range_nm": 5.0,
+      "speed_kts": 1188,
+      "enable_range_nm": 0,
+      "pk": 0.5,
+      "salvo": 1,
+      "reload_s": 30,
+      "damage": 32,
+      "guidance": "HomingAir",
+      "ir": false,
+      "directors": 1
+    },
+    "cw_seacat": {
+      "id": "cw_seacat",
+      "name": "Sea Cat (GWS20/21/22/24)",
+      "kind": "Sam",
+      "targets": {
+        "air": true
+      },
+      "range_nm": 2.5,
+      "min_range_nm": 0.7,
+      "speed_kts": 530,
+      "enable_range_nm": 0,
+      "pk": 0.45,
+      "salvo": 1,
+      "reload_s": 8,
+      "damage": 18,
+      "guidance": "HomingAir",
+      "ir": false,
+      "directors": 1
+    },
+    "cw_seasparrow": {
+      "id": "cw_seasparrow",
+      "name": "RIM-7M/P Sea Sparrow",
+      "kind": "Sam",
+      "targets": {
+        "air": true,
+        "missile": true
+      },
+      "range_nm": 12.0,
+      "min_range_nm": 0.5,
+      "speed_kts": 1650,
+      "enable_range_nm": 0,
+      "pk": 0.55,
+      "salvo": 2,
+      "reload_s": 4,
+      "damage": 23,
+      "guidance": "HomingAir",
+      "ir": false,
+      "directors": 2
+    },
+    "cw_sm1mr": {
+      "id": "cw_sm1mr",
+      "name": "SM1MR RIM-66 Blk VI",
+      "kind": "Sam",
+      "targets": {
+        "air": true,
+        "missile": true
+      },
+      "range_nm": 25.0,
+      "min_range_nm": 2.0,
+      "speed_kts": 1650,
+      "enable_range_nm": 0,
+      "pk": 0.55,
+      "salvo": 1,
+      "reload_s": 5,
+      "damage": 25,
+      "guidance": "HomingAir",
+      "ir": false,
+      "directors": 2
+    },
+    "cw_essm": {
+      "id": "cw_essm",
+      "name": "ESSM RIM-162 Blk I",
+      "kind": "Sam",
+      "targets": {
+        "air": true,
+        "missile": true
+      },
+      "range_nm": 18.0,
+      "min_range_nm": 0.5,
+      "speed_kts": 2250,
+      "enable_range_nm": 0,
+      "pk": 0.6,
+      "salvo": 2,
+      "reload_s": 3,
+      "damage": 25,
+      "guidance": "HomingAir",
+      "ir": false,
+      "directors": 4
+    },
+    "cw_sm2mr": {
+      "id": "cw_sm2mr",
+      "name": "SM2MR RIM-66 Blk IIIA",
+      "kind": "Sam",
+      "targets": {
+        "air": true,
+        "missile": true
+      },
+      "range_nm": 90.0,
+      "min_range_nm": 3.0,
+      "speed_kts": 2006,
+      "enable_range_nm": 0,
+      "pk": 0.62,
+      "salvo": 1,
+      "reload_s": 5,
+      "damage": 27,
+      "guidance": "HomingAir",
+      "ir": false,
+      "directors": 4
+    },
+    "cw_exocet": {
+      "id": "cw_exocet",
+      "name": "MM38 Exocet",
+      "kind": "Ascm",
+      "targets": {
+        "surface": true,
+        "land": true
+      },
+      "range_nm": 23.0,
+      "min_range_nm": 2.7,
+      "speed_kts": 603,
+      "enable_range_nm": 0,
+      "pk": 0.55,
+      "salvo": 2,
+      "reload_s": 30,
+      "damage": 36,
+      "guidance": "SeaSkimmer",
+      "ir": false,
+      "directors": 0
+    },
+    "cw_nsm": {
+      "id": "cw_nsm",
+      "name": "Naval Strike Missile (NSM)",
+      "kind": "Ascm",
+      "targets": {
+        "surface": true,
+        "land": true
+      },
+      "range_nm": 108.0,
+      "min_range_nm": 1.6,
+      "speed_kts": 627,
+      "enable_range_nm": 0,
+      "pk": 0.6,
+      "salvo": 2,
+      "reload_s": 30,
+      "damage": 34,
+      "guidance": "SeaSkimmer",
+      "ir": false,
+      "directors": 0
+    },
+    "cw_ikara": {
+      "id": "cw_ikara",
+      "name": "Ikara GWS40",
+      "kind": "AswRocket",
+      "targets": {
+        "sub": true
+      },
+      "range_nm": 12.0,
+      "min_range_nm": 1.0,
+      "speed_kts": 495,
+      "enable_range_nm": 0,
+      "pk": 0.5,
+      "salvo": 1,
+      "reload_s": 180,
+      "damage": 25,
+      "guidance": "AswBallistic",
+      "ir": false,
+      "directors": 0
+    },
+    "cw_5in_mk45": {
+      "id": "cw_5in_mk45",
+      "name": "Mk45 Mod 4 5in/62",
+      "kind": "Gun",
+      "targets": {
+        "air": true,
+        "surface": true,
+        "land": true
+      },
+      "range_nm": 13.0,
+      "min_range_nm": 0,
+      "speed_kts": 0,
+      "enable_range_nm": 0,
+      "pk": 0.35,
+      "salvo": 1,
+      "reload_s": 2.0,
+      "damage": 24,
+      "guidance": "BallisticGun",
+      "ir": false,
+      "directors": 0
+    },
+    "cw_4_5in": {
+      "id": "cw_4_5in",
+      "name": "Mk8/Mk6 4.5in",
+      "kind": "Gun",
+      "targets": {
+        "air": true,
+        "surface": true,
+        "land": true
+      },
+      "range_nm": 12.0,
+      "min_range_nm": 0,
+      "speed_kts": 0,
+      "enable_range_nm": 0,
+      "pk": 0.3,
+      "salvo": 1,
+      "reload_s": 2.5,
+      "damage": 21,
+      "guidance": "BallisticGun",
+      "ir": false,
+      "directors": 0
+    },
+    "cw_57mm": {
+      "id": "cw_57mm",
+      "name": "Bofors 57mm/70 Mk3",
+      "kind": "Gun",
+      "targets": {
+        "air": true,
+        "surface": true,
+        "land": true
+      },
+      "range_nm": 9.3,
+      "min_range_nm": 0,
+      "speed_kts": 0,
+      "enable_range_nm": 0,
+      "pk": 0.3,
+      "salvo": 1,
+      "reload_s": 1.5,
+      "damage": 15,
+      "guidance": "BallisticGun",
+      "ir": false,
+      "directors": 0
+    },
+    "cw_40mm": {
+      "id": "cw_40mm",
+      "name": "Bofors 40mm/60-70",
+      "kind": "Gun",
+      "targets": {
+        "air": true,
+        "surface": true
+      },
+      "range_nm": 5.4,
+      "min_range_nm": 0,
+      "speed_kts": 0,
+      "enable_range_nm": 0,
+      "pk": 0.25,
+      "salvo": 1,
+      "reload_s": 2.0,
+      "damage": 5,
+      "guidance": "BallisticGun",
+      "ir": false,
+      "directors": 0
+    },
+    "cw_25mm": {
+      "id": "cw_25mm",
+      "name": "25mm Typhoon/DS25M mount",
+      "kind": "Gun",
+      "targets": {
+        "air": true,
+        "surface": true
+      },
+      "range_nm": 1.6,
+      "min_range_nm": 0,
+      "speed_kts": 0,
+      "enable_range_nm": 0,
+      "pk": 0.18,
+      "salvo": 1,
+      "reload_s": 2.0,
+      "damage": 2,
+      "guidance": "BallisticGun",
+      "ir": false,
+      "directors": 0
+    },
+    "cw_50cal": {
+      "id": "cw_50cal",
+      "name": "12.7mm / M2 / Mini-Typhoon mount",
+      "kind": "Gun",
+      "targets": {
+        "air": true,
+        "surface": true
+      },
+      "range_nm": 1.0,
+      "min_range_nm": 0,
+      "speed_kts": 0,
+      "enable_range_nm": 0,
+      "pk": 0.1,
+      "salvo": 1,
+      "reload_s": 2.0,
+      "damage": 1,
+      "guidance": "BallisticGun",
+      "ir": false,
+      "directors": 0
+    },
+    "cw_762mm": {
+      "id": "cw_762mm",
+      "name": "7.62mm / M134 close-in mount",
+      "kind": "Gun",
+      "targets": {
+        "air": true,
+        "surface": true
+      },
+      "range_nm": 0.7,
+      "min_range_nm": 0,
+      "speed_kts": 0,
+      "enable_range_nm": 0,
+      "pk": 0.08,
+      "salvo": 1,
+      "reload_s": 2.0,
+      "damage": 0.5,
+      "guidance": "BallisticGun",
+      "ir": false,
+      "directors": 0
+    },
+    "cw_20mm": {
+      "id": "cw_20mm",
+      "name": "20mm close-in mount",
+      "kind": "Gun",
+      "targets": {
+        "air": true,
+        "surface": true
+      },
+      "range_nm": 1.4,
+      "min_range_nm": 0,
+      "speed_kts": 0,
+      "enable_range_nm": 0,
+      "pk": 0.15,
+      "salvo": 1,
+      "reload_s": 2.0,
+      "damage": 2,
+      "guidance": "BallisticGun",
+      "ir": false,
+      "directors": 0
+    },
+    "cw_76mm": {
+      "id": "cw_76mm",
+      "name": "76mm/62 OTO Melara",
+      "kind": "Gun",
+      "targets": {
+        "air": true,
+        "surface": true,
+        "land": true
+      },
+      "range_nm": 10.0,
+      "min_range_nm": 0,
+      "speed_kts": 0,
+      "enable_range_nm": 0,
+      "pk": 0.3,
+      "salvo": 1,
+      "reload_s": 2.5,
+      "damage": 18,
+      "guidance": "BallisticGun",
+      "ir": false,
+      "directors": 0
+    },
+    "cw_martlet": {
+      "id": "cw_martlet",
+      "name": "Martlet lightweight missile",
+      "kind": "Aam",
+      "targets": {
+        "air": true,
+        "surface": true
+      },
+      "range_nm": 4.3,
+      "min_range_nm": 0,
+      "speed_kts": 989,
+      "enable_range_nm": 0,
+      "pk": 0.5,
+      "salvo": 1,
+      "reload_s": 2,
+      "damage": 10,
+      "guidance": "HomingAir",
+      "ir": false,
+      "directors": 0
+    },
+    "cw_amraam": {
+      "id": "cw_amraam",
+      "name": "AIM-120 AMRAAM",
+      "kind": "Aam",
+      "targets": {
+        "air": true
+      },
+      "range_nm": 40.0,
+      "min_range_nm": 0,
+      "speed_kts": 2000,
+      "enable_range_nm": 0,
+      "pk": 0.6,
+      "salvo": 1,
+      "reload_s": 3,
+      "damage": 25,
+      "guidance": "HomingAir",
+      "ir": false,
+      "directors": 0
+    },
+    "cw_paveway_iv": {
+      "id": "cw_paveway_iv",
+      "name": "Paveway IV guided bomb",
+      "kind": "Bomb",
+      "targets": {
+        "surface": true,
+        "land": true
+      },
+      "range_nm": 8.0,
+      "min_range_nm": 0,
+      "speed_kts": 0,
+      "enable_range_nm": 0,
+      "pk": 0.6,
+      "salvo": 1,
+      "reload_s": 30,
+      "damage": 30,
+      "guidance": "BallisticGun",
+      "ir": false,
+      "directors": 0
+    },
+    "cw_mk82": {
+      "id": "cw_mk82",
+      "name": "Mk82 500 lb bomb",
+      "kind": "Bomb",
+      "targets": {
+        "surface": true,
+        "land": true
+      },
+      "range_nm": 5.0,
+      "min_range_nm": 0,
+      "speed_kts": 0,
+      "enable_range_nm": 0,
+      "pk": 0.4,
+      "salvo": 2,
+      "reload_s": 20,
+      "damage": 22,
+      "guidance": "BallisticGun",
+      "ir": false,
+      "directors": 0
+    },
+    "cw_zuni": {
+      "id": "cw_zuni",
+      "name": "Zuni 5in rocket",
+      "kind": "Rocket",
+      "targets": {
+        "surface": true,
+        "land": true
+      },
+      "range_nm": 2.0,
+      "min_range_nm": 0,
+      "speed_kts": 600,
+      "enable_range_nm": 0,
+      "pk": 0.3,
+      "salvo": 4,
+      "reload_s": 5,
+      "damage": 8,
+      "guidance": "BallisticGun",
+      "ir": false,
+      "directors": 0
+    },
+    "cw_sea_eagle": {
+      "id": "cw_sea_eagle",
+      "name": "Sea Eagle ASM",
+      "kind": "Ascm",
+      "targets": {
+        "surface": true
+      },
+      "range_nm": 68.0,
+      "min_range_nm": 5.0,
+      "speed_kts": 600,
+      "enable_range_nm": 0,
+      "pk": 0.55,
+      "salvo": 1,
+      "reload_s": 30,
+      "damage": 40,
+      "guidance": "SeaSkimmer",
+      "ir": false,
+      "directors": 0
+    },
+    "cw_sea_skua": {
+      "id": "cw_sea_skua",
+      "name": "Sea Skua",
+      "kind": "Ascm",
+      "targets": {
+        "surface": true
+      },
+      "range_nm": 8.0,
+      "min_range_nm": 1.0,
+      "speed_kts": 600,
+      "enable_range_nm": 0,
+      "pk": 0.5,
+      "salvo": 2,
+      "reload_s": 20,
+      "damage": 20,
+      "guidance": "SeaSkimmer",
+      "ir": false,
+      "directors": 0
+    },
+    "cw_penguin": {
+      "id": "cw_penguin",
+      "name": "AGM-119 Penguin Mk2 Mod7",
+      "kind": "Ascm",
+      "targets": {
+        "surface": true
+      },
+      "range_nm": 20.0,
+      "min_range_nm": 1.0,
+      "speed_kts": 600,
+      "enable_range_nm": 0,
+      "pk": 0.55,
+      "salvo": 1,
+      "reload_s": 30,
+      "damage": 30,
+      "guidance": "SeaSkimmer",
+      "ir": false,
+      "directors": 0
+    },
+    "cw_depth_charge": {
+      "id": "cw_depth_charge",
+      "name": "Mk11 depth charge",
+      "kind": "Bomb",
+      "targets": {
+        "sub": true
+      },
+      "range_nm": 1.0,
+      "min_range_nm": 0,
+      "speed_kts": 0,
+      "enable_range_nm": 0,
+      "pk": 0.3,
+      "salvo": 4,
+      "reload_s": 20,
+      "damage": 10,
+      "guidance": "BallisticGun",
+      "ir": false,
+      "directors": 0
+    }
+  },
+  "sensors": {
+    "cw_mad": {
+      "id": "cw_mad",
+      "name": "Magnetic anomaly detector",
+      "kind": "Magnetic",
+      "air_range_nm": 0,
+      "surface_range_nm": 0,
+      "sub_range_nm": 1.5,
+      "missile_range_nm": 0,
+      "alt_m": 20,
+      "radar_class": ""
+    },
+    "cw_sonobuoy": {
+      "id": "cw_sonobuoy",
+      "name": "Sonobuoy field (passive)",
+      "kind": "SonarPassive",
+      "air_range_nm": 0,
+      "surface_range_nm": 0,
+      "sub_range_nm": 12.0,
+      "missile_range_nm": 0,
+      "alt_m": 20,
+      "radar_class": ""
+    },
+    "cw_irst": {
+      "id": "cw_irst",
+      "name": "IRST / FLIR search set",
+      "kind": "Ir",
+      "air_range_nm": 25,
+      "surface_range_nm": 15,
+      "sub_range_nm": 0,
+      "missile_range_nm": 10,
+      "alt_m": 20,
+      "radar_class": ""
+    }
+  }
+}

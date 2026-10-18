@@ -1,0 +1,3261 @@
+{
+  "platforms": {
+    "kr_ddg_sejong": {
+      "id": "kr_ddg_sejong",
+      "name": "Sejong the Great (KDX-III) DDG",
+      "kind": "Ship",
+      "hp": 331,
+      "max_speed_kts": 30,
+      "cruise_speed_kts": 20,
+      "turn_rate_deg_s": 1.8,
+      "rcs": "Small",
+      "noise_db": 58,
+      "visual_factor": 1.0,
+      "vp_value": 33,
+      "sensors": [
+        "kr_spy1d",
+        "kr_sps95k",
+        "kr_sqr220k",
+        "kr_dsqs24",
+        "kr_eo_ir",
+        "esm_std",
+        "visual",
+        "kr_sps100k"
+      ],
+      "weapons": [
+        {
+          "weapon": "kr_sm2",
+          "mounts": 10,
+          "ammo": 8
+        },
+        {
+          "weapon": "kr_ssm700k",
+          "mounts": 4,
+          "ammo": 4
+        },
+        {
+          "weapon": "kr_red_shark",
+          "mounts": 1,
+          "ammo": 8
+        },
+        {
+          "weapon": "kr_hyunmoo3c",
+          "mounts": 2,
+          "ammo": 16
+        },
+        {
+          "weapon": "kr_haegung",
+          "mounts": 2,
+          "ammo": 16
+        },
+        {
+          "weapon": "gun_5in",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 1,
+          "ammo": 60
+        },
+        {
+          "weapon": "kr_blue_shark",
+          "mounts": 2,
+          "ammo": 3
+        }
+      ],
+      "chaff": 40,
+      "decoys": 12,
+      "deck": {
+        "capacity": 2,
+        "cycle_s": 600,
+        "wing": [
+          {
+            "class": "kr_helo_lynx",
+            "count": 2
+          }
+        ]
+      }
+    },
+    "kr_ddg_jeongjo": {
+      "id": "kr_ddg_jeongjo",
+      "name": "Jeongjo the Great (KDX-III Batch II) DDG",
+      "kind": "Ship",
+      "hp": 379,
+      "max_speed_kts": 30,
+      "cruise_speed_kts": 20,
+      "turn_rate_deg_s": 1.7,
+      "rcs": "Small",
+      "noise_db": 57,
+      "visual_factor": 1.0,
+      "vp_value": 38,
+      "sensors": [
+        "kr_spy1d",
+        "kr_sps560k",
+        "kr_sps100k",
+        "kr_sqr301k",
+        "kr_vds300k",
+        "kr_eo_ir",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "kr_sm2",
+          "mounts": 6,
+          "ammo": 6
+        },
+        {
+          "weapon": "kr_sm6",
+          "mounts": 2,
+          "ammo": 6
+        },
+        {
+          "weapon": "kr_haegung",
+          "mounts": 2,
+          "ammo": 16
+        },
+        {
+          "weapon": "kr_red_shark",
+          "mounts": 1,
+          "ammo": 8
+        },
+        {
+          "weapon": "kr_ssm700k",
+          "mounts": 2,
+          "ammo": 4
+        },
+        {
+          "weapon": "gun_5in",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 2,
+          "ammo": 60
+        },
+        {
+          "weapon": "kr_blue_shark",
+          "mounts": 2,
+          "ammo": 3
+        }
+      ],
+      "chaff": 40,
+      "decoys": 12,
+      "deck": {
+        "capacity": 2,
+        "cycle_s": 600,
+        "wing": [
+          {
+            "class": "kr_helo_wildcat",
+            "count": 2
+          }
+        ]
+      }
+    },
+    "kr_dd_chungmugong": {
+      "id": "kr_dd_chungmugong",
+      "name": "Chungmugong Yi Sun-shin (KDX-II) DD",
+      "kind": "Ship",
+      "hp": 229,
+      "max_speed_kts": 29,
+      "cruise_speed_kts": 19,
+      "turn_rate_deg_s": 2.0,
+      "rcs": "VerySmall",
+      "noise_db": 56,
+      "visual_factor": 1.0,
+      "vp_value": 23,
+      "sensors": [
+        "radar_air_long",
+        "kr_sps95k",
+        "kr_dsqs24",
+        "kr_sqr220k",
+        "kr_eo_ir",
+        "esm_std",
+        "visual",
+        "radar_surf_med"
+      ],
+      "weapons": [
+        {
+          "weapon": "kr_sm2",
+          "mounts": 4,
+          "ammo": 8
+        },
+        {
+          "weapon": "kr_ssm700k",
+          "mounts": 2,
+          "ammo": 4
+        },
+        {
+          "weapon": "kr_hyunmoo3c",
+          "mounts": 2,
+          "ammo": 8
+        },
+        {
+          "weapon": "kr_red_shark",
+          "mounts": 1,
+          "ammo": 8
+        },
+        {
+          "weapon": "kr_ram",
+          "mounts": 1,
+          "ammo": 21
+        },
+        {
+          "weapon": "gun_5in",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 1,
+          "ammo": 60
+        },
+        {
+          "weapon": "kr_blue_shark",
+          "mounts": 2,
+          "ammo": 3
+        }
+      ],
+      "chaff": 30,
+      "decoys": 10,
+      "deck": {
+        "capacity": 2,
+        "cycle_s": 600,
+        "wing": [
+          {
+            "class": "kr_helo_lynx",
+            "count": 2
+          }
+        ]
+      }
+    },
+    "kr_dd_gwanggaeto": {
+      "id": "kr_dd_gwanggaeto",
+      "name": "Gwanggaeto the Great (KDX-I) DD",
+      "kind": "Ship",
+      "hp": 185,
+      "max_speed_kts": 30,
+      "cruise_speed_kts": 20,
+      "turn_rate_deg_s": 2.2,
+      "rcs": "Small",
+      "noise_db": 58,
+      "visual_factor": 1.0,
+      "vp_value": 19,
+      "sensors": [
+        "radar_air_long",
+        "kr_sps95k",
+        "kr_dsqs24",
+        "kr_sqr220k",
+        "esm_std",
+        "visual",
+        "radar_surf_med"
+      ],
+      "weapons": [
+        {
+          "weapon": "kr_rim7p",
+          "mounts": 2,
+          "ammo": 8
+        },
+        {
+          "weapon": "kr_harpoon",
+          "mounts": 2,
+          "ammo": 4
+        },
+        {
+          "weapon": "gun_5in",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 2,
+          "ammo": 60
+        },
+        {
+          "weapon": "kr_blue_shark",
+          "mounts": 2,
+          "ammo": 3
+        }
+      ],
+      "chaff": 30,
+      "decoys": 8,
+      "deck": {
+        "capacity": 2,
+        "cycle_s": 600,
+        "wing": [
+          {
+            "class": "kr_helo_lynx",
+            "count": 2
+          }
+        ]
+      }
+    },
+    "kr_ff_chungnam": {
+      "id": "kr_ff_chungnam",
+      "name": "Chungnam (FFX Batch III) FF",
+      "kind": "Ship",
+      "hp": 216,
+      "max_speed_kts": 30,
+      "cruise_speed_kts": 20,
+      "turn_rate_deg_s": 2.2,
+      "rcs": "VerySmall",
+      "noise_db": 52,
+      "visual_factor": 1.0,
+      "vp_value": 22,
+      "sensors": [
+        "kr_mfr4x",
+        "kr_sps100k",
+        "kr_sqs240k",
+        "kr_sqr250k",
+        "kr_eo_ir",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "kr_haegung",
+          "mounts": 2,
+          "ammo": 16
+        },
+        {
+          "weapon": "kr_red_shark",
+          "mounts": 2,
+          "ammo": 4
+        },
+        {
+          "weapon": "kr_ssm700k",
+          "mounts": 2,
+          "ammo": 4
+        },
+        {
+          "weapon": "kr_blue_shark",
+          "mounts": 2,
+          "ammo": 3
+        },
+        {
+          "weapon": "gun_5in",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 1,
+          "ammo": 60
+        }
+      ],
+      "chaff": 20,
+      "decoys": 8,
+      "deck": {
+        "capacity": 1,
+        "cycle_s": 600,
+        "wing": [
+          {
+            "class": "kr_helo_wildcat",
+            "count": 1
+          }
+        ]
+      }
+    },
+    "kr_ff_daegu": {
+      "id": "kr_ff_daegu",
+      "name": "Daegu (FFX Batch II) FF",
+      "kind": "Ship",
+      "hp": 181,
+      "max_speed_kts": 30,
+      "cruise_speed_kts": 20,
+      "turn_rate_deg_s": 2.4,
+      "rcs": "VerySmall",
+      "noise_db": 52,
+      "visual_factor": 1.0,
+      "vp_value": 18,
+      "sensors": [
+        "kr_sps550k",
+        "kr_sps100k",
+        "kr_sqs240k",
+        "kr_sqr250k",
+        "kr_eo_ir",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "kr_haegung",
+          "mounts": 2,
+          "ammo": 16
+        },
+        {
+          "weapon": "kr_red_shark",
+          "mounts": 2,
+          "ammo": 4
+        },
+        {
+          "weapon": "kr_ssm700k",
+          "mounts": 2,
+          "ammo": 4
+        },
+        {
+          "weapon": "kr_blue_shark",
+          "mounts": 2,
+          "ammo": 3
+        },
+        {
+          "weapon": "gun_5in",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 1,
+          "ammo": 60
+        }
+      ],
+      "chaff": 20,
+      "decoys": 8,
+      "deck": {
+        "capacity": 1,
+        "cycle_s": 600,
+        "wing": [
+          {
+            "class": "kr_helo_wildcat",
+            "count": 1
+          }
+        ]
+      }
+    },
+    "kr_ff_incheon": {
+      "id": "kr_ff_incheon",
+      "name": "Incheon (FFX Batch I) FF",
+      "kind": "Ship",
+      "hp": 148,
+      "max_speed_kts": 30,
+      "cruise_speed_kts": 20,
+      "turn_rate_deg_s": 2.6,
+      "rcs": "VerySmall",
+      "noise_db": 53,
+      "visual_factor": 1.0,
+      "vp_value": 15,
+      "sensors": [
+        "kr_sps550k",
+        "kr_sps100k",
+        "kr_sqs240k",
+        "kr_eo_ir",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "kr_ssm700k",
+          "mounts": 2,
+          "ammo": 4
+        },
+        {
+          "weapon": "kr_ram",
+          "mounts": 1,
+          "ammo": 21
+        },
+        {
+          "weapon": "kr_blue_shark",
+          "mounts": 2,
+          "ammo": 3
+        },
+        {
+          "weapon": "gun_5in",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 1,
+          "ammo": 60
+        }
+      ],
+      "chaff": 20,
+      "decoys": 6,
+      "deck": {
+        "capacity": 1,
+        "cycle_s": 600,
+        "wing": [
+          {
+            "class": "kr_helo_wildcat",
+            "count": 1
+          }
+        ]
+      }
+    },
+    "kr_ff_ulsan": {
+      "id": "kr_ff_ulsan",
+      "name": "Ulsan (HDF-2000) FF",
+      "kind": "Ship",
+      "hp": 95,
+      "max_speed_kts": 36,
+      "cruise_speed_kts": 22,
+      "turn_rate_deg_s": 3.0,
+      "rcs": "Small",
+      "noise_db": 58,
+      "visual_factor": 1.0,
+      "vp_value": 10,
+      "sensors": [
+        "radar_surf_med",
+        "radar_nav",
+        "kr_de1167",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "kr_harpoon",
+          "mounts": 2,
+          "ammo": 4
+        },
+        {
+          "weapon": "kr_gun76",
+          "mounts": 2,
+          "ammo": 100
+        },
+        {
+          "weapon": "kr_gun40",
+          "mounts": 4,
+          "ammo": 100
+        },
+        {
+          "weapon": "kr_mk46",
+          "mounts": 2,
+          "ammo": 3
+        }
+      ],
+      "chaff": 20,
+      "decoys": 4
+    },
+    "kr_ffl_pohang": {
+      "id": "kr_ffl_pohang",
+      "name": "Pohang (PCC) FFL",
+      "kind": "Ship",
+      "hp": 85,
+      "max_speed_kts": 31,
+      "cruise_speed_kts": 20,
+      "turn_rate_deg_s": 3.2,
+      "rcs": "Small",
+      "noise_db": 56,
+      "visual_factor": 1.0,
+      "vp_value": 9,
+      "sensors": [
+        "radar_surf_med",
+        "radar_nav",
+        "kr_de1167",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "kr_harpoon",
+          "mounts": 2,
+          "ammo": 2
+        },
+        {
+          "weapon": "kr_gun76",
+          "mounts": 1,
+          "ammo": 100
+        },
+        {
+          "weapon": "kr_gun40",
+          "mounts": 2,
+          "ammo": 100
+        },
+        {
+          "weapon": "kr_mk46",
+          "mounts": 2,
+          "ammo": 3
+        }
+      ],
+      "chaff": 16,
+      "decoys": 4
+    },
+    "kr_pgg_yoon": {
+      "id": "kr_pgg_yoon",
+      "name": "Yoon Yonung-ha (PKG) PGG",
+      "kind": "Ship",
+      "hp": 50,
+      "max_speed_kts": 44,
+      "cruise_speed_kts": 25,
+      "turn_rate_deg_s": 4.5,
+      "rcs": "VerySmall",
+      "noise_db": 50,
+      "visual_factor": 1.0,
+      "vp_value": 6,
+      "sensors": [
+        "kr_sps540k",
+        "kr_sps100k",
+        "kr_eo_ir",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "kr_ssm700k",
+          "mounts": 2,
+          "ammo": 2
+        },
+        {
+          "weapon": "kr_gun76",
+          "mounts": 1,
+          "ammo": 100
+        },
+        {
+          "weapon": "kr_gun40",
+          "mounts": 1,
+          "ammo": 100
+        }
+      ],
+      "chaff": 10,
+      "decoys": 2
+    },
+    "kr_pg_chamsuri": {
+      "id": "kr_pg_chamsuri",
+      "name": "Chamsuri II (PKX-B) PG",
+      "kind": "Ship",
+      "hp": 32,
+      "max_speed_kts": 40,
+      "cruise_speed_kts": 26,
+      "turn_rate_deg_s": 5.0,
+      "rcs": "VerySmall",
+      "noise_db": 48,
+      "visual_factor": 1.0,
+      "vp_value": 4,
+      "sensors": [
+        "kr_sps560k",
+        "kr_sps300k",
+        "kr_eo_ir",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "kr_gun76",
+          "mounts": 1,
+          "ammo": 100
+        },
+        {
+          "weapon": "kr_hanwha_rocket",
+          "mounts": 1,
+          "ammo": 12
+        }
+      ],
+      "chaff": 6,
+      "decoys": 0
+    },
+    "kr_lph_dokdo": {
+      "id": "kr_lph_dokdo",
+      "name": "Dokdo LPH",
+      "kind": "Ship",
+      "hp": 377,
+      "max_speed_kts": 22,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 1.2,
+      "rcs": "Medium",
+      "noise_db": 60,
+      "visual_factor": 1.0,
+      "vp_value": 35,
+      "sensors": [
+        "kr_smartl",
+        "kr_sps95k",
+        "kr_eo_ir",
+        "esm_std",
+        "visual",
+        "radar_surf_med"
+      ],
+      "weapons": [
+        {
+          "weapon": "kr_ram",
+          "mounts": 1,
+          "ammo": 21
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 2,
+          "ammo": 60
+        }
+      ],
+      "chaff": 20,
+      "decoys": 8
+    },
+    "kr_lph_marado": {
+      "id": "kr_lph_marado",
+      "name": "Marado LPH",
+      "kind": "Ship",
+      "hp": 380,
+      "max_speed_kts": 23,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 1.2,
+      "rcs": "Medium",
+      "noise_db": 60,
+      "visual_factor": 1.0,
+      "vp_value": 35,
+      "sensors": [
+        "kr_el2248",
+        "kr_sps550k",
+        "kr_sps95k",
+        "kr_eo_ir",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "kr_haegung",
+          "mounts": 1,
+          "ammo": 16
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 2,
+          "ammo": 60
+        }
+      ],
+      "chaff": 20,
+      "decoys": 8
+    },
+    "kr_lst_cheonwangbong": {
+      "id": "kr_lst_cheonwangbong",
+      "name": "Cheonwangbong LST",
+      "kind": "Ship",
+      "hp": 184,
+      "max_speed_kts": 23,
+      "cruise_speed_kts": 17,
+      "turn_rate_deg_s": 2.0,
+      "rcs": "Small",
+      "noise_db": 58,
+      "visual_factor": 1.0,
+      "vp_value": 18,
+      "sensors": [
+        "kr_sps100k",
+        "kr_sps540k",
+        "kr_eo_ir",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "kr_gun40",
+          "mounts": 1,
+          "ammo": 100
+        }
+      ],
+      "chaff": 10,
+      "decoys": 4
+    },
+    "kr_ss_dosan": {
+      "id": "kr_ss_dosan",
+      "name": "Dosan Ahn Chang-ho (KSS-III) SSP",
+      "kind": "Sub",
+      "hp": 103,
+      "max_speed_kts": 20,
+      "cruise_speed_kts": 8,
+      "turn_rate_deg_s": 3.0,
+      "rcs": "VerySmall",
+      "noise_db": 26,
+      "visual_factor": 0.15,
+      "vp_value": 30,
+      "sensors": [
+        "kr_kss3",
+        "visual",
+        "radar_nav"
+      ],
+      "weapons": [
+        {
+          "weapon": "kr_white_shark",
+          "mounts": 2,
+          "ammo": 9
+        },
+        {
+          "weapon": "kr_harpoon",
+          "mounts": 2,
+          "ammo": 2
+        }
+      ],
+      "chaff": 0,
+      "decoys": 36,
+      "max_depth_m": 400
+    },
+    "kr_ss_type214": {
+      "id": "kr_ss_type214",
+      "name": "Type 214 (Son Won-il) SSP",
+      "kind": "Sub",
+      "hp": 64,
+      "max_speed_kts": 20,
+      "cruise_speed_kts": 8,
+      "turn_rate_deg_s": 3.0,
+      "rcs": "VerySmall",
+      "noise_db": 26,
+      "visual_factor": 0.15,
+      "vp_value": 22,
+      "sensors": [
+        "kr_csu90",
+        "visual",
+        "radar_nav"
+      ],
+      "weapons": [
+        {
+          "weapon": "kr_sut_mod2",
+          "mounts": 2,
+          "ammo": 6
+        },
+        {
+          "weapon": "kr_harpoon",
+          "mounts": 2,
+          "ammo": 2
+        }
+      ],
+      "chaff": 0,
+      "decoys": 24,
+      "max_depth_m": 400
+    },
+    "kr_ss_type209": {
+      "id": "kr_ss_type209",
+      "name": "Type 209/1200 (Jang Bogo) SS",
+      "kind": "Sub",
+      "hp": 50,
+      "max_speed_kts": 22,
+      "cruise_speed_kts": 7,
+      "turn_rate_deg_s": 3.2,
+      "rcs": "VerySmall",
+      "noise_db": 30,
+      "visual_factor": 0.15,
+      "vp_value": 18,
+      "sensors": [
+        "kr_csu83",
+        "kr_prs315",
+        "visual",
+        "radar_nav"
+      ],
+      "weapons": [
+        {
+          "weapon": "kr_sut_mod2",
+          "mounts": 2,
+          "ammo": 7
+        },
+        {
+          "weapon": "kr_harpoon",
+          "mounts": 2,
+          "ammo": 2
+        }
+      ],
+      "chaff": 0,
+      "decoys": 16,
+      "max_depth_m": 200
+    },
+    "kr_ss_kss500a": {
+      "id": "kr_ss_kss500a",
+      "name": "KSS 500A SSW",
+      "kind": "Sub",
+      "hp": 29,
+      "max_speed_kts": 19,
+      "cruise_speed_kts": 6,
+      "turn_rate_deg_s": 3.5,
+      "rcs": "VerySmall",
+      "noise_db": 26,
+      "visual_factor": 0.15,
+      "vp_value": 15,
+      "sensors": [
+        "kr_kss500a",
+        "visual",
+        "radar_nav"
+      ],
+      "weapons": [
+        {
+          "weapon": "kr_white_shark",
+          "mounts": 1,
+          "ammo": 4
+        },
+        {
+          "weapon": "kr_sut_mod2",
+          "mounts": 1,
+          "ammo": 2
+        }
+      ],
+      "chaff": 0,
+      "decoys": 12,
+      "max_depth_m": 200
+    },
+    "kr_helo_wildcat": {
+      "id": "kr_helo_wildcat",
+      "name": "AW.159 Wildcat Mk210 ASW (ceiling 3050 m)",
+      "kind": "Aircraft",
+      "hp": 16,
+      "max_speed_kts": 157,
+      "cruise_speed_kts": 115,
+      "turn_rate_deg_s": 25,
+      "rcs": "Small",
+      "noise_db": 40,
+      "visual_factor": 1.0,
+      "vp_value": 16,
+      "sensors": [
+        "kr_seaspray",
+        "sonar_dipping",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "kr_blue_shark",
+          "mounts": 1,
+          "ammo": 2
+        }
+      ],
+      "chaff": 0,
+      "decoys": 0,
+      "endurance_s": 7680,
+      "dipping_sonar": true
+    },
+    "kr_helo_lynx": {
+      "id": "kr_helo_lynx",
+      "name": "Lynx Mk99 ASW (ceiling 3663 m)",
+      "kind": "Aircraft",
+      "hp": 15,
+      "max_speed_kts": 144,
+      "cruise_speed_kts": 120,
+      "turn_rate_deg_s": 25,
+      "rcs": "Small",
+      "noise_db": 40,
+      "visual_factor": 1.0,
+      "vp_value": 15,
+      "sensors": [
+        "radar_surf_sm",
+        "sonar_dipping",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "kr_blue_shark",
+          "mounts": 1,
+          "ammo": 2
+        }
+      ],
+      "chaff": 0,
+      "decoys": 0,
+      "endurance_s": 6750,
+      "dipping_sonar": true
+    },
+    "tw_ddg_kidd": {
+      "id": "tw_ddg_kidd",
+      "name": "Kee Lung (ex-Kidd) DDG",
+      "kind": "Ship",
+      "hp": 286,
+      "max_speed_kts": 33,
+      "cruise_speed_kts": 22,
+      "turn_rate_deg_s": 1.8,
+      "rcs": "Medium",
+      "noise_db": 60,
+      "visual_factor": 1.0,
+      "vp_value": 30,
+      "sensors": [
+        "tw_sps48e",
+        "tw_sps49",
+        "tw_sps55",
+        "tw_spq9a",
+        "tw_sqs53d",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "tw_sm2",
+          "mounts": 2,
+          "ammo": 34
+        },
+        {
+          "weapon": "tw_harpoon",
+          "mounts": 2,
+          "ammo": 4
+        },
+        {
+          "weapon": "gun_5in",
+          "mounts": 2,
+          "ammo": 40
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 2,
+          "ammo": 60
+        },
+        {
+          "weapon": "tw_mk46",
+          "mounts": 2,
+          "ammo": 3
+        }
+      ],
+      "chaff": 40,
+      "decoys": 10,
+      "deck": {
+        "capacity": 2,
+        "cycle_s": 600,
+        "wing": [
+          {
+            "class": "tw_helo_s70c",
+            "count": 2
+          }
+        ]
+      }
+    },
+    "tw_ffg_perry": {
+      "id": "tw_ffg_perry",
+      "name": "Ex-US O.H. Perry FFG",
+      "kind": "Ship",
+      "hp": 166,
+      "max_speed_kts": 29,
+      "cruise_speed_kts": 20,
+      "turn_rate_deg_s": 2.2,
+      "rcs": "Small",
+      "noise_db": 56,
+      "visual_factor": 1.0,
+      "vp_value": 17,
+      "sensors": [
+        "tw_sps49",
+        "tw_sps55",
+        "tw_mk92",
+        "tw_sqs56",
+        "tw_sqr19",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "tw_sm1",
+          "mounts": 1,
+          "ammo": 36
+        },
+        {
+          "weapon": "tw_harpoon",
+          "mounts": 1,
+          "ammo": 4
+        },
+        {
+          "weapon": "tw_gun76",
+          "mounts": 1,
+          "ammo": 100
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 1,
+          "ammo": 60
+        },
+        {
+          "weapon": "tw_mk46",
+          "mounts": 2,
+          "ammo": 3
+        }
+      ],
+      "chaff": 20,
+      "decoys": 6,
+      "deck": {
+        "capacity": 2,
+        "cycle_s": 600,
+        "wing": [
+          {
+            "class": "tw_helo_s70c",
+            "count": 2
+          }
+        ]
+      }
+    },
+    "tw_ffg_kuanghua": {
+      "id": "tw_ffg_kuanghua",
+      "name": "Kuang Hua I FFG",
+      "kind": "Ship",
+      "hp": 169,
+      "max_speed_kts": 29,
+      "cruise_speed_kts": 20,
+      "turn_rate_deg_s": 2.2,
+      "rcs": "Small",
+      "noise_db": 56,
+      "visual_factor": 1.0,
+      "vp_value": 17,
+      "sensors": [
+        "tw_sps49",
+        "tw_sps55",
+        "tw_mk92",
+        "tw_de1160",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "tw_sm1",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "tw_hsing_feng_2",
+          "mounts": 2,
+          "ammo": 4
+        },
+        {
+          "weapon": "tw_gun76",
+          "mounts": 1,
+          "ammo": 100
+        },
+        {
+          "weapon": "tw_gun40",
+          "mounts": 2,
+          "ammo": 100
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 1,
+          "ammo": 60
+        },
+        {
+          "weapon": "tw_mk46",
+          "mounts": 2,
+          "ammo": 3
+        }
+      ],
+      "chaff": 20,
+      "decoys": 6,
+      "deck": {
+        "capacity": 2,
+        "cycle_s": 600,
+        "wing": [
+          {
+            "class": "tw_helo_s70c",
+            "count": 2
+          }
+        ]
+      }
+    },
+    "tw_ffg_knox": {
+      "id": "tw_ffg_knox",
+      "name": "Ex-US Knox FFG",
+      "kind": "Ship",
+      "hp": 168,
+      "max_speed_kts": 27,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 2.4,
+      "rcs": "Small",
+      "noise_db": 58,
+      "visual_factor": 1.0,
+      "vp_value": 17,
+      "sensors": [
+        "tw_sps67",
+        "tw_sqs26",
+        "tw_sqr18",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "tw_sm1",
+          "mounts": 4,
+          "ammo": 3
+        },
+        {
+          "weapon": "tw_harpoon",
+          "mounts": 1,
+          "ammo": 2
+        },
+        {
+          "weapon": "asw_rocket",
+          "mounts": 1,
+          "ammo": 6
+        },
+        {
+          "weapon": "gun_5in",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 1,
+          "ammo": 60
+        },
+        {
+          "weapon": "tw_mk46",
+          "mounts": 2,
+          "ammo": 2
+        }
+      ],
+      "chaff": 20,
+      "decoys": 4
+    },
+    "tw_ff_kangding": {
+      "id": "tw_ff_kangding",
+      "name": "Kang Ding FF",
+      "kind": "Ship",
+      "hp": 164,
+      "max_speed_kts": 25,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 2.6,
+      "rcs": "VerySmall",
+      "noise_db": 54,
+      "visual_factor": 1.0,
+      "vp_value": 16,
+      "sensors": [
+        "tw_drbv26d",
+        "tw_drbv52",
+        "tw_spherion",
+        "tw_flir",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "tw_hsing_feng_2",
+          "mounts": 2,
+          "ammo": 4
+        },
+        {
+          "weapon": "tw_sea_chaparral",
+          "mounts": 1,
+          "ammo": 4
+        },
+        {
+          "weapon": "tw_gun76",
+          "mounts": 1,
+          "ammo": 100
+        },
+        {
+          "weapon": "tw_gun40",
+          "mounts": 2,
+          "ammo": 100
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 1,
+          "ammo": 60
+        },
+        {
+          "weapon": "tw_mk46",
+          "mounts": 2,
+          "ammo": 3
+        }
+      ],
+      "chaff": 20,
+      "decoys": 6,
+      "deck": {
+        "capacity": 1,
+        "cycle_s": 600,
+        "wing": [
+          {
+            "class": "tw_helo_s70c",
+            "count": 1
+          }
+        ]
+      }
+    },
+    "tw_ffl_light": {
+      "id": "tw_ffl_light",
+      "name": "Light Frigate FFL",
+      "kind": "Ship",
+      "hp": 133,
+      "max_speed_kts": 30,
+      "cruise_speed_kts": 21,
+      "turn_rate_deg_s": 2.6,
+      "rcs": "VerySmall",
+      "noise_db": 52,
+      "visual_factor": 1.0,
+      "vp_value": 13,
+      "sensors": [
+        "tw_artisan",
+        "tw_traps",
+        "tw_flir",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "tw_hsing_feng_3",
+          "mounts": 4,
+          "ammo": 4
+        },
+        {
+          "weapon": "tw_tien_chien_2n",
+          "mounts": 3,
+          "ammo": 16
+        },
+        {
+          "weapon": "tw_gun76",
+          "mounts": 1,
+          "ammo": 100
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 1,
+          "ammo": 60
+        },
+        {
+          "weapon": "tw_mk46",
+          "mounts": 2,
+          "ammo": 3
+        }
+      ],
+      "chaff": 20,
+      "decoys": 6,
+      "deck": {
+        "capacity": 1,
+        "cycle_s": 600,
+        "wing": [
+          {
+            "class": "tw_helo_s70c",
+            "count": 1
+          }
+        ]
+      }
+    },
+    "tw_pgg_tachiang": {
+      "id": "tw_pgg_tachiang",
+      "name": "Ta Chiang PGG",
+      "kind": "Ship",
+      "hp": 33,
+      "max_speed_kts": 30,
+      "cruise_speed_kts": 22,
+      "turn_rate_deg_s": 4.5,
+      "rcs": "VerySmall",
+      "noise_db": 48,
+      "visual_factor": 1.0,
+      "vp_value": 6,
+      "sensors": [
+        "tw_sps1",
+        "tw_sps2b",
+        "tw_flir",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "tw_hsing_feng_2",
+          "mounts": 2,
+          "ammo": 4
+        },
+        {
+          "weapon": "tw_hsing_feng_3",
+          "mounts": 2,
+          "ammo": 2
+        },
+        {
+          "weapon": "tw_tien_chien_2n",
+          "mounts": 2,
+          "ammo": 8
+        },
+        {
+          "weapon": "tw_gun76",
+          "mounts": 1,
+          "ammo": 100
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 1,
+          "ammo": 60
+        }
+      ],
+      "chaff": 8,
+      "decoys": 2
+    },
+    "tw_pgg_tuochien": {
+      "id": "tw_pgg_tuochien",
+      "name": "Tuo Chien PGG",
+      "kind": "Ship",
+      "hp": 26,
+      "max_speed_kts": 25,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 5.0,
+      "rcs": "VerySmall",
+      "noise_db": 48,
+      "visual_factor": 1.0,
+      "vp_value": 5,
+      "sensors": [
+        "tw_sps1",
+        "tw_spg6n",
+        "tw_flir",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "tw_hsing_feng_2",
+          "mounts": 2,
+          "ammo": 4
+        },
+        {
+          "weapon": "tw_hsing_feng_3",
+          "mounts": 2,
+          "ammo": 4
+        },
+        {
+          "weapon": "tw_gun76",
+          "mounts": 1,
+          "ammo": 100
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 1,
+          "ammo": 60
+        }
+      ],
+      "chaff": 8,
+      "decoys": 2
+    },
+    "tw_ss_hailung": {
+      "id": "tw_ss_hailung",
+      "name": "Hai Lung (Zwaardvis) SS",
+      "kind": "Sub",
+      "hp": 82,
+      "max_speed_kts": 20,
+      "cruise_speed_kts": 8,
+      "turn_rate_deg_s": 3.0,
+      "rcs": "VerySmall",
+      "noise_db": 28,
+      "visual_factor": 0.15,
+      "vp_value": 25,
+      "sensors": [
+        "tw_siass",
+        "radar_nav",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "tw_sut",
+          "mounts": 2,
+          "ammo": 8
+        },
+        {
+          "weapon": "tw_harpoon",
+          "mounts": 2,
+          "ammo": 3
+        }
+      ],
+      "chaff": 0,
+      "decoys": 20,
+      "max_depth_m": 300
+    },
+    "tw_ss_haikun": {
+      "id": "tw_ss_haikun",
+      "name": "Hai Kun (IDS) SS",
+      "kind": "Sub",
+      "hp": 78,
+      "max_speed_kts": 17,
+      "cruise_speed_kts": 8,
+      "turn_rate_deg_s": 3.0,
+      "rcs": "VerySmall",
+      "noise_db": 26,
+      "visual_factor": 0.15,
+      "vp_value": 26,
+      "sensors": [
+        "tw_ums3000",
+        "radar_nav",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "tw_mk48",
+          "mounts": 2,
+          "ammo": 6
+        }
+      ],
+      "chaff": 0,
+      "decoys": 24,
+      "max_depth_m": 400
+    },
+    "tw_ptg_kuanghua6": {
+      "id": "tw_ptg_kuanghua6",
+      "name": "Kuang Hua VI PTG",
+      "kind": "Ship",
+      "hp": 22,
+      "max_speed_kts": 34,
+      "cruise_speed_kts": 24,
+      "turn_rate_deg_s": 5.5,
+      "rcs": "VerySmall",
+      "noise_db": 48,
+      "visual_factor": 1.0,
+      "vp_value": 4,
+      "sensors": [
+        "radar_nav",
+        "tw_flir",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "tw_hsing_feng_2",
+          "mounts": 2,
+          "ammo": 2
+        },
+        {
+          "weapon": "tw_gun20",
+          "mounts": 1,
+          "ammo": 100
+        }
+      ],
+      "chaff": 6,
+      "decoys": 0
+    },
+    "tw_lpd_yushan": {
+      "id": "tw_lpd_yushan",
+      "name": "Yu Shan LPD",
+      "kind": "Ship",
+      "hp": 277,
+      "max_speed_kts": 21,
+      "cruise_speed_kts": 16,
+      "turn_rate_deg_s": 1.5,
+      "rcs": "Small",
+      "noise_db": 58,
+      "visual_factor": 1.0,
+      "vp_value": 28,
+      "sensors": [
+        "tw_sps2b",
+        "tw_sps1",
+        "tw_flir",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "tw_tien_chien_2n",
+          "mounts": 4,
+          "ammo": 8
+        },
+        {
+          "weapon": "tw_gun76",
+          "mounts": 1,
+          "ammo": 100
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 2,
+          "ammo": 60
+        },
+        {
+          "weapon": "tw_gun20",
+          "mounts": 2,
+          "ammo": 100
+        }
+      ],
+      "chaff": 20,
+      "decoys": 6,
+      "deck": {
+        "capacity": 2,
+        "cycle_s": 600,
+        "wing": [
+          {
+            "class": "tw_helo_s70c",
+            "count": 2
+          }
+        ]
+      }
+    },
+    "tw_wpg_anping": {
+      "id": "tw_wpg_anping",
+      "name": "Anping WPG",
+      "kind": "Ship",
+      "hp": 32,
+      "max_speed_kts": 30,
+      "cruise_speed_kts": 22,
+      "turn_rate_deg_s": 4.5,
+      "rcs": "Small",
+      "noise_db": 50,
+      "visual_factor": 1.0,
+      "vp_value": 5,
+      "sensors": [
+        "radar_nav",
+        "tw_flir",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "tw_gun20",
+          "mounts": 1,
+          "ammo": 100
+        },
+        {
+          "weapon": "tw_rocket70",
+          "mounts": 1,
+          "ammo": 12
+        }
+      ],
+      "chaff": 4,
+      "decoys": 0
+    },
+    "tw_helo_s70c": {
+      "id": "tw_helo_s70c",
+      "name": "S-70C(M) Sheng Ying ASW (ceiling 4360 m)",
+      "kind": "Aircraft",
+      "hp": 18,
+      "max_speed_kts": 150,
+      "cruise_speed_kts": 125,
+      "turn_rate_deg_s": 25,
+      "rcs": "Small",
+      "noise_db": 40,
+      "visual_factor": 1.0,
+      "vp_value": 18,
+      "sensors": [
+        "tw_aps143",
+        "sonar_dipping",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "tw_mk46",
+          "mounts": 1,
+          "ammo": 3
+        }
+      ],
+      "chaff": 0,
+      "decoys": 0,
+      "endurance_s": 8640,
+      "dipping_sonar": true
+    },
+    "ph_ff_miguel": {
+      "id": "ph_ff_miguel",
+      "name": "Miguel Malvar FF",
+      "kind": "Ship",
+      "hp": 185,
+      "max_speed_kts": 25,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 2.2,
+      "rcs": "Small",
+      "noise_db": 56,
+      "visual_factor": 1.0,
+      "vp_value": 19,
+      "sensors": [
+        "ph_alpha",
+        "ph_sharpeye",
+        "ph_model997",
+        "ph_paseo",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ph_cstar",
+          "mounts": 2,
+          "ammo": 4
+        },
+        {
+          "weapon": "ph_vl_mica",
+          "mounts": 1,
+          "ammo": 16
+        },
+        {
+          "weapon": "ph_gun76",
+          "mounts": 1,
+          "ammo": 100
+        },
+        {
+          "weapon": "ph_ciws35",
+          "mounts": 1,
+          "ammo": 60
+        },
+        {
+          "weapon": "ph_blue_shark",
+          "mounts": 2,
+          "ammo": 3
+        }
+      ],
+      "chaff": 16,
+      "decoys": 6,
+      "deck": {
+        "capacity": 1,
+        "cycle_s": 600,
+        "wing": [
+          {
+            "class": "ph_helo_wildcat",
+            "count": 1
+          }
+        ]
+      }
+    },
+    "ph_ff_joserizal": {
+      "id": "ph_ff_joserizal",
+      "name": "Jose Rizal FF",
+      "kind": "Ship",
+      "hp": 161,
+      "max_speed_kts": 25,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 2.4,
+      "rcs": "VerySmall",
+      "noise_db": 54,
+      "visual_factor": 1.0,
+      "vp_value": 16,
+      "sensors": [
+        "ph_trs3d",
+        "ph_sharpeye",
+        "ph_model997",
+        "ph_paseo",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ph_cstar",
+          "mounts": 2,
+          "ammo": 2
+        },
+        {
+          "weapon": "ph_mistral",
+          "mounts": 2,
+          "ammo": 2
+        },
+        {
+          "weapon": "ph_gun76",
+          "mounts": 1,
+          "ammo": 100
+        },
+        {
+          "weapon": "ph_gun30",
+          "mounts": 1,
+          "ammo": 100
+        },
+        {
+          "weapon": "ph_blue_shark",
+          "mounts": 2,
+          "ammo": 3
+        }
+      ],
+      "chaff": 12,
+      "decoys": 4,
+      "deck": {
+        "capacity": 1,
+        "cycle_s": 600,
+        "wing": [
+          {
+            "class": "ph_helo_wildcat",
+            "count": 1
+          }
+        ]
+      }
+    },
+    "ph_ff_hamilton": {
+      "id": "ph_ff_hamilton",
+      "name": "Gregorio del Pilar (ex-Hamilton) FF",
+      "kind": "Ship",
+      "hp": 124,
+      "max_speed_kts": 28,
+      "cruise_speed_kts": 20,
+      "turn_rate_deg_s": 2.6,
+      "rcs": "Small",
+      "noise_db": 56,
+      "visual_factor": 1.0,
+      "vp_value": 13,
+      "sensors": [
+        "ph_sps77",
+        "ph_mk92",
+        "ph_hunter2",
+        "ph_flir",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ph_gun76",
+          "mounts": 1,
+          "ammo": 100
+        },
+        {
+          "weapon": "ph_gun25",
+          "mounts": 1,
+          "ammo": 100
+        }
+      ],
+      "chaff": 10,
+      "decoys": 2
+    },
+    "ph_ffl_peacock": {
+      "id": "ph_ffl_peacock",
+      "name": "Emilio Jacinto (ex-Peacock) FFL",
+      "kind": "Ship",
+      "hp": 65,
+      "max_speed_kts": 28,
+      "cruise_speed_kts": 20,
+      "turn_rate_deg_s": 3.2,
+      "rcs": "Small",
+      "noise_db": 54,
+      "visual_factor": 1.0,
+      "vp_value": 7,
+      "sensors": [
+        "radar_nav",
+        "ph_flir",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ph_gun76",
+          "mounts": 1,
+          "ammo": 100
+        },
+        {
+          "weapon": "ph_gun25",
+          "mounts": 1,
+          "ammo": 100
+        }
+      ],
+      "chaff": 6,
+      "decoys": 0
+    },
+    "ph_lpd_tarlac": {
+      "id": "ph_lpd_tarlac",
+      "name": "Tarlac LPD",
+      "kind": "Ship",
+      "hp": 294,
+      "max_speed_kts": 16,
+      "cruise_speed_kts": 13,
+      "turn_rate_deg_s": 1.5,
+      "rcs": "Medium",
+      "noise_db": 58,
+      "visual_factor": 1.0,
+      "vp_value": 30,
+      "sensors": [
+        "radar_nav",
+        "radar_nav",
+        "visual"
+      ],
+      "weapons": [],
+      "chaff": 4,
+      "decoys": 0
+    },
+    "ph_pb_cyclone": {
+      "id": "ph_pb_cyclone",
+      "name": "Cyclone PB",
+      "kind": "Ship",
+      "hp": 34,
+      "max_speed_kts": 35,
+      "cruise_speed_kts": 25,
+      "turn_rate_deg_s": 5.0,
+      "rcs": "VerySmall",
+      "noise_db": 48,
+      "visual_factor": 1.0,
+      "vp_value": 4,
+      "sensors": [
+        "radar_nav",
+        "ph_flir",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ph_gun25",
+          "mounts": 2,
+          "ammo": 100
+        }
+      ],
+      "chaff": 4,
+      "decoys": 0
+    },
+    "ph_pb_shaldag": {
+      "id": "ph_pb_shaldag",
+      "name": "Shaldag Mk V PB",
+      "kind": "Ship",
+      "hp": 16,
+      "max_speed_kts": 43,
+      "cruise_speed_kts": 30,
+      "turn_rate_deg_s": 6.0,
+      "rcs": "VerySmall",
+      "noise_db": 46,
+      "visual_factor": 1.0,
+      "vp_value": 3,
+      "sensors": [
+        "radar_nav",
+        "ph_flir",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ph_spike_nlos",
+          "mounts": 1,
+          "ammo": 8
+        },
+        {
+          "weapon": "ph_gun30",
+          "mounts": 1,
+          "ammo": 100
+        }
+      ],
+      "chaff": 4,
+      "decoys": 0
+    },
+    "ph_helo_wildcat": {
+      "id": "ph_helo_wildcat",
+      "name": "AW.159 Wildcat Mk220 ASW (ceiling 3050 m)",
+      "kind": "Aircraft",
+      "hp": 16,
+      "max_speed_kts": 157,
+      "cruise_speed_kts": 115,
+      "turn_rate_deg_s": 25,
+      "rcs": "Small",
+      "noise_db": 40,
+      "visual_factor": 1.0,
+      "vp_value": 16,
+      "sensors": [
+        "ph_seaspray",
+        "sonar_dipping",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ph_blue_shark",
+          "mounts": 1,
+          "ammo": 2
+        }
+      ],
+      "chaff": 0,
+      "decoys": 0,
+      "endurance_s": 7680,
+      "dipping_sonar": true
+    }
+  },
+  "weapons": {
+    "kr_gun76": {
+      "id": "kr_gun76",
+      "name": "76mm/62 Naval Gun (ROK service)",
+      "kind": "Gun",
+      "targets": {
+        "surface": true,
+        "air": true,
+        "land": true
+      },
+      "range_nm": 10,
+      "min_range_nm": 0.0,
+      "speed_kts": 0,
+      "enable_range_nm": 0.0,
+      "pk": 0.25,
+      "salvo": 2,
+      "reload_s": 3,
+      "damage": 17,
+      "guidance": "BallisticGun"
+    },
+    "kr_gun40": {
+      "id": "kr_gun40",
+      "name": "40mm/70 Naval Gun (ROK service)",
+      "kind": "Gun",
+      "targets": {
+        "surface": true,
+        "air": true
+      },
+      "range_nm": 1.7,
+      "min_range_nm": 0.0,
+      "speed_kts": 0,
+      "enable_range_nm": 0.0,
+      "pk": 0.18,
+      "salvo": 4,
+      "reload_s": 2,
+      "damage": 4,
+      "guidance": "BallisticGun"
+    },
+    "kr_ssm700k": {
+      "id": "kr_ssm700k",
+      "name": "SSM-700K Haeseong",
+      "kind": "Ascm",
+      "targets": {
+        "surface": true,
+        "land": false
+      },
+      "range_nm": 108,
+      "min_range_nm": 3,
+      "speed_kts": 628,
+      "enable_range_nm": 0.0,
+      "pk": 0.6,
+      "salvo": 2,
+      "reload_s": 45,
+      "damage": 42,
+      "guidance": "SeaSkimmer"
+    },
+    "kr_sm2": {
+      "id": "kr_sm2",
+      "name": "SM-2MR Block IIIB",
+      "kind": "Sam",
+      "targets": {
+        "air": true,
+        "missile": true
+      },
+      "range_nm": 75,
+      "min_range_nm": 2,
+      "speed_kts": 2000,
+      "enable_range_nm": 0.0,
+      "pk": 0.55,
+      "salvo": 2,
+      "reload_s": 6,
+      "damage": 30,
+      "guidance": "HomingAir",
+      "directors": 4
+    },
+    "kr_sm6": {
+      "id": "kr_sm6",
+      "name": "SM-6 Block I",
+      "kind": "Sam",
+      "targets": {
+        "air": true,
+        "missile": true,
+        "surface": true
+      },
+      "range_nm": 130,
+      "min_range_nm": 2,
+      "speed_kts": 2200,
+      "enable_range_nm": 0.0,
+      "pk": 0.6,
+      "salvo": 2,
+      "reload_s": 6,
+      "damage": 35,
+      "guidance": "HomingAir",
+      "directors": 4
+    },
+    "kr_haegung": {
+      "id": "kr_haegung",
+      "name": "Haegung K-SAAM",
+      "kind": "Sam",
+      "targets": {
+        "air": true,
+        "missile": true
+      },
+      "range_nm": 10.8,
+      "min_range_nm": 0.3,
+      "speed_kts": 1147,
+      "enable_range_nm": 0.0,
+      "pk": 0.5,
+      "salvo": 2,
+      "reload_s": 3,
+      "damage": 19,
+      "guidance": "HomingAir",
+      "directors": 4
+    },
+    "kr_ram": {
+      "id": "kr_ram",
+      "name": "RIM-116B RAM Block I",
+      "kind": "Sam",
+      "targets": {
+        "air": true,
+        "missile": true
+      },
+      "range_nm": 5,
+      "min_range_nm": 0.2,
+      "speed_kts": 1500,
+      "enable_range_nm": 0.0,
+      "pk": 0.45,
+      "salvo": 1,
+      "reload_s": 3,
+      "damage": 15,
+      "guidance": "HomingAir",
+      "ir": true,
+      "directors": 2
+    },
+    "kr_rim7p": {
+      "id": "kr_rim7p",
+      "name": "RIM-7P Sea Sparrow",
+      "kind": "Sam",
+      "targets": {
+        "air": true,
+        "missile": true
+      },
+      "range_nm": 8,
+      "min_range_nm": 0.3,
+      "speed_kts": 1600,
+      "enable_range_nm": 0.0,
+      "pk": 0.45,
+      "salvo": 1,
+      "reload_s": 4,
+      "damage": 20,
+      "guidance": "HomingAir",
+      "directors": 2
+    },
+    "kr_harpoon": {
+      "id": "kr_harpoon",
+      "name": "Harpoon IC",
+      "kind": "Ascm",
+      "targets": {
+        "surface": true,
+        "land": false
+      },
+      "range_nm": 80,
+      "min_range_nm": 3,
+      "speed_kts": 561,
+      "enable_range_nm": 0.0,
+      "pk": 0.55,
+      "salvo": 2,
+      "reload_s": 45,
+      "damage": 40,
+      "guidance": "SeaSkimmer"
+    },
+    "kr_red_shark": {
+      "id": "kr_red_shark",
+      "name": "Red Shark K-ASROC",
+      "kind": "AswRocket",
+      "targets": {
+        "sub": true
+      },
+      "range_nm": 10.8,
+      "min_range_nm": 2,
+      "speed_kts": 600,
+      "enable_range_nm": 0.0,
+      "pk": 0.5,
+      "salvo": 1,
+      "reload_s": 20,
+      "damage": 66,
+      "guidance": "AswBallistic"
+    },
+    "kr_hyunmoo3c": {
+      "id": "kr_hyunmoo3c",
+      "name": "Hyunmoo 3C",
+      "kind": "Slcm",
+      "targets": {
+        "land": true
+      },
+      "range_nm": 810,
+      "min_range_nm": 10,
+      "speed_kts": 594,
+      "enable_range_nm": 0.0,
+      "pk": 0.7,
+      "salvo": 1,
+      "reload_s": 60,
+      "damage": 48,
+      "guidance": "SeaSkimmer"
+    },
+    "kr_blue_shark": {
+      "id": "kr_blue_shark",
+      "name": "K745 Blue Shark",
+      "kind": "Lwt",
+      "targets": {
+        "sub": true
+      },
+      "range_nm": 6.5,
+      "min_range_nm": 0.2,
+      "speed_kts": 45,
+      "enable_range_nm": 0.4,
+      "pk": 0.55,
+      "salvo": 1,
+      "reload_s": 20,
+      "damage": 66,
+      "guidance": "TorpedoActive"
+    },
+    "kr_white_shark": {
+      "id": "kr_white_shark",
+      "name": "K731 White Shark",
+      "kind": "Torpedo",
+      "targets": {
+        "surface": true,
+        "sub": true
+      },
+      "range_nm": 16.2,
+      "min_range_nm": 0.3,
+      "speed_kts": 35,
+      "enable_range_nm": 2.0,
+      "pk": 0.7,
+      "salvo": 1,
+      "reload_s": 30,
+      "damage": 176,
+      "guidance": "TorpedoActive"
+    },
+    "kr_sut_mod2": {
+      "id": "kr_sut_mod2",
+      "name": "SUT Mod 2",
+      "kind": "Torpedo",
+      "targets": {
+        "surface": true,
+        "sub": true
+      },
+      "range_nm": 7.6,
+      "min_range_nm": 0.3,
+      "speed_kts": 35,
+      "enable_range_nm": 2.0,
+      "pk": 0.65,
+      "salvo": 1,
+      "reload_s": 30,
+      "damage": 148,
+      "guidance": "TorpedoActive"
+    },
+    "kr_hanwha_rocket": {
+      "id": "kr_hanwha_rocket",
+      "name": "Hanwha 130mm Guided Rocket",
+      "kind": "Rocket",
+      "targets": {
+        "surface": true,
+        "land": false
+      },
+      "range_nm": 10.8,
+      "min_range_nm": 1,
+      "speed_kts": 1320,
+      "enable_range_nm": 0.0,
+      "pk": 0.35,
+      "salvo": 3,
+      "reload_s": 6,
+      "damage": 15,
+      "guidance": "BallisticGun"
+    },
+    "tw_gun76": {
+      "id": "tw_gun76",
+      "name": "76mm/62 Naval Gun (Taiwan service)",
+      "kind": "Gun",
+      "targets": {
+        "surface": true,
+        "air": true,
+        "land": true
+      },
+      "range_nm": 10,
+      "min_range_nm": 0.0,
+      "speed_kts": 0,
+      "enable_range_nm": 0.0,
+      "pk": 0.25,
+      "salvo": 2,
+      "reload_s": 3,
+      "damage": 17,
+      "guidance": "BallisticGun"
+    },
+    "tw_gun40": {
+      "id": "tw_gun40",
+      "name": "40mm/70 Naval Gun (Taiwan service)",
+      "kind": "Gun",
+      "targets": {
+        "surface": true,
+        "air": true
+      },
+      "range_nm": 1.7,
+      "min_range_nm": 0.0,
+      "speed_kts": 0,
+      "enable_range_nm": 0.0,
+      "pk": 0.18,
+      "salvo": 4,
+      "reload_s": 2,
+      "damage": 4,
+      "guidance": "BallisticGun"
+    },
+    "tw_gun20": {
+      "id": "tw_gun20",
+      "name": "Type 75 20mm",
+      "kind": "Gun",
+      "targets": {
+        "surface": true,
+        "air": true
+      },
+      "range_nm": 0.7,
+      "min_range_nm": 0.0,
+      "speed_kts": 0,
+      "enable_range_nm": 0.0,
+      "pk": 0.08,
+      "salvo": 5,
+      "reload_s": 2,
+      "damage": 2,
+      "guidance": "BallisticGun"
+    },
+    "tw_harpoon": {
+      "id": "tw_harpoon",
+      "name": "Harpoon II",
+      "kind": "Ascm",
+      "targets": {
+        "surface": true,
+        "land": true
+      },
+      "range_nm": 80,
+      "min_range_nm": 3,
+      "speed_kts": 561,
+      "enable_range_nm": 0.0,
+      "pk": 0.55,
+      "salvo": 2,
+      "reload_s": 45,
+      "damage": 40,
+      "guidance": "SeaSkimmer"
+    },
+    "tw_sm1": {
+      "id": "tw_sm1",
+      "name": "SM-1MR Block VI",
+      "kind": "Sam",
+      "targets": {
+        "air": true,
+        "missile": true
+      },
+      "range_nm": 40,
+      "min_range_nm": 1,
+      "speed_kts": 2000,
+      "enable_range_nm": 0.0,
+      "pk": 0.5,
+      "salvo": 2,
+      "reload_s": 6,
+      "damage": 25,
+      "guidance": "HomingAir",
+      "directors": 2
+    },
+    "tw_sm2": {
+      "id": "tw_sm2",
+      "name": "SM-2MR Block IIIA",
+      "kind": "Sam",
+      "targets": {
+        "air": true,
+        "missile": true
+      },
+      "range_nm": 75,
+      "min_range_nm": 2,
+      "speed_kts": 2000,
+      "enable_range_nm": 0.0,
+      "pk": 0.55,
+      "salvo": 2,
+      "reload_s": 6,
+      "damage": 30,
+      "guidance": "HomingAir",
+      "directors": 4
+    },
+    "tw_hsing_feng_2": {
+      "id": "tw_hsing_feng_2",
+      "name": "Hsiung Feng II Block 2",
+      "kind": "Ascm",
+      "targets": {
+        "surface": true,
+        "land": false
+      },
+      "range_nm": 80,
+      "min_range_nm": 3,
+      "speed_kts": 561,
+      "enable_range_nm": 0.0,
+      "pk": 0.55,
+      "salvo": 2,
+      "reload_s": 45,
+      "damage": 42,
+      "guidance": "SeaSkimmer"
+    },
+    "tw_hsing_feng_3": {
+      "id": "tw_hsing_feng_3",
+      "name": "Hsiung Feng III",
+      "kind": "Ascm",
+      "targets": {
+        "surface": true
+      },
+      "range_nm": 108,
+      "min_range_nm": 3,
+      "speed_kts": 1985,
+      "enable_range_nm": 0.0,
+      "pk": 0.6,
+      "salvo": 2,
+      "reload_s": 45,
+      "damage": 43,
+      "guidance": "SeaSkimmer"
+    },
+    "tw_tien_chien_2n": {
+      "id": "tw_tien_chien_2n",
+      "name": "Tien Chien IIN (TC-2N)",
+      "kind": "Sam",
+      "targets": {
+        "air": true,
+        "missile": true
+      },
+      "range_nm": 16.2,
+      "min_range_nm": 0.5,
+      "speed_kts": 1584,
+      "enable_range_nm": 0.0,
+      "pk": 0.5,
+      "salvo": 2,
+      "reload_s": 4,
+      "damage": 21,
+      "guidance": "HomingAir",
+      "directors": 4
+    },
+    "tw_sea_chaparral": {
+      "id": "tw_sea_chaparral",
+      "name": "Sea Chaparral",
+      "kind": "Sam",
+      "targets": {
+        "air": true
+      },
+      "range_nm": 3,
+      "min_range_nm": 0.3,
+      "speed_kts": 1000,
+      "enable_range_nm": 0.0,
+      "pk": 0.35,
+      "salvo": 1,
+      "reload_s": 5,
+      "damage": 11,
+      "guidance": "HomingAir",
+      "ir": true,
+      "directors": 1
+    },
+    "tw_sut": {
+      "id": "tw_sut",
+      "name": "SUT Mod 1",
+      "kind": "Torpedo",
+      "targets": {
+        "surface": true,
+        "sub": true
+      },
+      "range_nm": 7.6,
+      "min_range_nm": 0.3,
+      "speed_kts": 35,
+      "enable_range_nm": 2.0,
+      "pk": 0.65,
+      "salvo": 1,
+      "reload_s": 30,
+      "damage": 148,
+      "guidance": "TorpedoActive"
+    },
+    "tw_mk48": {
+      "id": "tw_mk48",
+      "name": "Mk48 Mod 6AT",
+      "kind": "Torpedo",
+      "targets": {
+        "surface": true,
+        "sub": true
+      },
+      "range_nm": 11.2,
+      "min_range_nm": 0.3,
+      "speed_kts": 55,
+      "enable_range_nm": 2.5,
+      "pk": 0.72,
+      "salvo": 1,
+      "reload_s": 30,
+      "damage": 175,
+      "guidance": "TorpedoActive"
+    },
+    "tw_mk46": {
+      "id": "tw_mk46",
+      "name": "Mk46 Mod 5A(S)",
+      "kind": "Lwt",
+      "targets": {
+        "sub": true
+      },
+      "range_nm": 6.0,
+      "min_range_nm": 0.2,
+      "speed_kts": 45,
+      "enable_range_nm": 0.4,
+      "pk": 0.55,
+      "salvo": 1,
+      "reload_s": 20,
+      "damage": 52,
+      "guidance": "TorpedoActive"
+    },
+    "tw_rocket70": {
+      "id": "tw_rocket70",
+      "name": "Zenhai 70mm Rocket",
+      "kind": "Rocket",
+      "targets": {
+        "surface": true,
+        "land": false
+      },
+      "range_nm": 3,
+      "min_range_nm": 0.3,
+      "speed_kts": 700,
+      "enable_range_nm": 0.0,
+      "pk": 0.2,
+      "salvo": 6,
+      "reload_s": 3,
+      "damage": 3,
+      "guidance": "BallisticGun"
+    },
+    "ph_gun76": {
+      "id": "ph_gun76",
+      "name": "76mm/62 Naval Gun (Philippine service)",
+      "kind": "Gun",
+      "targets": {
+        "surface": true,
+        "air": true,
+        "land": true
+      },
+      "range_nm": 10,
+      "min_range_nm": 0.0,
+      "speed_kts": 0,
+      "enable_range_nm": 0.0,
+      "pk": 0.25,
+      "salvo": 2,
+      "reload_s": 3,
+      "damage": 17,
+      "guidance": "BallisticGun"
+    },
+    "ph_gun30": {
+      "id": "ph_gun30",
+      "name": "SMASH 200/30 RWS",
+      "kind": "Gun",
+      "targets": {
+        "surface": true
+      },
+      "range_nm": 2.5,
+      "min_range_nm": 0.0,
+      "speed_kts": 0,
+      "enable_range_nm": 0.0,
+      "pk": 0.15,
+      "salvo": 4,
+      "reload_s": 2,
+      "damage": 4,
+      "guidance": "BallisticGun"
+    },
+    "ph_gun25": {
+      "id": "ph_gun25",
+      "name": "Mk38 Bushmaster 25mm/87",
+      "kind": "Gun",
+      "targets": {
+        "surface": true,
+        "air": true
+      },
+      "range_nm": 0.8,
+      "min_range_nm": 0.0,
+      "speed_kts": 0,
+      "enable_range_nm": 0.0,
+      "pk": 0.12,
+      "salvo": 4,
+      "reload_s": 2,
+      "damage": 3,
+      "guidance": "BallisticGun"
+    },
+    "ph_ciws35": {
+      "id": "ph_ciws35",
+      "name": "Gokdeniz 35mm CIWS",
+      "kind": "Ciws",
+      "targets": {
+        "missile": true,
+        "air": true,
+        "surface": true
+      },
+      "range_nm": 1.1,
+      "min_range_nm": 0.1,
+      "speed_kts": 0,
+      "enable_range_nm": 0.0,
+      "pk": 0.35,
+      "salvo": 4,
+      "reload_s": 2,
+      "damage": 15,
+      "guidance": "BallisticGun"
+    },
+    "ph_cstar": {
+      "id": "ph_cstar",
+      "name": "SSM-710K C-Star",
+      "kind": "Ascm",
+      "targets": {
+        "surface": true,
+        "land": false
+      },
+      "range_nm": 108,
+      "min_range_nm": 3,
+      "speed_kts": 628,
+      "enable_range_nm": 0.0,
+      "pk": 0.6,
+      "salvo": 2,
+      "reload_s": 45,
+      "damage": 42,
+      "guidance": "SeaSkimmer"
+    },
+    "ph_vl_mica": {
+      "id": "ph_vl_mica",
+      "name": "VL Mica-M",
+      "kind": "Sam",
+      "targets": {
+        "air": true,
+        "missile": true
+      },
+      "range_nm": 10.8,
+      "min_range_nm": 0.3,
+      "speed_kts": 1979,
+      "enable_range_nm": 0.0,
+      "pk": 0.5,
+      "salvo": 2,
+      "reload_s": 4,
+      "damage": 18,
+      "guidance": "HomingAir",
+      "ir": true,
+      "directors": 4
+    },
+    "ph_mistral": {
+      "id": "ph_mistral",
+      "name": "Mistral 3",
+      "kind": "Sam",
+      "targets": {
+        "air": true
+      },
+      "range_nm": 4.3,
+      "min_range_nm": 0.2,
+      "speed_kts": 1715,
+      "enable_range_nm": 0.0,
+      "pk": 0.5,
+      "salvo": 1,
+      "reload_s": 4,
+      "damage": 11,
+      "guidance": "HomingAir",
+      "ir": true,
+      "directors": 2
+    },
+    "ph_blue_shark": {
+      "id": "ph_blue_shark",
+      "name": "K745 Blue Shark",
+      "kind": "Lwt",
+      "targets": {
+        "sub": true
+      },
+      "range_nm": 6.5,
+      "min_range_nm": 0.2,
+      "speed_kts": 45,
+      "enable_range_nm": 0.4,
+      "pk": 0.55,
+      "salvo": 1,
+      "reload_s": 20,
+      "damage": 66,
+      "guidance": "TorpedoActive"
+    },
+    "ph_spike_nlos": {
+      "id": "ph_spike_nlos",
+      "name": "Naval Spike NLOS",
+      "kind": "Ascm",
+      "targets": {
+        "surface": true,
+        "land": true
+      },
+      "range_nm": 17.3,
+      "min_range_nm": 0.5,
+      "speed_kts": 350,
+      "enable_range_nm": 0.0,
+      "pk": 0.65,
+      "salvo": 2,
+      "reload_s": 10,
+      "damage": 14,
+      "guidance": "SeaSkimmer"
+    },
+    "kr_mk46": {
+      "id": "kr_mk46",
+      "name": "Mk46 Mod 5",
+      "kind": "Lwt",
+      "targets": {
+        "sub": true
+      },
+      "range_nm": 6.0,
+      "min_range_nm": 0.2,
+      "speed_kts": 45,
+      "enable_range_nm": 0.4,
+      "pk": 0.55,
+      "salvo": 1,
+      "reload_s": 20,
+      "damage": 52,
+      "guidance": "TorpedoActive"
+    }
+  },
+  "sensors": {
+    "kr_spy1d": {
+      "id": "kr_spy1d",
+      "name": "SPY-1D Aegis Radar",
+      "kind": "Radar",
+      "air_range_nm": 180,
+      "surface_range_nm": 40,
+      "sub_range_nm": 0.0,
+      "missile_range_nm": 90,
+      "alt_m": 30,
+      "radar_class": "LAS"
+    },
+    "kr_sps95k": {
+      "id": "kr_sps95k",
+      "name": "SPS-95K Surface Search Radar",
+      "kind": "Radar",
+      "air_range_nm": 30,
+      "surface_range_nm": 68,
+      "sub_range_nm": 0.0,
+      "missile_range_nm": 20,
+      "alt_m": 25,
+      "radar_class": "SS"
+    },
+    "kr_sps100k": {
+      "id": "kr_sps100k",
+      "name": "SPS-100K Surface Search Radar",
+      "kind": "Radar",
+      "air_range_nm": 30,
+      "surface_range_nm": 72,
+      "sub_range_nm": 0.0,
+      "missile_range_nm": 20,
+      "alt_m": 25,
+      "radar_class": "SS"
+    },
+    "kr_sps300k": {
+      "id": "kr_sps300k",
+      "name": "SPS-300K Surface Search Radar",
+      "kind": "Radar",
+      "air_range_nm": 25,
+      "surface_range_nm": 64,
+      "sub_range_nm": 0.0,
+      "missile_range_nm": 18,
+      "alt_m": 20,
+      "radar_class": "SS"
+    },
+    "kr_sps540k": {
+      "id": "kr_sps540k",
+      "name": "SPS-540K 3D Air Search Radar",
+      "kind": "Radar",
+      "air_range_nm": 54,
+      "surface_range_nm": 30,
+      "sub_range_nm": 0.0,
+      "missile_range_nm": 30,
+      "alt_m": 25,
+      "radar_class": "LAS"
+    },
+    "kr_sps550k": {
+      "id": "kr_sps550k",
+      "name": "SPS-550K 3D Air Search Radar",
+      "kind": "Radar",
+      "air_range_nm": 130,
+      "surface_range_nm": 57,
+      "sub_range_nm": 0.0,
+      "missile_range_nm": 60,
+      "alt_m": 30,
+      "radar_class": "LAS"
+    },
+    "kr_sps560k": {
+      "id": "kr_sps560k",
+      "name": "SPS-560K 3D Air Search Radar",
+      "kind": "Radar",
+      "air_range_nm": 65,
+      "surface_range_nm": 30,
+      "sub_range_nm": 0.0,
+      "missile_range_nm": 30,
+      "alt_m": 30,
+      "radar_class": "LAS"
+    },
+    "kr_mfr4x": {
+      "id": "kr_mfr4x",
+      "name": "MFR(4X) Multifunction Radar",
+      "kind": "Radar",
+      "air_range_nm": 135,
+      "surface_range_nm": 72,
+      "sub_range_nm": 0.0,
+      "missile_range_nm": 60,
+      "alt_m": 30,
+      "radar_class": "LAS"
+    },
+    "kr_el2248": {
+      "id": "kr_el2248",
+      "name": "EL/M-2248 MF-STAR",
+      "kind": "Radar",
+      "air_range_nm": 135,
+      "surface_range_nm": 48,
+      "sub_range_nm": 0.0,
+      "missile_range_nm": 60,
+      "alt_m": 35,
+      "radar_class": "LAS"
+    },
+    "kr_smartl": {
+      "id": "kr_smartl",
+      "name": "SMART-L Air Search Radar",
+      "kind": "Radar",
+      "air_range_nm": 216,
+      "surface_range_nm": 32,
+      "sub_range_nm": 0.0,
+      "missile_range_nm": 100,
+      "alt_m": 40,
+      "radar_class": "LAS"
+    },
+    "kr_sqr220k": {
+      "id": "kr_sqr220k",
+      "name": "SQR-220K Towed Passive Array",
+      "kind": "SonarPassive",
+      "air_range_nm": 0.0,
+      "surface_range_nm": 0.0,
+      "sub_range_nm": 7.5,
+      "missile_range_nm": 0.0,
+      "alt_m": 20.0,
+      "radar_class": ""
+    },
+    "kr_sqr250k": {
+      "id": "kr_sqr250k",
+      "name": "SQR-250K Towed Passive Array",
+      "kind": "SonarPassive",
+      "air_range_nm": 0.0,
+      "surface_range_nm": 0.0,
+      "sub_range_nm": 9.0,
+      "missile_range_nm": 0.0,
+      "alt_m": 20.0,
+      "radar_class": ""
+    },
+    "kr_sqr301k": {
+      "id": "kr_sqr301k",
+      "name": "SQR-301K Towed Passive Array",
+      "kind": "SonarPassive",
+      "air_range_nm": 0.0,
+      "surface_range_nm": 0.0,
+      "sub_range_nm": 9.0,
+      "missile_range_nm": 0.0,
+      "alt_m": 20.0,
+      "radar_class": ""
+    },
+    "kr_sqs240k": {
+      "id": "kr_sqs240k",
+      "name": "SQS-240K Hull Sonar",
+      "kind": "SonarActive",
+      "air_range_nm": 0.0,
+      "surface_range_nm": 0.0,
+      "sub_range_nm": 3.6,
+      "missile_range_nm": 0.0,
+      "alt_m": 20.0,
+      "radar_class": ""
+    },
+    "kr_dsqs24": {
+      "id": "kr_dsqs24",
+      "name": "DSQS-24BZ Hull Sonar",
+      "kind": "SonarActive",
+      "air_range_nm": 0.0,
+      "surface_range_nm": 0.0,
+      "sub_range_nm": 3.5,
+      "missile_range_nm": 0.0,
+      "alt_m": 20.0,
+      "radar_class": ""
+    },
+    "kr_de1167": {
+      "id": "kr_de1167",
+      "name": "DE 1167 Keel Sonar",
+      "kind": "SonarActive",
+      "air_range_nm": 0.0,
+      "surface_range_nm": 0.0,
+      "sub_range_nm": 2.4,
+      "missile_range_nm": 0.0,
+      "alt_m": 20.0,
+      "radar_class": ""
+    },
+    "kr_vds300k": {
+      "id": "kr_vds300k",
+      "name": "TB-300K Variable Depth Sonar",
+      "kind": "SonarActive",
+      "air_range_nm": 0.0,
+      "surface_range_nm": 0.0,
+      "sub_range_nm": 9.0,
+      "missile_range_nm": 0.0,
+      "alt_m": 20.0,
+      "radar_class": ""
+    },
+    "kr_kss3": {
+      "id": "kr_kss3",
+      "name": "KSS-III Sonar Suite",
+      "kind": "SonarPassive",
+      "air_range_nm": 0.0,
+      "surface_range_nm": 0.0,
+      "sub_range_nm": 4.5,
+      "missile_range_nm": 0.0,
+      "alt_m": 0,
+      "radar_class": ""
+    },
+    "kr_kss500a": {
+      "id": "kr_kss500a",
+      "name": "KSS 500A Sonar Suite",
+      "kind": "SonarPassive",
+      "air_range_nm": 0.0,
+      "surface_range_nm": 0.0,
+      "sub_range_nm": 3.3,
+      "missile_range_nm": 0.0,
+      "alt_m": 0,
+      "radar_class": ""
+    },
+    "kr_csu90": {
+      "id": "kr_csu90",
+      "name": "CSU 90 Submarine Sonar",
+      "kind": "SonarPassive",
+      "air_range_nm": 0.0,
+      "surface_range_nm": 0.0,
+      "sub_range_nm": 3.0,
+      "missile_range_nm": 0.0,
+      "alt_m": 0,
+      "radar_class": ""
+    },
+    "kr_csu83": {
+      "id": "kr_csu83",
+      "name": "CSU 83 Submarine Sonar",
+      "kind": "SonarPassive",
+      "air_range_nm": 0.0,
+      "surface_range_nm": 0.0,
+      "sub_range_nm": 2.6,
+      "missile_range_nm": 0.0,
+      "alt_m": 0,
+      "radar_class": ""
+    },
+    "kr_prs315": {
+      "id": "kr_prs315",
+      "name": "PRS 3-15 Flank Array",
+      "kind": "SonarPassive",
+      "air_range_nm": 0.0,
+      "surface_range_nm": 0.0,
+      "sub_range_nm": 2.6,
+      "missile_range_nm": 0.0,
+      "alt_m": 0,
+      "radar_class": ""
+    },
+    "kr_eo_ir": {
+      "id": "kr_eo_ir",
+      "name": "SAQ-540K EO/IR Director",
+      "kind": "Ir",
+      "air_range_nm": 10,
+      "surface_range_nm": 15,
+      "sub_range_nm": 0.0,
+      "missile_range_nm": 5,
+      "alt_m": 20,
+      "radar_class": ""
+    },
+    "kr_seaspray": {
+      "id": "kr_seaspray",
+      "name": "Sea Spray 7000 Radar",
+      "kind": "Radar",
+      "air_range_nm": 30,
+      "surface_range_nm": 40,
+      "sub_range_nm": 0.0,
+      "missile_range_nm": 10,
+      "alt_m": 1000,
+      "radar_class": "SS"
+    },
+    "tw_sps48e": {
+      "id": "tw_sps48e",
+      "name": "SPS-48E 3D Air Search Radar",
+      "kind": "Radar",
+      "air_range_nm": 220,
+      "surface_range_nm": 40,
+      "sub_range_nm": 0.0,
+      "missile_range_nm": 100,
+      "alt_m": 30,
+      "radar_class": "LAS"
+    },
+    "tw_sps49": {
+      "id": "tw_sps49",
+      "name": "SPS-49(V)5 Air Search Radar",
+      "kind": "Radar",
+      "air_range_nm": 200,
+      "surface_range_nm": 36,
+      "sub_range_nm": 0.0,
+      "missile_range_nm": 80,
+      "alt_m": 30,
+      "radar_class": "LAS"
+    },
+    "tw_sps55": {
+      "id": "tw_sps55",
+      "name": "SPS-55 Surface Search Radar",
+      "kind": "Radar",
+      "air_range_nm": 20,
+      "surface_range_nm": 32,
+      "sub_range_nm": 0.0,
+      "missile_range_nm": 10,
+      "alt_m": 20,
+      "radar_class": "SS"
+    },
+    "tw_spq9a": {
+      "id": "tw_spq9a",
+      "name": "SPQ-9A Surface Search Radar",
+      "kind": "Radar",
+      "air_range_nm": 20,
+      "surface_range_nm": 25,
+      "sub_range_nm": 0.0,
+      "missile_range_nm": 20,
+      "alt_m": 20,
+      "radar_class": "SS"
+    },
+    "tw_mk92": {
+      "id": "tw_mk92",
+      "name": "Mk92 CAS Radar",
+      "kind": "Radar",
+      "air_range_nm": 32,
+      "surface_range_nm": 30,
+      "sub_range_nm": 0.0,
+      "missile_range_nm": 20,
+      "alt_m": 20,
+      "radar_class": "SS"
+    },
+    "tw_sps67": {
+      "id": "tw_sps67",
+      "name": "SPS-67 Surface Search Radar",
+      "kind": "Radar",
+      "air_range_nm": 20,
+      "surface_range_nm": 35,
+      "sub_range_nm": 0.0,
+      "missile_range_nm": 10,
+      "alt_m": 20,
+      "radar_class": "SS"
+    },
+    "tw_sqs53d": {
+      "id": "tw_sqs53d",
+      "name": "SQS-53D Hull Sonar",
+      "kind": "SonarActive",
+      "air_range_nm": 0.0,
+      "surface_range_nm": 0.0,
+      "sub_range_nm": 4.0,
+      "missile_range_nm": 0.0,
+      "alt_m": 20.0,
+      "radar_class": ""
+    },
+    "tw_sqs26": {
+      "id": "tw_sqs26",
+      "name": "SQS-26CX Hull Sonar",
+      "kind": "SonarActive",
+      "air_range_nm": 0.0,
+      "surface_range_nm": 0.0,
+      "sub_range_nm": 3.0,
+      "missile_range_nm": 0.0,
+      "alt_m": 20.0,
+      "radar_class": ""
+    },
+    "tw_sqr18": {
+      "id": "tw_sqr18",
+      "name": "SQR-18A(V)1 Towed Array",
+      "kind": "SonarPassive",
+      "air_range_nm": 0.0,
+      "surface_range_nm": 0.0,
+      "sub_range_nm": 8.0,
+      "missile_range_nm": 0.0,
+      "alt_m": 20.0,
+      "radar_class": ""
+    },
+    "tw_sqs56": {
+      "id": "tw_sqs56",
+      "name": "SQS-56 Hull Sonar",
+      "kind": "SonarActive",
+      "air_range_nm": 0.0,
+      "surface_range_nm": 0.0,
+      "sub_range_nm": 2.6,
+      "missile_range_nm": 0.0,
+      "alt_m": 20.0,
+      "radar_class": ""
+    },
+    "tw_sqr19": {
+      "id": "tw_sqr19",
+      "name": "SQR-19(V)2 Towed Array",
+      "kind": "SonarPassive",
+      "air_range_nm": 0.0,
+      "surface_range_nm": 0.0,
+      "sub_range_nm": 9.0,
+      "missile_range_nm": 0.0,
+      "alt_m": 20.0,
+      "radar_class": ""
+    },
+    "tw_drbv26d": {
+      "id": "tw_drbv26d",
+      "name": "DRBV 26D Jupiter 8 Air Search",
+      "kind": "Radar",
+      "air_range_nm": 160,
+      "surface_range_nm": 30,
+      "sub_range_nm": 0.0,
+      "missile_range_nm": 50,
+      "alt_m": 30,
+      "radar_class": "LAS"
+    },
+    "tw_drbv52": {
+      "id": "tw_drbv52",
+      "name": "DRBV 52 Triton G Radar",
+      "kind": "Radar",
+      "air_range_nm": 25,
+      "surface_range_nm": 45,
+      "sub_range_nm": 0.0,
+      "missile_range_nm": 15,
+      "alt_m": 25,
+      "radar_class": "SS"
+    },
+    "tw_spherion": {
+      "id": "tw_spherion",
+      "name": "Spherion B Hull Sonar",
+      "kind": "SonarActive",
+      "air_range_nm": 0.0,
+      "surface_range_nm": 0.0,
+      "sub_range_nm": 2.8,
+      "missile_range_nm": 0.0,
+      "alt_m": 20.0,
+      "radar_class": ""
+    },
+    "tw_de1160": {
+      "id": "tw_de1160",
+      "name": "DE 1160B Hull Sonar",
+      "kind": "SonarActive",
+      "air_range_nm": 0.0,
+      "surface_range_nm": 0.0,
+      "sub_range_nm": 2.6,
+      "missile_range_nm": 0.0,
+      "alt_m": 20.0,
+      "radar_class": ""
+    },
+    "tw_siass": {
+      "id": "tw_siass",
+      "name": "SIASS Submarine Sonar Suite",
+      "kind": "SonarPassive",
+      "air_range_nm": 0.0,
+      "surface_range_nm": 0.0,
+      "sub_range_nm": 4.0,
+      "missile_range_nm": 0.0,
+      "alt_m": 0,
+      "radar_class": ""
+    },
+    "tw_ums3000": {
+      "id": "tw_ums3000",
+      "name": "UMS 3000 Submarine Sonar",
+      "kind": "SonarPassive",
+      "air_range_nm": 0.0,
+      "surface_range_nm": 0.0,
+      "sub_range_nm": 3.5,
+      "missile_range_nm": 0.0,
+      "alt_m": 0,
+      "radar_class": ""
+    },
+    "tw_artisan": {
+      "id": "tw_artisan",
+      "name": "Type 997 Artisan 3D Radar",
+      "kind": "Radar",
+      "air_range_nm": 108,
+      "surface_range_nm": 48,
+      "sub_range_nm": 0.0,
+      "missile_range_nm": 50,
+      "alt_m": 25,
+      "radar_class": "LAS"
+    },
+    "tw_traps": {
+      "id": "tw_traps",
+      "name": "TRAPS Towed Active/Passive Sonar",
+      "kind": "SonarActive",
+      "air_range_nm": 0.0,
+      "surface_range_nm": 0.0,
+      "sub_range_nm": 5.5,
+      "missile_range_nm": 0.0,
+      "alt_m": 20.0,
+      "radar_class": ""
+    },
+    "tw_sps1": {
+      "id": "tw_sps1",
+      "name": "CS/SPS-1 Surface Search Radar",
+      "kind": "Radar",
+      "air_range_nm": 20,
+      "surface_range_nm": 56,
+      "sub_range_nm": 0.0,
+      "missile_range_nm": 15,
+      "alt_m": 20,
+      "radar_class": "SS"
+    },
+    "tw_sps2b": {
+      "id": "tw_sps2b",
+      "name": "CS/SPS-2B See Bee 3D Radar",
+      "kind": "Radar",
+      "air_range_nm": 29,
+      "surface_range_nm": 29,
+      "sub_range_nm": 0.0,
+      "missile_range_nm": 20,
+      "alt_m": 25,
+      "radar_class": "LAS"
+    },
+    "tw_spg6n": {
+      "id": "tw_spg6n",
+      "name": "CS/SPG-6N Fire Control Radar",
+      "kind": "Radar",
+      "air_range_nm": 39,
+      "surface_range_nm": 30,
+      "sub_range_nm": 0.0,
+      "missile_range_nm": 30,
+      "alt_m": 20,
+      "radar_class": "LAS"
+    },
+    "tw_aps143": {
+      "id": "tw_aps143",
+      "name": "APS-143 Radar",
+      "kind": "Radar",
+      "air_range_nm": 60,
+      "surface_range_nm": 60,
+      "sub_range_nm": 0.0,
+      "missile_range_nm": 10,
+      "alt_m": 1000,
+      "radar_class": "SS"
+    },
+    "tw_flir": {
+      "id": "tw_flir",
+      "name": "EO/IR Sensor",
+      "kind": "Ir",
+      "air_range_nm": 10,
+      "surface_range_nm": 20,
+      "sub_range_nm": 0.0,
+      "missile_range_nm": 5,
+      "alt_m": 20,
+      "radar_class": ""
+    },
+    "ph_alpha": {
+      "id": "ph_alpha",
+      "name": "EL/M-2258 Alpha Radar",
+      "kind": "Radar",
+      "air_range_nm": 129,
+      "surface_range_nm": 65,
+      "sub_range_nm": 0.0,
+      "missile_range_nm": 60,
+      "alt_m": 30,
+      "radar_class": "LAS"
+    },
+    "ph_sharpeye": {
+      "id": "ph_sharpeye",
+      "name": "SharpEye Mk11 Radar",
+      "kind": "Radar",
+      "air_range_nm": 20,
+      "surface_range_nm": 48,
+      "sub_range_nm": 0.0,
+      "missile_range_nm": 10,
+      "alt_m": 20,
+      "radar_class": "SS"
+    },
+    "ph_model997": {
+      "id": "ph_model997",
+      "name": "Model 997 Hull Sonar",
+      "kind": "SonarActive",
+      "air_range_nm": 0.0,
+      "surface_range_nm": 0.0,
+      "sub_range_nm": 3.5,
+      "missile_range_nm": 0.0,
+      "alt_m": 20.0,
+      "radar_class": ""
+    },
+    "ph_trs3d": {
+      "id": "ph_trs3d",
+      "name": "TRS-3D Baseline D Radar",
+      "kind": "Radar",
+      "air_range_nm": 108,
+      "surface_range_nm": 36,
+      "sub_range_nm": 0.0,
+      "missile_range_nm": 50,
+      "alt_m": 25,
+      "radar_class": "LAS"
+    },
+    "ph_sps77": {
+      "id": "ph_sps77",
+      "name": "SPS-77(V)1 3D Radar",
+      "kind": "Radar",
+      "air_range_nm": 97,
+      "surface_range_nm": 32,
+      "sub_range_nm": 0.0,
+      "missile_range_nm": 40,
+      "alt_m": 25,
+      "radar_class": "LAS"
+    },
+    "ph_mk92": {
+      "id": "ph_mk92",
+      "name": "Mk92 CAS Radar",
+      "kind": "Radar",
+      "air_range_nm": 32,
+      "surface_range_nm": 30,
+      "sub_range_nm": 0.0,
+      "missile_range_nm": 20,
+      "alt_m": 20,
+      "radar_class": "SS"
+    },
+    "ph_paseo": {
+      "id": "ph_paseo",
+      "name": "PASEO XLR EO/IR",
+      "kind": "Ir",
+      "air_range_nm": 10,
+      "surface_range_nm": 20,
+      "sub_range_nm": 0.0,
+      "missile_range_nm": 5,
+      "alt_m": 20,
+      "radar_class": ""
+    },
+    "ph_flir": {
+      "id": "ph_flir",
+      "name": "EO/IR Sensor",
+      "kind": "Ir",
+      "air_range_nm": 8,
+      "surface_range_nm": 15,
+      "sub_range_nm": 0.0,
+      "missile_range_nm": 5,
+      "alt_m": 20,
+      "radar_class": ""
+    },
+    "ph_seaspray": {
+      "id": "ph_seaspray",
+      "name": "Seaspray 7000 Radar",
+      "kind": "Radar",
+      "air_range_nm": 30,
+      "surface_range_nm": 40,
+      "sub_range_nm": 0.0,
+      "missile_range_nm": 10,
+      "alt_m": 1000,
+      "radar_class": "SS"
+    },
+    "ph_hunter2": {
+      "id": "ph_hunter2",
+      "name": "Hunter 2.0 Hull Sonar",
+      "kind": "SonarActive",
+      "air_range_nm": 0.0,
+      "surface_range_nm": 0.0,
+      "sub_range_nm": 3.1,
+      "missile_range_nm": 0.0,
+      "alt_m": 20.0,
+      "radar_class": ""
+    }
+  }
+}

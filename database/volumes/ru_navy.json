@@ -1,0 +1,3351 @@
+{
+  "platforms": {
+    "ru_kuznetsov": {
+      "id": "ru_kuznetsov",
+      "name": "Pr. 1143.5 Admiral Kuznetsov CV",
+      "kind": "Ship",
+      "hp": 1110,
+      "max_speed_kts": 29,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 1.2,
+      "rcs": "Large",
+      "noise_db": 66,
+      "vp_value": 75,
+      "sensors": [
+        "ru_radar_fregat_m2",
+        "radar_surf_med",
+        "esm_std",
+        "sonar_p_hull",
+        "sonar_a_hull",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_p700",
+          "mounts": 1,
+          "ammo": 12
+        },
+        {
+          "weapon": "ru_kinzhal",
+          "mounts": 4,
+          "ammo": 12
+        },
+        {
+          "weapon": "ru_kortik",
+          "mounts": 8,
+          "ammo": 32
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 6,
+          "ammo": 30
+        },
+        {
+          "weapon": "asw_rocket",
+          "mounts": 2,
+          "ammo": 3
+        }
+      ],
+      "chaff": 60,
+      "decoys": 14,
+      "deck": {
+        "capacity": 40,
+        "cycle_s": 120,
+        "wing": [
+          {
+            "class": "ru_cv_su33",
+            "count": 14
+          },
+          {
+            "class": "ru_cv_mig29kr",
+            "count": 10
+          },
+          {
+            "class": "ru_cv_ka27",
+            "count": 11
+          },
+          {
+            "class": "ru_cv_ka31r",
+            "count": 2
+          }
+        ]
+      }
+    },
+    "ru_gorshkov_cv": {
+      "id": "ru_gorshkov_cv",
+      "name": "Pr. 1143.4 Admiral Gorshkov CVHG",
+      "kind": "Ship",
+      "hp": 790,
+      "max_speed_kts": 30,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 1.3,
+      "rcs": "Large",
+      "noise_db": 60,
+      "vp_value": 55,
+      "sensors": [
+        "ru_radar_fregat_m2",
+        "radar_surf_med",
+        "esm_std",
+        "sonar_p_hull",
+        "sonar_a_hull",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_p500",
+          "mounts": 1,
+          "ammo": 12
+        },
+        {
+          "weapon": "ru_shtorm",
+          "mounts": 2,
+          "ammo": 24
+        },
+        {
+          "weapon": "ru_kinzhal",
+          "mounts": 2,
+          "ammo": 4
+        },
+        {
+          "weapon": "gun_76mm",
+          "mounts": 2,
+          "ammo": 40
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 8,
+          "ammo": 30
+        },
+        {
+          "weapon": "asw_rocket",
+          "mounts": 1,
+          "ammo": 16
+        },
+        {
+          "weapon": "asw_rocket",
+          "mounts": 2,
+          "ammo": 5
+        }
+      ],
+      "chaff": 50,
+      "decoys": 12,
+      "deck": {
+        "capacity": 24,
+        "cycle_s": 120,
+        "wing": [
+          {
+            "class": "ru_cv_ka27",
+            "count": 16
+          },
+          {
+            "class": "ru_cv_ka29",
+            "count": 3
+          },
+          {
+            "class": "ru_cv_ka31r",
+            "count": 2
+          }
+        ]
+      }
+    },
+    "ru_novorossiysk": {
+      "id": "ru_novorossiysk",
+      "name": "Pr. 1143.3 Novorossiysk CVHG",
+      "kind": "Ship",
+      "hp": 772,
+      "max_speed_kts": 32,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 1.3,
+      "rcs": "Large",
+      "noise_db": 58,
+      "vp_value": 45,
+      "sensors": [
+        "radar_air_xlong",
+        "radar_air_med",
+        "radar_surf_med",
+        "esm_std",
+        "sonar_p_hull",
+        "sonar_a_hull",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_p500",
+          "mounts": 1,
+          "ammo": 8
+        },
+        {
+          "weapon": "ru_shtorm",
+          "mounts": 2,
+          "ammo": 24
+        },
+        {
+          "weapon": "gun_76mm",
+          "mounts": 2,
+          "ammo": 40
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 8,
+          "ammo": 30
+        },
+        {
+          "weapon": "asw_rocket",
+          "mounts": 1,
+          "ammo": 16
+        },
+        {
+          "weapon": "asw_rocket",
+          "mounts": 2,
+          "ammo": 5
+        }
+      ],
+      "chaff": 40,
+      "decoys": 10,
+      "deck": {
+        "capacity": 22,
+        "cycle_s": 120,
+        "wing": [
+          {
+            "class": "ru_cv_ka27",
+            "count": 16
+          },
+          {
+            "class": "ru_cv_ka29",
+            "count": 2
+          },
+          {
+            "class": "ru_cv_ka31r",
+            "count": 2
+          }
+        ]
+      }
+    },
+    "ru_kiev": {
+      "id": "ru_kiev",
+      "name": "Pr. 1143 Kiev CVHG",
+      "kind": "Ship",
+      "hp": 749,
+      "max_speed_kts": 32,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 1.3,
+      "rcs": "Large",
+      "noise_db": 58,
+      "vp_value": 42,
+      "sensors": [
+        "radar_air_xlong",
+        "radar_air_med",
+        "radar_surf_med",
+        "esm_std",
+        "sonar_p_hull",
+        "sonar_a_hull",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_p500",
+          "mounts": 1,
+          "ammo": 8
+        },
+        {
+          "weapon": "ru_shtorm",
+          "mounts": 2,
+          "ammo": 24
+        },
+        {
+          "weapon": "ru_osa",
+          "mounts": 2,
+          "ammo": 10
+        },
+        {
+          "weapon": "gun_76mm",
+          "mounts": 2,
+          "ammo": 40
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 8,
+          "ammo": 30
+        },
+        {
+          "weapon": "asw_rocket",
+          "mounts": 1,
+          "ammo": 16
+        },
+        {
+          "weapon": "asw_rocket",
+          "mounts": 2,
+          "ammo": 5
+        },
+        {
+          "weapon": "ru_usp",
+          "mounts": 2,
+          "ammo": 5
+        }
+      ],
+      "chaff": 40,
+      "decoys": 10,
+      "deck": {
+        "capacity": 22,
+        "cycle_s": 120,
+        "wing": [
+          {
+            "class": "ru_cv_ka27",
+            "count": 14
+          },
+          {
+            "class": "ru_cv_ka29",
+            "count": 2
+          },
+          {
+            "class": "ru_cv_ka31r",
+            "count": 2
+          }
+        ]
+      }
+    },
+    "ru_moskva": {
+      "id": "ru_moskva",
+      "name": "Pr. 1123 Moskva CHG",
+      "kind": "Ship",
+      "hp": 400,
+      "max_speed_kts": 28,
+      "cruise_speed_kts": 17,
+      "turn_rate_deg_s": 1.6,
+      "rcs": "Medium",
+      "noise_db": 56,
+      "vp_value": 30,
+      "sensors": [
+        "radar_air_xlong",
+        "radar_air_med",
+        "radar_nav",
+        "esm_std",
+        "sonar_p_hull",
+        "sonar_a_hull",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_shtorm",
+          "mounts": 2,
+          "ammo": 24
+        },
+        {
+          "weapon": "gun_76mm",
+          "mounts": 2,
+          "ammo": 40
+        },
+        {
+          "weapon": "asw_rocket",
+          "mounts": 1,
+          "ammo": 8
+        },
+        {
+          "weapon": "asw_rocket",
+          "mounts": 2,
+          "ammo": 5
+        },
+        {
+          "weapon": "ru_usp",
+          "mounts": 2,
+          "ammo": 5
+        }
+      ],
+      "chaff": 20,
+      "decoys": 6,
+      "deck": {
+        "capacity": 14,
+        "cycle_s": 150,
+        "wing": [
+          {
+            "class": "ru_cv_ka27",
+            "count": 10
+          },
+          {
+            "class": "ru_cv_ka29",
+            "count": 2
+          }
+        ]
+      }
+    },
+    "ru_kirov": {
+      "id": "ru_kirov",
+      "name": "Pr. 1144 Kirov CGN",
+      "kind": "Ship",
+      "hp": 640,
+      "max_speed_kts": 31,
+      "cruise_speed_kts": 20,
+      "turn_rate_deg_s": 1.5,
+      "rcs": "Large",
+      "noise_db": 60,
+      "vp_value": 65,
+      "sensors": [
+        "ru_radar_podberezovik",
+        "ru_radar_fregat_m2",
+        "radar_surf_med",
+        "esm_std",
+        "sonar_p_hull",
+        "sonar_p_tow",
+        "sonar_a_hull",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_p700",
+          "mounts": 1,
+          "ammo": 20
+        },
+        {
+          "weapon": "ru_s300f",
+          "mounts": 12,
+          "ammo": 8
+        },
+        {
+          "weapon": "ru_osa",
+          "mounts": 2,
+          "ammo": 10
+        },
+        {
+          "weapon": "gun_100mm",
+          "mounts": 2,
+          "ammo": 40
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 8,
+          "ammo": 30
+        },
+        {
+          "weapon": "ru_metel",
+          "mounts": 1,
+          "ammo": 10
+        },
+        {
+          "weapon": "asw_rocket",
+          "mounts": 1,
+          "ammo": 6
+        },
+        {
+          "weapon": "asw_rocket",
+          "mounts": 2,
+          "ammo": 4
+        },
+        {
+          "weapon": "ru_usp",
+          "mounts": 2,
+          "ammo": 5
+        }
+      ],
+      "chaff": 50,
+      "decoys": 12,
+      "deck": {
+        "capacity": 3,
+        "cycle_s": 180,
+        "wing": [
+          {
+            "class": "ru_cv_ka27",
+            "count": 2
+          }
+        ]
+      }
+    },
+    "ru_pyotr_velikiy": {
+      "id": "ru_pyotr_velikiy",
+      "name": "Pr. 1144.2 Pyotr Velikiy CGN",
+      "kind": "Ship",
+      "hp": 649,
+      "max_speed_kts": 31,
+      "cruise_speed_kts": 20,
+      "turn_rate_deg_s": 1.5,
+      "rcs": "Large",
+      "noise_db": 60,
+      "vp_value": 68,
+      "sensors": [
+        "ru_radar_podberezovik",
+        "ru_radar_fregat_m2",
+        "radar_surf_med",
+        "esm_std",
+        "sonar_p_hull",
+        "sonar_p_tow",
+        "sonar_a_hull",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_p700",
+          "mounts": 1,
+          "ammo": 20
+        },
+        {
+          "weapon": "ru_rif",
+          "mounts": 12,
+          "ammo": 8
+        },
+        {
+          "weapon": "ru_kinzhal",
+          "mounts": 2,
+          "ammo": 16
+        },
+        {
+          "weapon": "gun_130mm",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "ru_kortik",
+          "mounts": 6,
+          "ammo": 32
+        },
+        {
+          "weapon": "asw_rocket",
+          "mounts": 1,
+          "ammo": 6
+        },
+        {
+          "weapon": "asw_rocket",
+          "mounts": 2,
+          "ammo": 5
+        },
+        {
+          "weapon": "ru_usp",
+          "mounts": 2,
+          "ammo": 5
+        }
+      ],
+      "chaff": 50,
+      "decoys": 12,
+      "deck": {
+        "capacity": 3,
+        "cycle_s": 180,
+        "wing": [
+          {
+            "class": "ru_cv_ka27",
+            "count": 3
+          }
+        ]
+      }
+    },
+    "ru_nakhimov": {
+      "id": "ru_nakhimov",
+      "name": "Pr. 1144M Admiral Nakhimov CGN",
+      "kind": "Ship",
+      "hp": 644,
+      "max_speed_kts": 31,
+      "cruise_speed_kts": 20,
+      "turn_rate_deg_s": 1.5,
+      "rcs": "Large",
+      "noise_db": 60,
+      "vp_value": 70,
+      "sensors": [
+        "ru_radar_podberezovik",
+        "ru_radar_poliment",
+        "ru_radar_fregat_m2",
+        "radar_surf_med",
+        "esm_std",
+        "sonar_p_tow",
+        "sonar_a_hull",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_oniks",
+          "mounts": 8,
+          "ammo": 8
+        },
+        {
+          "weapon": "ru_kalibr",
+          "mounts": 2,
+          "ammo": 8
+        },
+        {
+          "weapon": "ru_rif",
+          "mounts": 12,
+          "ammo": 8
+        },
+        {
+          "weapon": "gun_130mm",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "ru_pantsir",
+          "mounts": 6,
+          "ammo": 32
+        },
+        {
+          "weapon": "asw_rocket",
+          "mounts": 1,
+          "ammo": 6
+        },
+        {
+          "weapon": "asw_rocket",
+          "mounts": 2,
+          "ammo": 8
+        },
+        {
+          "weapon": "ru_paket",
+          "mounts": 2,
+          "ammo": 4
+        }
+      ],
+      "chaff": 50,
+      "decoys": 12,
+      "deck": {
+        "capacity": 3,
+        "cycle_s": 180,
+        "wing": [
+          {
+            "class": "ru_cv_ka27",
+            "count": 3
+          }
+        ]
+      }
+    },
+    "ru_slava": {
+      "id": "ru_slava",
+      "name": "Pr. 1164 Atlant Slava CG",
+      "kind": "Ship",
+      "hp": 284,
+      "max_speed_kts": 32,
+      "cruise_speed_kts": 20,
+      "turn_rate_deg_s": 1.8,
+      "rcs": "Medium",
+      "noise_db": 56,
+      "vp_value": 45,
+      "sensors": [
+        "ru_radar_podberezovik",
+        "ru_radar_fregat_m2",
+        "radar_surf_med",
+        "esm_std",
+        "sonar_p_hull",
+        "sonar_a_hull",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_p500",
+          "mounts": 1,
+          "ammo": 16
+        },
+        {
+          "weapon": "ru_s300f",
+          "mounts": 8,
+          "ammo": 8
+        },
+        {
+          "weapon": "ru_osa",
+          "mounts": 2,
+          "ammo": 10
+        },
+        {
+          "weapon": "gun_130mm",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 6,
+          "ammo": 30
+        },
+        {
+          "weapon": "asw_rocket",
+          "mounts": 2,
+          "ammo": 6
+        },
+        {
+          "weapon": "ru_usp",
+          "mounts": 2,
+          "ammo": 5
+        }
+      ],
+      "chaff": 40,
+      "decoys": 10,
+      "deck": {
+        "capacity": 1,
+        "cycle_s": 180,
+        "wing": [
+          {
+            "class": "ru_cv_ka27",
+            "count": 1
+          }
+        ]
+      }
+    },
+    "ru_varyag": {
+      "id": "ru_varyag",
+      "name": "Pr. 1164.1 Varyag CG",
+      "kind": "Ship",
+      "hp": 350,
+      "max_speed_kts": 32,
+      "cruise_speed_kts": 20,
+      "turn_rate_deg_s": 1.8,
+      "rcs": "Medium",
+      "noise_db": 56,
+      "vp_value": 50,
+      "sensors": [
+        "ru_radar_podberezovik",
+        "ru_radar_fregat_m2",
+        "radar_surf_med",
+        "esm_std",
+        "sonar_p_hull",
+        "sonar_a_hull",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_p1000",
+          "mounts": 1,
+          "ammo": 16
+        },
+        {
+          "weapon": "ru_s300f",
+          "mounts": 8,
+          "ammo": 8
+        },
+        {
+          "weapon": "gun_130mm",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "ru_kortik",
+          "mounts": 5,
+          "ammo": 32
+        },
+        {
+          "weapon": "asw_rocket",
+          "mounts": 2,
+          "ammo": 6
+        },
+        {
+          "weapon": "ru_usp",
+          "mounts": 2,
+          "ammo": 5
+        }
+      ],
+      "chaff": 40,
+      "decoys": 10,
+      "deck": {
+        "capacity": 2,
+        "cycle_s": 180,
+        "wing": [
+          {
+            "class": "ru_cv_ka27",
+            "count": 2
+          }
+        ]
+      }
+    },
+    "ru_kerch": {
+      "id": "ru_kerch",
+      "name": "Pr. 1134B Kerch CG",
+      "kind": "Ship",
+      "hp": 272,
+      "max_speed_kts": 32,
+      "cruise_speed_kts": 20,
+      "turn_rate_deg_s": 1.8,
+      "rcs": "Medium",
+      "noise_db": 56,
+      "vp_value": 35,
+      "sensors": [
+        "radar_air_xlong",
+        "ru_radar_fregat_m2",
+        "radar_surf_med",
+        "esm_std",
+        "sonar_p_hull",
+        "sonar_a_hull",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_shtorm",
+          "mounts": 2,
+          "ammo": 40
+        },
+        {
+          "weapon": "ru_osa",
+          "mounts": 2,
+          "ammo": 10
+        },
+        {
+          "weapon": "ru_metel",
+          "mounts": 2,
+          "ammo": 4
+        },
+        {
+          "weapon": "gun_76mm",
+          "mounts": 2,
+          "ammo": 40
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 4,
+          "ammo": 30
+        },
+        {
+          "weapon": "asw_rocket",
+          "mounts": 2,
+          "ammo": 6
+        },
+        {
+          "weapon": "ru_usp",
+          "mounts": 2,
+          "ammo": 5
+        }
+      ],
+      "chaff": 30,
+      "decoys": 8
+    },
+    "ru_sovremenny": {
+      "id": "ru_sovremenny",
+      "name": "Pr. 956 Sarych Sovremenny DDG",
+      "kind": "Ship",
+      "hp": 223,
+      "max_speed_kts": 32,
+      "cruise_speed_kts": 20,
+      "turn_rate_deg_s": 2.0,
+      "rcs": "Medium",
+      "noise_db": 56,
+      "vp_value": 30,
+      "sensors": [
+        "ru_radar_fregat_m2",
+        "radar_surf_med",
+        "esm_std",
+        "sonar_p_hull",
+        "sonar_a_hull",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_p270",
+          "mounts": 2,
+          "ammo": 4
+        },
+        {
+          "weapon": "ru_uragan",
+          "mounts": 2,
+          "ammo": 24
+        },
+        {
+          "weapon": "gun_130mm",
+          "mounts": 2,
+          "ammo": 40
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 4,
+          "ammo": 30
+        },
+        {
+          "weapon": "asw_rocket",
+          "mounts": 2,
+          "ammo": 4
+        },
+        {
+          "weapon": "ru_usp",
+          "mounts": 2,
+          "ammo": 2
+        }
+      ],
+      "chaff": 30,
+      "decoys": 8,
+      "deck": {
+        "capacity": 1,
+        "cycle_s": 180,
+        "wing": [
+          {
+            "class": "ru_cv_ka27",
+            "count": 1
+          }
+        ]
+      }
+    },
+    "ru_sovremenny_a": {
+      "id": "ru_sovremenny_a",
+      "name": "Pr. 956A Sarych Mod Sovremenny DDG",
+      "kind": "Ship",
+      "hp": 223,
+      "max_speed_kts": 32,
+      "cruise_speed_kts": 20,
+      "turn_rate_deg_s": 2.0,
+      "rcs": "Medium",
+      "noise_db": 56,
+      "vp_value": 32,
+      "sensors": [
+        "ru_radar_fregat_m2",
+        "radar_surf_med",
+        "esm_std",
+        "sonar_p_hull",
+        "sonar_a_hull",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_p270",
+          "mounts": 2,
+          "ammo": 4
+        },
+        {
+          "weapon": "ru_uragan",
+          "mounts": 2,
+          "ammo": 24
+        },
+        {
+          "weapon": "gun_130mm",
+          "mounts": 2,
+          "ammo": 40
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 4,
+          "ammo": 30
+        },
+        {
+          "weapon": "asw_rocket",
+          "mounts": 2,
+          "ammo": 4
+        },
+        {
+          "weapon": "ru_usp",
+          "mounts": 2,
+          "ammo": 2
+        }
+      ],
+      "chaff": 30,
+      "decoys": 8,
+      "deck": {
+        "capacity": 1,
+        "cycle_s": 180,
+        "wing": [
+          {
+            "class": "ru_cv_ka27",
+            "count": 1
+          }
+        ]
+      }
+    },
+    "ru_udaloy": {
+      "id": "ru_udaloy",
+      "name": "Pr. 1155 Udaloy DD",
+      "kind": "Ship",
+      "hp": 232,
+      "max_speed_kts": 30,
+      "cruise_speed_kts": 19,
+      "turn_rate_deg_s": 2.0,
+      "rcs": "Medium",
+      "noise_db": 46,
+      "vp_value": 30,
+      "sensors": [
+        "ru_radar_fregat_m2",
+        "radar_surf_med",
+        "esm_std",
+        "sonar_p_hull",
+        "sonar_p_tow",
+        "sonar_a_hull",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_kinzhal",
+          "mounts": 2,
+          "ammo": 16
+        },
+        {
+          "weapon": "ru_metel",
+          "mounts": 2,
+          "ammo": 4
+        },
+        {
+          "weapon": "gun_100mm",
+          "mounts": 2,
+          "ammo": 40
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 4,
+          "ammo": 30
+        },
+        {
+          "weapon": "asw_rocket",
+          "mounts": 2,
+          "ammo": 6
+        },
+        {
+          "weapon": "ru_fizik",
+          "mounts": 2,
+          "ammo": 2
+        }
+      ],
+      "chaff": 30,
+      "decoys": 8,
+      "deck": {
+        "capacity": 2,
+        "cycle_s": 180,
+        "wing": [
+          {
+            "class": "ru_cv_ka27",
+            "count": 2
+          }
+        ]
+      }
+    },
+    "ru_chabanenko": {
+      "id": "ru_chabanenko",
+      "name": "Pr. 1155.1 Udaloy II DD",
+      "kind": "Ship",
+      "hp": 249,
+      "max_speed_kts": 30,
+      "cruise_speed_kts": 19,
+      "turn_rate_deg_s": 2.0,
+      "rcs": "Medium",
+      "noise_db": 46,
+      "vp_value": 34,
+      "sensors": [
+        "ru_radar_fregat_m2",
+        "radar_surf_med",
+        "esm_std",
+        "sonar_p_hull",
+        "sonar_p_tow",
+        "sonar_a_hull",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_p270",
+          "mounts": 2,
+          "ammo": 4
+        },
+        {
+          "weapon": "ru_kinzhal",
+          "mounts": 2,
+          "ammo": 16
+        },
+        {
+          "weapon": "gun_130mm",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "ru_kortik",
+          "mounts": 2,
+          "ammo": 32
+        },
+        {
+          "weapon": "asw_rocket",
+          "mounts": 2,
+          "ammo": 3
+        },
+        {
+          "weapon": "ru_fizik",
+          "mounts": 2,
+          "ammo": 4
+        }
+      ],
+      "chaff": 30,
+      "decoys": 8,
+      "deck": {
+        "capacity": 2,
+        "cycle_s": 180,
+        "wing": [
+          {
+            "class": "ru_cv_ka27",
+            "count": 2
+          }
+        ]
+      }
+    },
+    "ru_gorshkov": {
+      "id": "ru_gorshkov",
+      "name": "Pr. 22350 Admiral Gorshkov FFG",
+      "kind": "Ship",
+      "hp": 209,
+      "max_speed_kts": 30,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 2.4,
+      "rcs": "VerySmall",
+      "noise_db": 44,
+      "vp_value": 24,
+      "sensors": [
+        "ru_radar_furke4",
+        "ru_radar_poliment",
+        "radar_surf_med",
+        "esm_std",
+        "sonar_p_tow",
+        "sonar_a_hull",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_redut",
+          "mounts": 1,
+          "ammo": 32
+        },
+        {
+          "weapon": "ru_oniks",
+          "mounts": 1,
+          "ammo": 8
+        },
+        {
+          "weapon": "ru_kalibr",
+          "mounts": 1,
+          "ammo": 8
+        },
+        {
+          "weapon": "gun_130mm",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 2,
+          "ammo": 30
+        },
+        {
+          "weapon": "ru_igla",
+          "mounts": 1,
+          "ammo": 8
+        },
+        {
+          "weapon": "ru_paket",
+          "mounts": 2,
+          "ammo": 4
+        }
+      ],
+      "chaff": 20,
+      "decoys": 6,
+      "deck": {
+        "capacity": 1,
+        "cycle_s": 180,
+        "wing": [
+          {
+            "class": "ru_cv_ka27",
+            "count": 1
+          }
+        ]
+      }
+    },
+    "ru_22350m": {
+      "id": "ru_22350m",
+      "name": "Pr. 22350M FFG",
+      "kind": "Ship",
+      "hp": 209,
+      "max_speed_kts": 29,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 2.4,
+      "rcs": "VerySmall",
+      "noise_db": 44,
+      "vp_value": 28,
+      "sensors": [
+        "ru_radar_furke4",
+        "ru_radar_poliment",
+        "radar_surf_med",
+        "esm_std",
+        "sonar_p_tow",
+        "sonar_a_hull",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_redut",
+          "mounts": 1,
+          "ammo": 32
+        },
+        {
+          "weapon": "ru_oniks",
+          "mounts": 1,
+          "ammo": 8
+        },
+        {
+          "weapon": "ru_kalibr",
+          "mounts": 1,
+          "ammo": 8
+        },
+        {
+          "weapon": "ru_tsirkon",
+          "mounts": 1,
+          "ammo": 8
+        },
+        {
+          "weapon": "gun_130mm",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 2,
+          "ammo": 30
+        },
+        {
+          "weapon": "ru_paket",
+          "mounts": 2,
+          "ammo": 4
+        }
+      ],
+      "chaff": 20,
+      "decoys": 6,
+      "deck": {
+        "capacity": 1,
+        "cycle_s": 180,
+        "wing": [
+          {
+            "class": "ru_cv_ka27",
+            "count": 1
+          }
+        ]
+      }
+    },
+    "ru_grigorovich": {
+      "id": "ru_grigorovich",
+      "name": "Pr. 1135.6R Grigorovich FFG",
+      "kind": "Ship",
+      "hp": 201,
+      "max_speed_kts": 30,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 2.4,
+      "rcs": "VerySmall",
+      "noise_db": 44,
+      "vp_value": 22,
+      "sensors": [
+        "ru_radar_fregat_m2",
+        "radar_surf_med",
+        "esm_std",
+        "sonar_p_hull",
+        "sonar_a_hull",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_shtil",
+          "mounts": 1,
+          "ammo": 24
+        },
+        {
+          "weapon": "ru_kalibr",
+          "mounts": 1,
+          "ammo": 8
+        },
+        {
+          "weapon": "gun_100mm",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 2,
+          "ammo": 30
+        },
+        {
+          "weapon": "asw_rocket",
+          "mounts": 1,
+          "ammo": 4
+        },
+        {
+          "weapon": "ru_usp",
+          "mounts": 2,
+          "ammo": 2
+        }
+      ],
+      "chaff": 20,
+      "decoys": 6,
+      "deck": {
+        "capacity": 1,
+        "cycle_s": 180,
+        "wing": [
+          {
+            "class": "ru_cv_ka27",
+            "count": 1
+          }
+        ]
+      }
+    },
+    "ru_neustrashimy": {
+      "id": "ru_neustrashimy",
+      "name": "Pr. 1154 Neustrashimy FF",
+      "kind": "Ship",
+      "hp": 181,
+      "max_speed_kts": 30,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 2.4,
+      "rcs": "Small",
+      "noise_db": 44,
+      "vp_value": 20,
+      "sensors": [
+        "ru_radar_fregat_m2",
+        "radar_surf_med",
+        "esm_std",
+        "sonar_p_hull",
+        "sonar_a_hull",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_kinzhal",
+          "mounts": 1,
+          "ammo": 32
+        },
+        {
+          "weapon": "ru_kortik",
+          "mounts": 2,
+          "ammo": 32
+        },
+        {
+          "weapon": "gun_100mm",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "asw_rocket",
+          "mounts": 1,
+          "ammo": 6
+        },
+        {
+          "weapon": "ru_usp",
+          "mounts": 2,
+          "ammo": 6
+        }
+      ],
+      "chaff": 20,
+      "decoys": 6,
+      "deck": {
+        "capacity": 1,
+        "cycle_s": 180,
+        "wing": [
+          {
+            "class": "ru_cv_ka27",
+            "count": 1
+          }
+        ]
+      }
+    },
+    "ru_krivak3": {
+      "id": "ru_krivak3",
+      "name": "Pr. 1135.1 Nerey Krivak III FF",
+      "kind": "Ship",
+      "hp": 138,
+      "max_speed_kts": 30,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 2.4,
+      "rcs": "Small",
+      "noise_db": 54,
+      "vp_value": 14,
+      "sensors": [
+        "ru_radar_fregat_m2",
+        "radar_surf_med",
+        "esm_std",
+        "sonar_p_hull",
+        "sonar_a_hull",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_osa",
+          "mounts": 1,
+          "ammo": 20
+        },
+        {
+          "weapon": "gun_100mm",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 2,
+          "ammo": 30
+        },
+        {
+          "weapon": "asw_rocket",
+          "mounts": 2,
+          "ammo": 6
+        },
+        {
+          "weapon": "ru_usp",
+          "mounts": 2,
+          "ammo": 2
+        }
+      ],
+      "chaff": 15,
+      "decoys": 4,
+      "deck": {
+        "capacity": 1,
+        "cycle_s": 180,
+        "wing": [
+          {
+            "class": "ru_cv_ka27",
+            "count": 1
+          }
+        ]
+      }
+    },
+    "ru_gepard2": {
+      "id": "ru_gepard2",
+      "name": "Pr. 1166.1K Gepard II FFL",
+      "kind": "Ship",
+      "hp": 95,
+      "max_speed_kts": 28,
+      "cruise_speed_kts": 17,
+      "turn_rate_deg_s": 3.0,
+      "rcs": "Small",
+      "noise_db": 54,
+      "vp_value": 12,
+      "sensors": [
+        "ru_radar_fregat_m2",
+        "radar_surf_med",
+        "esm_std",
+        "sonar_p_hull",
+        "sonar_a_hull",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_oniks",
+          "mounts": 1,
+          "ammo": 8
+        },
+        {
+          "weapon": "gun_76mm",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 2,
+          "ammo": 30
+        },
+        {
+          "weapon": "ru_igla",
+          "mounts": 1,
+          "ammo": 8
+        }
+      ],
+      "chaff": 12,
+      "decoys": 4,
+      "deck": {
+        "capacity": 1,
+        "cycle_s": 180,
+        "wing": [
+          {
+            "class": "ru_cv_ka27",
+            "count": 1
+          }
+        ]
+      }
+    },
+    "ru_steregushchy": {
+      "id": "ru_steregushchy",
+      "name": "Pr. 20380 Steregushchiy FFL",
+      "kind": "Ship",
+      "hp": 116,
+      "max_speed_kts": 26,
+      "cruise_speed_kts": 16,
+      "turn_rate_deg_s": 3.2,
+      "rcs": "VerySmall",
+      "noise_db": 44,
+      "vp_value": 12,
+      "sensors": [
+        "ru_radar_fregat_m2",
+        "radar_surf_med",
+        "esm_std",
+        "ru_sonar_zarya2",
+        "sonar_p_tow",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_uran",
+          "mounts": 2,
+          "ammo": 4
+        },
+        {
+          "weapon": "gun_100mm",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "ru_kortik",
+          "mounts": 1,
+          "ammo": 32
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 2,
+          "ammo": 30
+        },
+        {
+          "weapon": "ru_igla",
+          "mounts": 1,
+          "ammo": 8
+        },
+        {
+          "weapon": "ru_paket",
+          "mounts": 2,
+          "ammo": 4
+        }
+      ],
+      "chaff": 12,
+      "decoys": 4,
+      "deck": {
+        "capacity": 1,
+        "cycle_s": 180,
+        "wing": [
+          {
+            "class": "ru_cv_ka27",
+            "count": 1
+          }
+        ]
+      }
+    },
+    "ru_soobrazitelny": {
+      "id": "ru_soobrazitelny",
+      "name": "Pr. 20381 Steregushchiy II FFL",
+      "kind": "Ship",
+      "hp": 116,
+      "max_speed_kts": 26,
+      "cruise_speed_kts": 16,
+      "turn_rate_deg_s": 3.2,
+      "rcs": "VerySmall",
+      "noise_db": 44,
+      "vp_value": 13,
+      "sensors": [
+        "ru_radar_fregat_m2",
+        "radar_surf_med",
+        "esm_std",
+        "ru_sonar_zarya2",
+        "sonar_p_tow",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_redut",
+          "mounts": 1,
+          "ammo": 16
+        },
+        {
+          "weapon": "ru_uran",
+          "mounts": 2,
+          "ammo": 4
+        },
+        {
+          "weapon": "gun_100mm",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 2,
+          "ammo": 30
+        },
+        {
+          "weapon": "ru_paket",
+          "mounts": 2,
+          "ammo": 4
+        }
+      ],
+      "chaff": 12,
+      "decoys": 4,
+      "deck": {
+        "capacity": 1,
+        "cycle_s": 180,
+        "wing": [
+          {
+            "class": "ru_cv_ka27",
+            "count": 1
+          }
+        ]
+      }
+    },
+    "ru_gremyashchy": {
+      "id": "ru_gremyashchy",
+      "name": "Pr. 20385 Gremyashchy FFL",
+      "kind": "Ship",
+      "hp": 130,
+      "max_speed_kts": 27,
+      "cruise_speed_kts": 16,
+      "turn_rate_deg_s": 3.2,
+      "rcs": "VerySmall",
+      "noise_db": 54,
+      "vp_value": 14,
+      "sensors": [
+        "ru_radar_furke4",
+        "radar_surf_med",
+        "esm_std",
+        "ru_sonar_zarya2",
+        "sonar_p_tow",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_redut",
+          "mounts": 1,
+          "ammo": 16
+        },
+        {
+          "weapon": "ru_kalibr",
+          "mounts": 1,
+          "ammo": 8
+        },
+        {
+          "weapon": "gun_100mm",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 2,
+          "ammo": 30
+        },
+        {
+          "weapon": "ru_paket",
+          "mounts": 2,
+          "ammo": 4
+        }
+      ],
+      "chaff": 12,
+      "decoys": 4,
+      "deck": {
+        "capacity": 1,
+        "cycle_s": 180,
+        "wing": [
+          {
+            "class": "ru_cv_ka27",
+            "count": 1
+          }
+        ]
+      }
+    },
+    "ru_karakurt": {
+      "id": "ru_karakurt",
+      "name": "Pr. 22800 Karakurt FFL",
+      "kind": "Ship",
+      "hp": 69,
+      "max_speed_kts": 30,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 4.0,
+      "rcs": "VerySmall",
+      "noise_db": 54,
+      "vp_value": 9,
+      "sensors": [
+        "ru_radar_fregat_m2",
+        "radar_surf_med",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_kalibr",
+          "mounts": 1,
+          "ammo": 8
+        },
+        {
+          "weapon": "gun_76mm",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "ru_pantsir",
+          "mounts": 1,
+          "ammo": 32
+        },
+        {
+          "weapon": "ru_igla",
+          "mounts": 1,
+          "ammo": 8
+        }
+      ],
+      "chaff": 8,
+      "decoys": 2
+    },
+    "ru_buyan_m": {
+      "id": "ru_buyan_m",
+      "name": "Pr. 21631 Buyan-M FFL",
+      "kind": "Ship",
+      "hp": 66,
+      "max_speed_kts": 26,
+      "cruise_speed_kts": 15,
+      "turn_rate_deg_s": 4.0,
+      "rcs": "VerySmall",
+      "noise_db": 54,
+      "vp_value": 8,
+      "sensors": [
+        "ru_radar_fregat_m2",
+        "radar_surf_med",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_kalibr",
+          "mounts": 1,
+          "ammo": 8
+        },
+        {
+          "weapon": "gun_100mm",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 1,
+          "ammo": 30
+        },
+        {
+          "weapon": "ru_igla",
+          "mounts": 2,
+          "ammo": 4
+        }
+      ],
+      "chaff": 8,
+      "decoys": 2
+    },
+    "ru_tarantul4": {
+      "id": "ru_tarantul4",
+      "name": "Pr. 1241.8 Tarantul IV PTG",
+      "kind": "Ship",
+      "hp": 37,
+      "max_speed_kts": 29,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 4.5,
+      "rcs": "Small",
+      "noise_db": 56,
+      "vp_value": 5,
+      "sensors": [
+        "ru_radar_fregat_m2",
+        "radar_surf_med",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_uran",
+          "mounts": 2,
+          "ammo": 4
+        },
+        {
+          "weapon": "gun_76mm",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 2,
+          "ammo": 30
+        }
+      ],
+      "chaff": 6,
+      "decoys": 2
+    },
+    "ru_tarantul3": {
+      "id": "ru_tarantul3",
+      "name": "Pr. 1241.1M Tarantul III PTG",
+      "kind": "Ship",
+      "hp": 37,
+      "max_speed_kts": 38,
+      "cruise_speed_kts": 20,
+      "turn_rate_deg_s": 5.0,
+      "rcs": "Small",
+      "noise_db": 56,
+      "vp_value": 6,
+      "sensors": [
+        "ru_radar_fregat_m2",
+        "radar_surf_med",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_p270",
+          "mounts": 2,
+          "ammo": 2
+        },
+        {
+          "weapon": "gun_76mm",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 2,
+          "ammo": 30
+        },
+        {
+          "weapon": "ru_igla",
+          "mounts": 1,
+          "ammo": 4
+        }
+      ],
+      "chaff": 6,
+      "decoys": 2
+    },
+    "ru_tarantul2": {
+      "id": "ru_tarantul2",
+      "name": "Pr. 1241.1T Tarantul II PTG",
+      "kind": "Ship",
+      "hp": 34,
+      "max_speed_kts": 42,
+      "cruise_speed_kts": 20,
+      "turn_rate_deg_s": 5.0,
+      "rcs": "Small",
+      "noise_db": 56,
+      "vp_value": 5,
+      "sensors": [
+        "ru_radar_fregat_m2",
+        "radar_surf_med",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_p120",
+          "mounts": 2,
+          "ammo": 2
+        },
+        {
+          "weapon": "gun_76mm",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 2,
+          "ammo": 30
+        },
+        {
+          "weapon": "ru_igla",
+          "mounts": 1,
+          "ammo": 4
+        }
+      ],
+      "chaff": 6,
+      "decoys": 2
+    },
+    "ru_nanuchka3": {
+      "id": "ru_nanuchka3",
+      "name": "Pr. 1234.1 Nanuchka III PGG",
+      "kind": "Ship",
+      "hp": 47,
+      "max_speed_kts": 32,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 4.5,
+      "rcs": "Small",
+      "noise_db": 56,
+      "vp_value": 6,
+      "sensors": [
+        "ru_radar_fregat_m2",
+        "radar_surf_med",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_p120",
+          "mounts": 2,
+          "ammo": 3
+        },
+        {
+          "weapon": "ru_osa",
+          "mounts": 1,
+          "ammo": 20
+        },
+        {
+          "weapon": "gun_76mm",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 1,
+          "ammo": 30
+        }
+      ],
+      "chaff": 6,
+      "decoys": 2
+    },
+    "ru_nanuchka4": {
+      "id": "ru_nanuchka4",
+      "name": "Pr. 1234.7 Nanuchka IV PGG",
+      "kind": "Ship",
+      "hp": 47,
+      "max_speed_kts": 34,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 4.5,
+      "rcs": "Small",
+      "noise_db": 56,
+      "vp_value": 7,
+      "sensors": [
+        "ru_radar_fregat_m2",
+        "radar_surf_med",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_oniks",
+          "mounts": 1,
+          "ammo": 12
+        },
+        {
+          "weapon": "ru_osa",
+          "mounts": 1,
+          "ammo": 20
+        },
+        {
+          "weapon": "gun_76mm",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 1,
+          "ammo": 30
+        }
+      ],
+      "chaff": 6,
+      "decoys": 2
+    },
+    "ru_dergach": {
+      "id": "ru_dergach",
+      "name": "Pr. 1239 Sivuch Dergach PGGA",
+      "kind": "Ship",
+      "hp": 36,
+      "max_speed_kts": 53,
+      "cruise_speed_kts": 25,
+      "turn_rate_deg_s": 5.0,
+      "rcs": "Small",
+      "noise_db": 34,
+      "vp_value": 7,
+      "sensors": [
+        "ru_radar_fregat_m2",
+        "radar_surf_med",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_p270",
+          "mounts": 2,
+          "ammo": 4
+        },
+        {
+          "weapon": "ru_osa",
+          "mounts": 1,
+          "ammo": 20
+        },
+        {
+          "weapon": "gun_76mm",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 2,
+          "ammo": 30
+        },
+        {
+          "weapon": "ru_igla",
+          "mounts": 1,
+          "ammo": 8
+        }
+      ],
+      "chaff": 6,
+      "decoys": 2
+    },
+    "ru_borei": {
+      "id": "ru_borei",
+      "name": "Pr. 955 Borei SSBN [no SLBM]",
+      "kind": "Sub",
+      "hp": 308,
+      "max_speed_kts": 29,
+      "cruise_speed_kts": 6,
+      "turn_rate_deg_s": 2.5,
+      "rcs": "Medium",
+      "noise_db": 30,
+      "visual_factor": 0.15,
+      "vp_value": 55,
+      "max_depth_m": 400,
+      "sensors": [
+        "ru_sonar_amfora",
+        "sonar_p_tow",
+        "sonar_a_hull",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_fizik",
+          "mounts": 1,
+          "ammo": 16
+        },
+        {
+          "weapon": "ru_usp",
+          "mounts": 1,
+          "ammo": 8
+        },
+        {
+          "weapon": "ru_igla",
+          "mounts": 1,
+          "ammo": 8
+        }
+      ],
+      "decoys": 12
+    },
+    "ru_borei_2": {
+      "id": "ru_borei_2",
+      "name": "Pr. 955A Borei II SSBN [no SLBM]",
+      "kind": "Sub",
+      "hp": 320,
+      "max_speed_kts": 29,
+      "cruise_speed_kts": 6,
+      "turn_rate_deg_s": 2.5,
+      "rcs": "Medium",
+      "noise_db": 30,
+      "visual_factor": 0.15,
+      "vp_value": 58,
+      "max_depth_m": 400,
+      "sensors": [
+        "ru_sonar_amfora",
+        "sonar_p_tow",
+        "sonar_a_hull",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_fizik",
+          "mounts": 1,
+          "ammo": 18
+        },
+        {
+          "weapon": "ru_usp",
+          "mounts": 1,
+          "ammo": 6
+        },
+        {
+          "weapon": "ru_igla",
+          "mounts": 1,
+          "ammo": 8
+        }
+      ],
+      "decoys": 12
+    },
+    "ru_yasen": {
+      "id": "ru_yasen",
+      "name": "Pr. 885 Yasen SSGN",
+      "kind": "Sub",
+      "hp": 221,
+      "max_speed_kts": 31,
+      "cruise_speed_kts": 7,
+      "turn_rate_deg_s": 2.5,
+      "rcs": "Small",
+      "noise_db": 22,
+      "visual_factor": 0.15,
+      "vp_value": 50,
+      "max_depth_m": 520,
+      "sensors": [
+        "ru_sonar_amfora",
+        "sonar_p_tow",
+        "sonar_a_hull",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_oniks",
+          "mounts": 1,
+          "ammo": 24
+        },
+        {
+          "weapon": "ru_kalibr",
+          "mounts": 1,
+          "ammo": 8
+        },
+        {
+          "weapon": "ru_fizik",
+          "mounts": 2,
+          "ammo": 5
+        },
+        {
+          "weapon": "ru_usp",
+          "mounts": 2,
+          "ammo": 5
+        },
+        {
+          "weapon": "ru_65k",
+          "mounts": 1,
+          "ammo": 4
+        }
+      ],
+      "decoys": 12
+    },
+    "ru_yasen_m": {
+      "id": "ru_yasen_m",
+      "name": "Pr. 885M Yasen-M SSGN",
+      "kind": "Sub",
+      "hp": 217,
+      "max_speed_kts": 31,
+      "cruise_speed_kts": 7,
+      "turn_rate_deg_s": 2.5,
+      "rcs": "Small",
+      "noise_db": 22,
+      "visual_factor": 0.15,
+      "vp_value": 52,
+      "max_depth_m": 520,
+      "sensors": [
+        "ru_sonar_amfora",
+        "sonar_p_tow",
+        "sonar_a_hull",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_oniks",
+          "mounts": 1,
+          "ammo": 24
+        },
+        {
+          "weapon": "ru_kalibr",
+          "mounts": 1,
+          "ammo": 8
+        },
+        {
+          "weapon": "ru_fizik",
+          "mounts": 2,
+          "ammo": 5
+        },
+        {
+          "weapon": "ru_usp",
+          "mounts": 2,
+          "ammo": 5
+        },
+        {
+          "weapon": "ru_65k",
+          "mounts": 1,
+          "ammo": 4
+        }
+      ],
+      "decoys": 12
+    },
+    "ru_oscar2": {
+      "id": "ru_oscar2",
+      "name": "Pr. 949A Antey Oscar II SSGN",
+      "kind": "Sub",
+      "hp": 368,
+      "max_speed_kts": 31,
+      "cruise_speed_kts": 6,
+      "turn_rate_deg_s": 2.5,
+      "rcs": "Medium",
+      "noise_db": 30,
+      "visual_factor": 0.15,
+      "vp_value": 55,
+      "max_depth_m": 500,
+      "sensors": [
+        "ru_sonar_amfora",
+        "sonar_p_tow",
+        "sonar_a_hull",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_p700",
+          "mounts": 1,
+          "ammo": 24
+        },
+        {
+          "weapon": "ru_fizik",
+          "mounts": 2,
+          "ammo": 5
+        },
+        {
+          "weapon": "ru_65k",
+          "mounts": 2,
+          "ammo": 4
+        },
+        {
+          "weapon": "ru_usp",
+          "mounts": 2,
+          "ammo": 5
+        }
+      ],
+      "decoys": 12
+    },
+    "ru_akula2": {
+      "id": "ru_akula2",
+      "name": "Pr. 971M Akula II SSN",
+      "kind": "Sub",
+      "hp": 211,
+      "max_speed_kts": 33,
+      "cruise_speed_kts": 7,
+      "turn_rate_deg_s": 2.5,
+      "rcs": "Small",
+      "noise_db": 22,
+      "visual_factor": 0.15,
+      "vp_value": 40,
+      "max_depth_m": 480,
+      "sensors": [
+        "ru_sonar_amfora",
+        "sonar_p_tow",
+        "sonar_a_hull",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_fizik",
+          "mounts": 2,
+          "ammo": 8
+        },
+        {
+          "weapon": "ru_65k",
+          "mounts": 2,
+          "ammo": 4
+        },
+        {
+          "weapon": "ru_usp",
+          "mounts": 2,
+          "ammo": 6
+        }
+      ],
+      "decoys": 10
+    },
+    "ru_akula1": {
+      "id": "ru_akula1",
+      "name": "Pr. 971 Akula I SSN",
+      "kind": "Sub",
+      "hp": 204,
+      "max_speed_kts": 33,
+      "cruise_speed_kts": 7,
+      "turn_rate_deg_s": 2.5,
+      "rcs": "Small",
+      "noise_db": 28,
+      "visual_factor": 0.15,
+      "vp_value": 36,
+      "max_depth_m": 480,
+      "sensors": [
+        "ru_sonar_amfora",
+        "sonar_p_tow",
+        "sonar_a_hull",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_usp",
+          "mounts": 2,
+          "ammo": 8
+        },
+        {
+          "weapon": "ru_65k",
+          "mounts": 2,
+          "ammo": 4
+        },
+        {
+          "weapon": "ru_fizik",
+          "mounts": 1,
+          "ammo": 4
+        }
+      ],
+      "decoys": 10
+    },
+    "ru_sierra2": {
+      "id": "ru_sierra2",
+      "name": "Pr. 945A Kondor Sierra II SSN",
+      "kind": "Sub",
+      "hp": 178,
+      "max_speed_kts": 33,
+      "cruise_speed_kts": 7,
+      "turn_rate_deg_s": 2.5,
+      "rcs": "Small",
+      "noise_db": 28,
+      "visual_factor": 0.15,
+      "vp_value": 38,
+      "max_depth_m": 600,
+      "sensors": [
+        "ru_sonar_amfora",
+        "sonar_p_tow",
+        "sonar_a_hull",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_usp",
+          "mounts": 2,
+          "ammo": 8
+        },
+        {
+          "weapon": "ru_fizik",
+          "mounts": 2,
+          "ammo": 6
+        }
+      ],
+      "decoys": 10
+    },
+    "ru_delta4": {
+      "id": "ru_delta4",
+      "name": "Pr. 667BDRM Del'fin Delta IV SSBN [no SLBM]",
+      "kind": "Sub",
+      "hp": 265,
+      "max_speed_kts": 24,
+      "cruise_speed_kts": 6,
+      "turn_rate_deg_s": 2.5,
+      "rcs": "Small",
+      "noise_db": 44,
+      "visual_factor": 0.15,
+      "vp_value": 45,
+      "max_depth_m": 400,
+      "sensors": [
+        "ru_sonar_amfora",
+        "sonar_p_tow",
+        "sonar_a_hull",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_usp",
+          "mounts": 2,
+          "ammo": 4
+        },
+        {
+          "weapon": "ru_fizik",
+          "mounts": 1,
+          "ammo": 4
+        }
+      ],
+      "decoys": 8
+    },
+    "ru_typhoon": {
+      "id": "ru_typhoon",
+      "name": "Pr. 941 Akula Typhoon SSBN [no SLBM]",
+      "kind": "Sub",
+      "hp": 535,
+      "max_speed_kts": 25,
+      "cruise_speed_kts": 6,
+      "turn_rate_deg_s": 2.2,
+      "rcs": "Medium",
+      "noise_db": 40,
+      "visual_factor": 0.15,
+      "vp_value": 50,
+      "max_depth_m": 400,
+      "sensors": [
+        "ru_sonar_amfora",
+        "sonar_p_tow",
+        "sonar_a_hull",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_usp",
+          "mounts": 2,
+          "ammo": 6
+        },
+        {
+          "weapon": "ru_fizik",
+          "mounts": 1,
+          "ammo": 4
+        }
+      ],
+      "decoys": 8
+    },
+    "ru_kilo": {
+      "id": "ru_kilo",
+      "name": "Pr. 636.3 Varshavyanka SS",
+      "kind": "Sub",
+      "hp": 91,
+      "max_speed_kts": 20,
+      "cruise_speed_kts": 5,
+      "turn_rate_deg_s": 2.5,
+      "rcs": "VerySmall",
+      "noise_db": 30,
+      "visual_factor": 0.15,
+      "vp_value": 24,
+      "max_depth_m": 240,
+      "sensors": [
+        "sonar_p_hull",
+        "sonar_a_hull",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_kalibr",
+          "mounts": 1,
+          "ammo": 4
+        },
+        {
+          "weapon": "ru_fizik",
+          "mounts": 1,
+          "ammo": 10
+        },
+        {
+          "weapon": "ru_usp",
+          "mounts": 1,
+          "ammo": 4
+        },
+        {
+          "weapon": "ru_igla",
+          "mounts": 1,
+          "ammo": 8
+        }
+      ],
+      "decoys": 10
+    },
+    "ru_kilo_636": {
+      "id": "ru_kilo_636",
+      "name": "Pr. 636 Varshavyanka SS",
+      "kind": "Sub",
+      "hp": 91,
+      "max_speed_kts": 20,
+      "cruise_speed_kts": 5,
+      "turn_rate_deg_s": 2.5,
+      "rcs": "VerySmall",
+      "noise_db": 30,
+      "visual_factor": 0.15,
+      "vp_value": 22,
+      "max_depth_m": 200,
+      "sensors": [
+        "sonar_p_hull",
+        "sonar_a_hull",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_usp",
+          "mounts": 1,
+          "ammo": 14
+        },
+        {
+          "weapon": "ru_fizik",
+          "mounts": 1,
+          "ammo": 4
+        },
+        {
+          "weapon": "ru_igla",
+          "mounts": 1,
+          "ammo": 6
+        }
+      ],
+      "decoys": 10
+    },
+    "ru_lada": {
+      "id": "ru_lada",
+      "name": "Pr. 677 Lada SS",
+      "kind": "Sub",
+      "hp": 70,
+      "max_speed_kts": 21,
+      "cruise_speed_kts": 5,
+      "turn_rate_deg_s": 2.5,
+      "rcs": "VerySmall",
+      "noise_db": 22,
+      "visual_factor": 0.15,
+      "vp_value": 22,
+      "max_depth_m": 300,
+      "sensors": [
+        "ru_sonar_amfora",
+        "sonar_p_tow",
+        "sonar_a_hull",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_kalibr",
+          "mounts": 1,
+          "ammo": 4
+        },
+        {
+          "weapon": "ru_fizik",
+          "mounts": 1,
+          "ammo": 12
+        },
+        {
+          "weapon": "ru_igla",
+          "mounts": 1,
+          "ammo": 8
+        }
+      ],
+      "decoys": 8
+    },
+    "ru_khabarovsk": {
+      "id": "ru_khabarovsk",
+      "name": "Pr. 09851 Khabarovsk SSAN",
+      "kind": "Sub",
+      "hp": 256,
+      "max_speed_kts": 29,
+      "cruise_speed_kts": 7,
+      "turn_rate_deg_s": 2.5,
+      "rcs": "Small",
+      "noise_db": 22,
+      "visual_factor": 0.15,
+      "vp_value": 40,
+      "max_depth_m": 400,
+      "sensors": [
+        "ru_sonar_amfora",
+        "sonar_p_tow",
+        "sonar_a_hull",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_fizik",
+          "mounts": 1,
+          "ammo": 24
+        }
+      ],
+      "decoys": 8
+    },
+    "ru_ivan_gren": {
+      "id": "ru_ivan_gren",
+      "name": "Pr. 11711 Ivan Gren LST",
+      "kind": "Ship",
+      "hp": 189,
+      "max_speed_kts": 18,
+      "cruise_speed_kts": 12,
+      "turn_rate_deg_s": 2.0,
+      "rcs": "Small",
+      "noise_db": 54,
+      "vp_value": 16,
+      "sensors": [
+        "ru_radar_fregat_m2",
+        "radar_surf_med",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 3,
+          "ammo": 30
+        },
+        {
+          "weapon": "ru_igla",
+          "mounts": 1,
+          "ammo": 8
+        }
+      ],
+      "chaff": 10,
+      "decoys": 2,
+      "deck": {
+        "capacity": 2,
+        "cycle_s": 180,
+        "wing": [
+          {
+            "class": "ru_cv_ka29",
+            "count": 2
+          }
+        ]
+      }
+    },
+    "ru_ropucha": {
+      "id": "ru_ropucha",
+      "name": "Pr. 775M Ropucha II LST",
+      "kind": "Ship",
+      "hp": 126,
+      "max_speed_kts": 17,
+      "cruise_speed_kts": 11,
+      "turn_rate_deg_s": 2.2,
+      "rcs": "Small",
+      "noise_db": 54,
+      "vp_value": 12,
+      "sensors": [
+        "ru_radar_fregat_m2",
+        "radar_surf_med",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "gun_76mm",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 2,
+          "ammo": 30
+        },
+        {
+          "weapon": "ru_igla",
+          "mounts": 2,
+          "ammo": 4
+        }
+      ],
+      "chaff": 8,
+      "decoys": 2
+    },
+    "ru_alligator": {
+      "id": "ru_alligator",
+      "name": "Pr. 1171 Tapir Alligator LST",
+      "kind": "Ship",
+      "hp": 113,
+      "max_speed_kts": 16,
+      "cruise_speed_kts": 11,
+      "turn_rate_deg_s": 2.2,
+      "rcs": "Small",
+      "noise_db": 54,
+      "vp_value": 12,
+      "sensors": [
+        "radar_nav",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "gun_76mm",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 2,
+          "ammo": 30
+        }
+      ],
+      "chaff": 6,
+      "decoys": 2
+    },
+    "ru_cv_su33": {
+      "id": "ru_cv_su33",
+      "name": "Su-33 Flanker D (ceiling 17000 m)",
+      "kind": "Aircraft",
+      "hp": 35,
+      "max_speed_kts": 1240,
+      "cruise_speed_kts": 485,
+      "turn_rate_deg_s": 12.0,
+      "rcs": "Medium",
+      "vp_value": 14,
+      "endurance_s": 8425,
+      "sensors": [
+        "radar_air_med",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_r27er",
+          "mounts": 4,
+          "ammo": 1
+        },
+        {
+          "weapon": "ru_r73",
+          "mounts": 2,
+          "ammo": 1
+        },
+        {
+          "weapon": "bomb_mk82",
+          "mounts": 1,
+          "ammo": 8
+        }
+      ],
+      "chaff": 12
+    },
+    "ru_cv_mig29kr": {
+      "id": "ru_cv_mig29kr",
+      "name": "MiG-29KR Fulcrum D (ceiling 17500 m)",
+      "kind": "Aircraft",
+      "hp": 29,
+      "max_speed_kts": 1190,
+      "cruise_speed_kts": 460,
+      "turn_rate_deg_s": 12.0,
+      "rcs": "Small",
+      "vp_value": 14,
+      "endurance_s": 5596,
+      "sensors": [
+        "radar_air_med",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_r77",
+          "mounts": 6,
+          "ammo": 1
+        },
+        {
+          "weapon": "ru_r73",
+          "mounts": 2,
+          "ammo": 1
+        },
+        {
+          "weapon": "ru_kh35u",
+          "mounts": 2,
+          "ammo": 1
+        }
+      ],
+      "chaff": 12
+    },
+    "ru_cv_ka27": {
+      "id": "ru_cv_ka27",
+      "name": "Ka-27 Helix A ASW (ceiling 5000 m)",
+      "kind": "Aircraft",
+      "hp": 18,
+      "max_speed_kts": 146,
+      "cruise_speed_kts": 124,
+      "turn_rate_deg_s": 25.0,
+      "rcs": "Small",
+      "vp_value": 8,
+      "endurance_s": 7694,
+      "dipping_sonar": true,
+      "sensors": [
+        "radar_surf_sm",
+        "sonar_dipping",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "lwt",
+          "mounts": 1,
+          "ammo": 1
+        }
+      ],
+      "chaff": 4
+    },
+    "ru_cv_ka29": {
+      "id": "ru_cv_ka29",
+      "name": "Ka-29 Helix B Assault (ceiling 4300 m)",
+      "kind": "Aircraft",
+      "hp": 19,
+      "max_speed_kts": 150,
+      "cruise_speed_kts": 124,
+      "turn_rate_deg_s": 25.0,
+      "rcs": "Small",
+      "vp_value": 6,
+      "endurance_s": 6532,
+      "sensors": [
+        "radar_nav",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "rocket_57",
+          "mounts": 1,
+          "ammo": 4
+        },
+        {
+          "weapon": "gun_30mm",
+          "mounts": 1,
+          "ammo": 20
+        }
+      ],
+      "chaff": 4
+    },
+    "ru_cv_ka31r": {
+      "id": "ru_cv_ka31r",
+      "name": "Ka-31R Helix E AEW (ceiling 3500 m)",
+      "kind": "Aircraft",
+      "hp": 17,
+      "max_speed_kts": 120,
+      "cruise_speed_kts": 100,
+      "turn_rate_deg_s": 25.0,
+      "rcs": "Small",
+      "vp_value": 10,
+      "endurance_s": 9180,
+      "sensors": [
+        "radar_air_xlong",
+        "esm_std"
+      ],
+      "weapons": [],
+      "chaff": 4
+    },
+    "ru_cv_ka52k": {
+      "id": "ru_cv_ka52k",
+      "name": "Ka-52K Katran (ceiling 5000 m)",
+      "kind": "Aircraft",
+      "hp": 22,
+      "max_speed_kts": 160,
+      "cruise_speed_kts": 140,
+      "turn_rate_deg_s": 22.0,
+      "rcs": "Small",
+      "vp_value": 8,
+      "endurance_s": 5271,
+      "sensors": [
+        "radar_air_med",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ru_kh35u",
+          "mounts": 1,
+          "ammo": 2
+        },
+        {
+          "weapon": "rocket_57",
+          "mounts": 1,
+          "ammo": 4
+        },
+        {
+          "weapon": "ru_igla",
+          "mounts": 1,
+          "ammo": 4
+        }
+      ],
+      "chaff": 6
+    }
+  },
+  "weapons": {
+    "ru_p700": {
+      "id": "ru_p700",
+      "name": "P-700 Granit (SS-N-19)",
+      "kind": "Ascm",
+      "targets": {
+        "surface": true
+      },
+      "range_nm": 300,
+      "min_range_nm": 5,
+      "speed_kts": 1620,
+      "pk": 0.55,
+      "salvo": 1,
+      "reload_s": 60,
+      "damage": 90,
+      "guidance": "SeaSkimmer"
+    },
+    "ru_p1000": {
+      "id": "ru_p1000",
+      "name": "P-1000 Vulkan (SS-N-12 Mod 2)",
+      "kind": "Ascm",
+      "targets": {
+        "surface": true
+      },
+      "range_nm": 378,
+      "min_range_nm": 5,
+      "speed_kts": 1620,
+      "pk": 0.55,
+      "salvo": 1,
+      "reload_s": 60,
+      "damage": 85,
+      "guidance": "SeaSkimmer"
+    },
+    "ru_p500": {
+      "id": "ru_p500",
+      "name": "P-500 Bazalt (SS-N-12 Mod 1)",
+      "kind": "Ascm",
+      "targets": {
+        "surface": true
+      },
+      "range_nm": 300,
+      "min_range_nm": 5,
+      "speed_kts": 1650,
+      "pk": 0.55,
+      "salvo": 1,
+      "reload_s": 60,
+      "damage": 80,
+      "guidance": "SeaSkimmer"
+    },
+    "ru_p270": {
+      "id": "ru_p270",
+      "name": "P-270 Moskit-M (SS-N-22 Mod 1)",
+      "kind": "Ascm",
+      "targets": {
+        "surface": true
+      },
+      "range_nm": 65,
+      "min_range_nm": 4,
+      "speed_kts": 1650,
+      "pk": 0.55,
+      "salvo": 1,
+      "reload_s": 30,
+      "damage": 58,
+      "guidance": "SeaSkimmer"
+    },
+    "ru_p120": {
+      "id": "ru_p120",
+      "name": "P-120 Malakhit (SS-N-9)",
+      "kind": "Ascm",
+      "targets": {
+        "surface": true
+      },
+      "range_nm": 65,
+      "min_range_nm": 3,
+      "speed_kts": 594,
+      "pk": 0.55,
+      "salvo": 1,
+      "reload_s": 30,
+      "damage": 52,
+      "guidance": "SeaSkimmer"
+    },
+    "ru_oniks": {
+      "id": "ru_oniks",
+      "name": "P-800 Oniks (SS-N-26)",
+      "kind": "Ascm",
+      "targets": {
+        "surface": true
+      },
+      "range_nm": 165,
+      "min_range_nm": 4,
+      "speed_kts": 1650,
+      "pk": 0.6,
+      "salvo": 1,
+      "reload_s": 45,
+      "damage": 49,
+      "guidance": "SeaSkimmer"
+    },
+    "ru_kalibr": {
+      "id": "ru_kalibr",
+      "name": "3M54/3M54T Kalibr (SS-N-27)",
+      "kind": "Ascm",
+      "targets": {
+        "surface": true
+      },
+      "range_nm": 120,
+      "min_range_nm": 3,
+      "speed_kts": 528,
+      "pk": 0.6,
+      "salvo": 1,
+      "reload_s": 45,
+      "damage": 49,
+      "guidance": "SeaSkimmer"
+    },
+    "ru_uran": {
+      "id": "ru_uran",
+      "name": "Kh-35 Uran (SS-N-25)",
+      "kind": "Ascm",
+      "targets": {
+        "surface": true
+      },
+      "range_nm": 65,
+      "min_range_nm": 2,
+      "speed_kts": 580,
+      "pk": 0.55,
+      "salvo": 1,
+      "reload_s": 30,
+      "damage": 41,
+      "guidance": "SeaSkimmer"
+    },
+    "ru_tsirkon": {
+      "id": "ru_tsirkon",
+      "name": "3M22 Tsirkon (SS-N-33)",
+      "kind": "Ascm",
+      "targets": {
+        "surface": true
+      },
+      "range_nm": 187,
+      "min_range_nm": 5,
+      "speed_kts": 3150,
+      "pk": 0.5,
+      "salvo": 1,
+      "reload_s": 60,
+      "damage": 53,
+      "guidance": "SeaSkimmer"
+    },
+    "ru_kh35u": {
+      "id": "ru_kh35u",
+      "name": "Kh-35U Uran (AS-20)",
+      "kind": "Ascm",
+      "targets": {
+        "surface": true
+      },
+      "range_nm": 140,
+      "min_range_nm": 3.8,
+      "speed_kts": 560,
+      "pk": 0.6,
+      "salvo": 1,
+      "reload_s": 30,
+      "damage": 44,
+      "guidance": "SeaSkimmer"
+    },
+    "ru_rastrub": {
+      "id": "ru_rastrub",
+      "name": "85RU Rastrub (SS-N-14b)",
+      "kind": "AswRocket",
+      "targets": {
+        "sub": true
+      },
+      "range_nm": 27,
+      "min_range_nm": 2.7,
+      "speed_kts": 1000,
+      "pk": 0.55,
+      "salvo": 1,
+      "reload_s": 20,
+      "damage": 45,
+      "guidance": "AswBallistic"
+    },
+    "ru_metel": {
+      "id": "ru_metel",
+      "name": "85R Metel (SS-N-14a)",
+      "kind": "AswRocket",
+      "targets": {
+        "sub": true
+      },
+      "range_nm": 27,
+      "min_range_nm": 2.7,
+      "speed_kts": 1000,
+      "pk": 0.5,
+      "salvo": 1,
+      "reload_s": 20,
+      "damage": 40,
+      "guidance": "AswBallistic"
+    },
+    "ru_65k": {
+      "id": "ru_65k",
+      "name": "65-76A Kit 650mm Torpedo",
+      "kind": "Torpedo",
+      "targets": {
+        "surface": true
+      },
+      "range_nm": 27,
+      "speed_kts": 50,
+      "enable_range_nm": 2.0,
+      "pk": 0.65,
+      "salvo": 1,
+      "reload_s": 30,
+      "damage": 197,
+      "guidance": "WakeHome"
+    },
+    "ru_usp": {
+      "id": "ru_usp",
+      "name": "USET-80K 533mm Torpedo",
+      "kind": "Torpedo",
+      "targets": {
+        "surface": true,
+        "sub": true
+      },
+      "range_nm": 10,
+      "speed_kts": 48,
+      "enable_range_nm": 1.5,
+      "pk": 0.7,
+      "salvo": 1,
+      "reload_s": 30,
+      "damage": 159,
+      "guidance": "TorpedoActive"
+    },
+    "ru_fizik": {
+      "id": "ru_fizik",
+      "name": "Fizik-2 533mm Torpedo",
+      "kind": "Torpedo",
+      "targets": {
+        "surface": true,
+        "sub": true
+      },
+      "range_nm": 22,
+      "speed_kts": 60,
+      "enable_range_nm": 2.0,
+      "pk": 0.7,
+      "salvo": 1,
+      "reload_s": 30,
+      "damage": 164,
+      "guidance": "TorpedoActive"
+    },
+    "ru_paket": {
+      "id": "ru_paket",
+      "name": "Paket-NK MTT",
+      "kind": "Lwt",
+      "targets": {
+        "sub": true
+      },
+      "range_nm": 4,
+      "speed_kts": 40,
+      "enable_range_nm": 0.5,
+      "pk": 0.5,
+      "salvo": 1,
+      "reload_s": 20,
+      "damage": 40,
+      "guidance": "TorpedoActive"
+    },
+    "ru_s300f": {
+      "id": "ru_s300f",
+      "name": "S-300F Fort 5V55RD (SA-N-6b)",
+      "kind": "Sam",
+      "targets": {
+        "air": true,
+        "missile": true
+      },
+      "range_nm": 50,
+      "min_range_nm": 2.7,
+      "speed_kts": 3885,
+      "pk": 0.6,
+      "salvo": 2,
+      "reload_s": 6,
+      "damage": 45,
+      "guidance": "HomingAir",
+      "directors": 6
+    },
+    "ru_rif": {
+      "id": "ru_rif",
+      "name": "S-300FM Fort-M 48N6 (SA-N-20)",
+      "kind": "Sam",
+      "targets": {
+        "air": true,
+        "missile": true
+      },
+      "range_nm": 135,
+      "min_range_nm": 1.6,
+      "speed_kts": 4080,
+      "pk": 0.62,
+      "salvo": 2,
+      "reload_s": 6,
+      "damage": 48,
+      "guidance": "HomingAir",
+      "directors": 6
+    },
+    "ru_shtorm": {
+      "id": "ru_shtorm",
+      "name": "Shtorm-M (SA-N-3b)",
+      "kind": "Sam",
+      "targets": {
+        "air": true,
+        "missile": true
+      },
+      "range_nm": 19,
+      "min_range_nm": 3,
+      "speed_kts": 1650,
+      "pk": 0.5,
+      "salvo": 2,
+      "reload_s": 6,
+      "damage": 33,
+      "guidance": "HomingAir",
+      "directors": 2
+    },
+    "ru_uragan": {
+      "id": "ru_uragan",
+      "name": "Uragan 9M38 (SA-N-7)",
+      "kind": "Sam",
+      "targets": {
+        "air": true,
+        "missile": true
+      },
+      "range_nm": 19,
+      "min_range_nm": 1.8,
+      "speed_kts": 1650,
+      "pk": 0.5,
+      "salvo": 2,
+      "reload_s": 6,
+      "damage": 31,
+      "guidance": "HomingAir",
+      "directors": 6
+    },
+    "ru_shtil": {
+      "id": "ru_shtil",
+      "name": "Shtil-1 9M317 (SA-N-7b)",
+      "kind": "Sam",
+      "targets": {
+        "air": true,
+        "missile": true
+      },
+      "range_nm": 27,
+      "min_range_nm": 1.3,
+      "speed_kts": 2581,
+      "pk": 0.55,
+      "salvo": 2,
+      "reload_s": 5,
+      "damage": 30,
+      "guidance": "HomingAir",
+      "directors": 4
+    },
+    "ru_redut": {
+      "id": "ru_redut",
+      "name": "Redut 9M96D (SA-N-28)",
+      "kind": "Sam",
+      "targets": {
+        "air": true,
+        "missile": true
+      },
+      "range_nm": 65,
+      "min_range_nm": 0.5,
+      "speed_kts": 1750,
+      "pk": 0.55,
+      "salvo": 2,
+      "reload_s": 6,
+      "damage": 26,
+      "guidance": "HomingAir",
+      "directors": 4
+    },
+    "ru_kinzhal": {
+      "id": "ru_kinzhal",
+      "name": "Kinzhal 9M330 (SA-N-9)",
+      "kind": "Sam",
+      "targets": {
+        "air": true,
+        "missile": true
+      },
+      "range_nm": 6.5,
+      "min_range_nm": 0.8,
+      "speed_kts": 1675,
+      "pk": 0.5,
+      "salvo": 2,
+      "reload_s": 4,
+      "damage": 19,
+      "guidance": "HomingAir",
+      "directors": 4
+    },
+    "ru_kortik": {
+      "id": "ru_kortik",
+      "name": "Kortik 9M311 (SA-N-11)",
+      "kind": "Ciws",
+      "targets": {
+        "air": true,
+        "missile": true
+      },
+      "range_nm": 5.4,
+      "min_range_nm": 1.3,
+      "speed_kts": 1749,
+      "pk": 0.45,
+      "salvo": 2,
+      "reload_s": 3,
+      "damage": 15,
+      "guidance": "HomingAir",
+      "directors": 2
+    },
+    "ru_pantsir": {
+      "id": "ru_pantsir",
+      "name": "Pantsir-M 57E6 (SA-22)",
+      "kind": "Ciws",
+      "targets": {
+        "air": true,
+        "missile": true
+      },
+      "range_nm": 9.2,
+      "min_range_nm": 0.5,
+      "speed_kts": 1979,
+      "pk": 0.5,
+      "salvo": 2,
+      "reload_s": 3,
+      "damage": 19,
+      "guidance": "HomingAir",
+      "directors": 2
+    },
+    "ru_osa": {
+      "id": "ru_osa",
+      "name": "Osa-MA 9M33 (SA-N-4)",
+      "kind": "Sam",
+      "targets": {
+        "air": true,
+        "missile": true
+      },
+      "range_nm": 6.5,
+      "min_range_nm": 0.5,
+      "speed_kts": 1650,
+      "pk": 0.42,
+      "salvo": 1,
+      "reload_s": 3,
+      "damage": 18,
+      "guidance": "HomingAir",
+      "directors": 2
+    },
+    "ru_igla": {
+      "id": "ru_igla",
+      "name": "Igla-S / Verba (SA-24/29)",
+      "kind": "Sam",
+      "ir": true,
+      "targets": {
+        "air": true,
+        "missile": true
+      },
+      "range_nm": 3.2,
+      "min_range_nm": 0.3,
+      "speed_kts": 1166,
+      "pk": 0.35,
+      "salvo": 1,
+      "reload_s": 4,
+      "damage": 12,
+      "guidance": "HomingAir"
+    },
+    "ru_r77": {
+      "id": "ru_r77",
+      "name": "R-77 Adder (AA-12)",
+      "kind": "Aam",
+      "targets": {
+        "air": true
+      },
+      "range_nm": 37,
+      "min_range_nm": 2.0,
+      "speed_kts": 1721,
+      "pk": 0.5,
+      "salvo": 1,
+      "reload_s": 3,
+      "damage": 22,
+      "guidance": "HomingAir"
+    },
+    "ru_r73": {
+      "id": "ru_r73",
+      "name": "R-73 Archer (AA-11)",
+      "kind": "Aam",
+      "ir": true,
+      "targets": {
+        "air": true
+      },
+      "range_nm": 8.1,
+      "min_range_nm": 0.3,
+      "speed_kts": 1434,
+      "pk": 0.55,
+      "salvo": 1,
+      "reload_s": 3,
+      "damage": 20,
+      "guidance": "HomingAir"
+    },
+    "ru_r27er": {
+      "id": "ru_r27er",
+      "name": "R-27ER Alamo C (AA-10)",
+      "kind": "Aam",
+      "targets": {
+        "air": true
+      },
+      "range_nm": 40,
+      "min_range_nm": 2.5,
+      "speed_kts": 2295,
+      "pk": 0.5,
+      "salvo": 1,
+      "reload_s": 3,
+      "damage": 22,
+      "guidance": "HomingAir"
+    }
+  },
+  "sensors": {
+    "ru_radar_fregat_m2": {
+      "id": "ru_radar_fregat_m2",
+      "name": "MR-750 Fregat-M2 (Top Plate)",
+      "kind": "Radar",
+      "alt_m": 30,
+      "air_range_nm": 81,
+      "surface_range_nm": 25,
+      "missile_range_nm": 45,
+      "radar_class": "LAS"
+    },
+    "ru_radar_poliment": {
+      "id": "ru_radar_poliment",
+      "name": "5P20K Poliment",
+      "kind": "Radar",
+      "alt_m": 30,
+      "air_range_nm": 81,
+      "surface_range_nm": 27,
+      "missile_range_nm": 60,
+      "radar_class": "LAS"
+    },
+    "ru_radar_furke4": {
+      "id": "ru_radar_furke4",
+      "name": "5P27 Furke-4",
+      "kind": "Radar",
+      "alt_m": 30,
+      "air_range_nm": 108,
+      "surface_range_nm": 30,
+      "missile_range_nm": 60,
+      "radar_class": "LAS"
+    },
+    "ru_radar_podberezovik": {
+      "id": "ru_radar_podberezovik",
+      "name": "MR-650 Podberezovik T1 (Flat Screen)",
+      "kind": "Radar",
+      "alt_m": 40,
+      "air_range_nm": 270,
+      "surface_range_nm": 25,
+      "missile_range_nm": 120,
+      "radar_class": "LAS"
+    },
+    "ru_sonar_zarya2": {
+      "id": "ru_sonar_zarya2",
+      "name": "Zarya-2 Bow Sonar",
+      "kind": "SonarActive",
+      "alt_m": 0,
+      "sub_range_nm": 3.5
+    },
+    "ru_sonar_amfora": {
+      "id": "ru_sonar_amfora",
+      "name": "MGK-600 Irtysh-Amfora",
+      "kind": "SonarPassive",
+      "alt_m": 0,
+      "sub_range_nm": 6.5
+    }
+  }
+}
