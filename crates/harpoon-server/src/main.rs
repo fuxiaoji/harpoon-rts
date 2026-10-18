@@ -39,6 +39,40 @@ struct AppState {
     game: Arc<Mutex<Game>>,
     scenario_dir: Arc<PathBuf>,
     update_tx: Arc<tokio::sync::broadcast::Sender<()>>,
+    /// Built-in database merged with database/volumes/*.json at startup.
+    db: Arc<Database>,
+}
+
+/// Merge every database/volumes/*.json (underscore-prefixed files skipped)
+/// over the built-in database.
+fn load_volume_database(volumes_dir: &std::path::Path) -> Database {
+    let mut db = Database::built_in();
+    let mut files: Vec<std::path::PathBuf> = std::fs::read_dir(volumes_dir)
+        .map(|rd| {
+            rd.flatten()
+                .map(|e| e.path())
+                .filter(|p| {
+                    p.extension().map(|x| x == "json").unwrap_or(false)
+                        && !p
+                            .file_name()
+                            .map(|n| n.to_string_lossy().starts_with('_'))
+                            .unwrap_or(false)
+                })
+                .collect()
+        })
+        .unwrap_or_default();
+    files.sort();
+    for f in files {
+        match std::fs::read_to_string(&f).map_err(|e| e.to_string()).and_then(|t| Database::from_json(&t).map_err(|e| e.to_string())) {
+            Ok(vol) => {
+                let n = vol.platforms.len();
+                db = db.merged(&vol);
+                eprintln!("db volume: {} (+{} platforms)", f.display(), n);
+            }
+            Err(e) => eprintln!("db volume {f:?} FAILED to load: {e}"),
+        }
+    }
+    db
 }
 
 struct Game {
@@ -177,7 +211,7 @@ async fn new_game(
     if let Some(seed) = req.seed {
         sc.seed = seed;
     }
-    let world = load_scenario(sc, Database::built_in())
+    let world = load_scenario(sc, (*state.db).clone())
         .map_err(|e| (StatusCode::BAD_REQUEST, e))?;
     let tick = world.tick;
     let name = world.scenario_name.clone();
@@ -303,7 +337,23 @@ async fn selfplay_handler(
 }
 
 pub fn run_selfplay(sc: &Scenario, max_ticks: i64) -> serde_json::Value {
-    let mut world = load_scenario(sc.clone(), Database::built_in()).expect("load");
+    SelfplayCtx::ensure().run(sc, max_ticks)
+}
+
+/// Lazily-initialised database for headless rollouts (also picks up volume
+/// overrides so selfplay matches server games).
+pub struct SelfplayCtx {
+    db: Database,
+}
+static SELFPLAY_DB: std::sync::OnceLock<SelfplayCtx> = std::sync::OnceLock::new();
+impl SelfplayCtx {
+    fn ensure() -> &'static SelfplayCtx {
+        SELFPLAY_DB.get_or_init(|| SelfplayCtx {
+            db: load_volume_database(std::path::Path::new("database/volumes")),
+        })
+    }
+    fn run(&self, sc: &Scenario, max_ticks: i64) -> serde_json::Value {
+        let mut world = load_scenario(sc.clone(), self.db.clone()).expect("load");
     let mut blue = ai::HeuristicStaff::new(Side::Blue);
     let mut red = ai::HeuristicStaff::new(Side::Red);
     let digest = AtomicU64::new(0xcbf2_9ce4_8422_2325);
@@ -356,8 +406,9 @@ pub fn run_selfplay(sc: &Scenario, max_ticks: i64) -> serde_json::Value {
         "vp": {"blue": vp_blue, "red": vp_red},
         "state_digest": format!("{:016x}", digest.load(Ordering::Relaxed)),
         "event_counts": event_counts,
-        "entities_alive": world.entities.values().filter(|e| e.alive).count(),
-    })
+            "entities_alive": world.entities.values().filter(|e| e.alive).count(),
+        })
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -442,10 +493,13 @@ async fn main() {
     let start_speed: f64 = arg("--speed", "60").parse().unwrap_or(60.0);
 
     let update_tx = tokio::sync::broadcast::channel(64).0;
+    let volumes_dir = std::path::PathBuf::from("database/volumes");
+    let merged_db = load_volume_database(&volumes_dir);
     let state = AppState {
         game: Arc::new(Mutex::new(Game::new())),
         scenario_dir: scenario_dir.clone(),
         update_tx: Arc::new(update_tx),
+        db: Arc::new(merged_db),
     };
 
     run_loop(state.clone());
