@@ -151,7 +151,7 @@ pub fn update_sensors(world: &mut World) {
 
         // Phase A: strongest detection per enemy entity.
         let mut dets: BTreeMap<EntityId, DetObs> = BTreeMap::new();
-        let mut consider = |world: &World,
+        let consider = |world: &World,
                             o: &Entity,
                             def: &SensorDef,
                             dets: &mut BTreeMap<EntityId, DetObs>| {

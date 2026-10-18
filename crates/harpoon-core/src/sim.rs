@@ -9,7 +9,7 @@ use crate::movement;
 use crate::sensors;
 use crate::types::{PlatformKind, Side};
 use crate::weapons;
-use crate::world::{World, TICK_SECONDS};
+use crate::world::World;
 
 pub fn tick(world: &mut World, commands: &[(Side, Command)]) {
     if world.over {

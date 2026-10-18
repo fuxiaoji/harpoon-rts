@@ -4,7 +4,7 @@
 
 use crate::geom::{angle_diff, normalize_deg, KTS_TO_NM_PER_S};
 use crate::types::{PlatformKind, EntityId};
-use crate::world::{Entity, World, TICK_SECONDS};
+use crate::world::{World, TICK_SECONDS};
 
 pub fn update_movement(world: &mut World) {
     let dt = TICK_SECONDS;
@@ -18,12 +18,11 @@ pub fn update_movement(world: &mut World) {
         let Some(class) = e.class_def(&world.db) else { continue };
         let turn_rate = class.turn_rate_deg_s;
         let accel = class.accel_kts_per_s;
-        let cruise = if class.cruise_speed_kts > 0.0 {
+        let _cruise = if class.cruise_speed_kts > 0.0 {
             class.cruise_speed_kts
         } else {
             class.max_speed_kts * 0.7
         };
-        drop(class);
 
         // Formation station: derive course/speed orders from leader geometry.
         apply_station(world, id, dt);

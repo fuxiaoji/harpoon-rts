@@ -24,7 +24,7 @@ use harpoon_core::observe::{observe, Observation};
 use harpoon_core::scenario::{load_scenario, scenario_from_json, Scenario};
 use harpoon_core::types::Side;
 use harpoon_core::world::World;
-use serde::{Deserialize, Serialize};
+use serde::Deserialize;
 use ai::CommandStaff;
 use serde_json::json;
 use std::collections::HashMap;
@@ -68,7 +68,7 @@ fn run_loop(state: AppState) {
                 let over = g.world.as_ref().map(|w| w.over).unwrap_or(true);
                 if g.speed > 0.0 && !over {
                     g.accumulator += g.speed * 0.1; // 100 ms wall step
-                    let mut n = g.accumulator.floor() as i64;
+                    let n = g.accumulator.floor() as i64;
                     g.accumulator -= n as f64;
                     let n = n.min(MAX_TICKS_PER_STEP);
                     if n > 0 {

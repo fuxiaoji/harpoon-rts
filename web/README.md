@@ -1,0 +1,1 @@
+零构建界面：无需 npm 或打包，直接 `source ~/.cargo/env && cargo run -p harpoon-server -- --port 8799 --scenarios scenarios --web web`，然后浏览器打开 <http://127.0.0.1:8799/> 即可（页面通过 WebSocket `/ws?side=…` 接收态势，连接中断时自动切换为每 500ms 轮询 `/api/state`）。

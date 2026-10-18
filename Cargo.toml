@@ -3,6 +3,8 @@ resolver = "2"
 members = [
     "crates/harpoon-core",
     "crates/harpoon-server",
+    "crates/harpoon-mcp",
+    "crates/harpoon-py",
 ]
 
 [workspace.package]

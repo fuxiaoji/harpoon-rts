@@ -1,0 +1,18 @@
+[package]
+name = "harpoon-py"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "PyO3 bindings + Gym-style RL environment for harpoon-core"
+
+[lib]
+name = "harpoon_py"
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+harpoon-core = { path = "../harpoon-core" }
+serde = { workspace = true }
+serde_json = { workspace = true }
+# 0.30 supports CPython 3.14 (including the 3.14 stable ABI). extension-module
+# leaves the cdylib unlinked from libpython, which is what maturin expects.
+pyo3 = { version = "0.30.1", features = ["extension-module"] }

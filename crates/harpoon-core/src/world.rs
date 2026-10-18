@@ -3,7 +3,7 @@
 //! `&mut World`. Iteration order is always `BTreeMap` order for determinism.
 
 use crate::commands::AirMission;
-use crate::db::{Database, DeckDef, PlatformClass, SensorKind, WeaponDef};
+use crate::db::{Database, PlatformClass, SensorKind, WeaponDef};
 use crate::events::{Event, EventKind, Visibility};
 use crate::geom::Vec2;
 use crate::rng::Rng;

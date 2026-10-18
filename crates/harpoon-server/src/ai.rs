@@ -12,7 +12,7 @@
 //! `harpoon_core::observe`, so no side ever sees enemy truth.
 
 use harpoon_core::commands::{AirMission, Command};
-use harpoon_core::observe::{ContactObs, Observation, UnitObs};
+use harpoon_core::observe::{Observation, UnitObs};
 use harpoon_core::types::{ContactId, EntityId, PlatformKind, Side};
 use serde::{Deserialize, Serialize};
 use serde_json::json;
@@ -184,6 +184,7 @@ fn nearest_contact(
 // ---------------------------------------------------------------------------
 
 pub struct OpenAiCompatStaff {
+    #[allow(dead_code)]
     pub side: Side,
     pub base_url: String,
     pub api_key: String,

@@ -1,0 +1,11 @@
+[package]
+name = "harpoon-mcp"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "MCP (Model Context Protocol) stdio server exposing the harpoon engine"
+
+[dependencies]
+harpoon-core = { path = "../harpoon-core" }
+serde = { workspace = true }
+serde_json = { workspace = true }

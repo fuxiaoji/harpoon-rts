@@ -1,0 +1,28 @@
+[build-system]
+requires = ["maturin>=1.9,<2.0"]
+build-backend = "maturin"
+
+[project]
+name = "harpoon-rl"
+version = "0.1.0"
+description = "PyO3 bindings and Gym-style RL environment for the harpoon-core naval wargame engine"
+readme = "python/harpoon_rl/README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+dependencies = []
+classifiers = [
+    "Programming Language :: Rust",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+]
+
+[tool.maturin]
+module-name = "harpoon_py"
+python-source = "python"
+# module-name's own package plus the Gym wrapper package. Without this,
+# maturin only ships the module-name package in wheels.
+python-packages = ["harpoon_py", "harpoon_rl"]
+exclude = ["python/**/__pycache__/**", "python/**/*.pyc"]

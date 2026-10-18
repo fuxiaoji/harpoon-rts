@@ -5,7 +5,7 @@
 
 use crate::db::WeaponDef;
 use crate::events::{EventKind, Visibility};
-use crate::types::{EntityId, PlatformKind, Side};
+use crate::types::{EntityId, PlatformKind};
 use crate::world::World;
 
 /// Roll damage + criticals for a successful weapon hit on `target`.
@@ -108,8 +108,8 @@ fn bda_to_shooter(
 }
 
 fn roll_critical(world: &mut World, target_id: EntityId, rng: &mut crate::rng::Rng) {
-    let mut system = String::new();
-    let mut side = None;
+    let system;
+    let side;
     {
         let Some(t) = world.entities.get_mut(&target_id) else { return };
         // Weighted subsystem table (flavored from the critical-hit chapters).

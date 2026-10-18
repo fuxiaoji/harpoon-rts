@@ -1,0 +1,6 @@
+# `maturin develop` writes the compiled extension into the mixed-layout
+# Python package in the source tree (editable install).
+python/harpoon_py/*.so
+python/harpoon_py/*.pyd
+python/harpoon_py/*.dylib
+python/harpoon_py/*.dll

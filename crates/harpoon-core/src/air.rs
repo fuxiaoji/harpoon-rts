@@ -391,7 +391,6 @@ fn try_recover(world: &mut World, id: EntityId) {
     e.alive = false;
     e.hp = 0.0;
     e.last_emit_tick = now - 1000;
-    drop(e);
     {
         let c = world.entity_mut(carrier_id).unwrap();
         if let Some(deck) = c.deck.as_mut() {

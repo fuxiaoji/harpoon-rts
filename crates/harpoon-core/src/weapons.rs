@@ -453,7 +453,7 @@ fn fly_toward(e: &mut Entity, aim: Vec2, dt: f64) {
     e.pos = e.pos.advanced(brg, v);
 }
 
-fn runout(world: &World, def: &WeaponDef, data: &crate::world::ProjectileData) -> bool {
+fn runout(_world: &World, def: &WeaponDef, data: &crate::world::ProjectileData) -> bool {
     let range_time_s = if def.speed_kts > 0.0 {
         def.range_nm / def.speed_kts * 3600.0
     } else {
@@ -527,7 +527,6 @@ fn advance_sea_skimmer(world: &mut World, id: EntityId, def: WeaponDef, mut data
             t.chaff -= 1;
             t.chaff_active_s = 30.0;
             let tside = t.side;
-            drop(t);
             sensors::chaff_breaks_lock(world, target_id);
             world.emit(
                 EventKind::ChaffDeployed { side: tside, unit: target_id },
@@ -756,7 +755,6 @@ fn advance_torpedo(world: &mut World, id: EntityId, def: WeaponDef, mut data: cr
                 let t = world.entity_mut(target_id).unwrap();
                 t.decoys -= 1;
                 let tside = t.side;
-                drop(t);
                 data.decoyed = true;
                 let tpos = target.pos;
                 data.decoy_point = Some(tpos.advanced(rng.cone_deg(target.course_deg, 170.0), 1.2));
