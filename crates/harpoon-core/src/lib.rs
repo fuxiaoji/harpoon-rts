@@ -21,6 +21,7 @@ pub mod events;
 pub mod geom;
 pub mod movement;
 pub mod observe;
+pub mod rules;
 pub mod rng;
 pub mod scenario;
 pub mod sensors;

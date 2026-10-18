@@ -33,6 +33,10 @@ pub struct WeaponDef {
     // Infrared seeker: immune to radar chaff.
     #[serde(default)]
     pub ir: bool,
+    /// SAM directors: simultaneous engagements this system can prosecute
+    /// (rules §8.4). 0 = unlimited (default).
+    #[serde(default)]
+    pub directors: u8,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -135,6 +139,8 @@ pub enum SensorKind {
     Esm,
     SonarPassive,
     SonarActive,
+    /// Magnetic anomaly detection (ASW aircraft/helo, very short range).
+    Magnetic,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -231,8 +237,13 @@ pub enum DbError {
 
 impl Database {
     pub fn built_in() -> Database {
-        let db: Database =
+        let mut db: Database =
             serde_json::from_str(crate::db_data::BUILT_IN).expect("built-in database must parse");
+        // Rules-extension layers (aaw/asw/aircombat/damage/strike) may add
+        // platforms, weapons, and sensors on top of the canonical set.
+        for extra in crate::rules::database_extras() {
+            db = db.merged(&extra);
+        }
         db.validate()
             .expect("built-in database must be internally consistent");
         db

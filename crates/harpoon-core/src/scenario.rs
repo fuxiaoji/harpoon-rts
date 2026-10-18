@@ -183,6 +183,7 @@ pub fn load_scenario(sc: Scenario, db: Database) -> Result<World, String> {
             },
             burn_s: 0.0,
             flooding_s: 0.0,
+            ext: Default::default(),
             deck,
             mission: None,
             station: None,

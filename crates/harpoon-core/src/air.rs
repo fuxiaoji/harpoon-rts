@@ -135,6 +135,7 @@ pub fn launch_aircraft(
             endurance_s: Some(ac_class.endurance_s),
             burn_s: 0.0,
             flooding_s: 0.0,
+            ext: Default::default(),
             deck: None,
             mission: Some(MissionState::from_air_mission(mission)),
             station: None,

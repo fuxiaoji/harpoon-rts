@@ -33,6 +33,11 @@ fn range_for_target(def: &SensorDef, kind: PlatformKind) -> f64 {
     }
 }
 
+/// Sonar propagation hook owned by rules::asw (layer physics).
+fn propagation_modifier(o: &Entity, t: &Entity) -> f64 {
+    crate::rules::asw::propagation_modifier(o, t)
+}
+
 fn is_radar_sensor(sensor_id: &str) -> bool {
     sensor_id.starts_with("radar")
 }
@@ -102,7 +107,9 @@ fn effective_range(
             }
             let noise = target_class(t).map(|c| c.noise_db / 50.0).unwrap_or(1.0);
             match t.kind {
-                PlatformKind::Sub => base * speed_factor * noise,
+                PlatformKind::Sub => {
+                    base * speed_factor * noise * propagation_modifier(o, t)
+                }
                 PlatformKind::Ship => base * 0.35 * speed_factor * noise,
                 _ => return None,
             }
@@ -112,10 +119,17 @@ fn effective_range(
                 return None;
             }
             match t.kind {
-                PlatformKind::Sub => base * 0.75,
+                PlatformKind::Sub => base * 0.75 * propagation_modifier(o, t),
                 PlatformKind::Ship => base * 1.2,
                 _ => return None,
             }
+        }
+        SensorKind::Magnetic => {
+            // MAD: only near-surface submarines, very short range.
+            if t.kind != PlatformKind::Sub || t.depth_m > 60.0 {
+                return None;
+            }
+            base.min(def.sub_range_nm) * 0.5
         }
     };
     if eff <= 0.0 {
@@ -211,6 +225,14 @@ pub fn update_sensors(world: &mut World) {
                         true_bearing_deg: o.pos.bearing_to(t.pos),
                         bearing_only: false,
                         err_base_nm: 0.8,
+                        quality_cap: 1.0,
+                    },
+                    SensorKind::Magnetic => DetObs {
+                        sensor: def.id.clone(),
+                        observer_pos: o.pos,
+                        true_bearing_deg: o.pos.bearing_to(t.pos),
+                        bearing_only: false,
+                        err_base_nm: 0.4,
                         quality_cap: 1.0,
                     },
                 };

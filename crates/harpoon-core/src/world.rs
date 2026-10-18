@@ -172,6 +172,10 @@ pub struct Entity {
     /// Seconds of flooding damage remaining (drains HP faster than fire).
     #[serde(default)]
     pub flooding_s: f64,
+    /// Rules-extension scratch state (damage control, battery, maneuver
+    /// levels, ...). Keys are owned by the corresponding rules::* module.
+    #[serde(default)]
+    pub ext: std::collections::BTreeMap<String, f64>,
     #[serde(default)]
     pub deck: Option<DeckState>,
     #[serde(default)]

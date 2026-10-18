@@ -174,6 +174,18 @@ pub enum EventKind {
         base_name: String,
     },
 
+    // --- rules extensions (generic carrier; `rule` is domain-qualified) ---
+    RulesEvent {
+        /// Owning domain, e.g. "aaw", "asw", "aircombat", "damage".
+        domain: String,
+        /// Short rule slug, e.g. "air_burst", "sonobuoy_active", "dogfight_pass".
+        rule: String,
+        side: Option<Side>,
+        unit: Option<EntityId>,
+        contact: Option<ContactId>,
+        detail: String,
+    },
+
     // --- victory ---
     ScenarioEnded {
         winner: Option<Side>,
@@ -210,6 +222,7 @@ impl EventKind {
             EventKind::DeckBusy { .. } => "deck_busy",
             EventKind::BaseDamaged { .. } => "base_damaged",
             EventKind::BaseDestroyed { .. } => "base_destroyed",
+            EventKind::RulesEvent { .. } => "rules_event",
             EventKind::ScenarioEnded { .. } => "scenario_ended",
         }
     }

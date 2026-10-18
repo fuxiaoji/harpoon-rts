@@ -347,6 +347,7 @@ pub fn launch(
         endurance_s: None,
         burn_s: 0.0,
         flooding_s: 0.0,
+            ext: Default::default(),
         deck: None,
         mission: None,
         station: None,
@@ -597,11 +598,15 @@ fn advance_sea_skimmer(world: &mut World, id: EntityId, def: WeaponDef, mut data
                 if rng.chance(ciws_pk) {
                     let defender = target.side;
                     let contact = world.find_contact(defender, id);
+                    let burst_range = dist;
                     remove_projectile(world, id);
                     world.emit(
                         EventKind::Intercept { side: defender, contact, intercepted: true },
                         Visibility::Side(defender),
                     );
+                    // Three-second rule: intercept fragments may air-burst
+                    // over the defender (rules §8.1.5, AAW workstream).
+                    crate::rules::aaw::on_intercept(world, target_id, burst_range);
                     return;
                 }
             }
@@ -701,11 +706,18 @@ fn advance_homing_air(world: &mut World, id: EntityId, def: WeaponDef, mut data:
         let defender = target.side;
         let contact = world.find_contact(defender, id);
         if hit {
-            damage::apply_hit(world, target_id, &def, false);
+            let burst_range = dist;
+            remove_projectile(world, id);
+            world.emit(
+                EventKind::Intercept { side: defender, contact, intercepted: true },
+                Visibility::Side(defender),
+            );
+            crate::rules::aaw::on_intercept(world, target_id, burst_range);
+            return;
         }
         remove_projectile(world, id);
         world.emit(
-            EventKind::Intercept { side: defender, contact, intercepted: hit },
+            EventKind::Intercept { side: defender, contact, intercepted: false },
             Visibility::Side(defender),
         );
         return;

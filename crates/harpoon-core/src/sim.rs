@@ -20,6 +20,7 @@ pub fn tick(world: &mut World, commands: &[(Side, Command)]) {
     process_commands(world, commands);
     movement::update_movement(world);
     air::update_air_ops(world);
+    crate::rules::step(world);
     weapons::update_weapons(world);
     damage::update_fires(world);
     sensors::update_sensors(world);
