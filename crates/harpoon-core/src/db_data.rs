@@ -177,13 +177,13 @@ pub const BUILT_IN: &str = r#"{
       "id": "sam_long", "name": "Long-Range SAM", "kind": "Sam",
       "targets": {"air": true, "missile": true},
       "range_nm": 70, "min_range_nm": 2, "speed_kts": 2000, "pk": 0.55, "salvo": 2,
-      "reload_s": 7, "damage": 30, "guidance": "HomingAir"
+      "reload_s": 7, "damage": 30, "guidance": "HomingAir", "directors": 4
     },
     "sam_point": {
       "id": "sam_point", "name": "Point-Defense SAM", "kind": "Sam",
       "targets": {"air": true, "missile": true},
       "range_nm": 14, "min_range_nm": 0.3, "speed_kts": 1500, "pk": 0.42, "salvo": 1,
-      "reload_s": 4, "damage": 25, "guidance": "HomingAir"
+      "reload_s": 4, "damage": 25, "guidance": "HomingAir", "directors": 2
     },
     "aam_ir": {
       "id": "aam_ir", "name": "IR AAM", "kind": "Aam", "ir": true,

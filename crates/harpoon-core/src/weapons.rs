@@ -105,9 +105,13 @@ pub fn fire_control_scan(world: &mut World) {
             let engaged = match def.kind {
                 WeaponKind::Ciws => false, // CIWS engages inside the terminal chain
                 WeaponKind::Gun => {
+                    // AA-capable guns may engage aircraft (§8.1.3, PDF p. 83).
+                    // The `targets` gate above already rejects aircraft for
+                    // guns without `air: true`; missiles remain in the CIWS
+                    // terminal chain and subs are not gun targets.
                     dist <= def.range_nm
                         && dist >= def.min_range_nm
-                        && !matches!(target_kind, PlatformKind::Aircraft | PlatformKind::Missile | PlatformKind::Sub)
+                        && !matches!(target_kind, PlatformKind::Missile | PlatformKind::Sub)
                 }
                 WeaponKind::Sam | WeaponKind::Aam => {
                     matches!(target_kind, PlatformKind::Aircraft | PlatformKind::Missile)
@@ -137,7 +141,23 @@ pub fn fire_control_scan(world: &mut World) {
                     gun_salvo(world, shooter.id, contact_id, target_id, &def, salvo);
                 }
                 WeaponKind::Sam | WeaponKind::Aam => {
-                    let salvo = def.salvo;
+                    let mut salvo = def.salvo;
+                    if def.kind == WeaponKind::Sam && def.directors > 0 {
+                        // SAM fire-control channels (§6.1 SAM Salvo Summary;
+                        // §8.1.1 step 8, PDF p. 81): each director controls
+                        // one engagement of up to `salvo` missiles, so the
+                        // ship can keep `directors × salvo` rounds in flight.
+                        // Count this mount's live projectiles as the
+                        // referee's channel occupancy.
+                        let capacity = def.directors as usize * def.salvo.max(1) as usize;
+                        let in_flight = in_flight_projectiles(world, shooter.id, &def.id);
+                        if in_flight >= capacity {
+                            continue; // channels full: try another mount
+                        }
+                        // Clamp to free channels; the result is <= salvo <= u8.
+                        let available = (capacity - in_flight).min(salvo as usize);
+                        salvo = available as u8;
+                    }
                     for _ in 0..salvo {
                         launch(world, shooter.id, &def, Some(target_id), None);
                     }
@@ -184,6 +204,24 @@ fn salvo_or(def: &WeaponDef, fallback: u16) -> u16 {
         WeaponKind::Gun => def.salvo as u16,
         _ => fallback,
     }
+}
+
+/// Live projectiles of one weapon type this shooter still has in flight.
+/// SAM director channels count these to cap simultaneous engagements
+/// (§6.1 / §8.1.1 step 8: one engagement = `salvo` missiles per director).
+fn in_flight_projectiles(world: &World, shooter: EntityId, weapon_id: &str) -> usize {
+    world
+        .entities
+        .values()
+        .filter(|p| {
+            p.alive
+                && p.kind == PlatformKind::Missile
+                && p.projectile
+                    .as_ref()
+                    .map(|d| d.launched_by == shooter && d.weapon == weapon_id)
+                    .unwrap_or(false)
+        })
+        .count()
 }
 
 pub fn resolve_contact(world: &World, side: Side, cid: ContactId) -> Option<EntityId> {
@@ -233,33 +271,48 @@ fn gun_salvo(
 ) {
     let shooter_name = world.entity(shooter_id).map(|e| e.name.clone()).unwrap_or_default();
     let side = world.entity(shooter_id).map(|e| e.side).unwrap_or(Side::Blue);
-    let (dist, aspect_mult) = world
+    let (dist, rel_deg) = world
         .entity(shooter_id)
         .zip(world.entity(target_id))
         .map(|(s, t)| {
             let bearing_from_target = t.pos.bearing_to(s.pos);
             let rel = crate::geom::angle_diff(t.course_deg, bearing_from_target).abs();
-            // Official range-band base hit rates (75/55/25/15%) with bearing
-            // as an additive penalty, approximated multiplicatively.
-            let band = if (45.0..=135.0).contains(&rel) {
-                1.00 // beam: no penalty
-            } else if (20.0..45.0).contains(&rel) || (135.0..160.0).contains(&rel) {
-                0.90 // quarter: ~-1 on D100
-            } else {
-                0.80 // bow/stern on: ~-2..-4
-            };
-            (s.pos.range_to(t.pos), band)
+            (s.pos.range_to(t.pos), rel)
         })
-        .unwrap_or((f64::MAX, 1.0));
-    let range_frac = dist / def.range_nm.max(1.0);
-    let range_base = if range_frac <= 0.25 {
-        0.75
-    } else if range_frac <= 0.5 {
-        0.55
-    } else if range_frac <= 0.75 {
-        0.25
+        .unwrap_or((f64::MAX, 180.0));
+    let target_is_air = world
+        .entity(target_id)
+        .map(|t| t.kind == PlatformKind::Aircraft)
+        .unwrap_or(false);
+    let (range_base, aspect_mult) = if target_is_air {
+        // AA gunnery path (§8.1.3, PDF pp. 83-84): dedicated range bands and
+        // Crossing Target Table aspect. A crossing aircraft is the hardest
+        // shot, the inverse of the surface beam-on bonus below.
+        (
+            crate::rules::aaw::aa_gun_range_base(dist, def.range_nm),
+            crate::rules::aaw::aa_gun_aspect_mult(rel_deg, dist),
+        )
     } else {
-        0.15
+        let range_frac = dist / def.range_nm.max(1.0);
+        let range_base = if range_frac <= 0.25 {
+            0.75
+        } else if range_frac <= 0.5 {
+            0.55
+        } else if range_frac <= 0.75 {
+            0.25
+        } else {
+            0.15
+        };
+        // Official range-band base hit rates (75/55/25/15%) with bearing
+        // as an additive penalty, approximated multiplicatively.
+        let band = if (45.0..=135.0).contains(&rel_deg) {
+            1.00 // beam: no penalty
+        } else if (20.0..45.0).contains(&rel_deg) || (135.0..160.0).contains(&rel_deg) {
+            0.90 // quarter: ~-1 on D100
+        } else {
+            0.80 // bow/stern on: ~-2..-4
+        };
+        (range_base, band)
     };
     let pk = range_base * def.pk * aspect_mult;
     let mut rng = world.scope_rng(shooter_id, "gun");
