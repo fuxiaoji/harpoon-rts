@@ -33,6 +33,16 @@ fn range_for_target(def: &SensorDef, kind: PlatformKind) -> f64 {
     }
 }
 
+/// Radar-generation / weather-clutter hook owned by rules::sensing (§5.2/§5.5).
+fn sensing_radar_modifier(def: &SensorDef, t: &Entity) -> f64 {
+    crate::rules::sensing::radar_type_modifier(def, t)
+}
+
+/// Visual/EO-IR conditions hook (cloud, rain, dusk) owned by rules::sensing.
+fn sensing_visual_modifier(o: &Entity, t: &Entity) -> f64 {
+    crate::rules::sensing::visual_modifier(o, t)
+}
+
 /// Sonar propagation hook owned by rules::asw (layer physics).
 fn propagation_modifier(o: &Entity, t: &Entity) -> f64 {
     crate::rules::asw::propagation_modifier(o, t)
@@ -67,6 +77,7 @@ fn effective_range(
             let rcs = target_class(t).map(|c| c.rcs.factor()).unwrap_or(1.0);
             let horizon = horizon_nm(def.alt_m, t.current_alt_for_horizon());
             (base * rcs).min(horizon) * (1.0 - weather_jam.clamp(0.0, 0.8))
+                * sensing_radar_modifier(def, t)
         }
         SensorKind::Esm => {
             // ESM hears emitters only: radar-carrying platforms and live
@@ -93,7 +104,16 @@ fn effective_range(
             };
             let horizon = horizon_nm(def.alt_m, t.current_alt_for_horizon());
             let visual_factor = target_class(t).map(|c| c.visual_factor).unwrap_or(1.0);
-            (base * visual_factor * vis).min(horizon)
+            (base * visual_factor * vis).min(horizon) * sensing_visual_modifier(o, t)
+        }
+        SensorKind::Ir => {
+            // EO/IR: horizon-limited imaging; strong against heat emitters
+            // (aircraft at speed), degraded by weather (hook in rules::sensing).
+            if t.kind != PlatformKind::Aircraft && t.kind != PlatformKind::Missile {
+                return None;
+            }
+            let horizon = horizon_nm(def.alt_m, t.current_alt_for_horizon());
+            base.min(horizon) * sensing_visual_modifier(o, t)
         }
         SensorKind::SonarPassive => {
             if o.systems.sonar <= 0.05 {
@@ -234,6 +254,14 @@ pub fn update_sensors(world: &mut World) {
                         bearing_only: false,
                         err_base_nm: 0.4,
                         quality_cap: 1.0,
+                    },
+                    SensorKind::Ir => DetObs {
+                        sensor: def.id.clone(),
+                        observer_pos: o.pos,
+                        true_bearing_deg: o.pos.bearing_to(t.pos),
+                        bearing_only: false,
+                        err_base_nm: 0.5,
+                        quality_cap: 0.95,
                     },
                 };
                 let better = match dets.get(&t.id) {

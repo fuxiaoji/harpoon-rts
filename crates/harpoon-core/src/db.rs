@@ -50,6 +50,10 @@ pub enum WeaponKind {
     Torpedo,
     Lwt,
     AswRocket,
+    /// Free-fall bomb (unguided air attack, §9.6).
+    Bomb,
+    /// Unguided rocket (air/boat launched, §9.6).
+    Rocket,
 }
 
 impl WeaponKind {
@@ -126,6 +130,10 @@ pub struct SensorDef {
     /// Mount height in meters; bounds radar/visual by the horizon.
     #[serde(default = "default_alt")]
     pub alt_m: f64,
+    /// Radar generation class for LAS/SS doctrine (§5.2.4/5.2.5):
+    /// "LAS" = long-range air search, "SS" = surface search, "" = n/a.
+    #[serde(default)]
+    pub radar_class: String,
 }
 
 fn default_alt() -> f64 {
@@ -141,6 +149,8 @@ pub enum SensorKind {
     SonarActive,
     /// Magnetic anomaly detection (ASW aircraft/helo, very short range).
     Magnetic,
+    /// Electro-optical / infrared imaging (aircraft, ships' IRST).
+    Ir,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]

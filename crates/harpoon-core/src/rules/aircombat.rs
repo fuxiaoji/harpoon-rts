@@ -637,7 +637,7 @@ mod tests {
             name: "Aircombat Duel".into(),
             description: String::new(),
             duration_s: 3600,
-            weather: Weather { visibility_nm: 30.0, jam: [0.0, 0.0] },
+            weather: Weather { visibility_nm: 30.0, jam: [0.0, 0.0], overcast: 0.0, rain: 0.0 },
             day_night: DayNight::Day,
             seed,
             victory: Default::default(),

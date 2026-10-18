@@ -597,7 +597,7 @@ mod tests {
             name: "ASW test".into(),
             description: String::new(),
             duration_s: 40_000,
-            weather: Weather { visibility_nm: 12.0, jam: [0.0, 0.0] },
+            weather: Weather { visibility_nm: 12.0, jam: [0.0, 0.0], overcast: 0.0, rain: 0.0 },
             day_night: DayNight::Day,
             seed: 7,
             victory: Default::default(),
@@ -1005,6 +1005,7 @@ mod tests {
         w.db.sensors.insert(
             "mad_test".into(),
             SensorDef {
+                radar_class: String::new(),
                 id: "mad_test".into(),
                 name: "Test MAD".into(),
                 kind: SensorKind::Magnetic,

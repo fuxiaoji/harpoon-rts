@@ -51,7 +51,7 @@ mod tests {
             name: "Mini".into(),
             description: String::new(),
             duration_s: 600,
-            weather: world::Weather { visibility_nm: 12.0, jam: [0.0, 0.0] },
+            weather: world::Weather { visibility_nm: 12.0, jam: [0.0, 0.0], overcast: 0.0, rain: 0.0 },
             day_night: DayNight::Day,
             seed: 20251017,
             victory: Default::default(),

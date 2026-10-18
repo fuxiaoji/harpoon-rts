@@ -25,6 +25,12 @@ pub struct Weather {
     /// Radar jamming factor per side: 0 = clear, 0.8 = heavy. Applied as a
     /// multiplier on that side's radar effective ranges.
     pub jam: [f64; 2],
+    /// Overcast fraction 0..1 (cloud base/clutter, rules §5.5).
+    #[serde(default)]
+    pub overcast: f64,
+    /// Rain intensity fraction 0..1 (radar clutter + visual degradation).
+    #[serde(default)]
+    pub rain: f64,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]

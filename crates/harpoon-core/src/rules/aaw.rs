@@ -359,6 +359,8 @@ mod tests {
             weather: Weather {
                 visibility_nm: 20.0,
                 jam: [0.0, 0.0],
+                overcast: 0.0,
+                rain: 0.0,
             },
             day_night: DayNight::Day,
             seed: 20261018,

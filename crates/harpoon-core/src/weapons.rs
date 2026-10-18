@@ -40,6 +40,7 @@ struct ShooterCtx {
     id: EntityId,
     side: Side,
     pos: Vec2,
+    altitude_m: f64,
     fire_on: bool,
     assigned: Option<ContactId>,
 }
@@ -58,6 +59,7 @@ pub fn fire_control_scan(world: &mut World) {
             id: e.id,
             side: e.side,
             pos: e.pos,
+            altitude_m: e.altitude_m,
             fire_on: e.fire_on,
             assigned: e.assigned,
         })
@@ -102,6 +104,7 @@ pub fn fire_control_scan(world: &mut World) {
                 continue;
             }
             let dist = shooter.pos.range_to(world.entity(target_id).map(|t| t.pos).unwrap_or_default());
+            let shooter_alt_m = shooter.altitude_m;
             let engaged = match def.kind {
                 WeaponKind::Ciws => false, // CIWS engages inside the terminal chain
                 WeaponKind::Gun => {
@@ -129,6 +132,12 @@ pub fn fire_control_scan(world: &mut World) {
                 }
                 WeaponKind::AswRocket => {
                     target_kind == PlatformKind::Sub && dist <= def.range_nm
+                }
+                WeaponKind::Bomb | WeaponKind::Rocket => {
+                    // Unguided air attack (§9.6): release from a low pass.
+                    matches!(target_kind, PlatformKind::Ship | PlatformKind::Base)
+                        && dist <= def.range_nm
+                        && shooter_alt_m < 900.0
                 }
             };
             if !engaged {
@@ -185,6 +194,10 @@ pub fn fire_control_scan(world: &mut World) {
                     for _ in 0..salvo {
                         launch(world, shooter.id, &def, Some(target_id), None);
                     }
+                }
+                WeaponKind::Bomb | WeaponKind::Rocket => {
+                    let salvo = def.salvo.max(mounts_n.min(2));
+                    gun_salvo(world, shooter.id, contact_id, target_id, &def, salvo);
                 }
                 WeaponKind::Ciws => unreachable!(),
             }
@@ -843,10 +856,12 @@ fn advance_torpedo(world: &mut World, id: EntityId, def: WeaponDef, mut data: cr
     }
 
     if data.passes == 1 {
-        // Evasion: target may drop a decoy once inside 1.2 nm.
+        // Evasion: target may drop a decoy once inside 1.2 nm. Seeker
+        // generation (rules::torpedoes) modulates the seduction chance.
         if dist < 1.2 && target.decoys > 0 {
             let mut rng = world.scope_rng(id, "torp_decoy");
-            if rng.chance(0.55) {
+            let seduce_p = crate::rules::torpedoes::decoy_resistance(&def) * 0.55;
+            if rng.chance(seduce_p) {
                 let t = world.entity_mut(target_id).unwrap();
                 t.decoys -= 1;
                 let tside = t.side;
