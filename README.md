@@ -19,7 +19,7 @@
   DP/SDPS 量级标定、舰炮射界带、被动声纳航速-噪声关系。逐条改编见
   [docs/design/adaptations.md](docs/design/adaptations.md)，独立规则合规审计见
   [docs/compliance/rules-audit-001.md](docs/compliance/rules-audit-001.md)。
-- **游戏内 AI 参谋**：右侧“AI 参谋 / AGENT”面板可启用 DeepSeek Flash 等模型参谋。每回合只接收与玩家相同的双盲 `Observation`，具备长期记忆、每 5 分钟模拟时间主动汇报、对话、建议/执行两种自主度；所有命令仍由引擎按己方单位、接触、武器和甲板状态二次校验。支持独立双 Agent 完整对局。见[游戏内 AI 参谋与双 Agent 对局](docs/agent-assistant.md)。
+- **游戏内 AI 参谋**：右侧“AI 参谋 / AGENT”面板可启用 DeepSeek Flash 等模型参谋。每回合只接收与玩家相同的双盲 `Observation`，具备长期记忆、每 5 分钟模拟时间主动汇报、对话、建议/执行两种自主度；可开启服务端自动推进（1–60×，速度由玩家选择），并常驻显示战果/损失、弹出击杀/损失/重损卡和终局结算。所有命令仍由引擎按己方单位、接触、武器和甲板状态二次校验。支持独立双 Agent 完整对局。见[游戏内 AI 参谋与双 Agent 对局](docs/agent-assistant.md)。
 - **预留接口**：
   - AI 接口：`CommandStaff` trait + 启发式参谋 + OpenAI 兼容 LLM 提供方
     （`HARPOON_LLM_BASE_URL/API_KEY/MODEL`，DeepSeek/GLM/vLLM/Ollama 均可）
