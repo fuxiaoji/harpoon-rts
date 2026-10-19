@@ -182,6 +182,8 @@ struct SideAgent {
     last_error: Option<String>,
     last_turn_tick: Option<i64>,
     usage: UsageStats,
+    auto_run: bool,
+    auto_speed: f64,
 }
 
 impl SideAgent {
@@ -197,6 +199,8 @@ impl SideAgent {
             last_error: None,
             last_turn_tick: None,
             usage: UsageStats::default(),
+            auto_run: false,
+            auto_speed: 15.0,
         }
     }
 }
@@ -310,6 +314,22 @@ impl Runtime {
 
     pub(crate) fn generation(&self) -> u64 {
         self.inner.lock().unwrap().generation
+    }
+
+    /// The server-side autopilot speed requested by an enabled side. The
+    /// browser does not need to stay open for time to advance.
+    pub(crate) fn auto_run_speed(&self) -> Option<f64> {
+        let inner = self.inner.lock().unwrap();
+        if !inner.settings.configured() {
+            return None;
+        }
+        for side in [Side::Blue, Side::Red] {
+            let slot = &inner.sides[side.index()];
+            if slot.enabled && slot.auto_run && slot.auto_speed > 0.0 {
+                return Some(slot.auto_speed);
+            }
+        }
+        None
     }
 
     pub fn due_sides(&self, tick: i64) -> Vec<Side> {
@@ -536,7 +556,25 @@ impl Runtime {
                 }
                 if !enabled {
                     slot.next_report_tick = i64::MAX;
+                    slot.auto_run = false;
                 }
+            }
+        }
+        if let Some(v) = req.auto_speed {
+            if !(1.0..=60.0).contains(&v) {
+                return Err("auto_speed must be between 1 and 60".into());
+            }
+            for side in &target_sides {
+                inner.sides[side.index()].auto_speed = v;
+            }
+        }
+        if let Some(auto) = req.auto_run {
+            for side in &target_sides {
+                let slot = &mut inner.sides[side.index()];
+                if auto && !slot.enabled {
+                    return Err("enable the agent before enabling auto-run".into());
+                }
+                slot.auto_run = auto;
             }
         }
         inner.current_tick = current_tick;
@@ -697,6 +735,8 @@ impl Inner {
             "last_error": slot.last_error,
             "memory": slot.memory.summary,
             "memory_turns": slot.memory.turns.len(),
+            "auto_run": slot.auto_run,
+            "auto_speed": slot.auto_speed,
             "usage": slot.usage.value(),
             "reports": reports,
             "last_proposals": slot.last_proposals,
@@ -717,6 +757,8 @@ pub struct AgentConfigReq {
     pub autonomy: Option<String>,
     pub cadence_s: Option<i64>,
     pub max_tokens: Option<u32>,
+    pub auto_run: Option<bool>,
+    pub auto_speed: Option<f64>,
     pub model: Option<String>,
     pub base_url: Option<String>,
     pub api_key: Option<String>,
@@ -2245,6 +2287,8 @@ mod tests {
                     autonomy: Some("execute".into()),
                     cadence_s: Some(300),
                     max_tokens: Some(65_536),
+                    auto_run: Some(true),
+                    auto_speed: Some(15.0),
                     model: None,
                     base_url: None,
                     api_key: None,
@@ -2253,6 +2297,7 @@ mod tests {
                 0,
             )
             .unwrap();
+        assert_eq!(runtime.auto_run_speed(), Some(15.0));
         assert_eq!(runtime.due_sides(0), Vec::<Side>::new());
         assert_eq!(runtime.due_sides(1), vec![Side::Blue]);
         let ctx = runtime.prepare_turn(Side::Blue, "scheduled", 1).unwrap();
@@ -2290,6 +2335,25 @@ mod tests {
         // replayed immediately. The next report is one cadence later.
         assert_eq!(runtime.due_sides(1199), Vec::<Side>::new());
         assert_eq!(runtime.due_sides(1200), vec![Side::Blue]);
+        runtime
+            .set_config(
+                &AgentConfigReq {
+                    side: Some("Blue".into()),
+                    enabled: Some(false),
+                    autonomy: None,
+                    cadence_s: None,
+                    max_tokens: None,
+                    auto_run: None,
+                    auto_speed: None,
+                    model: None,
+                    base_url: None,
+                    api_key: None,
+                    language: None,
+                },
+                1200,
+            )
+            .unwrap();
+        assert_eq!(runtime.auto_run_speed(), None);
         let _ = std::fs::remove_file(memory_path(&scenario, 7, Side::Blue));
     }
 

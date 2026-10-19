@@ -121,6 +121,12 @@ fn run_loop(state: AppState) {
             let work: Option<(i64, Vec<(Side, Command)>)> = {
                 let mut g = state.game.lock().unwrap();
                 let over = g.world.as_ref().map(|w| w.over).unwrap_or(true);
+                if !over && g.training.is_none() && g.speed <= 0.0 {
+                    if let Some(speed) = state.agents.auto_run_speed() {
+                        g.speed = speed;
+                        g.accumulator = 0.0;
+                    }
+                }
                 if g.speed > 0.0 && !over {
                     g.accumulator += g.speed * 0.1; // 100 ms wall step
                     let n = g.accumulator.floor() as i64;
