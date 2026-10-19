@@ -209,6 +209,19 @@
       "automated_side": null,
       "satellite": true
     },
+    "fleet_decisive_3h": {
+      "file": "fleet_decisive_3h.json",
+      "source_sha256": "5027e97338a13020bccec7786b533bc509ae75c2a13a4eac1606aa0f8f9c8d92",
+      "duration_s": 10800,
+      "seed": 20261019,
+      "initial_units": 34,
+      "sides": {
+        "Blue": 18,
+        "Red": 16
+      },
+      "automated_side": null,
+      "satellite": true
+    },
     "gunnery_dual": {
       "file": "gunnery_dual.json",
       "source_sha256": "240dc9e545ac38b49d59d9d6aeb6b0a4b06a975ade3e8d5c9519694180c46d64",

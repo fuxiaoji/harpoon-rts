@@ -9,6 +9,21 @@ test('launch always starts paused and resolves public id to actual scenario file
   assert.deepEqual(M.gameRequest({id:'tattletail_1991',file:'tattletail.json'}),{scenario:'tattletail',speed:0});
   assert.deepEqual(M.gameRequest({file:'dual_carrier_hotseat.json'},'0'),{scenario:'dual_carrier_hotseat',speed:0,seed:0});
 });
+test('AI opponent and assistant modes produce strict-double-blind match configs',()=>{
+  assert.deepEqual(M.agentMatchConfigs({agentOpponent:true,assistantMode:'semi',matchSpeed:30}),[
+    {side:'Red',enabled:true,autonomy:'execute',auto_run:false,auto_speed:30},
+    {side:'Blue',enabled:true,autonomy:'advise',auto_run:false,auto_speed:30}
+  ]);
+  assert.deepEqual(M.agentMatchConfigs({agentOpponent:true,assistantMode:'full',matchSpeed:60}),[
+    {side:'Red',enabled:true,autonomy:'execute',auto_run:true,auto_speed:60},
+    {side:'Blue',enabled:true,autonomy:'execute',auto_run:true,auto_speed:60}
+  ]);
+  assert.deepEqual(M.agentMatchConfigs({agentOpponent:false,assistantMode:'off',matchSpeed:15}),[]);
+  assert.equal(M.agentMatchConfigs({assistantMode:'full',matchSpeed:1})[0].auto_speed,5);
+  assert.equal(M.agentMatchStartsAtSpeed({agentOpponent:true,assistantMode:'semi'}),true);
+  assert.equal(M.agentMatchStartsAtSpeed({agentOpponent:false,assistantMode:'semi'}),false);
+  assert.equal(M.agentMatchStartsAtSpeed({agentOpponent:false,assistantMode:'full'}),true);
+});
 test('optional seeds preserve exact integers and reject truncation or precision loss',()=>{
   assert.equal(M.seedValue(''),undefined);assert.equal(M.seedValue(' 42 '),42);
   assert.equal(M.seedValue('9007199254740991'),Number.MAX_SAFE_INTEGER);

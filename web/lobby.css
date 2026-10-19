@@ -19,3 +19,8 @@
   .feature-content{padding:26px}.theater-feature{min-height:320px}
   .home-bottom{margin-top:20px}.lobby-footer{margin-top:20px;padding-top:10px}
 }
+.agent-setup{margin:4px 0 18px;padding:14px;border:1px solid var(--line);background:#071a26}
+.agent-setup .agent-check{display:flex;align-items:center;gap:9px;font-size:13px;color:var(--text);margin-bottom:12px}
+.agent-setup input[type=checkbox]{width:17px;height:17px;accent-color:var(--gold)}
+.agent-setup select{min-width:190px}
+.agent-setup .agent-note{display:block;margin:8px 0 14px;color:var(--soft);font-size:11px;line-height:1.7}
