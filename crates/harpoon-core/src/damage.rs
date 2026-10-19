@@ -564,6 +564,9 @@ pub fn sink(world: &mut World, target_id: EntityId) {
         t.hp = 0.0;
         t.last_emit_tick = world.tick; // death timestamp for cleanup linger
     }
+    if !t.kind.is_projectile() {
+        world.losses[t.side.index()] += 1;
+    }
 
     // Aircraft ditch / shoot-down reporting is handled by air.rs for its own
     // flows; this path covers ships, subs, bases, and kinetic kills.
@@ -615,11 +618,17 @@ pub fn sink(world: &mut World, target_id: EntityId) {
             }
         }
     }
+    let had_confirmed_contact = !sank_contacts.is_empty();
     for cid in sank_contacts {
         world.emit(
             EventKind::ContactSank { side: enemy, contact: cid },
             Visibility::Side(enemy),
         );
+    }
+    // One confirmed kill per destroyed platform, even if several tracks
+    // resolved onto it.
+    if had_confirmed_contact && !t.kind.is_projectile() {
+        world.sides[enemy.index()].confirmed_kills += 1;
     }
 }
 

@@ -3,7 +3,7 @@
   "scenarios": {
     "academy_assessment": {
       "file": "academy_assessment.json",
-      "source_sha256": "9d1f3d769a309adec94b835474b429f2e601b5afea1614c854235ba78d9c595a",
+      "source_sha256": "ddee8f025df2f250863cca8b21588c3543e031911c063acd9ddd2ffcde59c6b3",
       "duration_s": 7200,
       "seed": 777108,
       "initial_units": 2,
@@ -16,7 +16,7 @@
     },
     "academy_asw": {
       "file": "academy_asw.json",
-      "source_sha256": "893fa572025abb44db48e71ae7817f47b702db51d2186133bdaf06ec0cc75a29",
+      "source_sha256": "e1c393bfb9fa7552dd19848de35b92f55de15433f78c615f2b1d89584eaf225f",
       "duration_s": 3600,
       "seed": 777109,
       "initial_units": 3,
@@ -29,7 +29,7 @@
     },
     "academy_aviation": {
       "file": "academy_aviation.json",
-      "source_sha256": "eb935d7f1451b1030acb68bcf4cc7a3b1320f9b8cc18ab72267d6fdb3571a770",
+      "source_sha256": "4275eba618d62087c3dbf7341c56ca812b8997b47561edec7b19a1935ca3ce13",
       "duration_s": 7200,
       "seed": 777107,
       "initial_units": 1,
@@ -42,7 +42,7 @@
     },
     "academy_bridge": {
       "file": "academy_bridge.json",
-      "source_sha256": "69d92c8df3e3b59775afc92510e76912ee29fce75462708f1d0a491d604df455",
+      "source_sha256": "bf3e1ee6a589524c95966bd81dcf35e22c055d8aef12ac0b407cfe7b95641688",
       "duration_s": 7200,
       "seed": 777101,
       "initial_units": 1,
@@ -55,7 +55,7 @@
     },
     "academy_defence": {
       "file": "academy_defence.json",
-      "source_sha256": "cddf0f46d9eed626d1e95910a692aa30035d7736cbd99ba63945b3afbccbac5c",
+      "source_sha256": "87d5d80ced07087c8c842b92099691230459cf99f2b833bf0a74e9b5dd4e3924",
       "duration_s": 7200,
       "seed": 777105,
       "initial_units": 2,
@@ -68,7 +68,7 @@
     },
     "academy_fleet_defense": {
       "file": "academy_fleet_defense.json",
-      "source_sha256": "5d5672a0bce0d4d86c0673d1654cc82d632e3476befbf90a071cd58b7fdbaf3e",
+      "source_sha256": "43a474dc74cc93160c5ae9f96734dc557240a5f4bbe50d7466088fea3f215049",
       "duration_s": 3600,
       "seed": 777111,
       "initial_units": 3,
@@ -81,7 +81,7 @@
     },
     "academy_gunnery": {
       "file": "academy_gunnery.json",
-      "source_sha256": "3c013057870e6b750aa81870593aaa10d9e41a8644a76dcc184f227a64d86d84",
+      "source_sha256": "fb474721ecc2f513b2d0e4985d4c67458b6dd102f87bf66ec47624533e4e9bad",
       "duration_s": 7200,
       "seed": 777104,
       "initial_units": 2,
@@ -94,7 +94,7 @@
     },
     "academy_navigation": {
       "file": "academy_navigation.json",
-      "source_sha256": "7ffd60f65ced6db0c506f4d73671870ed7929ceb0aec5f0044e02fdd7b4543e5",
+      "source_sha256": "ac725cfe7a1278447c29dfa015dfffa5e777701661eb1766b3655342d72912aa",
       "duration_s": 7200,
       "seed": 777102,
       "initial_units": 1,
@@ -107,7 +107,7 @@
     },
     "academy_sensors": {
       "file": "academy_sensors.json",
-      "source_sha256": "838c38810eda5c8ffb8e61b8a7664a942bcba4064d71fa14021d75091a9883ed",
+      "source_sha256": "be5554b35c036db16f8bdc44840be46e49c67b99879fd7d039c026716397166c",
       "duration_s": 7200,
       "seed": 777103,
       "initial_units": 2,
@@ -120,7 +120,7 @@
     },
     "academy_strike": {
       "file": "academy_strike.json",
-      "source_sha256": "f99a0d20f6d59602fb605728e55e0978fbb8dd7c9a9d0912ea02813629d7fd0d",
+      "source_sha256": "7b09b7815b21fda172915c554235390f838eaad2a1d86bdfffa3ef9d15b000e4",
       "duration_s": 3600,
       "seed": 777110,
       "initial_units": 5,
@@ -133,7 +133,7 @@
     },
     "academy_submarine": {
       "file": "academy_submarine.json",
-      "source_sha256": "951dad3a8d92bc6269c4d5d842da26b8ceccd2c0428c07abc8d471f3ab80989a",
+      "source_sha256": "511d755697588c1d1248351551bc5a611493f8dbc3d04236e43084c215b97620",
       "duration_s": 7200,
       "seed": 777106,
       "initial_units": 1,
@@ -146,7 +146,7 @@
     },
     "crimson_tide": {
       "file": "crimson_tide.json",
-      "source_sha256": "17a6b7e7eedce5019c61d11cfdde23165055e00bb9448e21ea3f4f15402706c1",
+      "source_sha256": "8112567f0dd5040466fd5d0c0b1f08d5a9064f58262e5d99c24da4e4d6f912ab",
       "duration_s": 28800,
       "seed": 20251018,
       "initial_units": 10,
@@ -159,7 +159,7 @@
     },
     "dual_carrier_denial": {
       "file": "dual_carrier_denial.json",
-      "source_sha256": "b7b6cf3937092a9491c8b7e2e396edf452cc0d8fb6057964d1365ad9a437130e",
+      "source_sha256": "e0950d86e39f1c69cc3be13243fba4e772fddf0003a61628296e4a90f25ada08",
       "duration_s": 7200,
       "seed": 20261019,
       "initial_units": 34,
@@ -172,7 +172,20 @@
     },
     "dual_carrier_hotseat": {
       "file": "dual_carrier_hotseat.json",
-      "source_sha256": "7cb2793e9aedad22dbf602ac40770ad569504a6dae68fd0608a0d821fe16c4da",
+      "source_sha256": "9c321a486d44a5e22470a8ff72a685678c869bdf83b26fc62303dfec80df2f36",
+      "duration_s": 21600,
+      "seed": 20261019,
+      "initial_units": 34,
+      "sides": {
+        "Blue": 18,
+        "Red": 16
+      },
+      "automated_side": null,
+      "satellite": true
+    },
+    "dual_carrier_kills": {
+      "file": "dual_carrier_kills.json",
+      "source_sha256": "9ab1f4b2950f25823828dbd154247fa799e18f87f1413d1fb484aaaeabf190bf",
       "duration_s": 21600,
       "seed": 20261019,
       "initial_units": 34,
@@ -185,7 +198,7 @@
     },
     "gunnery_dual": {
       "file": "gunnery_dual.json",
-      "source_sha256": "4650fbddcded30acfae55cc949522e0010656a3dc87c0ba5ad00276731601f82",
+      "source_sha256": "240dc9e545ac38b49d59d9d6aeb6b0a4b06a975ade3e8d5c9519694180c46d64",
       "duration_s": 3600,
       "seed": 20251018,
       "initial_units": 3,
@@ -198,7 +211,7 @@
     },
     "pacific_storm": {
       "file": "pacific_storm.json",
-      "source_sha256": "29aa25732df3295bd5c5533b35510e222a91f1a7f9428b1c38b7c15be82695f5",
+      "source_sha256": "08518acc3ca2e20cdacdfbba07d1b7e41f92cd3cfd25208abd6c5843cc734455",
       "duration_s": 28800,
       "seed": 20251020,
       "initial_units": 13,
@@ -211,7 +224,7 @@
     },
     "tattletail_1991": {
       "file": "tattletail.json",
-      "source_sha256": "eb7a3b940385e4095fc3a393f441be7888c328b1f6f57a32545a0816fb82505e",
+      "source_sha256": "34851f8f82f233a9494b1050b5b21355fb00a7f84f3ff87a11012e54cc66285b",
       "duration_s": 7200,
       "seed": 19910515,
       "initial_units": 6,
@@ -224,7 +237,7 @@
     },
     "tutorial_01": {
       "file": "tutorial_01.json",
-      "source_sha256": "4078b43732eeff00e0ef3d9b8f8a8e9952bcabf78057d82edb1023ed3b5747f7",
+      "source_sha256": "d8a6681d6faa885d84658952d03e355a9ae6347de8b3d395f9e6a1f1e76bca98",
       "duration_s": 5400,
       "seed": 777001,
       "initial_units": 2,

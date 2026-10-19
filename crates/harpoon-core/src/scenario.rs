@@ -58,6 +58,9 @@ pub struct VictoryConfig {
     /// Early win if one side leads by this VP margin (0 = disabled).
     #[serde(default)]
     pub target_vp: f64,
+    /// At the time limit, compare destroyed enemy platforms instead of VP.
+    #[serde(default)]
+    pub kill_count_at_end: bool,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -113,7 +116,10 @@ pub fn load_scenario(sc: Scenario, db: Database) -> Result<World, String> {
         duration_s: sc.duration_s,
         scenario_id: sc.id.clone(),
         scenario_name: sc.name.clone(),
+        scenario_description: sc.description.clone(),
         scenario_target_vp: sc.victory.target_vp,
+        scenario_kill_count_at_end: sc.victory.kill_count_at_end,
+        losses: Default::default(),
         context: sc.context.clone(),
         mission_state: Default::default(),
         over: false,

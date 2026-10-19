@@ -268,6 +268,10 @@ impl Contact {
 pub struct SideState {
     pub contacts: BTreeMap<ContactId, Contact>,
     pub next_contact: u32,
+    /// Enemy platforms this side has confirmed destroyed via its own
+    /// contacts. Referee truth is not included here.
+    #[serde(default)]
+    pub confirmed_kills: u32,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -276,6 +280,11 @@ pub struct VictoryResult {
     pub reason: String,
     pub vp_blue: f64,
     pub vp_red: f64,
+    /// Authoritative enemy platforms destroyed by each side.
+    #[serde(default)]
+    pub blue_kills: u32,
+    #[serde(default)]
+    pub red_kills: u32,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -309,8 +318,16 @@ pub struct World {
     pub duration_s: i64,
     pub scenario_id: String,
     pub scenario_name: String,
+    #[serde(default)]
+    pub scenario_description: String,
     /// Early-win VP margin from the scenario victory config.
     pub scenario_target_vp: f64,
+    /// Compare kill counts at the time limit (six-hour kill-count exercise).
+    #[serde(default)]
+    pub scenario_kill_count_at_end: bool,
+    /// Authoritative losses by side; survives entity cleanup.
+    #[serde(default)]
+    pub losses: [u32; 2],
     #[serde(default)]
     pub context: crate::scenario::ScenarioContext,
     #[serde(default)]
@@ -398,6 +415,12 @@ impl World {
             .filter(move |c| !c.stale && c.quality >= min_quality)
             .filter_map(|c| self.entities.get(&c.about).map(|e| (c, e)))
             .filter(|(_, e)| e.alive)
+    }
+
+    /// Authoritative kill counts by side: enemy platforms destroyed.
+    /// Projectiles do not count; ditched aircraft do not go through `sink`.
+    pub fn kill_counts(&self) -> (u32, u32) {
+        (self.losses[Side::Red.index()], self.losses[Side::Blue.index()])
     }
 
     /// VP currently earned by each side (kills + base damage).

@@ -82,14 +82,33 @@ pub struct ContactObs {
     pub sensors: Vec<String>,
 }
 
+/// Objective display for an exercise. It deliberately exposes only the
+/// player's own confirmed kills and losses; the authoritative enemy total is
+/// revealed in `result` when the scenario ends.
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct VictoryObservation {
+    /// `area_denial`, `kill_count`, or `vp`.
+    pub mode: String,
+    pub duration_s: i64,
+    pub remaining_s: i64,
+    pub kill_count_at_end: bool,
+    pub target_vp: f64,
+    pub own_confirmed_kills: u32,
+    pub own_losses: u32,
+}
+
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Observation {
     pub tick: i64,
     pub time_s: f64,
     pub scenario_id: String,
     pub scenario_name: String,
+    #[serde(default)]
+    pub scenario_description: String,
     pub theater: Option<crate::scenario::Theater>,
     pub mission: Option<crate::mission::MissionObservation>,
+    #[serde(default)]
+    pub victory: Option<VictoryObservation>,
     pub automated_side: Option<Side>,
     pub your_side: Side,
     pub over: bool,
@@ -208,8 +227,24 @@ pub fn observe(world: &World, side: Side, since_seq: u64, max_events: usize) -> 
         time_s: world.time_s(),
         scenario_id: world.scenario_id.clone(),
         scenario_name: world.scenario_name.clone(),
+        scenario_description: world.scenario_description.clone(),
         theater: world.context.theater.clone(),
         mission: crate::mission::observe(world, side),
+        victory: Some(VictoryObservation {
+            mode: if world.context.area_denial.is_some() {
+                "area_denial".into()
+            } else if world.scenario_kill_count_at_end {
+                "kill_count".into()
+            } else {
+                "vp".into()
+            },
+            duration_s: world.duration_s,
+            remaining_s: (world.duration_s - world.tick).max(0),
+            kill_count_at_end: world.scenario_kill_count_at_end,
+            target_vp: world.scenario_target_vp,
+            own_confirmed_kills: world.sides[side.index()].confirmed_kills,
+            own_losses: world.losses[side.index()],
+        }),
         automated_side: world.context.automated_side,
         your_side: side,
         over: world.over,

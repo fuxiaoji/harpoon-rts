@@ -218,6 +218,7 @@ fn check_victory(world: &mut World) {
         return;
     }
     let (vp_blue, vp_red) = world.victory_points();
+    let (blue_kills, red_kills) = world.kill_counts();
     let target = world.scenario_target_vp;
 
     // Annihilation: a side with no units left loses.
@@ -244,14 +245,26 @@ fn check_victory(world: &mut World) {
         let winner = if vp_blue > vp_red { Side::Blue } else { Side::Red };
         outcome = Some((Some(winner), "VP margin reached".into()));
     } else if world.tick >= world.duration_s {
-        let winner = if vp_blue > vp_red {
-            Some(Side::Blue)
-        } else if vp_red > vp_blue {
-            Some(Side::Red)
+        let (winner, reason) = if world.scenario_kill_count_at_end {
+            let winner = if blue_kills > red_kills {
+                Some(Side::Blue)
+            } else if red_kills > blue_kills {
+                Some(Side::Red)
+            } else {
+                None
+            };
+            (winner, "time limit: kill count".to_string())
         } else {
-            None
+            let winner = if vp_blue > vp_red {
+                Some(Side::Blue)
+            } else if vp_red > vp_blue {
+                Some(Side::Red)
+            } else {
+                None
+            };
+            (winner, "time limit".to_string())
         };
-        outcome = Some((winner, "time limit".into()));
+        outcome = Some((winner, reason));
     }
 
     if let Some((winner, reason)) = outcome {
@@ -261,6 +274,8 @@ fn check_victory(world: &mut World) {
             reason,
             vp_blue,
             vp_red,
+            blue_kills,
+            red_kills,
         });
         world.emit(
             EventKind::ScenarioEnded { winner, reason: world.result.as_ref().unwrap().reason.clone(), vp_blue, vp_red },
