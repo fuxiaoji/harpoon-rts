@@ -1,0 +1,58 @@
+{
+  "id": "academy_fleet_defense",
+  "name": "Tutorial 11 — Fleet Missile Defence",
+  "description": "Guided defence lesson: a two-missile raid is launched at the carrier group. Read the INCOMING warning, deploy chaff, turn into the raid, release weapons so the Aegis engages, and watch the intercepts resolve.",
+  "duration_s": 3600,
+  "weather": {
+    "visibility_nm": 12,
+    "jam": [
+      0,
+      0
+    ],
+    "overcast": 0,
+    "rain": 0
+  },
+  "day_night": "Day",
+  "seed": 777111,
+  "victory": {
+    "target_vp": 0
+  },
+  "units": [
+    {
+      "side": "Blue",
+      "class": "training_ddg_aa",
+      "name": "TUTOR DDG",
+      "pos": [
+        0,
+        0
+      ],
+      "course_deg": 90,
+      "speed_kts": 0,
+      "fire_on": false
+    },
+    {
+      "side": "Blue",
+      "class": "cvn",
+      "name": "TUTOR CV",
+      "pos": [
+        -4,
+        -3
+      ],
+      "course_deg": 90,
+      "speed_kts": 0,
+      "fire_on": false
+    },
+    {
+      "side": "Red",
+      "class": "mgb",
+      "name": "RAIDER",
+      "pos": [
+        9,
+        3
+      ],
+      "course_deg": 270,
+      "speed_kts": 0,
+      "fire_on": false
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "id": "academy_asw",
+  "name": "Tutorial 09 — Hunt the Submarine",
+  "description": "Guided ASW lesson: deploy the towed array, find the diesel boat with passive sonar, launch the dipping-sonar helicopter and attack. Fixed seed; the submarine transits at 12 knots so passive detection is reliable.",
+  "duration_s": 3600,
+  "weather": { "visibility_nm": 12, "jam": [0, 0], "overcast": 0, "rain": 0 },
+  "day_night": "Day",
+  "seed": 777109,
+  "victory": { "target_vp": 0 },
+  "units": [
+    {
+      "side": "Blue", "class": "ffg", "name": "TUTOR FFG",
+      "pos": [0, 0], "course_deg": 90, "speed_kts": 10, "fire_on": false
+    },
+    {
+      "side": "Blue", "class": "cvn", "name": "TUTOR CV",
+      "pos": [-10, -2], "course_deg": 90, "speed_kts": 10, "fire_on": false
+    },
+    {
+      "side": "Red", "class": "ssk", "name": "TARGET SSK",
+      "pos": [8, 3], "course_deg": 270, "speed_kts": 12, "depth_m": 60, "fire_on": false,
+      "waypoints": [[-20, 3]]
+    }
+  ]
+}

@@ -59,6 +59,42 @@
       case 'launch': plan = [order('launch-order', '[data-deck-launch][data-class="helo_asw"]', 'launch_aircraft', both('点击反潜直升机这一行的放飞按钮', 'Launch from the ASW Helicopter row'), both('已经为你滚动到飞行甲板。点击高光按钮，收到回执后推进一秒。', 'The flight deck has been scrolled into view. Click the highlighted launch button, then execute one second after the receipt.'), { field: 'class', value: 'helo_asw' }), tick()]; break;
       case 'recall': plan = [order('recall-order', '#btn-recover', 'recover_aircraft', both('保持母舰选中，点击召回航空器', 'Keep the carrier selected and click RECOVER AIR'), both('这会开始返航流程。下一目标还会单独确认航空器实际回收。', 'This begins return-to-base. The next objective separately verifies actual recovery.')), tick()]; break;
       case 'recovered': plan = [run(15)]; plan[0].body = both('继续时间，等到战报出现真实回收记录。如果刚才已经立即回收，也可点击教学栏“单步执行1秒”核验。', 'Continue time until an actual recovery is reported. If it recovered immediately on recall, you can also use Advance 1 second to verify the evidence.'); break;
+      // ---- 实战教学关：反潜 / 三域打击 / 舰队防御 ----
+      case 'towed': plan = [run(15)]; plan[0].body = both('保持 15 节，推进时间等待拖曳阵自动展开。传感器面板会显示“拖曳阵：已展开”，本目标自动完成。', 'Hold 15 knots and advance time until the towed array deploys. The sensor panel will report it and this objective clears itself.'); break;
+      case 'sub_contact': plan = [run(60)]; plan[0].body = both('推进时间，等战报出现“发现接触 · 水下”。接触质量 Q 到 40 时自动通过。', 'Advance time until an underwater DETECTION appears. The objective clears at quality 40.'); break;
+      case 'asw_launch': plan = [
+        cue('select-carrier', '#nav-controls, #unit-panel', both('先选中有飞行甲板的母舰', 'Select a ship with a flight deck first'), both('点击右侧列表里的 TUTOR CV。反潜直升机在它的甲板上。', 'Click TUTOR CV in the right-hand list. The ASW helicopter sits on its deck.'), 'select_unit'),
+        order('launch-helo', '[data-deck-launch][data-class="helo_asw"]', 'launch_aircraft', both('点击反潜直升机一行的“反潜搜索”', 'Click ASW on the helicopter row'), both('收起面板前先滚动到飞行甲板。点击高光按钮后，用单步执行一秒确认起飞。', 'Scroll to the flight deck first. After the button, advance one second to confirm the launch.'), { field: 'class', value: 'helo_asw' }), tick(),
+      ]; break;
+      case 'asw_fire': plan = [
+        ...(!context.contactSelected ? [contact] : []),
+        enter('weapon-asw', '#fire-weapon', 'asw_rocket', both('武器下拉选择“反潜火箭”', 'Choose ASW Rocket in the weapon list'), both('先选中护卫舰与潜艇接触。保持限制开火，手动射击练习。', 'Select the frigate and the submarine contact first. Keep weapons on hold; this is manual fire practice.')),
+        order('fire-asw', '#btn-fire', 'fire', both('点击“射击”', 'Click FIRE'), both('命中是概率性的，打不中属于正常——继续齐射或让直升机投雷。', 'Hits are probabilistic; a miss is normal — keep firing or let the helicopter drop a torpedo.'), { field: 'weapon', value: 'asw_rocket' }), tick(),
+      ]; break;
+      case 'strike_launch': plan = [
+        ...(!context.contactSelected ? [contact] : []),
+        cue('select-carrier', '#nav-controls, #unit-panel', both('再选中航母', 'Now select the carrier'), both('点击右侧列表里的 TUTOR CV。', 'Click TUTOR CV in the right-hand list.'), 'select_unit'),
+        order('launch-striker', '[data-deck-launch][data-mission="strike"]', 'launch_aircraft', both('点击攻击机一行的“打击”', 'Click STRIKE on the strike-fighter row'), both('必须先选中一个接触，“打击”按钮才会出现。', 'A contact must be selected before the STRIKE button appears.'), { field: 'class', value: 'striker' }), tick(),
+      ]; break;
+      case 'air_release': plan = [run(60)]; plan[0].body = both('推进时间，等打击机飞到射程内自主齐射（战报出现“武器发射”）。', 'Advance time until the flight reaches release range and fires (a WEAPONS RELEASE line appears).'); break;
+      case 'ship_strike': plan = [
+        ...(!context.contactSelected ? [contact] : []),
+        enter('weapon-ship', '#fire-weapon', 'ascm_std', both('武器下拉选择“反舰导弹”', 'Choose the anti-ship missile'), both('先选中驱逐舰与水面接触。', 'Select the destroyer and the surface contact first.')),
+        order('fire-ship', '#btn-fire', 'fire', both('点击“射击”齐射', 'Click FIRE to salvo'), both('发射后立刻转向——发射闪光已经暴露了你。', 'Turn away right after firing: the launch flash has exposed you.'), { field: 'weapon', value: 'ascm_std' }), tick(),
+      ]; break;
+      case 'sub_strike': plan = [
+        ...(!context.contactSelected ? [contact] : []),
+        cue('select-sub', '#nav-controls, #unit-panel', both('选中潜艇 TUTOR SSK', 'Select the submarine TUTOR SSK'), both('点击右侧列表里的 TUTOR SSK。', 'Click TUTOR SSK in the right-hand list.'), 'select_unit'),
+        enter('weapon-sub', '#fire-weapon', 'torp_homing', both('武器下拉选择“鱼雷”', 'Choose the torpedo'), both('重型鱼雷一到两发就能解决护卫舰级目标。', 'One or two heavyweight torpedoes sink a frigate-sized target.')),
+        cue('fire-sub', '#btn-fire', both('点击“射击”发射鱼雷', 'Click FIRE to launch the torpedo'), both('潜艇已在阵位，直接开火。', 'The submarine is already in position; fire.'), 'command'), tick(),
+      ]; break;
+      case 'weapons_free': plan = [order('wf-order', '#btn-weapons-free', 'set_weapons_free', both('点击“武器自由”开关', 'Click the WEAPONS FREE toggle'), both('只有解除限制后，宙斯盾才会自动向导弹开火。', 'Only with release authority will the Aegis engage missiles automatically.'), { field: 'free', value: true }), tick()]; break;
+      case 'turn_into_raid': plan = [
+        cue('course-raid', '#nav-course', both('在航向框填入来袭方位', 'Enter the raid bearing'), both('在接触列表或事件流里读导弹的方位值（度），填入航向输入框。任意朝向来袭方向的航向（±60°）都算完成。', 'Read the missile bearing (degrees) from the contact list or event feed and enter it as the course. Anything within 60° of the raid bearing completes this objective.'), 'input'),
+        cue('course-apply', '[data-nav="course"]', both('点击“下达命令”', 'Click Apply'), both('舰艏对敌能把受弹面降到最小。收到回执后推进一秒。', 'Bow-on minimises the presented area. After the receipt, advance one second.'), 'command'),
+        tick(),
+      ]; break;
+      case 'intercept_seen': plan = [run(15)]; plan[0].body = both('继续推进时间，观察战报里逐条出现的“拦截成功/失败”。', 'Keep advancing time and watch the INTERCEPT SUCCESS/FAILED lines resolve.'); break;
       default: plan = [cue('details', '#training-panel', step.title, step.body)];
     }
     const commands = ['speed','course','route','depth','sonar_on','sonar_off','gun_fire','stop','chaff','launch','recall'];

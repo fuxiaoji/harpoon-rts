@@ -1,0 +1,83 @@
+{
+  "id": "academy_strike",
+  "name": "Tutorial 10 — Three-Domain Strike",
+  "description": "Guided strike lesson: hit the same surface group from the air (strike fighters), from the surface (Aegis anti-ship missiles) and from under the water (diesel submarine torpedoes). Fixed seed; the Red boats hold fire so the lesson is about your own coordination.",
+  "duration_s": 3600,
+  "weather": {
+    "visibility_nm": 12,
+    "jam": [
+      0,
+      0
+    ],
+    "overcast": 0,
+    "rain": 0
+  },
+  "day_night": "Day",
+  "seed": 777110,
+  "victory": {
+    "target_vp": 0
+  },
+  "units": [
+    {
+      "side": "Blue",
+      "class": "cvn",
+      "name": "TUTOR CV",
+      "pos": [
+        0,
+        0
+      ],
+      "course_deg": 90,
+      "speed_kts": 12,
+      "fire_on": false
+    },
+    {
+      "side": "Blue",
+      "class": "training_ddg_strike",
+      "name": "TUTOR DDG",
+      "pos": [
+        2,
+        -4
+      ],
+      "course_deg": 90,
+      "speed_kts": 12,
+      "fire_on": false
+    },
+    {
+      "side": "Blue",
+      "class": "ssk",
+      "name": "TUTOR SSK",
+      "pos": [
+        20,
+        6
+      ],
+      "course_deg": 90,
+      "speed_kts": 4,
+      "depth_m": 60,
+      "fire_on": false
+    },
+    {
+      "side": "Red",
+      "class": "mgb",
+      "name": "RED TARGET 1",
+      "pos": [
+        14,
+        2
+      ],
+      "course_deg": 270,
+      "speed_kts": 8,
+      "fire_on": false
+    },
+    {
+      "side": "Red",
+      "class": "mgb",
+      "name": "RED TARGET 2",
+      "pos": [
+        16,
+        -3
+      ],
+      "course_deg": 270,
+      "speed_kts": 8,
+      "fire_on": false
+    }
+  ]
+}

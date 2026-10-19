@@ -154,17 +154,22 @@ impl Session {
     }
     /// The training opponent uses only its own observation and normal commands.
     pub fn opponent_commands(&mut self, world: &World) -> Vec<(Side, Command)> {
-        if self.status != "active" || self.course.id != "defence" || self.wave_sent
+        if self.status != "active" || self.wave_sent
+            || !matches!(self.course.id.as_str(), "defence" | "fleet_defense")
             || !self.current().is_some_and(|s| s.objective == "incoming") { return Vec::new(); }
         let obs = observe(world, Side::Red, 0, 0);
         let shooter = obs.units.iter().find(|u| u.class == "mgb");
-        let target = obs.contacts.iter().find(|c| c.category == PlatformKind::Ship && !c.stale && c.quality >= 0.3);
-        if let (Some(unit), Some(contact)) = (shooter, target) {
+        let Some(target) = obs.contacts.iter().find(|c| c.category == PlatformKind::Ship && !c.stale && c.quality >= 0.3) else {
+            return Vec::new();
+        };
+        if let Some(unit) = shooter {
             self.wave_sent = true;
             self.wave_started_tick = Some(world.tick);
-            return vec![(Side::Red, Command::Fire {
-                unit: unit.id, contact: contact.id, weapon: "ascm_std".into(), rounds: 1,
-            })];
+            // 舰队防御课：两弹齐射，逼玩家走完整防御流程；基础防务课保持单弹。
+            let salvo = if self.course.id == "fleet_defense" { 2 } else { 1 };
+            return (0..salvo).map(|_| (Side::Red, Command::Fire {
+                unit: unit.id, contact: target.id, weapon: "ascm_std".into(), rounds: 1,
+            })).collect();
         }
         Vec::new()
     }
@@ -217,6 +222,76 @@ impl Session {
                     || events.iter().any(|e| matches!(e.kind, EventKind::AirRecovered { carrier, .. } if carrier == self.unit))),
             "recovered" => self.manual_recall && world.events_for(Side::Blue, self.start_seq).iter()
                 .any(|e| matches!(e.kind, EventKind::AirRecovered { carrier, .. } if carrier == self.unit)),
+            // ---- 实战教学关（反潜 / 三域打击 / 舰队防御） ----
+            "towed" => unit.ext.get("tow_deployed").is_some_and(|v| *v > 0.5),
+            "sub_contact" => observe(world, Side::Blue, 0, 0).contacts.iter()
+                .any(|c| c.category == PlatformKind::Sub && !c.stale && c.quality >= 0.4),
+            "asw_launch" => {
+                // 母舰不必是训练主单位：本课从航母放飞、从护卫舰开火。
+                let launched = mine.iter().any(|c| matches!(c, Command::LaunchAircraft { unit: id, class, .. }
+                    if world.entity(*id).is_some_and(|e| e.side == Side::Blue) && class == "helo_asw"));
+                launched && events.iter().any(|e| matches!(e.kind, EventKind::AirLaunch { side: Side::Blue, ref class, .. }
+                    if class.contains("Helicopter")))
+            }
+            "asw_fire" => {
+                let fired = mine.iter().any(|c| matches!(c, Command::Fire { unit: id, weapon, rounds, .. }
+                    if world.entity(*id).is_some_and(|e| e.side == Side::Blue)
+                        && (weapon.starts_with("asw") || weapon == "lwt") && *rounds > 0));
+                fired && events.iter().any(|e| matches!(e.kind, EventKind::WeaponsRelease { side: Side::Blue, ref weapon, .. }
+                    if weapon.contains("ASW") || weapon.contains("ASW Torpedo") || weapon.contains("Torpedo")))
+                    || fired
+            }
+            // 打击机常在“出动”那一秒就进入发射包线（同一 tick 内完成），
+            // 事件会落在上一目标的时间窗里；因此从课程起点起查，并按
+            // 空射武器名识别（实体回收后无法再按 id 判定）。
+            "air_release" => world.events_for(Side::Blue, self.start_seq).iter()
+                .any(|e| matches!(e.kind, EventKind::WeaponsRelease { side: Side::Blue, ref weapon, .. }
+                    if weapon.contains("Air-Launched"))),
+            "strike_launch" => {
+                let launched = mine.iter().any(|c| matches!(c, Command::LaunchAircraft { unit: id, class, .. }
+                    if world.entity(*id).is_some_and(|e| e.side == Side::Blue) && class == "striker"));
+                launched && events.iter().any(|e| matches!(e.kind, EventKind::AirLaunch { side: Side::Blue, .. }))
+            }
+            "ship_strike" => {
+                let fired = mine.iter().any(|c| matches!(c, Command::Fire { unit: id, weapon, .. }
+                    if world.entity(*id).is_some_and(|e| e.side == Side::Blue)
+                        && world.entity(*id).is_some_and(|e| e.kind == PlatformKind::Ship)
+                        && (weapon == "ascm_std" || weapon.contains("ascm"))));
+                fired && events.iter().any(|e| matches!(e.kind, EventKind::WeaponsRelease { side: Side::Blue, .. }))
+            }
+            "sub_strike" => {
+                let fired = mine.iter().any(|c| matches!(c, Command::Fire { unit: id, weapon, .. }
+                    if world.entity(*id).is_some_and(|e| e.side == Side::Blue && e.kind == PlatformKind::Sub)
+                        && weapon.contains("torp")));
+                fired
+            }
+            "weapons_free" => {
+                let any_blue = mine.iter().any(|c| matches!(c, Command::SetWeaponsFree { unit: id, free: true }
+                    if world.entity(*id).is_some_and(|e| e.side == Side::Blue)));
+                any_blue && world.entities.values().any(|e| e.side == Side::Blue && e.fire_on)
+            }
+            "turn_into_raid" => {
+                let contact_bearing = observe(world, Side::Blue, 0, 0).contacts.iter()
+                    .filter(|c| c.category == PlatformKind::Missile && !c.stale)
+                    .map(|c| unit.pos.bearing_to(c.estimate))
+                    .next();
+                match contact_bearing {
+                    Some(bearing) => mine.iter().any(|c| matches!(c, Command::SetCourse { unit: id, course_deg }
+                        if *id == self.unit
+                            && harpoon_core::geom::angle_diff(bearing, *course_deg).abs() <= 60.0))
+                        || harpoon_core::geom::angle_diff(bearing, unit.ordered_course_deg).abs() <= 60.0,
+                    None => false,
+                }
+            }
+            // 突袭被挫败即算通过：出现拦截事件，或 60 秒后本侧图中再无
+            // 在飞导弹（被箔条诱偏/已自毁同样属于成功防御）。
+            "intercept_seen" => {
+                let intercepted = events.iter().any(|e| matches!(e.kind, EventKind::Intercept { side: Side::Blue, .. }));
+                let clear = world.tick - self.checkpoint.tick >= 60
+                    && !observe(world, Side::Blue, 0, 0).contacts.iter()
+                        .any(|c| c.category == PlatformKind::Missile && !c.stale);
+                intercepted || clear
+            }
             _ => false,
         };
         if done {
@@ -277,8 +352,8 @@ mod tests {
     #[test]
     fn curriculum_is_bilingual_and_does_not_publish_answers() {
         let cat = catalog();
-        assert_eq!(cat.courses.len(), 8);
-        assert_eq!(cat.courses.iter().map(|c| c.steps.len()).sum::<usize>(), 55);
+        assert_eq!(cat.courses.len(), 11);
+        assert_eq!(cat.courses.iter().map(|c| c.steps.len()).sum::<usize>(), 76);
         let public = serde_json::to_value(&cat).unwrap();
         for course in &cat.courses {
             for step in &course.steps {

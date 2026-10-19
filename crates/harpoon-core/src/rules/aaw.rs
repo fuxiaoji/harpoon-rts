@@ -51,7 +51,51 @@ pub const POINT_DEFENSE_BAND_NM: f64 = 4.0;
 
 /// Extra DB (AA gun band data, director ratings) — filled by the AAW workstream.
 pub fn db() -> crate::db::Database {
-    crate::db::Database::default()
+    // 训练用纯防空舰：与 ddg_aegis 同构但取消舰炮，避免在导弹防御教学关里
+    // 提前用炮火击沉靶船、导致想定提前结束。仅被训练想定引用。
+    const TRAINING_DDG: &str = r#"{
+      "platforms": {
+        "training_ddg_aa": {
+          "id": "training_ddg_aa", "name": "Air-Defence Training DDG", "kind": "Ship",
+          "hp": 260, "max_speed_kts": 30, "cruise_speed_kts": 20, "turn_rate_deg_s": 1.8,
+          "rcs": "Medium", "noise_db": 60, "vp_value": 30,
+          "sensors": ["radar_air_long", "radar_surf_med", "esm_std", "visual"],
+          "weapons": [
+            {"weapon": "sam_long", "mounts": 1, "ammo": 48},
+            {"weapon": "sam_point", "mounts": 1, "ammo": 24},
+            {"weapon": "ciws_30mm", "mounts": 1, "ammo": 60}
+          ],
+          "chaff": 50, "decoys": 12
+        }
+      },
+      "weapons": {},
+      "sensors": {}
+    }"#;
+    const TRAINING_DDG_STRIKE: &str = r#"{
+      "platforms": {
+        "training_ddg_strike": {
+          "id": "training_ddg_strike", "name": "Strike Training DDG", "kind": "Ship",
+          "hp": 260, "max_speed_kts": 30, "cruise_speed_kts": 20, "turn_rate_deg_s": 1.8,
+          "rcs": "Medium", "noise_db": 60, "vp_value": 30,
+          "sensors": ["radar_air_long", "radar_surf_med", "esm_std", "visual"],
+          "weapons": [
+            {"weapon": "sam_long", "mounts": 1, "ammo": 24},
+            {"weapon": "ciws_30mm", "mounts": 1, "ammo": 40},
+            {"weapon": "gun_5in", "mounts": 1, "ammo": 40},
+            {"weapon": "ascm_std", "mounts": 2, "ammo": 4}
+          ],
+          "chaff": 50, "decoys": 12
+        }
+      },
+      "weapons": {},
+      "sensors": {}
+    }"#;
+    let mut db: crate::db::Database =
+        serde_json::from_str(TRAINING_DDG).expect("training DDG definition must parse");
+    let strike: crate::db::Database =
+        serde_json::from_str(TRAINING_DDG_STRIKE).expect("strike DDG definition must parse");
+    db = db.merged(&strike);
+    db
 }
 
 // ---------------------------------------------------------------------------

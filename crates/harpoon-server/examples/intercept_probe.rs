@@ -14,6 +14,7 @@ fn base(seed: u64) -> Scenario {
         id: "probe".into(),
         name: "Probe".into(),
         description: String::new(),
+        context: Default::default(),
         duration_s: 7200,
         weather: harpoon_core::world::Weather { visibility_nm: 12.0, jam: [0.0, 0.0], overcast: 0.0, rain: 0.0 },
         day_night: DayNight::Day,
