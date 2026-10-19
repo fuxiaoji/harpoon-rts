@@ -410,6 +410,18 @@ Assistant|参谋
 You|你
 Six-hour kill-count exercise|六小时击杀数演习
 At 06:00:00 the side that destroyed more enemy platforms wins.|06:00:00 时击毁敌方平台更多的一方获胜。
+KILLS|战果
+LOSSES|损失
+AUTO RUN|自动推进
+Agent run speed|参谋推进速度
+CONFIRMED KILL|确认战果
+OWN LOSS|己方损失
+OWN DAMAGE|己方受损
+ENEMY BASE DESTROYED|敌方基地被毁
+OWN BASE DESTROYED|己方基地被毁
+SCENARIO ENDED|想定结束
+DEFEAT|失败
+CLOSE|关闭
 `.trim().split('\n').map(line => line.split('|')));
   const escape = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   let phrasePattern;

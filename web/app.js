@@ -294,6 +294,17 @@
     agentForm: $('agent-form'),
     agentInput: $('agent-input'),
     agentSend: $('agent-send'),
+    agentAuto: $('agent-auto'),
+    agentSpeed: $('agent-speed'),
+    scoreStrip: $('score-strip'),
+    scoreKills: $('score-kills'),
+    scoreLosses: $('score-losses'),
+    battlePopups: $('battle-popups'),
+    battleResultDialog: $('battle-result-dialog'),
+    battleResultTitle: $('battle-result-title'),
+    battleResultReason: $('battle-result-reason'),
+    battleResultScore: $('battle-result-score'),
+    battleResultClose: $('battle-result-close'),
 
     logSideBadge: $('log-side-badge'),
     logMeta: $('log-meta'),
@@ -336,6 +347,9 @@
       reportBusy: false,
       timer: null,
     },
+    battlePrimed: false,
+    battleSeq: 0,
+    resultDialogKey: null,
   };
 
   const map = {
@@ -760,6 +774,11 @@
     state.routes.clear();
     state.gotoQueues.clear();
     state.gameGeneration += 1;
+    state.battlePrimed = false;
+    state.battleSeq = 0;
+    state.resultDialogKey = null;
+    dom.battlePopups?.replaceChildren();
+    if (dom.battleResultDialog?.open) dom.battleResultDialog.close();
 
     clearEventLog();
     updateHeader(null);
@@ -800,7 +819,16 @@
       }
     }
 
-    mergeEvents(Array.isArray(obs.events) ? obs.events : []);
+    const incomingEvents = Array.isArray(obs.events) ? obs.events : [];
+    const firstObservation = !state.battlePrimed;
+    if (firstObservation) {
+      state.battlePrimed = true;
+      state.battleSeq = incomingEvents.reduce(
+        (max, event) => Math.max(max, Number(event?.seq) || 0),
+        0,
+      );
+    }
+    mergeEvents(incomingEvents, { announce: !firstObservation });
     reconcileSelection(obs);
     updateHeader(obs);
     updateMapBrief(obs);
@@ -936,6 +964,18 @@
 
   function updateMapBrief(obs) {
     window.HarpoonTheater?.renderHUD(obs);
+    if (dom.scoreStrip) {
+      const victory = obs && obs.victory;
+      dom.scoreStrip.hidden = !victory;
+      if (victory) {
+        dom.scoreKills.textContent = fmtInt(victory.own_confirmed_kills);
+        dom.scoreLosses.textContent = fmtInt(victory.own_losses);
+        dom.scoreStrip.title = battleText(
+          '本方确认战果与损失；终局权威结果以战报为准。',
+          'Own confirmed kills and losses; the after-action result is authoritative.',
+        );
+      }
+    }
     const scenario = state.scenarios.find((sc) => sc.id === (obs ? obs.scenario_id : state.scenarioId));
     const presentation = window.HarpoonI18n?.scenario(obs?.scenario_id || state.scenarioId);
     const title = presentation?.title || (obs && obs.scenario_name
@@ -977,6 +1017,8 @@
       dom.outcomePanel.hidden = true;
       dom.outcomePanel.removeAttribute('data-winner');
       dom.outcomeTitle.style.color = '';
+      state.resultDialogKey = null;
+      if (dom.battleResultDialog?.open) dom.battleResultDialog.close();
       return;
     }
 
@@ -1004,6 +1046,12 @@
     dom.outcomeVp.textContent = result
       ? `VP BLUE ${fmtRange(result.vp_blue)}  ·  RED ${fmtRange(result.vp_red)}${killLine}${playerWon ? '  ·  COMMAND OBJECTIVE MET' : ''}`
       : 'FINAL SCORE UNAVAILABLE';
+
+    const resultKey = `${obs.scenario_id}:${obs.tick}`;
+    if (state.resultDialogKey !== resultKey) {
+      state.resultDialogKey = resultKey;
+      showBattleResultDialog(obs);
+    }
   }
 
   function renderSpeedControls() {
@@ -1014,6 +1062,16 @@
       button.classList.toggle('is-active', active);
       button.setAttribute('aria-pressed', String(active));
     });
+  }
+
+  async function changeGameSpeed(speed) {
+    const requested = Number(speed);
+    const side = agentSideState();
+    if (side?.auto_run) {
+      if (requested === 0) await configureAgent({ auto_run: false });
+      else if (requested <= 60) await configureAgent({ auto_speed: requested });
+    }
+    await setSpeed(requested);
   }
 
   async function setSpeed(speed) {
@@ -2049,7 +2107,7 @@
     dom.eventLog.scrollTop = top;
   }
 
-  function mergeEvents(events) {
+  function mergeEvents(events, options = {}) {
     const added = [];
     for (const event of events) {
       if (!isObject(event)) continue;
@@ -2077,6 +2135,13 @@
       else dom.eventLog.scrollTop = previousTop + (dom.eventLog.scrollHeight - previousHeight);
 
       trimEvents();
+      if (options.announce) {
+        const fresh = added.filter((event) => Number(event.seq) > state.battleSeq);
+        if (fresh.length) {
+          state.battleSeq = Math.max(state.battleSeq, ...fresh.map((event) => Number(event.seq)));
+          announceBattleEvents(fresh);
+        }
+      }
     }
     updateLogMeta();
   }
@@ -3553,7 +3618,7 @@
     dom.speedGroup.addEventListener('click', (event) => {
       const button = event.target.closest('button[data-speed]');
       if (!button) return;
-      void setSpeed(Number(button.dataset.speed));
+      void changeGameSpeed(Number(button.dataset.speed));
     });
 
     dom.scenarioSelect.addEventListener('change', () => {
@@ -3644,6 +3709,125 @@
   }
 
 
+
+  // ------------------------------------------------------------------
+  // Battle result scoreboard and popups
+  // ------------------------------------------------------------------
+  function battleText(zh, en) {
+    return window.HarpoonI18n?.language === 'en' ? en : zh;
+  }
+
+  function dismissBattlePopup(card) {
+    if (!card || card.dataset.leaving === '1') return;
+    card.dataset.leaving = '1';
+    card.classList.add('is-leaving');
+    window.setTimeout(() => card.remove(), 200);
+  }
+
+  function showBattlePopup(kind, title, detail, event) {
+    if (!dom.battlePopups) return;
+    while (dom.battlePopups.children.length >= 3) {
+      dom.battlePopups.firstElementChild.remove();
+    }
+    const card = document.createElement('article');
+    card.className = `battle-popup ${kind}`;
+    const kicker = document.createElement('div');
+    kicker.className = 'battle-kicker';
+    kicker.textContent = kind === 'kill'
+      ? battleText('战果确认', 'CONFIRMED KILL')
+      : kind === 'loss'
+        ? battleText('战斗损失', 'OWN LOSS')
+        : battleText('损伤告警', 'DAMAGE');
+    const heading = document.createElement('h3');
+    heading.textContent = title;
+    const text = document.createElement('p');
+    text.textContent = detail;
+    const time = document.createElement('div');
+    time.className = 'battle-time';
+    time.textContent = fmtEventTick(Number(event?.tick) || 0);
+    card.append(kicker, heading, text, time);
+    card.addEventListener('click', () => dismissBattlePopup(card));
+    dom.battlePopups.appendChild(card);
+    window.setTimeout(() => dismissBattlePopup(card), 7000);
+  }
+
+  function announceBattleEvents(events) {
+    const ordered = events.slice().sort((a, b) => Number(a.seq) - Number(b.seq));
+    for (const event of ordered) {
+      const kind = String(event.event || '');
+      const side = String(event.side || '');
+      if (kind === 'contact_sank') {
+        const contact = findContactById(event.contact);
+        const category = contact?.category ? ` · ${categoryInfo(contact.category).label}` : '';
+        const className = contact?.class_name ? ` · ${contact.class_name}` : '';
+        showBattlePopup(
+          'kill',
+          battleText('确认战果', 'CONFIRMED KILL'),
+          `${battleText('接触', 'Contact')} C${event.contact}${category}${className}`,
+          event,
+        );
+      } else if (kind === 'sunk' && side === state.side) {
+        showBattlePopup('loss', battleText('己方单位损失', 'UNIT LOST'), event.unit_name || `#${event.unit}`, event);
+      } else if (kind === 'air_shot_down' && side === state.side) {
+        showBattlePopup('loss', battleText('己方航空器损失', 'AIRCRAFT LOST'), event.unit_name || `#${event.unit}`, event);
+      } else if (kind === 'ditched' && side === state.side) {
+        showBattlePopup('loss', battleText('航空器迫降', 'AIRCRAFT DITCHED'), event.unit_name || `#${event.unit}`, event);
+      } else if (kind === 'base_destroyed' && side === state.side) {
+        showBattlePopup('loss', battleText('己方基地被毁', 'OWN BASE DESTROYED'), event.base_name || `#${event.base}`, event);
+      } else if (kind === 'critical_hit' && side === state.side) {
+        showBattlePopup('damage', battleText('致命损伤', 'CRITICAL HIT'), event.system || battleText('系统受损', 'System damage'), event);
+      } else if (kind === 'impact' && side === state.side) {
+        const unit = (state.observation?.units || []).find((u) => Number(u.id) === Number(event.unit));
+        if (!unit) continue;
+        const hpMax = Number(unit.hp_max) || 0;
+        const hpLeft = Number(event.hp_left);
+        const fraction = hpMax > 0 && Number.isFinite(hpLeft) ? hpLeft / hpMax : 1;
+        const damage = Number(event.damage) || 0;
+        if (damage >= 25 || fraction < 0.5) {
+          showBattlePopup(
+            'damage',
+            battleText('己方受损', 'OWN DAMAGE'),
+            `${event.unit_name || `#${event.unit}`} · ${event.weapon || ''} · ${Math.round(damage)} DP`,
+            event,
+          );
+        }
+      }
+    }
+  }
+
+  function showBattleResultDialog(obs) {
+    if (!dom.battleResultDialog) return;
+    const result = isObject(obs.result) ? obs.result : {};
+    const victory = isObject(obs.victory) ? obs.victory : {};
+    const winner = result.winner ? String(result.winner) : null;
+    const title = winner
+      ? (winner === state.side ? battleText('我方胜利', 'VICTORY') : battleText('敌方胜利', 'DEFEAT'))
+      : battleText('平局 / 停火', 'DRAW / CEASEFIRE');
+    dom.battleResultTitle.textContent = title;
+    dom.battleResultTitle.dataset.winner = winner || 'Draw';
+    const reason = result.reason
+      ? (window.HarpoonTheater?.reason(result.reason) || result.reason)
+      : battleText('想定结束', 'Scenario complete');
+    dom.battleResultReason.textContent = reason;
+    const rows = [
+      [battleText('本方战果', 'OWN KILLS'), fmtInt(victory.own_confirmed_kills)],
+      [battleText('本方损失', 'OWN LOSSES'), fmtInt(victory.own_losses)],
+      [battleText('权威击杀', 'AUTHORITATIVE KILLS'), `B ${fmtInt(result.blue_kills)} / R ${fmtInt(result.red_kills)}`],
+      [battleText('VP', 'VP'), `B ${fmtRange(result.vp_blue)} / R ${fmtRange(result.vp_red)}`],
+    ];
+    dom.battleResultScore.replaceChildren(...rows.map(([label, value]) => {
+      const span = document.createElement('span');
+      span.textContent = `${label} `;
+      const b = document.createElement('b');
+      b.textContent = String(value);
+      span.appendChild(b);
+      return span;
+    }));
+    if (!dom.battleResultDialog.open) {
+      try { dom.battleResultDialog.showModal(); } catch { /* another modal is opening */ }
+    }
+  }
+
   // ------------------------------------------------------------------
   // In-game AI staff panel
   // ------------------------------------------------------------------
@@ -3725,8 +3909,11 @@
       : '—';
     if (status && side) {
       const next = side.next_report_in_s;
+      const autoPrefix = side.enabled && side.auto_run
+        ? `${agentText('自动', 'AUTO')} ${Math.round(Number(side.auto_speed) || 15)}× · `
+        : '';
       dom.agentNext.textContent = side.enabled
-        ? `${agentText('下次汇报', 'NEXT REPORT')} ${next === null || next === undefined ? '—' : fmtEta(next)}`
+        ? `${autoPrefix}${agentText('下次汇报', 'NEXT REPORT')} ${next === null || next === undefined ? '—' : fmtEta(next)}`
         : (configured ? agentText('就绪', 'READY') : agentText('未配置密钥', 'NO API KEY'));
     } else {
       dom.agentNext.textContent = '—';
@@ -3736,6 +3923,15 @@
     dom.agentToggle.disabled = !configured || !!state.agent.reportBusy;
     dom.agentAutonomy.checked = !!(side && side.autonomy === 'execute');
     dom.agentAutonomy.disabled = !side || !side.enabled || busy;
+    if (dom.agentAuto) {
+      dom.agentAuto.checked = !!(side && side.auto_run);
+      dom.agentAuto.disabled = !side || !side.enabled || busy || !configured;
+    }
+    if (dom.agentSpeed) {
+      const autoSpeed = Math.round(Number(side?.auto_speed) || 15);
+      dom.agentSpeed.value = ['1', '15', '30', '60'].includes(String(autoSpeed)) ? String(autoSpeed) : '15';
+      dom.agentSpeed.disabled = !side || !side.enabled || busy || !configured;
+    }
     dom.agentReport.disabled = !configured || busy || state.agent.reportBusy;
     dom.agentExecute.hidden = !(side && side.autonomy !== 'execute' && Array.isArray(side.last_proposals) && side.last_proposals.length > 0);
     const memoryText = (side && side.memory && side.memory.trim()) || agentText('尚无记忆。', 'No memory yet.');
@@ -3768,6 +3964,10 @@
         state.agent.chat = { Blue: [], Red: [] };
       }
       state.agent.status = status;
+      const side = status?.sides?.[state.side];
+      if (side?.auto_run && state.observation && !state.observation.over && state.speed === 0) {
+        void fetchTime();
+      }
       renderAgentPanel();
     } catch {
       /* status is optional; the tactical feed is primary */
@@ -3863,6 +4063,18 @@
     });
     dom.agentReport.addEventListener('click', () => { void requestAgentReport(); });
     dom.agentExecute.addEventListener('click', () => { void executeAgentProposals(); });
+    dom.battleResultClose?.addEventListener('click', () => dom.battleResultDialog?.close());
+    dom.agentAuto?.addEventListener('change', async () => {
+      const auto = dom.agentAuto.checked;
+      const speed = Number(dom.agentSpeed?.value) || 15;
+      const status = await configureAgent({ auto_run: auto, auto_speed: speed });
+      if (status && auto) await setSpeed(speed);
+    });
+    dom.agentSpeed?.addEventListener('change', async () => {
+      const speed = Number(dom.agentSpeed.value) || 15;
+      await configureAgent({ auto_speed: speed });
+      if (agentSideState()?.auto_run) await setSpeed(speed);
+    });
     const submitChat = () => {
       const message = dom.agentInput.value;
       dom.agentInput.value = '';

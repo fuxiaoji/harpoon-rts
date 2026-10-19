@@ -91,6 +91,10 @@
           <div class="map-scenario" id="map-scenario">No scenario</div>
           <div class="map-desc" id="map-desc">Awaiting deployment orders.</div>
           <div class="weather-chips" id="weather-chips"></div>
+          <div class="score-strip" id="score-strip" hidden>
+            <span class="score-kill"><span class="field-label">KILLS</span><b id="score-kills">0</b></span>
+            <span class="score-loss"><span class="field-label">LOSSES</span><b id="score-losses">0</b></span>
+          </div>
           <div id="mission-brief" class="mission-brief" data-i18n-native hidden>
             <div class="mission-status"><span id="mission-clock"></span><span id="mission-own"></span></div>
             <p id="mission-objective"></p><div id="mission-ai"></div>
@@ -139,6 +143,7 @@
         </div>
 
         <div class="toast-stack" id="toast-stack" aria-live="polite" aria-atomic="false"></div>
+        <div class="battle-popups" id="battle-popups" aria-live="assertive" aria-atomic="false"></div>
         <div id="map-attribution" class="map-attribution" data-i18n-native hidden></div>
       </section>
 
@@ -162,6 +167,10 @@
             <div class="agent-controls">
               <button type="button" id="agent-toggle" class="btn btn--secondary">ENABLE</button>
               <label class="agent-check"><input type="checkbox" id="agent-autonomy"> ALLOW ORDERS</label>
+              <label class="agent-check"><input type="checkbox" id="agent-auto"> AUTO RUN</label>
+              <select id="agent-speed" class="agent-speed" aria-label="Agent run speed">
+                <option value="1">1×</option><option value="15" selected>15×</option><option value="30">30×</option><option value="60">60×</option>
+              </select>
               <button type="button" id="agent-report" class="btn btn--ghost">REPORT NOW</button>
               <button type="button" id="agent-execute" class="btn btn--ghost" hidden>EXECUTE PROPOSALS</button>
             </div>
@@ -385,6 +394,15 @@
   </div>
 
   <dialog id="mission-dialog" data-i18n-native aria-label="Mission briefing"><div id="mission-briefing-content"></div><button type="button" id="mission-close"></button></dialog>
+  <dialog id="battle-result-dialog" class="battle-result-dialog" aria-label="Battle result">
+    <div class="battle-result-inner">
+      <span class="field-label" id="battle-result-kicker">SCENARIO ENDED</span>
+      <h2 id="battle-result-title">—</h2>
+      <p id="battle-result-reason"></p>
+      <div class="battle-result-score" id="battle-result-score"></div>
+      <button type="button" id="battle-result-close">CLOSE</button>
+    </div>
+  </dialog>
   <script src="i18n.js?v=lobby-20261019-1" defer></script>
   <script src="theater.js?v=rts-20261019-4" defer></script>
   <script src="aircraft-roles.js?v=theater-20261019-1" defer></script>

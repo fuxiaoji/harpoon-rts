@@ -9,6 +9,16 @@ test('language adapter translates dynamic presentation without changing numeric 
   assert.equal(translateText('12 KT · 5 NM', 'zh-CN'), '12 节 · 5 海里');
   assert.equal(translateText('Long-Range Air Radar', 'zh-CN'), '远程对空雷达');
 });
+test('battle result scoreboard, popups and agent auto-run controls are wired', () => {
+  const html = fs.readFileSync(path.join(__dirname, '../web/command.html'), 'utf8');
+  for (const id of ['score-strip', 'score-kills', 'score-losses', 'battle-popups', 'battle-result-dialog', 'battle-result-close', 'agent-auto', 'agent-speed']) {
+    assert.ok(html.includes(`id="${id}"`), `missing #${id}`);
+  }
+  const js = fs.readFileSync(path.join(__dirname, '../web/app.js'), 'utf8');
+  for (const token of ['announceBattleEvents', 'showBattleResultDialog', 'auto_run', 'auto_speed', 'changeGameSpeed']) {
+    assert.ok(js.includes(token), `missing ${token}`);
+  }
+});
 test('English source and stable technical identifiers remain exact', () => {
   const original = 'Long-Range Air Radar · 12 KT';
   assert.equal(translateText(original, 'en'), original);
