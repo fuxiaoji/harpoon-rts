@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="dark"><title>鱼叉 · 战局复盘</title>
+  <link rel="stylesheet" href="replay.css?v=20261019-1">
+  <script defer src="replay-model.js?v=20261019-1"></script>
+  <script defer src="combat-help.js?v=replay-20261019-1"></script>
+  <script defer src="replay.js?v=20261019-1"></script>
+</head>
+<body>
+  <header class="replay-header">
+    <div class="heading"><a href="./" data-zh="返回指挥台" data-en="Command console">返回指挥台</a><h1 data-zh="战局复盘" data-en="Battle replay">战局复盘</h1></div>
+    <div class="archive-tools">
+      <label class="archive-label"><span data-zh="复盘档案" data-en="Recording">复盘档案</span><select id="recording" aria-label="复盘档案"><option value="" data-zh="正在读取本地档案…" data-en="Loading local recordings…">正在读取本地档案…</option></select></label>
+      <button id="import" data-zh="导入文件" data-en="Import file">导入文件</button>
+      <input id="import-file" type="file" accept=".json,.gz" hidden>
+      <button id="export" disabled data-zh="导出复盘" data-en="Export replay">导出复盘</button>
+      <select id="replay-language" aria-label="语言 / Language"><option value="zh-CN">简体中文</option><option value="en">English</option></select>
+    </div>
+  </header>
+  <section class="replay-title"><div><h2 id="battle-title" data-zh="选择一份已完成的对局" data-en="Choose a completed battle">选择一份已完成的对局</h2><p id="archive-summary" data-zh="导入含双方观察记录的复盘文件，即可切换视角。" data-en="Import a recording with both side observations to switch perspectives.">导入含双方观察记录的复盘文件，即可切换视角。</p></div><span class="read-only" data-zh="只读复盘" data-en="Read-only replay">只读复盘</span></section>
+  <p id="status" role="status" aria-live="polite" hidden></p>
+  <main class="replay-workspace">
+    <section class="map-pane" aria-label="Replay map">
+      <div class="view-bar">
+        <div id="perspectives" role="group" aria-label="复盘视角">
+          <button data-view="Blue" aria-pressed="true" data-zh="蓝方 · 中方" data-en="Blue · China">蓝方 · 中方</button>
+          <button data-view="Red" aria-pressed="false" data-zh="红方 · 美方" data-en="Red · US">红方 · 美方</button>
+          <button data-view="God" aria-pressed="false" data-zh="上帝视角" data-en="God view">上帝视角</button>
+        </div>
+        <span id="view-note"></span>
+      </div>
+      <div class="map-area" id="map-area">
+        <canvas id="replay-map" tabindex="0" aria-label="复盘海图：点击选择，拖动平移，滚轮缩放"></canvas>
+        <div class="map-tools"><button id="fit" data-zh="兵力聚焦" data-en="Fit forces">兵力聚焦</button><button id="theater" data-zh="全战区" data-en="Theater">全战区</button><button id="zoom-in" aria-label="放大 / Zoom in">＋</button><button id="zoom-out" aria-label="缩小 / Zoom out">−</button><button id="satellite" aria-pressed="true" data-zh="卫星底图" data-en="Satellite">卫星底图</button><label><input id="trails" type="checkbox" checked><span data-zh="已走航迹" data-en="Past trails">已走航迹</span></label></div>
+        <div id="map-readout"></div>
+        <div class="map-legend"><span class="blue" data-zh="● 蓝方真态" data-en="● Blue truth">● 蓝方真态</span><span class="red" data-zh="● 红方真态" data-en="● Red truth">● 红方真态</span><span class="gold" data-zh="◇ 接触估计" data-en="◇ Contact estimate">◇ 接触估计</span><span data-zh="实线为已记录航迹" data-en="Lines show recorded past tracks">实线为已记录航迹</span></div>
+        <div id="map-empty" data-zh="导入对局后，在这里查看海图与战斗过程。" data-en="Import a battle to inspect its map and action.">导入对局后，在这里查看海图与战斗过程。</div>
+      </div>
+      <div class="sampling-note" id="sampling-note"></div>
+    </section>
+    <aside class="review-pane">
+      <section class="selection-pane"><div class="section-heading"><h3 data-zh="态势与单位" data-en="Picture and units">态势与单位</h3><span id="picture-count"></span></div><select id="unit-select" aria-label="选择单位或接触 / Select unit or contact"><option value="" data-zh="点击海图或选择单位" data-en="Click map or choose unit">点击海图或选择单位</option></select><div id="unit-detail" class="detail"><p data-zh="选择单位查看当时的航速、舰体、弹药与任务。" data-en="Select a unit for its recorded speed, hull, ammunition and mission.">选择单位查看当时的航速、舰体、弹药与任务。</p></div></section>
+      <section class="events-pane"><div class="section-heading"><h3 data-zh="当时的作战记录" data-en="Events at this time">当时的作战记录</h3><span id="event-count"></span></div><div class="event-tools"><select id="event-filter" aria-label="战报类型 / Event type"><option value="key" data-zh="关键战报" data-en="Key events">关键战报</option><option value="all" data-zh="全部战报" data-en="All events">全部战报</option><option value="impact" data-zh="命中与损失" data-en="Hits and losses">命中与损失</option><option value="air" data-zh="航空活动" data-en="Air operations">航空活动</option><option value="detection" data-zh="探测与失联" data-en="Detection and lost tracks">探测与失联</option></select><input id="event-search" type="search" aria-label="搜索战报 / Search events" placeholder="搜索战报"></div><div id="events" role="list"></div></section>
+    </aside>
+  </main>
+  <footer class="replay-controls">
+    <div class="transport"><button id="play" disabled data-zh="播放" data-en="Play">播放</button><button id="previous-frame" disabled data-zh="上一记录" data-en="Previous sample">上一记录</button><button id="next-frame" disabled data-zh="下一记录" data-en="Next sample">下一记录</button><button id="previous-event" disabled data-zh="上一事件" data-en="Previous event">上一事件</button><button id="next-event" disabled data-zh="下一事件" data-en="Next event">下一事件</button><label class="speed-label"><span data-zh="倍速" data-en="Speed">倍速</span><select id="speed" aria-label="复盘速度 / Replay speed"><option value="1">1×</option><option value="30">30×</option><option value="60" selected>60×</option><option value="300">300×</option><option value="1200">1200×</option></select></label><output id="clock">00:00:00 / 00:00:00</output><label class="goto-label"><input id="goto-time" placeholder="hh:mm:ss" aria-label="跳转时间 / Seek time" size="8"><button id="goto" disabled data-zh="跳转" data-en="Go">跳转</button></label></div>
+    <div class="timeline"><input id="timeline" type="range" min="0" max="1" value="0" step="1" disabled aria-label="复盘时间轴 / Replay timeline"><div id="event-markers" aria-hidden="true"></div></div>
+    <nav id="bookmarks" aria-label="关键时刻 / Bookmarks"></nav>
+    <div class="footer-line"><span id="outcome"></span><button id="source-info" data-zh="记录来源与精度" data-en="Recording and precision">记录来源与精度</button><span id="map-credit">NASA Blue Marble · 2004-08</span></div>
+  </footer>
+  <dialog id="source-dialog"><h2 data-zh="记录来源与精度" data-en="Recording and precision">记录来源与精度</h2><p data-zh="这是已完成对局的离散观察回放。双方视角仅显示该方当时收到的己方状态、接触估计和可见战报；上帝视角合并双方各自记录的己方真态。" data-en="This replays sampled observations from a completed battle. Side views show only that side’s units, estimated contacts and visible events. God view combines each side’s recorded own-unit truth.">这是已完成对局的离散观察回放。双方视角仅显示该方当时收到的己方状态、接触估计和可见战报；上帝视角合并双方各自记录的己方真态。</p><p data-zh="时间轴可以定位每条事件的精确模拟秒；地图保持不晚于当前时刻的最近样本，不推算两次记录之间的运动，也不读取未来帧。双方采样稍有时差，海图下方会分别显示记录时间。" data-en="Events retain exact simulated seconds. The map holds the latest sample at or before the cursor, without interpolating movement or reading future samples. Each side’s sample time is shown below the map.">时间轴可以定位每条事件的精确模拟秒；地图保持不晚于当前时刻的最近样本，不推算两次记录之间的运动，也不读取未来帧。双方采样稍有时差，海图下方会分别显示记录时间。</p><pre id="source-json"></pre><form method="dialog"><button data-zh="关闭" data-en="Close">关闭</button></form></dialog>
+</body>
+</html>

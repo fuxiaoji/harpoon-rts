@@ -33,6 +33,8 @@ Cargo.lock.bak
 # Node (web UI tooling)
 node_modules/
 web/dist/
+# Local battle recordings are imported/deployed separately, never committed.
+/web/replays/
 
 # IDE / OS
 .idea/

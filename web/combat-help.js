@@ -126,6 +126,7 @@
   if(typeof module!=='undefined'&&module.exports) module.exports={firingState,ruleReport,traceZh,eventNote};
   if(!root.document) return;
   root.HarpoonCombat={firingState,ruleReport,traceZh,eventNote};
+  if(!document.getElementById('btn-operator-help')) return;
   const I=root.HarpoonI18n, b=(zh,en)=>pick(pair(zh,en),I.language);
   let overlay, returnFocus;
   const closeHelp=()=>{overlay.hidden=true;returnFocus?.focus();};
