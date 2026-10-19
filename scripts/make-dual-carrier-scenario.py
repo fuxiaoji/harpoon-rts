@@ -58,3 +58,20 @@ scenario=dict(id='dual_carrier_denial',name='Twin Shields: Dual-carrier Area Den
 path=ROOT/'scenarios/dual_carrier_denial.json'
 path.write_text(json.dumps(scenario,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 print(f'{path}: {len(units)} initial units; four carrier groups')
+
+# A separate hotseat lesson: neither side has an automatic staff. Carrier
+# movement is deliberately left to the two human-controlled command seats.
+lesson=copy.deepcopy(scenario)
+lesson.update(id='dual_carrier_hotseat',name='Twin Shields: Six-hour Hotseat Exercise',
+    description='Fictional six-hour hotseat exercise. Both sides are manually commanded; no automated staff. Carriers start holding position. Existing patrol, formation, self-defense and standing engagement orders still execute.',
+    duration_s=21600)
+lesson['context']['automated_side']=None
+for unit in lesson['units']:
+    if unit['name'] in context['area_denial']['protected_names']+context['area_denial']['intruder_names']:
+        unit['speed_kts']=0
+        unit.pop('waypoints',None)
+    # Both seats explicitly authorize their own automatic target selection.
+    unit['fire_on']=False
+lesson_path=ROOT/'scenarios/dual_carrier_hotseat.json'
+lesson_path.write_text(json.dumps(lesson,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+print(f'{lesson_path}: six hours; both command seats manual; carriers hold')

@@ -429,6 +429,7 @@ Wake-Homing Torpedo|尾流自导鱼雷
   const original = new WeakMap();
   const originalAttributes = new WeakMap();
   const scenarios = {
+    dual_carrier_hotseat: { title:{zh:'双盾行动：六小时双边手操',en:'Twin Shields: six-hour hotseat'},summary:{zh:'双方自动参谋关闭，四艘航母起始停航，由玩家切换指挥。六小时虚构演习，胜负条件与区域拒止版相同。',en:'Both automated staffs off. Four carriers hold until commanded. A six-hour fictional hotseat exercise with the same denial conditions.'} },
     dual_carrier_denial: { title:{zh:'双盾行动：双航母区域拒止',en:'Twin Shields: dual-carrier area denial'},summary:{zh:'辽宁、山东守卫45海里任务区；福特、尼米兹尝试连续占据3分钟。两小时虚构演习，使用RTS改编与已声明的数据库估算。',en:'Liaoning and Shandong deny a 45-nm circle against Ford and Nimitz. A two-hour fictional exercise with RTS adaptations and declared database estimates.'} },
     gunnery_dual: { title: {zh:'舰炮对决',en:'Gunnery duel'}, summary: {zh:'两方水面舰艇逐渐接近，练习接触判断、舰炮与导弹交战。',en:'Surface combatants close for a gun and missile engagement. Practise contact assessment and weapon control.'} },
     crimson_tide: { title: {zh:'赤潮行动',en:'Operation Crimson Tide'}, summary: {zh:'指挥航母编队应对水面、潜艇与航空威胁，并开展对陆打击。',en:'Command a carrier group against surface, submarine and air threats while conducting land strikes.'} },
