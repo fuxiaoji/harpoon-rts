@@ -8,6 +8,8 @@
 
 ## 核心特性
 
+- **统一大厅**：根入口提供继续指挥、作战任务、训练学院、战局复盘和设置。任务确认后以暂停启动；原指挥台保留在`command.html`，浏览大厅不重置当前战局。见[大厅使用与验收说明](docs/command-lobby.md)。
+
 - **确定性引擎**（Rust）：`种子 + 想定 JSON + 指令日志 ⇒ 完全一致的终态与事件流`。
   复盘、回归、RL rollout 全部可复现。实测 ~7.5 万 tick/秒/核（release）。
 - **RTS 时间轴**：1 秒固定 tick 的权威模拟；时间倍速 0×–512×，服务端节拍驱动。
@@ -41,7 +43,7 @@ cargo build --release
 # 启动权威服务器（默认 8787，加载 scenarios/ 想定，服务 web/ 前端）
 cargo run --release -p harpoon-server -- --port 8787 --speed 60
 
-# 打开 RTS 指挥界面
+# 打开指挥大厅（原战术指挥台保留于 /command.html）
 open http://localhost:8787/
 
 # 跑一局确定性自对弈（HTTP）

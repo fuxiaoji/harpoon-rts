@@ -13,6 +13,8 @@ TRAINING|训练
 TUTORIAL|训练中心
 HOW TO PLAY|怎么玩
 BATTLE REPLAY|战局复盘
+RETURN TO LOBBY|返回大厅
+Return to lobby|返回大厅
 Pause and explain firing, detection and automatic actions|暂停并查看开火、探测与自主行动说明
 AUTO-ENGAGE TARGET|指定目标自动交战
 AUTO-ENGAGING TARGET|正在指定目标自动交战

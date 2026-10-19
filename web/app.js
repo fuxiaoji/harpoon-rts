@@ -291,7 +291,7 @@
   // Application state
   // ------------------------------------------------------------------
   const state = {
-    side: readStorage('harpoon.side') === 'Red' ? 'Red' : 'Blue',
+    side: (new URLSearchParams(location.search).get('side') || readStorage('harpoon.side')) === 'Red' ? 'Red' : 'Blue',
     scenarios: [],
     scenarioId: null,
     observation: null,
@@ -687,7 +687,9 @@
     let started = false;
 
     try {
-      await postJson('/api/game', { scenario: id, speed: 0 });
+      const sourceFile = state.scenarios.find(sc => sc.id === id)?.file;
+      const sourceId = typeof sourceFile === 'string' && /^[a-zA-Z0-9_-]+\.json$/.test(sourceFile) ? sourceFile.slice(0, -5) : id;
+      await postJson('/api/game', { scenario: sourceId, speed: 0 });
 
       state.scenarioId = id;
       state.speed = 0;
