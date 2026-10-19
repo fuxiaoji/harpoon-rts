@@ -130,7 +130,8 @@ pub fn launch_aircraft(
                 .collect(),
             chaff: ac_class.chaff,
             decoys: 0,
-            auto_chaff: false,
+            // Aircrews self-protect: chaff dispensers armed on takeoff.
+            auto_chaff: ac_class.chaff > 0,
             chaff_active_s: 0.0,
             endurance_s: Some(ac_class.endurance_s),
             burn_s: 0.0,

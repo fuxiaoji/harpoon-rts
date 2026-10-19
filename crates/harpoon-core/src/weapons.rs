@@ -319,6 +319,15 @@ fn pick_free_target(world: &World, shooter: &ShooterCtx) -> Option<(ContactId, E
         .contacts
         .values()
         .filter(|c| !c.stale && c.quality > 0.25)
+        .filter(|c| {
+            // A radar fire-control solution is required to shoot at aircraft:
+            // bearing-only ESM fixes never authorize BVR shots (§6.3).
+            if world.entity(c.about).map(|e| e.kind) == Some(PlatformKind::Aircraft) {
+                !c.bearing_only && c.quality > 0.4
+            } else {
+                true
+            }
+        })
         .filter_map(|c| {
             let e = world.entity(c.about)?;
             if !e.alive {
@@ -877,7 +886,8 @@ fn advance_homing_air(world: &mut World, id: EntityId, def: WeaponDef, mut data:
     }
     let dist = world.entity(id).map(|e| e.pos.range_to(target.pos)).unwrap_or(f64::MAX);
     if dist < 0.35 {
-        // Terminal roll; salvo saturation lowers per-missile Pk.
+        // Terminal roll; heavy salvo saturation (3+ in flight) lowers
+        // per-missile Pk — two missiles stacking is the standard shot pair.
         let inbound = world
             .entities
             .values()
@@ -892,7 +902,7 @@ fn advance_homing_air(world: &mut World, id: EntityId, def: WeaponDef, mut data:
             })
             .count();
         let mut pk = def.pk;
-        if inbound >= 2 {
+        if inbound >= 3 {
             pk *= 0.7;
         }
         // Chaff only seduces radar seekers, never IR.

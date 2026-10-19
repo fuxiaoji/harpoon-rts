@@ -89,7 +89,8 @@ pub const BUILT_IN: &str = r#"{
       "rcs": "Small", "vp_value": 12, "endurance_s": 5400, "max_depth_m": 0,
       "sensors": ["radar_air_med", "visual"],
       "weapons": [
-        {"weapon": "aam_ir", "mounts": 3, "ammo": 2},
+        {"weapon": "aam_radar", "mounts": 2, "ammo": 2},
+        {"weapon": "aam_ir", "mounts": 2, "ammo": 2},
         {"weapon": "asm_air", "mounts": 2, "ammo": 1}
       ],
       "chaff": 12
@@ -190,6 +191,12 @@ pub const BUILT_IN: &str = r#"{
       "targets": {"air": true},
       "range_nm": 15, "min_range_nm": 0.3, "speed_kts": 2000, "pk": 0.50, "salvo": 1,
       "reload_s": 3, "damage": 20, "guidance": "HomingAir"
+    },
+    "aam_radar": {
+      "id": "aam_radar", "name": "Radar-Guided AAM", "kind": "Aam",
+      "targets": {"air": true},
+      "range_nm": 30, "min_range_nm": 0.5, "speed_kts": 2000, "pk": 0.55, "salvo": 1,
+      "reload_s": 4, "damage": 24, "guidance": "HomingAir"
     },
     "ascm_std": {
       "id": "ascm_std", "name": "Anti-Ship Cruise Missile", "kind": "Ascm",

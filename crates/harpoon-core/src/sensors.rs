@@ -74,7 +74,13 @@ fn effective_range(
             if o.systems.radar <= 0.05 {
                 return None;
             }
-            let rcs = target_class(t).map(|c| c.rcs.factor()).unwrap_or(1.0);
+            // Air-search ranges already describe aircraft-sized targets; the
+            // RCS factor applies to surface/subsurface/missile discrimination
+            // only (§5.2 adaptation — was flattening BVR detection to 38 nm).
+            let rcs = match t.kind {
+                PlatformKind::Aircraft => 1.0,
+                _ => target_class(t).map(|c| c.rcs.factor()).unwrap_or(1.0),
+            };
             let horizon = horizon_nm(def.alt_m, t.current_alt_for_horizon());
             (base * rcs).min(horizon) * (1.0 - weather_jam.clamp(0.0, 0.8))
                 * sensing_radar_modifier(def, t)
