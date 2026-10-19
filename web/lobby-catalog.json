@@ -144,6 +144,19 @@
       "automated_side": null,
       "satellite": false
     },
+    "carrier_duel_3h": {
+      "file": "carrier_duel_3h.json",
+      "source_sha256": "d3ddcc40a14b5faa3aa18b705c45ed6fca034296a12f13abf47885e2cb959539",
+      "duration_s": 10800,
+      "seed": 20261019,
+      "initial_units": 20,
+      "sides": {
+        "Blue": 10,
+        "Red": 10
+      },
+      "automated_side": null,
+      "satellite": true
+    },
     "crimson_tide": {
       "file": "crimson_tide.json",
       "source_sha256": "8112567f0dd5040466fd5d0c0b1f08d5a9064f58262e5d99c24da4e4d6f912ab",

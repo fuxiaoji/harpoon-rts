@@ -2544,3 +2544,54 @@ select option {
 #director-trigger { color: var(--text-soft); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 340px; }
 #director-speeds { color: #8fe0ff; white-space: nowrap; }
 #director-next { color: var(--faint); white-space: nowrap; }
+
+/* ---- BDA, results and event filtering ---- */
+.bda-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 6px;
+  padding: 5px 7px;
+  border: 1px solid rgba(242, 182, 96, 0.24);
+  background: rgba(242, 182, 96, 0.05);
+}
+.bda-row .field-label { min-width: 74px; }
+.bar--bda { flex: 1; height: 4px; background: rgba(242, 182, 96, 0.12); }
+.bar--bda i { display: block; width: 0; height: 100%; background: #f2b660; }
+.bda-row b { color: #f2b660; font-family: var(--mono); font-size: 9px; font-weight: 500; white-space: nowrap; }
+.log-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+}
+.log-filter { display: inline-flex; gap: 3px; }
+.log-filter button,
+.log-results {
+  padding: 3px 6px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--faint);
+  font-family: var(--mono);
+  font-size: 7px;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+}
+.log-filter button.is-active,
+.log-filter button:hover,
+.log-results:hover {
+  border-color: rgba(242, 182, 96, 0.55);
+  color: #f2b660;
+  background: rgba(242, 182, 96, 0.08);
+}
+.log-results { border-color: rgba(242, 182, 96, 0.4); color: #f2b660; }
+.event-list[data-filter="important"] [data-category="detection"],
+.event-list[data-filter="important"] [data-category="ops"],
+.event-list[data-filter="important"] [data-category="ordnance"],
+.event-list[data-filter="combat"] [data-category="detection"],
+.event-list[data-filter="combat"] [data-category="ops"],
+.event-list[data-filter="detection"] [data-category="combat"],
+.event-list[data-filter="detection"] [data-category="ops"],
+.event-list[data-filter="detection"] [data-category="ordnance"],
+.event-list[data-filter="detection"] [data-category="result"] { display: none; }

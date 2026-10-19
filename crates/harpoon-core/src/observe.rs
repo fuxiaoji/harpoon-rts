@@ -80,6 +80,14 @@ pub struct ContactObs {
     pub last_seen_s: f64,
     pub stale: bool,
     pub sensors: Vec<String>,
+    /// Shooter-side battle-damage assessment. Only populated from hits this
+    /// side actually observed on a tracked contact.
+    #[serde(default)]
+    pub bda_hits: u32,
+    #[serde(default)]
+    pub bda_damage: f64,
+    #[serde(default)]
+    pub bda_hp_fraction: Option<f64>,
 }
 
 /// Objective display for an exercise. It deliberately exposes only the
@@ -213,6 +221,9 @@ pub fn observe(world: &World, side: Side, since_seq: u64, max_events: usize) -> 
             last_seen_s: (world.tick - c.last_update_tick) as f64 * crate::world::TICK_SECONDS,
             stale: c.stale,
             sensors: c.sensors.clone(),
+            bda_hits: world.sides[side.index()].bda.get(&c.about).map(|b| b.hits).unwrap_or(0),
+            bda_damage: world.sides[side.index()].bda.get(&c.about).map(|b| b.damage).unwrap_or(0.0),
+            bda_hp_fraction: world.sides[side.index()].bda.get(&c.about).and_then(|b| b.hp_fraction),
         })
         .collect();
 

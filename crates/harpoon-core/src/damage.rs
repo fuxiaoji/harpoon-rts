@@ -15,7 +15,7 @@ use crate::db::{WeaponDef, WeaponKind};
 use crate::events::{EventKind, Visibility};
 use crate::rng::Rng;
 use crate::rules::damage_tables::{self, CriticalColumn, EffectSpec, HitZone};
-use crate::types::{EntityId, PlatformKind};
+use crate::types::{EntityId, PlatformKind, Side};
 use crate::world::{Entity, World};
 
 /// Roll damage + criticals for a successful weapon hit on `target`.
@@ -31,6 +31,27 @@ pub fn apply_hit(world: &mut World, target_id: EntityId, weapon: &WeaponDef, und
     apply_hit_at(world, target_id, weapon, underwater, hit_bearing_rel);
 }
 
+/// Production hit with the actual firing side. BDA is credited only to that
+/// side; inferring "the enemy of the victim" would misattribute a RAM or gun
+/// misfire against a friendly aircraft.
+pub fn apply_hit_from(
+    world: &mut World,
+    target_id: EntityId,
+    weapon: &WeaponDef,
+    underwater: bool,
+    shooter_side: Side,
+) {
+    let hit_bearing_rel = incoming_bearing_rel(world, target_id, weapon);
+    apply_hit_inner(
+        world,
+        target_id,
+        weapon,
+        underwater,
+        hit_bearing_rel,
+        Some(shooter_side),
+    );
+}
+
 /// `apply_hit` with an explicit hit bearing relative to the target's bow
 /// (0° = from ahead, 180° = from astern). Split out so tests and future
 /// geometry-aware call sites can bypass the shooter-recovery estimate.
@@ -40,6 +61,17 @@ pub fn apply_hit_at(
     weapon: &WeaponDef,
     underwater: bool,
     hit_bearing_rel: Option<f64>,
+) {
+    apply_hit_inner(world, target_id, weapon, underwater, hit_bearing_rel, None);
+}
+
+fn apply_hit_inner(
+    world: &mut World,
+    target_id: EntityId,
+    weapon: &WeaponDef,
+    underwater: bool,
+    hit_bearing_rel: Option<f64>,
+    shooter_side: Option<Side>,
 ) {
     let Some(t) = world.entities.get(&target_id).cloned() else { return };
     if !t.alive {
@@ -100,7 +132,7 @@ pub fn apply_hit_at(
     }
 
     // Bomb-damage assessment for the shooter if they hold a track.
-    bda_to_shooter(world, target_id, weapon, dmg, new_hp.max(0.0));
+    bda_to_shooter(world, target_id, weapon, dmg, new_hp.max(0.0), shooter_side);
 
     if do_crit {
         let column = critical_column_for(weapon, underwater);
@@ -218,9 +250,13 @@ fn bda_to_shooter(
     weapon: &WeaponDef,
     dmg: f64,
     hp_left: f64,
+    shooter_side: Option<Side>,
 ) {
+    let Some(shooter_side) = shooter_side else { return };
     let Some(t) = world.entities.get(&target_id) else { return };
-    let shooter_side = t.side.other();
+    if t.side == shooter_side {
+        return;
+    }
     let tracked = world
         .sides[shooter_side.index()]
         .contacts
@@ -228,6 +264,15 @@ fn bda_to_shooter(
         .any(|c| c.about == target_id && !c.stale && c.quality > 0.25);
     if !tracked {
         return;
+    }
+    let record = world.sides[shooter_side.index()]
+        .bda
+        .entry(target_id)
+        .or_default();
+    record.hits += 1;
+    record.damage += dmg;
+    if t.hp_max > 0.0 {
+        record.hp_fraction = Some((hp_left / t.hp_max).clamp(0.0, 1.0));
     }
     if t.kind == PlatformKind::Base {
         world.emit(

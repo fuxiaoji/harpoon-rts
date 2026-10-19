@@ -14,7 +14,7 @@
   const summary=s=>I.scenario(s?.id)?.summary||String(s?.description||'').slice(0,600);
   const mode=m=>!m?t('控制方式未标注','Control mode unspecified'):m.automated_side?t('规则参谋对抗','Rule-based staff opposition'):t('双边指挥','Two-seat command');
   const modeFor=s=>s?.id==='dual_carrier_duel'?t('可配置 AI 对手','Configurable AI opponent'):mode(state.metadata[s?.id]);
-  const group=s=>s.id==='dual_carrier_hotseat'?'hotseat':['dual_carrier_denial','fleet_decisive_3h','crimson_tide','pacific_storm'].includes(s.id)?'large':'practice';
+  const group=s=>s.id==='dual_carrier_hotseat'?'hotseat':['dual_carrier_denial','fleet_decisive_3h','carrier_duel_3h','crimson_tide','pacific_storm'].includes(s.id)?'large':'practice';
   const operations=()=>state.scenarios.filter(s=>!s.id.startsWith('academy_'));
   function notice(message,error=false){$('lobby-notice').hidden=!message;$('lobby-notice').textContent=message;$('lobby-notice').dataset.error=String(error);}
   async function request(path,payload,allowEmpty=false){

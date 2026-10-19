@@ -1702,6 +1702,7 @@ format!(
 - In a kill-count or fleet-decisive scenario, no patch of water is worth holding: find the enemy, fix the contact, and destroy platforms.
 - Prefer enemy carriers, then the escorts and aircraft that enable their strikes; mass missiles in coordinated salvos instead of trickling them into Aegis.
 - Keep your own carriers functional and use AEW/CAP to preserve the picture. Submarines are for close ambush; aircraft are for search, CAP, ASW and stand-off strike.
+- A submarine inside torpedo range (about 22 nm for Yu-10 / Mk 48) is your highest-value attack: fire a 2-4 torpedo salvo in the same turn. Single torpedoes are usually seduced by carrier decoys; do not leave an in-range submarine idle in favour of another CAP rotation.
 - Do not fire without a usable track and fire-control solution, and do not sacrifice the last carrier air group for a marginal damage roll.
 
 {director_block}
@@ -1712,7 +1713,7 @@ Return exactly one JSON object, no markdown fences:
   "intent": "one-sentence commander intent",
   "report": "concise staff briefing for the human commander at the current simulated time (<= 260 Chinese chars / 180 English words)",
   "memory": "updated long-term memory summary (mission progress, own losses, confirmed kills, standing plans, lessons; no hidden enemy truth; <= 900 chars)",
-  "commands": [ ... zero or more command objects; at most 8 ... ],
+  "commands": [ ... zero or more command objects; at most 16 ... ],
   "desired_speed": 15,
   "wake_conditions": [ ... zero or more wake rule objects ... ],
   "error": null

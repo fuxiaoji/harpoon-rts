@@ -245,6 +245,10 @@
     targetLockTag: $('target-lock-tag'),
     targetQualityBar: $('target-quality-bar'),
     targetQualityText: $('target-quality-text'),
+    targetBdaRow: $('target-bda-row'),
+    targetBdaBar: $('target-bda-bar'),
+    targetBdaText: $('target-bda-text'),
+    btnResults: $('btn-results'),
     targetRange: $('target-range'),
     targetCourse: $('target-course'),
     targetSpeed: $('target-speed'),
@@ -301,6 +305,7 @@
     scoreLosses: $('score-losses'),
     battlePopups: $('battle-popups'),
     battleResultDialog: $('battle-result-dialog'),
+    battleResultKicker: $('battle-result-kicker'),
     battleResultTitle: $('battle-result-title'),
     battleResultReason: $('battle-result-reason'),
     battleResultScore: $('battle-result-score'),
@@ -354,6 +359,7 @@
     },
     battlePrimed: false,
     battleSeq: 0,
+    eventFilter: 'important',
     resultDialogKey: null,
     director: null,
   };
@@ -1024,7 +1030,6 @@
       dom.outcomePanel.removeAttribute('data-winner');
       dom.outcomeTitle.style.color = '';
       state.resultDialogKey = null;
-      if (dom.battleResultDialog?.open) dom.battleResultDialog.close();
       return;
     }
 
@@ -1460,6 +1465,7 @@
     if (!contact) {
       dom.targetEmpty.hidden = false;
       dom.targetContent.hidden = true;
+      if (dom.targetBdaRow) dom.targetBdaRow.hidden = true;
       dom.targetQualityChip.textContent = 'NO TRACK';
       state.fireOptionsKey = null;
       populateFirePlaceholder(unit ? 'Select a contact' : 'Select a unit');
@@ -1500,6 +1506,20 @@
     dom.targetLockTag.classList.toggle('is-stale', track.coasting);
     dom.targetQualityBar.style.width = `${qualityPct}%`;
     dom.targetQualityText.textContent = `${qualityPct}%`;
+    const bdaHits = Number(contact.bda_hits) || 0;
+    const bdaFrac = finiteOrNull(contact.bda_hp_fraction);
+    if (dom.targetBdaRow) {
+      dom.targetBdaRow.hidden = false;
+      if (bdaHits > 0 && bdaFrac !== null) {
+        const pct = Math.round(clamp(bdaFrac, 0, 1) * 100);
+        dom.targetBdaBar.style.width = `${pct}%`;
+        dom.targetBdaText.textContent = battleText(`${bdaHits} 次命中 · 舰体约 ${pct}%`, `${bdaHits} HITS · ~${pct}% HULL`);
+      } else {
+        dom.targetBdaBar.style.width = '0%';
+        dom.targetBdaText.textContent = battleText('尚无确认命中', 'NO CONFIRMED HITS');
+      }
+      dom.targetBdaRow.title = battleText('BDA 估损来自本方实际观测到的命中，不是敌方隐藏真值。','BDA estimate is derived from hits this side observed, not hidden enemy truth.');
+    }
     dom.targetRange.textContent = range === null ? '—' : `${fmtRange(range)} NM`;
     dom.targetCourse.textContent = fmtCourse(contact.est_course_deg);
     dom.targetSpeed.textContent = `${fmt1(contact.est_speed_kts)} KT`;
@@ -2078,6 +2098,28 @@
     }
   }
 
+  function eventCategory(event) {
+    const kind = String(event?.event || '');
+    if (kind === 'scenario_ended') return 'result';
+    if (['contact_sank','sunk','air_shot_down','ditched','impact','critical_hit','base_damaged','base_destroyed','gun_action'].includes(kind)) return 'combat';
+    if (['weapons_release','sam_shot','intercept','incoming','torpedo_detected','chaff_deployed','decoy_fooled'].includes(kind)) return 'ordnance';
+    if (['detection','contact_identified','contact_lost','counter_detected'].includes(kind)) return 'detection';
+    return 'ops';
+  }
+
+  function eventPriority(event) {
+    const category = eventCategory(event);
+    return category === 'result' ? 3 : category === 'combat' ? 2 : category === 'ordnance' ? 1 : category === 'ops' ? 1 : 0;
+  }
+
+  function applyEventFilter(filter = state.eventFilter) {
+    state.eventFilter = ['important','all','combat','detection'].includes(filter) ? filter : 'important';
+    dom.eventList.dataset.filter = state.eventFilter;
+    document.querySelectorAll('[data-log-filter]').forEach((button) => {
+      button.classList.toggle('is-active', button.dataset.logFilter === state.eventFilter);
+    });
+  }
+
   function buildEventNode(event) {
     const info = formatEvent(event);
     const I = window.HarpoonI18n;
@@ -2087,6 +2129,7 @@
     const node = document.createElement('article');
     node.className = `event-row event-row--${info.tone || 'status'}`;
     node.dataset.seq = String(event.seq);
+    node.dataset.category = eventCategory(event);
     node.dataset.i18nNative = '';
     node.innerHTML = `
       <span class="event-time">${escapeHtml(fmtEventTick(event.tick))}</span>
@@ -2154,10 +2197,11 @@
 
   function trimEvents() {
     if (state.eventMap.size <= MAX_EVENTS) return;
-    const seqs = Array.from(state.eventMap.keys()).sort((a, b) => a - b);
+    const ordered = [...state.eventMap.entries()].sort((a, b) =>
+      eventPriority(a[1]) - eventPriority(b[1]) || a[0] - b[0]);
     const removeCount = state.eventMap.size - MAX_EVENTS;
     for (let i = 0; i < removeCount; i += 1) {
-      const seq = seqs[i];
+      const seq = ordered[i][0];
       state.eventMap.delete(seq);
       const node = dom.eventList.querySelector(`[data-seq="${seq}"]`);
       if (node) node.remove();
@@ -3860,21 +3904,25 @@
     if (!dom.battleResultDialog) return;
     const result = isObject(obs.result) ? obs.result : {};
     const victory = isObject(obs.victory) ? obs.victory : {};
+    const over = !!obs.over;
     const winner = result.winner ? String(result.winner) : null;
-    const title = winner
-      ? (winner === state.side ? battleText('我方胜利', 'VICTORY') : battleText('敌方胜利', 'DEFEAT'))
-      : battleText('平局 / 停火', 'DRAW / CEASEFIRE');
+    const title = over
+      ? (winner ? (winner === state.side ? battleText('我方胜利', 'VICTORY') : battleText('敌方胜利', 'DEFEAT')) : battleText('平局 / 停火', 'DRAW / CEASEFIRE'))
+      : battleText('当前战果', 'CURRENT SCORE');
+    if (dom.battleResultKicker) dom.battleResultKicker.textContent = over ? battleText('想定结束', 'SCENARIO ENDED') : battleText('当前战果', 'CURRENT SCORE');
     dom.battleResultTitle.textContent = title;
-    dom.battleResultTitle.dataset.winner = winner || 'Draw';
-    const reason = result.reason
-      ? (window.HarpoonTheater?.reason(result.reason) || result.reason)
-      : battleText('想定结束', 'Scenario complete');
+    dom.battleResultTitle.dataset.winner = over ? (winner || 'Draw') : 'Live';
+    const reason = over
+      ? (result.reason ? (window.HarpoonTheater?.reason(result.reason) || result.reason) : battleText('想定结束', 'Scenario complete'))
+      : battleText('战斗进行中；这里只显示本方确认战果与损失。','Battle in progress; only own confirmed kills and losses are shown.');
     dom.battleResultReason.textContent = reason;
     const rows = [
       [battleText('本方战果', 'OWN KILLS'), fmtInt(victory.own_confirmed_kills)],
       [battleText('本方损失', 'OWN LOSSES'), fmtInt(victory.own_losses)],
-      [battleText('权威击杀', 'AUTHORITATIVE KILLS'), `B ${fmtInt(result.blue_kills)} / R ${fmtInt(result.red_kills)}`],
-      [battleText('VP', 'VP'), `B ${fmtRange(result.vp_blue)} / R ${fmtRange(result.vp_red)}`],
+      ...(over ? [
+        [battleText('权威击杀', 'AUTHORITATIVE KILLS'), `B ${fmtInt(result.blue_kills)} / R ${fmtInt(result.red_kills)}`],
+        [battleText('VP', 'VP'), `B ${fmtRange(result.vp_blue)} / R ${fmtRange(result.vp_red)}`],
+      ] : []),
     ];
     dom.battleResultScore.replaceChildren(...rows.map(([label, value]) => {
       const span = document.createElement('span');
@@ -4129,6 +4177,13 @@
     dom.agentReport.addEventListener('click', () => { void requestAgentReport(); });
     dom.agentExecute.addEventListener('click', () => { void executeAgentProposals(); });
     dom.battleResultClose?.addEventListener('click', () => dom.battleResultDialog?.close());
+    dom.btnResults?.addEventListener('click', () => {
+      if (state.observation) showBattleResultDialog(state.observation);
+    });
+    document.querySelectorAll('[data-log-filter]').forEach((button) => {
+      button.addEventListener('click', () => applyEventFilter(button.dataset.logFilter));
+    });
+    applyEventFilter();
     dom.agentAuto?.addEventListener('change', async () => {
       const auto = dom.agentAuto.checked;
       const speed = Number(dom.agentSpeed?.value) || 15;

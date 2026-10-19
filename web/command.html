@@ -280,6 +280,11 @@
                 <span class="bar bar--quality"><i id="target-quality-bar"></i></span>
                 <b id="target-quality-text">—</b>
               </div>
+              <div class="bda-row" id="target-bda-row" hidden>
+                <span class="field-label">BDA ESTIMATE</span>
+                <span class="bar bar--bda"><i id="target-bda-bar"></i></span>
+                <b id="target-bda-text">—</b>
+              </div>
 
               <div class="target-metrics">
                 <div><span class="field-label">RANGE</span><b id="target-range">—</b></div>
@@ -385,7 +390,16 @@
           <span class="kicker">EVENT FEED</span>
           <span class="log-side-badge" id="log-side-badge">BLUE + ALL</span>
         </div>
-        <div class="log-meta" id="log-meta">NEWEST FIRST · 0 EVENTS</div>
+        <div class="log-tools">
+          <div class="log-filter" role="group" aria-label="Event filter">
+            <button type="button" data-log-filter="important" class="is-active">IMPORTANT</button>
+            <button type="button" data-log-filter="all">ALL</button>
+            <button type="button" data-log-filter="combat">COMBAT</button>
+            <button type="button" data-log-filter="detection">DETECTION</button>
+          </div>
+          <button type="button" id="btn-results" class="log-results">RESULTS</button>
+          <div class="log-meta" id="log-meta">NEWEST FIRST · 0 EVENTS</div>
+        </div>
       </div>
       <div class="event-log" id="event-log">
         <div class="log-empty" id="log-empty">

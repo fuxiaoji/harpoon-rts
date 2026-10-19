@@ -422,6 +422,12 @@ OWN BASE DESTROYED|己方基地被毁
 SCENARIO ENDED|想定结束
 DEFEAT|失败
 CLOSE|关闭
+IMPORTANT|重要
+ALL|全部
+COMBAT|交战
+DETECTION|探测
+RESULTS|战果 / 结算
+BDA ESTIMATE|BDA 估损
 `.trim().split('\n').map(line => line.split('|')));
   const escape = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   let phrasePattern;
@@ -469,6 +475,7 @@ CLOSE|关闭
   const originalAttributes = new WeakMap();
   const scenarios = {
     dual_carrier_hotseat: { title:{zh:'双盾行动：六小时双边手操',en:'Twin Shields: six-hour hotseat'},summary:{zh:'双方自动参谋关闭，四艘航母起始停航，由玩家切换指挥。六小时虚构演习，胜负条件与区域拒止版相同。',en:'Both automated staffs off. Four carriers hold until commanded. A six-hour fictional hotseat exercise with the same denial conditions.'} },
+    carrier_duel_3h: { title:{zh:'双盾行动：三小时航母决战',en:'Twin Shields: three-hour carrier decisive duel'},summary:{zh:'轻护航航母决战：四艘航母、潜艇与舰载机在前沿位置直接交战，适合观察航母受损与击沉。到期按击毁平台数决胜；大厅可配置 AI 对手与助手。',en:'Light-escort carrier duel: four carriers, submarines and air wings start close enough for a decisive engagement. Designed to show carrier damage and sinking; kill count decides at the deadline.'} },
     fleet_decisive_3h: { title:{zh:'双盾行动：三小时舰队决战',en:'Twin Shields: three-hour fleet decisive battle'},summary:{zh:'三小时纯舰队决战：不守区域，寻找并击毁敌方编队。到期按击毁平台数决胜；大厅可配置 AI 对手与半自动/全自动助手，严格双盲固定规划窗。',en:'Three-hour fleet decisive battle: no area to hold, find and destroy the enemy formation. Kills decide at the deadline; the lobby can configure an AI opponent and semi/full-auto assistant with strict double-blind fixed planning windows.'} },
     dual_carrier_duel: { title:{zh:'双盾行动：5分钟杀伤对决',en:'Twin Shields: 5-minute kill duel'},summary:{zh:'纯杀伤对抗：不守区域，5分钟内击毁敌方平台更多的一方获胜。大厅可选择 AI 对手与助手半自动/全自动；严格双盲，固定 5 分钟规划窗，全自动双方速度取较慢值。',en:'Pure kill duel: no area to hold. The side destroying more enemy platforms in 5 minutes wins. The lobby can add an AI opponent and a semi/full-auto assistant; strict double-blind, fixed five-minute planning windows, full-auto uses the slower requested speed.'} },
     dual_carrier_kills: { title:{zh:'双盾行动：六小时击杀数',en:'Twin Shields: six-hour kill count'},summary:{zh:'辽宁、山东对福特、尼米兹的六小时虚构演习。取消区域拒止，06:00:00 时击毁敌方平台更多的一方获胜；可由双方游戏内 AI 参谋完整对局。',en:'A six-hour fictional exercise: Liaoning and Shandong against Ford and Nimitz. Area denial is removed; at 06:00:00 the side with more destroyed enemy platforms wins. Two in-game AI staff officers can play it end to end.'} },

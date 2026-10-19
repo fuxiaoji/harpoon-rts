@@ -3,6 +3,8 @@
   'use strict';
   const pair = (zh,en) => ({zh,en});
   const rules = {
+    air_terminal: pair('防空导弹末段判定','Air-defense terminal resolution'),
+    decoy_expired: pair('来袭弹飞抵诱饵后失效','Seduced missile expired'),
     air_burst: pair('近程拦截破片波及','Fragments after a close intercept'),
     tdl_share: pair('己方战术数据链共享','Friendly tactical data sharing'),
     cross_fix: pair('多个方位交叉定位','Cross-fix from passive bearings'),
@@ -26,6 +28,8 @@
     location_light_crit: pair('舰艏或舰艉附加轻微重创','Additional bow or stern light critical'),
   };
   const meanings = {
+    air_terminal: pair('成功时销毁空中目标，失败时仅消耗本枚拦截弹；此处采用当前RTS概率模型。','Success destroys the air target; failure expends only this interceptor. This uses the current RTS probability model.'),
+    decoy_expired: pair('导弹被诱饵骗离原目标，在假目标点结束飞行，没有命中原舰。','The decoy drew this missile away; it expired at the false aim point without hitting the original ship.'),
     air_burst: pair('来袭武器已在近处被拦截，但爆炸破片仍波及被保护单位；不等于整枚导弹直接命中。','The incoming weapon was intercepted nearby, but fragments affected the defended unit. This is not a direct missile impact.'),
     tdl_share: pair('己方平台正在交换接触情报。这是情报更新，不是发射或命中；共享情报也可能降质或延迟。','Friendly platforms are exchanging tracks. This is an intelligence update, not a launch or hit; shared tracks may be delayed or degraded.'),
     cross_fix: pair('多处被动方位被组合用于定位，原本只有方向的接触获得了位置估计。','Several passive bearings were combined to estimate a position for a bearing-only track.'),
@@ -72,6 +76,10 @@
   }
   function traceZh(raw) {
     const s=String(raw||'').replace(/\s+/g,' ').trim(); let match;
+    if((match=s.match(/^Air intercept: Pk=([\d.]+); roll=([\d.]+); hit=(true|false)$/))) {
+      return `防空导弹命中概率 ${(Number(match[1])*100).toFixed(1)}%；随机值 ${(Number(match[2])*100).toFixed(2)}；${match[3]==='true'?'判定成功，空中目标被销毁':'判定失败，目标继续飞行'}。`;
+    }
+    if(s==='Seduced missile reached its false aim point; original target not hit') return '导弹飞抵诱饵位置后失效；原目标未被命中。';
     if((match=s.match(/^PD-band intercept at ([\d.]+) nmi; fragment strike chance ([\d.]+)%; airburst critical d20=(\d+): (.+)$/))) {
       const effect=effectZh(match[4]);
       return effect ? `拦截点距被保护单位 ${match[1]} 海里；破片波及概率 ${match[2]}%；D20（20面骰）结果 ${match[3]}。${effect}。` : null;

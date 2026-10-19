@@ -54,3 +54,12 @@ test('firing labels tell players which operation is single or automatic', () => 
   assert.equal(translateText('AUTO-ENGAGE TARGET','zh-CN'),'指定目标自动交战');
   assert.equal(translateText('AUTO SELECT OFF','zh-CN'),'自动选敌：关');
 });
+test('terminal reports explain the actual roll and decoy outcome in Chinese',()=>{
+  const hit=ruleReport({rule:'air_terminal',detail:'Air intercept: Pk=0.700000; roll=0.234567; hit=true'});
+  assert.equal(hit.known,true);
+  assert.match(hit.detail,/70.0%.*23.46.*空中目标被销毁/);
+  assert.match(traceZh('Air intercept: Pk=0.700000; roll=0.999000; hit=false'),/判定失败/);
+  const decoy=ruleReport({rule:'decoy_expired',detail:'Seduced missile reached its false aim point; original target not hit'});
+  assert.equal(decoy.known,true);
+  assert.match(decoy.detail,/原目标未被命中/);
+});

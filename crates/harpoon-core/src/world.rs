@@ -268,10 +268,22 @@ impl Contact {
 pub struct SideState {
     pub contacts: BTreeMap<ContactId, Contact>,
     pub next_contact: u32,
+    /// Per-side battle-damage assessment for tracked enemy entities. This is
+    /// derived only from hits the side actually observed (BDA), never from
+    /// hidden truth.
+    #[serde(default)]
+    pub bda: BTreeMap<EntityId, BdaRecord>,
     /// Enemy platforms this side has confirmed destroyed via its own
     /// contacts. Referee truth is not included here.
     #[serde(default)]
     pub confirmed_kills: u32,
+}
+
+#[derive(Clone, Debug, Default, Serialize, Deserialize)]
+pub struct BdaRecord {
+    pub hits: u32,
+    pub damage: f64,
+    pub hp_fraction: Option<f64>,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]

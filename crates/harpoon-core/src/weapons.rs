@@ -217,7 +217,7 @@ pub fn fire_control_scan(world: &mut World) {
                         if rng.chance(0.05) {
                             let mut half = def.clone();
                             half.damage *= 0.5;
-                            damage::apply_hit(world, friend_id, &half, false);
+                            damage::apply_hit_from(world, friend_id, &half, false, shooter.side);
                             world.emit(
                                 EventKind::RulesEvent {
                                     domain: "firectl".into(),
@@ -407,7 +407,7 @@ fn gun_salvo(
     for _ in 0..rounds {
         if rng.chance(pk) {
             hits += 1;
-            damage::apply_hit(world, target_id, def, false);
+            damage::apply_hit_from(world, target_id, def, false, side);
         }
     }
     world.emit(
@@ -603,7 +603,7 @@ pub fn manual_fire(world: &mut World, side: Side, unit: EntityId, contact: Conta
         let mut fired = 0u16;
         for _ in 0..n {
             if rng.chance(def.pk * 0.25) {
-                damage::apply_hit(world, eid, &def, false);
+                damage::apply_hit_from(world, eid, &def, false, side);
             }
             fired += 1;
         }
@@ -670,6 +670,8 @@ pub fn advance_projectiles(world: &mut World) {
 
     for id in ids {
         let Some(e) = world.entities.get(&id) else { continue };
+        // An earlier projectile in this snapshot may already have intercepted it.
+        if !e.alive { continue; }
         let Some(data) = e.projectile.clone() else { continue };
         let Some(def) = world.db.weapons.get(&data.weapon).cloned() else { continue };
 
@@ -686,7 +688,9 @@ pub fn advance_projectiles(world: &mut World) {
 fn fly_toward(e: &mut Entity, aim: Vec2, dt: f64) {
     let brg = e.pos.bearing_to(aim);
     e.course_deg = brg;
-    let v = e.speed_kts * KTS_TO_NM_PER_S * dt;
+    // A one-second step must stop at the aim point. Unbounded steps can jump
+    // across the terminal radius indefinitely, reversing course every tick.
+    let v = (e.speed_kts * KTS_TO_NM_PER_S * dt).min(e.pos.range_to(aim));
     e.pos = e.pos.advanced(brg, v);
 }
 
@@ -718,7 +722,7 @@ fn advance_sea_skimmer(world: &mut World, id: EntityId, def: WeaponDef, mut data
         remove_projectile(world, id);
         return;
     };
-    let Some(target) = world.entity(target_id).cloned() else {
+    let Some(target) = world.entity(target_id).filter(|t| t.alive).cloned() else {
         // Target died mid-flight: fly to last aim point, then self-destruct.
         {
             let Some(e) = world.entity_mut(id) else { return };
@@ -732,7 +736,7 @@ fn advance_sea_skimmer(world: &mut World, id: EntityId, def: WeaponDef, mut data
         return;
     };
 
-    // Decoysed missiles chase the decoy point.
+    // Decoyed missiles chase the decoy point.
     let aim = match (data.decoyed, data.decoy_point) {
         (true, Some(p)) => p,
         _ => {
@@ -748,6 +752,19 @@ fn advance_sea_skimmer(world: &mut World, id: EntityId, def: WeaponDef, mut data
         let Some(e) = world.entity_mut(id) else { return };
         fly_toward(e, aim, dt);
         e.projectile = Some(data.clone());
+    }
+
+    // RTS adaptation: seduction is terminal at the false aim point. It must
+    // neither orbit that point until runout nor hit the original ship en route.
+    if data.decoyed && world.entity(id).map(|e| e.pos.range_to(aim) < 0.2).unwrap_or(false) {
+        let contact = world.find_contact(target.side, id);
+        world.emit(EventKind::RulesEvent {
+            domain: "weapons".into(), rule: "decoy_expired".into(), side: Some(target.side),
+            unit: Some(target_id), contact,
+            detail: "Seduced missile reached its false aim point; original target not hit".into(),
+        }, Visibility::Side(target.side));
+        remove_projectile(world, id);
+        return;
     }
 
     let dist = world.entity(id).map(|e| e.pos.range_to(target.pos)).unwrap_or(f64::MAX);
@@ -807,6 +824,8 @@ fn advance_sea_skimmer(world: &mut World, id: EntityId, def: WeaponDef, mut data
                     let contact = world.find_contact(defender, id);
                     let burst_range = dist;
                     remove_projectile(world, id);
+                    // Only the defending side knows this intercept succeeded.
+                    world.sides[defender.index()].contacts.retain(|_, c| c.about != id);
                     world.emit(
                         EventKind::Intercept { side: defender, contact, intercepted: true },
                         Visibility::Side(defender),
@@ -839,7 +858,7 @@ fn advance_sea_skimmer(world: &mut World, id: EntityId, def: WeaponDef, mut data
     }
 
     // Terminal impact.
-    if defendable && dist < 0.25 {
+    if defendable && !data.decoyed && dist < 0.25 {
         let chaff_on = world.entity(target_id).map(|t| t.chaff_active_s).unwrap_or(0.0) > 0.0;
         let mut pk = def.pk;
         if chaff_on && !data.decoyed {
@@ -847,7 +866,7 @@ fn advance_sea_skimmer(world: &mut World, id: EntityId, def: WeaponDef, mut data
         }
         let mut rng = world.scope_rng(id, "terminal");
         if rng.chance(pk) {
-            damage::apply_hit(world, target_id, &def, false);
+            damage::apply_hit_from(world, target_id, &def, false, data.launched_by_side);
         }
         remove_projectile(world, id);
         return;
@@ -874,7 +893,7 @@ fn advance_homing_air(world: &mut World, id: EntityId, def: WeaponDef, mut data:
         remove_projectile(world, id);
         return;
     };
-    let Some(target) = world.entity(target_id).cloned() else {
+    let Some(target) = world.entity(target_id).filter(|t| t.alive).cloned() else {
         remove_projectile(world, id);
         return;
     };
@@ -910,17 +929,33 @@ fn advance_homing_air(world: &mut World, id: EntityId, def: WeaponDef, mut data:
             pk *= 0.85;
         }
         let mut rng = world.scope_rng(id, "aam_terminal");
-        let hit = rng.chance(pk);
-        let defender = target.side;
-        let contact = world.find_contact(defender, id);
+        let roll = rng.next_f64();
+        let hit = roll < pk.clamp(0.0, 1.0);
+        let defender = data.launched_by_side;
+        let contact = world.find_contact(defender, target_id);
+        world.emit(EventKind::RulesEvent {
+            domain: "aaw".into(), rule: "air_terminal".into(), side: Some(defender),
+            unit: Some(data.launched_by), contact,
+            detail: format!("Air intercept: Pk={pk:.6}; roll={roll:.6}; hit={hit}"),
+        }, Visibility::Side(defender));
         if hit {
             let burst_range = dist;
+            // §8.1.1, printed 8-3 / PDF83: a successful attack shoots down
+            // the air target. The fragment hook must see the incoming missile
+            // before it is retired, to recover the defended ship and geometry.
+            crate::rules::aaw::on_intercept(world, target_id, burst_range);
+            if target.kind.is_projectile() {
+                remove_projectile(world, target_id);
+                // Resolve only the firing side's confirmed target track.
+                world.sides[defender.index()].contacts.retain(|_, c| c.about != target_id);
+            } else {
+                damage::sink(world, target_id);
+            }
             remove_projectile(world, id);
             world.emit(
                 EventKind::Intercept { side: defender, contact, intercepted: true },
                 Visibility::Side(defender),
             );
-            crate::rules::aaw::on_intercept(world, target_id, burst_range);
             return;
         }
         remove_projectile(world, id);
@@ -1031,7 +1066,7 @@ fn advance_torpedo(world: &mut World, id: EntityId, def: WeaponDef, mut data: cr
             let mut rng = world.scope_rng(id, "torp_terminal");
             let hit = rng.chance(pk);
             if hit {
-                damage::apply_hit(world, target_id, &def, true);
+                damage::apply_hit_from(world, target_id, &def, true, data.launched_by_side);
             } else {
                 data.passes = 0; // miss, re-attack if fuel remains
             }
@@ -1078,7 +1113,7 @@ fn advance_asw_ballistic(world: &mut World, id: EntityId, def: WeaponDef, mut da
             if still_close {
                 let mut rng = world.scope_rng(id, "asw_rocket");
                 if rng.chance(def.pk) {
-                    damage::apply_hit(world, tid, &def, true);
+                    damage::apply_hit_from(world, tid, &def, true, data.launched_by_side);
                 }
             }
         }
@@ -1230,6 +1265,174 @@ mod tests {
             .find(|m| m.weapon == weapon)
             .unwrap()
             .ammo
+    }
+
+    fn terminal_world() -> (World, EntityId, EntityId) {
+        let w = world(vec![
+            unit(Side::Blue, "ddg_aegis", "DEFENDER", 0.0, 0.0, 0.0, None, false),
+            unit(Side::Red, "fighter", "ATTACKER", 10.0, 0.0, 0.0, Some(5000.0), false),
+        ]);
+        let blue = id_of(&w, "DEFENDER");
+        let red = id_of(&w, "ATTACKER");
+        (w, blue, red)
+    }
+
+    #[test]
+    fn terminal_sam_success_destroys_incoming_and_reports_to_shooter() {
+        let (mut w, blue, red) = terminal_world();
+        let asm = w.db.weapons.values().find(|d| d.guidance == Guidance::SeaSkimmer).unwrap().clone();
+        let incoming = launch(&mut w, red, &asm, Some(blue), None).unwrap();
+        w.entity_mut(incoming).unwrap().pos = Vec2::new(0.5, 0.0);
+        let cid = seed_contact(&mut w, Side::Blue, incoming, PlatformKind::Missile,
+            Vec2::new(0.5, 0.0), 1.0, false, vec!["radar_air_long"]);
+        let mut sam = w.db.weapons["sam_long"].clone();
+        sam.pk = 1.0;
+        sam.speed_kts = 720.0;
+        let interceptor = launch(&mut w, blue, &sam, Some(incoming), None).unwrap();
+        let data = w.entity(interceptor).unwrap().projectile.clone().unwrap();
+        advance_homing_air(&mut w, interceptor, sam, data);
+        assert!(!w.entity(incoming).unwrap().alive, "successful SAM must destroy its target");
+        assert!(!w.entity(interceptor).unwrap().alive);
+        assert!(w.events.iter().any(|e| matches!(e.kind,
+            EventKind::Intercept { side: Side::Blue, contact: Some(c), intercepted: true } if c == cid)));
+        assert!(!w.sides[Side::Blue.index()].contacts.contains_key(&cid),
+            "the firing side's confirmed intercept must resolve its own track");
+        assert_eq!(w.entity(blue).unwrap().hp, w.entity(blue).unwrap().hp_max,
+            "fragment effects cause no direct DP");
+    }
+
+    #[test]
+    fn terminal_air_success_shoots_down_aircraft() {
+        for weapon in ["sam_long", "aam_ir"] {
+            let (mut w, blue, red) = terminal_world();
+            let mut def = w.db.weapons[weapon].clone();
+            def.pk = 1.0;
+            def.speed_kts = 360.0;
+            let missile = launch(&mut w, blue, &def, Some(red), None).unwrap();
+            w.entity_mut(missile).unwrap().pos = Vec2::new(9.8, 0.0);
+            let data = w.entity(missile).unwrap().projectile.clone().unwrap();
+            advance_homing_air(&mut w, missile, def, data);
+            assert!(!w.entity(red).unwrap().alive, "{weapon} success must shoot down aircraft");
+            assert_eq!(w.entity(red).unwrap().hp, 0.0);
+            assert_eq!(w.events.iter().filter(|e| matches!(e.kind,
+                EventKind::AirShotDown { unit, .. } if unit == red)).count(), 1);
+        }
+    }
+
+    #[test]
+    fn terminal_air_miss_leaves_target_alive() {
+        let (mut w, blue, red) = terminal_world();
+        let mut def = w.db.weapons["sam_long"].clone();
+        def.pk = 0.0;
+        def.speed_kts = 360.0;
+        let missile = launch(&mut w, blue, &def, Some(red), None).unwrap();
+        w.entity_mut(missile).unwrap().pos = Vec2::new(9.8, 0.0);
+        let data = w.entity(missile).unwrap().projectile.clone().unwrap();
+        advance_homing_air(&mut w, missile, def, data);
+        assert!(w.entity(red).unwrap().alive);
+        assert!(!w.entity(missile).unwrap().alive);
+        assert!(w.events.iter().any(|e| matches!(e.kind,
+            EventKind::Intercept { side: Side::Blue, intercepted: false, .. })));
+    }
+
+    #[test]
+    fn terminal_fast_missile_cannot_step_over_target_and_oscillate() {
+        let (mut w, blue, red) = terminal_world();
+        let mut def = w.db.weapons["sam_long"].clone();
+        def.pk = 1.0;
+        def.speed_kts = 7200.0;
+        let missile = launch(&mut w, blue, &def, Some(red), None).unwrap();
+        w.entity_mut(missile).unwrap().pos = Vec2::new(9.0, 0.0);
+        let data = w.entity(missile).unwrap().projectile.clone().unwrap();
+        advance_homing_air(&mut w, missile, def, data);
+        assert!(!w.entity(missile).unwrap().alive, "must resolve on the crossing tick");
+        assert!(!w.entity(red).unwrap().alive);
+    }
+
+    #[test]
+    fn terminal_decoy_arrival_expires_without_ship_damage() {
+        let (mut w, blue, red) = terminal_world();
+        let mut def = w.db.weapons.values().find(|d| d.guidance == Guidance::SeaSkimmer).unwrap().clone();
+        def.pk = 1.0;
+        let missile = launch(&mut w, red, &def, Some(blue), None).unwrap();
+        let e = w.entity_mut(missile).unwrap();
+        e.pos = Vec2::new(0.0, 1.55);
+        let mut data = e.projectile.clone().unwrap();
+        data.decoyed = true;
+        data.decoy_point = Some(Vec2::new(0.0, 1.5));
+        data.chaff_checked = true;
+        data.ciws_checked = true;
+        advance_sea_skimmer(&mut w, missile, def, data);
+        assert!(!w.entity(missile).unwrap().alive, "must not loiter at a decoy point");
+        assert_eq!(w.entity(blue).unwrap().hp, w.entity(blue).unwrap().hp_max);
+        assert!(!w.events.iter().any(|e| matches!(e.kind, EventKind::Impact { .. })));
+    }
+
+    #[test]
+    fn terminal_ciws_success_clears_only_the_defenders_confirmed_track() {
+        let (mut w, blue, red) = terminal_world();
+        w.db.weapons.get_mut("ciws_30mm").unwrap().pk = 1.0;
+        let def = w.db.weapons["asm_air"].clone();
+        let missile = launch(&mut w, red, &def, Some(blue), None).unwrap();
+        w.entity_mut(missile).unwrap().pos = Vec2::new(0.0, 0.8);
+        let a = seed_contact(&mut w, Side::Blue, missile, PlatformKind::Missile,
+            Vec2::new(0.0, 0.8), 1.0, false, vec!["visual"]);
+        let b = seed_contact(&mut w, Side::Red, missile, PlatformKind::Missile,
+            Vec2::new(0.0, 0.8), 1.0, false, vec!["visual"]);
+        let mut data = w.entity(missile).unwrap().projectile.clone().unwrap();
+        data.enabled = true;
+        data.chaff_checked = true;
+        advance_sea_skimmer(&mut w, missile, def, data);
+        assert!(!w.entity(missile).unwrap().alive);
+        assert!(!w.sides[Side::Blue.index()].contacts.contains_key(&a));
+        assert!(w.sides[Side::Red.index()].contacts.contains_key(&b));
+    }
+
+    #[test]
+    fn terminal_surface_hit_and_miss_resolve_once_with_real_damage() {
+        for pk in [0.0, 1.0] {
+            let (mut w, blue, red) = terminal_world();
+            let mut def = w.db.weapons["asm_air"].clone();
+            def.pk = pk;
+            w.db.weapons.insert(def.id.clone(), def.clone());
+            let missile = launch(&mut w, red, &def, Some(blue), None).unwrap();
+            let e = w.entity_mut(missile).unwrap();
+            e.pos = Vec2::new(0.0, 0.1);
+            let mut data = e.projectile.clone().unwrap();
+            data.enabled = true;
+            data.chaff_checked = true;
+            data.ciws_checked = true;
+            advance_sea_skimmer(&mut w, missile, def, data);
+            advance_projectiles(&mut w);
+            assert!(!w.entity(missile).unwrap().alive);
+            assert_eq!(w.events.iter().filter(|e| matches!(e.kind,
+                EventKind::Impact { unit, .. } if unit == blue)).count(), if pk == 1.0 { 1 } else { 0 });
+            assert_eq!(w.entity(blue).unwrap().hp < w.entity(blue).unwrap().hp_max, pk == 1.0);
+        }
+    }
+
+    #[test]
+    fn terminal_dead_projectile_in_iteration_snapshot_cannot_hit() {
+        let (mut w, blue, red) = terminal_world();
+        let mut def = w.db.weapons.values().find(|d| d.guidance == Guidance::SeaSkimmer).unwrap().clone();
+        def.pk = 1.0;
+        w.db.weapons.insert(def.id.clone(), def.clone());
+        let mut sam = w.db.weapons["sam_long"].clone();
+        sam.pk = 1.0;
+        sam.speed_kts = 360.0;
+        w.db.weapons.insert(sam.id.clone(), sam.clone());
+        let a = launch(&mut w, blue, &sam, Some(red), None).unwrap();
+        let b = launch(&mut w, red, &def, Some(blue), None).unwrap();
+        // Both ids are collected alive; A intercepts B before B's update in that same tick.
+        w.entity_mut(a).unwrap().pos = Vec2::new(0.0, 0.35);
+        w.entity_mut(a).unwrap().projectile.as_mut().unwrap().target = Some(b);
+        w.entity_mut(b).unwrap().pos = Vec2::new(0.0, 0.1);
+        let data = w.entity_mut(b).unwrap().projectile.as_mut().unwrap();
+        data.chaff_checked = true;
+        data.ciws_checked = true;
+        advance_projectiles(&mut w);
+        assert!(!w.entity(b).unwrap().alive);
+        assert!(!w.events.iter().any(|e| matches!(e.kind, EventKind::Impact { .. })));
     }
 
     #[test]
