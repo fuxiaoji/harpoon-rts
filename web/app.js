@@ -290,7 +290,9 @@
   // ------------------------------------------------------------------
   // Application state
   // ------------------------------------------------------------------
-  const state = {
+    const state = {
+    showRanges: false, // 探测范围圈：选中单位始终显示，按钮切换全队显示
+
     side: (new URLSearchParams(location.search).get('side') || readStorage('harpoon.side')) === 'Red' ? 'Red' : 'Blue',
     scenarios: [],
     scenarioId: null,
@@ -3214,6 +3216,7 @@
     }
 
     if (selected) drawSelectionBrackets(ctx, screen.x, screen.y, size + 8, color, now, 0.34);
+    if (state.showRanges || selected) drawSensorRings(ctx, unit, layout);
     drawUnitLabel(ctx, screen, size, unit, style, selected, labelBox);
   }
 
@@ -3261,6 +3264,35 @@
       ctx.stroke();
     }
     ctx.restore();
+  }
+
+  // 探测范围圈：对空(虚线青)/对海(实线青)/对潜(虚线绿)
+  function drawSensorRings(ctx, unit, layout) {
+    const sensors = Array.isArray(unit.sensors) ? unit.sensors : [];
+    const c = worldToScreen(unit.pos.x, unit.pos.y);
+    const rings = [
+      ['vs_air', 'rgba(102,209,255,0.50)', [5, 4]],
+      ['vs_surface', 'rgba(102,209,255,0.85)', []],
+      ['vs_sub', 'rgba(85,221,163,0.60)', [2, 4]],
+    ];
+    for (const [key, color, dash] of rings) {
+      let maxNm = 0;
+      for (const sn of sensors) {
+        const v = numberOr(sn[key], 0);
+        if (v > maxNm) maxNm = v;
+      }
+      const r = maxNm * map.view.scale;
+      if (maxNm > 0.2 && r > 6 && r < 5000) {
+        ctx.save();
+        ctx.strokeStyle = color;
+        ctx.setLineDash(dash);
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.arc(c.x, c.y, r, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.restore();
+      }
+    }
   }
 
   function drawUnitLabel(ctx, screen, iconRadius, unit, style, selected, layout) {
@@ -3481,6 +3513,13 @@
       if (id) void startScenario(id);
     });
 
+    const rangesBtn = document.getElementById('map-ranges');
+    if (rangesBtn) {
+      rangesBtn.addEventListener('click', () => {
+        state.showRanges = !state.showRanges;
+        rangesBtn.classList.toggle('is-active', state.showRanges);
+      });
+    }
     dom.btnWeaponsFree.addEventListener('click', () => void issueWeaponsFree());
     dom.btnChaff.addEventListener('click', () => void issueDeployChaff());
     dom.btnStop.addEventListener('click', () => void issueStop());
