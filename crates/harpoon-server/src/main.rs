@@ -7,6 +7,7 @@
 //! - POST /api/selfplay runs a fully deterministic headless rollout.
 
 mod ai;
+mod agent;
 mod tutorial;
 mod doctrine;
 
@@ -44,6 +45,8 @@ struct AppState {
     update_tx: Arc<tokio::sync::broadcast::Sender<()>>,
     /// Built-in database merged with database/volumes/*.json at startup.
     db: Arc<Database>,
+    /// In-game AI staff state (player-view observations + memory).
+    agents: Arc<agent::Runtime>,
 }
 
 /// Merge every database/volumes/*.json (underscore-prefixed files skipped)
@@ -166,6 +169,23 @@ fn run_loop(state: AppState) {
             }
             if poked {
                 let _ = state.update_tx.send(());
+                let due = {
+                    let g = state.game.lock().unwrap();
+                    if g.training.is_some() {
+                        Vec::new()
+                    } else if let Some(world) = g.world.as_ref() {
+                        if world.over {
+                            Vec::new()
+                        } else {
+                            state.agents.due_sides(world.tick)
+                        }
+                    } else {
+                        Vec::new()
+                    }
+                };
+                for side in due {
+                    tokio::spawn(run_agent_turn(state.clone(), side, "scheduled", None));
+                }
             }
         }
     });
@@ -248,10 +268,14 @@ async fn new_game(
         .map_err(|e| (StatusCode::BAD_REQUEST, e))?;
     let tick = world.tick;
     let name = world.scenario_name.clone();
+    let scenario_id = world.scenario_id.clone();
+    let seed = world.seed;
     let mut g = state.game.lock().unwrap();
     let completed = g.training_completed.clone();
     *g = Game { world: Some(world), speed: req.speed, accumulator: 0.0, inbox: Vec::new(),
         training: None, training_completed: completed, progress_saved: true };
+    drop(g);
+    state.agents.start_game(&scenario_id, seed, tick);
     Ok(Json(json!({"started": true, "scenario": name, "seeded_at_tick": tick})))
 }
 
@@ -313,6 +337,234 @@ async fn time_get(State(state): State<AppState>) -> Json<serde_json::Value> {
     Json(json!({"speed": g.speed, "over": over, "tick": tick}))
 }
 
+// ---------------------------------------------------------------------------
+// In-game AI staff endpoints
+// ---------------------------------------------------------------------------
+
+fn agent_error(err: agent::TurnError) -> (StatusCode, String) {
+    let status = match err {
+        agent::TurnError::Busy => StatusCode::CONFLICT,
+        agent::TurnError::NoGame => StatusCode::CONFLICT,
+        agent::TurnError::NotConfigured => StatusCode::BAD_REQUEST,
+    };
+    (status, err.message().to_string())
+}
+
+/// One player-view staff turn. The LLM sees only `observe(world, side)` plus
+/// public scenario/database facts. Valid commands enter the ordinary inbox,
+/// and only when the side is in `execute` autonomy.
+async fn run_agent_turn(
+    state: AppState,
+    side: Side,
+    trigger: &'static str,
+    message: Option<String>,
+) -> Result<agent::TurnReport, (StatusCode, String)> {
+    let tick = {
+        let g = state.game.lock().unwrap();
+        g.world
+            .as_ref()
+            .map(|w| w.tick)
+            .ok_or((StatusCode::CONFLICT, "no game running".to_string()))?
+    };
+    let ctx = state
+        .agents
+        .prepare_turn(side, trigger, tick)
+        .map_err(agent_error)?;
+    let obs = {
+        let g = state.game.lock().unwrap();
+        let Some(world) = g.world.as_ref() else {
+            state
+                .agents
+                .abort_turn(&ctx, "no game running".to_string());
+            return Err((StatusCode::CONFLICT, "no game running".to_string()));
+        };
+        observe(world, side, ctx.memory.last_event_seq, 120)
+    };
+    let last_event_seq = obs
+        .events
+        .iter()
+        .map(|e| e.seq)
+        .max()
+        .unwrap_or(ctx.memory.last_event_seq);
+    let db = state.db.clone();
+    let ctx_for_llm = ctx.clone();
+    let obs_for_llm = obs.clone();
+    let request_message = message.clone();
+    let decision = match tokio::task::spawn_blocking(move || {
+        agent::execute_turn(&ctx_for_llm, &obs_for_llm, &db, request_message.as_deref())
+    })
+    .await
+    {
+        Ok(decision) => decision,
+        Err(e) => {
+            let report = state
+                .agents
+                .abort_turn(&ctx, format!("agent task failed: {e}"));
+            return Err((
+                StatusCode::INTERNAL_SERVER_ERROR,
+                report.error.unwrap_or_default(),
+            ));
+        }
+    };
+
+    let mut applied = false;
+    let same_generation = state.agents.generation() == ctx.generation;
+    if decision.error.is_none()
+        && same_generation
+        && ctx.autonomy == "execute"
+        && !decision.commands.is_empty()
+    {
+        let mut g = state.game.lock().unwrap();
+        let same_world = g.world.as_ref().is_some_and(|world| {
+            world.scenario_id == ctx.scenario_id && world.seed == ctx.seed && !world.over
+        });
+        if same_world && g.training.is_none() {
+            for command in &decision.commands {
+                g.inbox.push((side, command.clone()));
+            }
+            applied = true;
+        }
+    }
+    let report = state
+        .agents
+        .finish_turn(&ctx, decision, applied, last_event_seq);
+    if let Some(error) = &report.error {
+        return Err((StatusCode::BAD_GATEWAY, error.clone()));
+    }
+    Ok(report)
+}
+
+async fn agent_status(State(state): State<AppState>) -> Json<serde_json::Value> {
+    Json(state.agents.status())
+}
+
+async fn agent_side_status(
+    State(state): State<AppState>,
+    AxPath(side): AxPath<String>,
+) -> Result<Json<serde_json::Value>, (StatusCode, String)> {
+    let side = Side::parse(&side).ok_or((StatusCode::BAD_REQUEST, "side must be Blue|Red".into()))?;
+    Ok(Json(state.agents.side_status(side)))
+}
+
+async fn agent_config(
+    State(state): State<AppState>,
+    Json(req): Json<agent::AgentConfigReq>,
+) -> Result<Json<serde_json::Value>, (StatusCode, String)> {
+    let tick = state
+        .game
+        .lock()
+        .unwrap()
+        .world
+        .as_ref()
+        .map(|w| w.tick)
+        .unwrap_or(0);
+    let status = state
+        .agents
+        .set_config(&req, tick)
+        .map_err(|e| (StatusCode::BAD_REQUEST, e))?;
+    Ok(Json(status))
+}
+
+async fn agent_reset(
+    State(state): State<AppState>,
+    Json(req): Json<agent::AgentResetReq>,
+) -> Json<serde_json::Value> {
+    let tick = state
+        .game
+        .lock()
+        .unwrap()
+        .world
+        .as_ref()
+        .map(|w| w.tick)
+        .unwrap_or(0);
+    Json(state.agents.reset(req.purge_memory, tick))
+}
+
+async fn agent_report(
+    State(state): State<AppState>,
+    AxPath(side): AxPath<String>,
+) -> Result<Json<serde_json::Value>, (StatusCode, String)> {
+    let side = Side::parse(&side).ok_or((StatusCode::BAD_REQUEST, "side must be Blue|Red".into()))?;
+    let report = run_agent_turn(state.clone(), side, "manual", None).await?;
+    Ok(Json(json!({"report": report, "status": state.agents.status()})))
+}
+
+async fn agent_chat(
+    State(state): State<AppState>,
+    AxPath(side): AxPath<String>,
+    Json(req): Json<agent::ChatReq>,
+) -> Result<Json<serde_json::Value>, (StatusCode, String)> {
+    let side = Side::parse(&side).ok_or((StatusCode::BAD_REQUEST, "side must be Blue|Red".into()))?;
+    let message = req.message.trim().to_string();
+    if message.is_empty() {
+        return Err((StatusCode::BAD_REQUEST, "message must not be empty".into()));
+    }
+    if message.chars().count() > 4000 {
+        return Err((StatusCode::BAD_REQUEST, "message is too long (max 4000 chars)".into()));
+    }
+    let report = run_agent_turn(state.clone(), side, "chat", Some(message)).await?;
+    Ok(Json(json!({
+        "reply": report.report,
+        "intent": report.intent,
+        "commands": report.commands,
+        "rejected": report.rejected,
+        "applied": report.applied,
+        "tick": report.tick,
+        "model": report.model,
+        "latency_ms": report.latency_ms,
+        "status": state.agents.status(),
+    })))
+}
+
+async fn agent_execute(
+    State(state): State<AppState>,
+    AxPath(side): AxPath<String>,
+) -> Result<Json<serde_json::Value>, (StatusCode, String)> {
+    let side = Side::parse(&side).ok_or((StatusCode::BAD_REQUEST, "side must be Blue|Red".into()))?;
+    let proposals = state.agents.last_proposals(side);
+    if proposals.is_empty() {
+        return Ok(Json(json!({"queued": 0, "rejected": []})));
+    }
+    let mut g = state.game.lock().unwrap();
+    if g.training.is_some() {
+        return Err((StatusCode::CONFLICT, "training session is active".into()));
+    }
+    let obs = {
+        let world = g
+            .world
+            .as_ref()
+            .ok_or((StatusCode::CONFLICT, "no game running".to_string()))?;
+        if world.over {
+            return Err((StatusCode::CONFLICT, "scenario is over".into()));
+        }
+        observe(world, side, 0, 0)
+    };
+    let (valid, rejected) = agent::validate_commands(&obs, side, &proposals);
+    for command in &valid {
+        g.inbox.push((side, command.clone()));
+    }
+    Ok(Json(json!({"queued": valid.len(), "rejected": rejected})))
+}
+
+async fn agent_duel_start(
+    State(state): State<AppState>,
+    Json(req): Json<agent::DuelReq>,
+) -> Result<Json<serde_json::Value>, (StatusCode, String)> {
+    agent::start_duel(
+        state.agents.clone(),
+        state.db.clone(),
+        (*state.scenario_dir).clone(),
+        req,
+    )
+    .await
+    .map(Json)
+    .map_err(|e| (StatusCode::BAD_REQUEST, e))
+}
+
+async fn agent_duel_status(State(state): State<AppState>) -> Json<serde_json::Value> {
+    Json(state.agents.duel_status())
+}
+
 async fn training_catalog() -> Json<tutorial::Catalog> { Json(tutorial::catalog()) }
 async fn training_status(State(state): State<AppState>) -> Json<serde_json::Value> {
     Json(state.game.lock().unwrap().training_view())
@@ -329,12 +581,17 @@ async fn training_start(State(state): State<AppState>, Json(req): Json<TrainingS
         .map_err(|e| (StatusCode::NOT_FOUND, e.to_string()))?;
     let scenario = scenario_from_json(&source).map_err(|e| (StatusCode::BAD_REQUEST, e.to_string()))?;
     let mut world = load_scenario(scenario, Database::built_in()).map_err(|e| (StatusCode::BAD_REQUEST, e))?;
+    let tutorial_scenario = world.scenario_id.clone();
+    let tutorial_seed = world.seed;
+    let tutorial_tick = world.tick;
     let session = tutorial::Session::new(course, TRAINING_ATTEMPT.fetch_add(1, Ordering::Relaxed), &mut world)
         .map_err(|e| (StatusCode::BAD_REQUEST, e))?;
     let mut g = state.game.lock().unwrap();
     g.world = Some(world); g.training = Some(session); g.speed = 0.0; g.accumulator = 0.0; g.inbox.clear();
+    drop(g);
+    state.agents.start_game(&tutorial_scenario, tutorial_seed, tutorial_tick);
     let _ = state.update_tx.send(());
-    Ok(Json(g.training_view()))
+    Ok(Json(state.game.lock().unwrap().training_view()))
 }
 async fn training_action(State(state): State<AppState>, Json(req): Json<tutorial::Action>)
     -> Result<Json<serde_json::Value>, (StatusCode, String)>
@@ -597,6 +854,7 @@ async fn main() {
         scenario_dir: scenario_dir.clone(),
         update_tx: Arc::new(update_tx),
         db: Arc::new(merged_db),
+        agents: Arc::new(agent::Runtime::new()),
     };
 
     run_loop(state.clone());
@@ -617,6 +875,14 @@ async fn main() {
         .route("/api/tutorial/action", post(training_action))
         .route("/api/db", get(db_handler))
         .route("/api/ai/step/:side", post(ai_step))
+        .route("/api/agent/status", get(agent_status))
+        .route("/api/agent/config", post(agent_config))
+        .route("/api/agent/reset", post(agent_reset))
+        .route("/api/agent/duel", post(agent_duel_start).get(agent_duel_status))
+        .route("/api/agent/:side/status", get(agent_side_status))
+        .route("/api/agent/:side/report", post(agent_report))
+        .route("/api/agent/:side/chat", post(agent_chat))
+        .route("/api/agent/:side/execute", post(agent_execute))
         .route("/api/selfplay", post(selfplay_handler))
         .route("/ws", get(ws_handler))
         .fallback_service(serve)
