@@ -1705,6 +1705,18 @@ format!(
 - A submarine inside torpedo range (about 22 nm for Yu-10 / Mk 48) is your highest-value attack: fire a 2-4 torpedo salvo in the same turn. Single torpedoes are usually seduced by carrier decoys; do not leave an in-range submarine idle in favour of another CAP rotation.
 - Do not fire without a usable track and fire-control solution, and do not sacrifice the last carrier air group for a marginal damage roll.
 
+## Ammunition discipline
+- Each contact shows `own_in_flight`: your own rounds already targeting it. Before firing, check it. As a rule do not push a contact past ~4 ASMs in flight per window; every extra round into an already-saturated target is a wasted magazine.
+- Carriers and Aegis escorts bleed salvos dry with SAM, RAM, CIWS and decoys. Saturate deliberately (one coordinated window, several shooters), then hold fire and reassess with BDA before re-attacking.
+- Keep a reserve: do not empty a submarine's torpedoes or a shooter's missiles in the first hour unless it is sinking the target. A platform with empty magazines is a target.
+- Aircraft only carry a few ASMs; bring them home and re-arm instead of dribbling single rounds.
+
+## Protect your AEW and fight the submarine war
+- The AEW aircraft is your radar picture. Keep it 25-40 nm behind your CAP line, away from known enemy fighters; if enemy fighters close within ~30 nm of the AEW, recall it or vector CAP onto them. An AEW sniped over the fleet is a self-inflicted blindness.
+- When you hold a submarine contact (category Sub), react: launch ASW helos (mission asw) over the contact, vector ASW-capable ships, and weapons-free ASW rockets inside range. Enemy submarines sink your carriers for heavy points.
+- Your own submarines hunt: transit toward the enemy's last known position, and once inside torpedo range of a tracked ship, fire a 2-4 torpedo salvo. Do not trail the fleet passively.
+- Surface ships and submarines usually score far more than aircraft — see `victory.kill_weights` in the observation. Shooting down aircraft alone will lose a weighted battle; kill hulls.
+
 {director_block}
 
 ## Output contract

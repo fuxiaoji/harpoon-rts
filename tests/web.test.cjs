@@ -9,6 +9,19 @@ test('language adapter translates dynamic presentation without changing numeric 
   assert.equal(translateText('12 KT · 5 NM', 'zh-CN'), '12 节 · 5 海里');
   assert.equal(translateText('Long-Range Air Radar', 'zh-CN'), '远程对空雷达');
 });
+test('kill breakdown, weighted score and WS stall watchdog are wired', () => {
+  const app = fs.readFileSync(path.join(__dirname, '../web/app.js'), 'utf8');
+  assert.match(app, /own_kills_by_kind/);
+  assert.match(app, /kindBreakdownText/);
+  assert.match(app, /WEIGHTED SCORE|加权比分/);
+  assert.match(app, /own_in_flight/);
+  assert.match(app, /lastWsFrameAt/);
+  assert.match(app, /WS_STALL_MS/);
+  const theater = fs.readFileSync(path.join(__dirname, '../web/theater.js'), 'utf8');
+  assert.match(theater, /kill_weights/);
+  assert.match(theater, /own_kill_points/);
+});
+
 test('battle result scoreboard, popups and agent auto-run controls are wired', () => {
   const html = fs.readFileSync(path.join(__dirname, '../web/command.html'), 'utf8');
   for (const id of ['score-strip', 'score-kills', 'score-losses', 'battle-popups', 'battle-result-dialog', 'battle-result-close', 'agent-auto', 'agent-speed']) {

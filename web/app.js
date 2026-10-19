@@ -93,6 +93,12 @@
     return n >= 100 ? n.toFixed(0) : n.toFixed(1);
   }
 
+  function fmtNum(value) {
+    const n = finiteOrNull(value);
+    if (n === null) return '—';
+    return Number.isInteger(n) ? String(n) : String(Math.round(n * 10) / 10);
+  }
+
   function fmtCourse(value) {
     const n = finiteOrNull(value);
     if (n === null) return '—';
@@ -248,6 +254,8 @@
     targetBdaRow: $('target-bda-row'),
     targetBdaBar: $('target-bda-bar'),
     targetBdaText: $('target-bda-text'),
+    targetInflightRow: $('target-inflight-row'),
+    targetInflightText: $('target-inflight-text'),
     btnResults: $('btn-results'),
     targetRange: $('target-range'),
     targetCourse: $('target-course'),
@@ -389,6 +397,10 @@
   let transportEpoch = 0;
   let pollBusy = false;
   let refreshBusy = false;
+  let lastWsFrameAt = 0;
+  let stallWatchdog = null;
+  const WS_STALL_MS = 8000;
+  const WS_STALL_POLL_MS = 3000;
 
   // ------------------------------------------------------------------
   // API plumbing
@@ -563,6 +575,17 @@
     transportEpoch += 1;
     const epoch = transportEpoch;
 
+    if (stallWatchdog === null) {
+      // A wedged WS can stay "open" while the server stops pushing (e.g. a
+      // lagged server-side push task). Poll through the stall so the display
+      // never freezes behind a live-looking socket.
+      stallWatchdog = window.setInterval(() => {
+        if (socket && socket.readyState === WebSocket.OPEN
+            && Date.now() - lastWsFrameAt > WS_STALL_MS) {
+          void pollOnce(transportEpoch);
+        }
+      }, WS_STALL_POLL_MS);
+    }
     if (pollTimer !== null) {
       clearInterval(pollTimer);
       pollTimer = null;
@@ -649,6 +672,7 @@
         return;
       }
       stopPolling();
+      lastWsFrameAt = Date.now();
       setLink('ws', 'WS LIVE', 'WebSocket feed connected');
       void refreshState(epoch);
       void syncTime();
@@ -657,6 +681,7 @@
     ws.onmessage = (event) => {
       if (epoch !== transportEpoch || socket !== ws) return;
       if (typeof event.data !== 'string') return;
+      lastWsFrameAt = Date.now();
       try {
         const obs = JSON.parse(event.data);
         applyObservation(obs);
@@ -982,10 +1007,25 @@
       if (victory) {
         dom.scoreKills.textContent = fmtInt(victory.own_confirmed_kills);
         dom.scoreLosses.textContent = fmtInt(victory.own_losses);
+        const breakdown = kindBreakdownText(victory.own_kills_by_kind);
+        if (breakdown && dom.scoreKills.parentElement) {
+          let sub = dom.scoreKills.parentElement.querySelector('.score-breakdown');
+          if (!sub) {
+            sub = document.createElement('span');
+            sub.className = 'score-breakdown';
+            dom.scoreKills.parentElement.appendChild(sub);
+          }
+          sub.textContent = breakdown;
+        }
+        const weights = victory.kill_weights && Number(victory.kill_weights.ship) !== 1
+          ? battleText(
+              `；分值：舰船 ${fmtNum(victory.kill_weights.ship)} · 潜艇 ${fmtNum(victory.kill_weights.sub)} · 飞机 ${fmtNum(victory.kill_weights.aircraft)} · 基地 ${fmtNum(victory.kill_weights.base)}`,
+              `; kill values: ship ${fmtNum(victory.kill_weights.ship)}, sub ${fmtNum(victory.kill_weights.sub)}, aircraft ${fmtNum(victory.kill_weights.aircraft)}, base ${fmtNum(victory.kill_weights.base)}`)
+          : '';
         dom.scoreStrip.title = battleText(
           '本方确认战果与损失；终局权威结果以战报为准。',
           'Own confirmed kills and losses; the after-action result is authoritative.',
-        );
+        ) + weights;
       }
     }
     const scenario = state.scenarios.find((sc) => sc.id === (obs ? obs.scenario_id : state.scenarioId));
@@ -1466,6 +1506,7 @@
       dom.targetEmpty.hidden = false;
       dom.targetContent.hidden = true;
       if (dom.targetBdaRow) dom.targetBdaRow.hidden = true;
+      if (dom.targetInflightRow) dom.targetInflightRow.hidden = true;
       dom.targetQualityChip.textContent = 'NO TRACK';
       state.fireOptionsKey = null;
       populateFirePlaceholder(unit ? 'Select a contact' : 'Select a unit');
@@ -1519,6 +1560,16 @@
         dom.targetBdaText.textContent = battleText('尚无确认命中', 'NO CONFIRMED HITS');
       }
       dom.targetBdaRow.title = battleText('BDA 估损来自本方实际观测到的命中，不是敌方隐藏真值。','BDA estimate is derived from hits this side observed, not hidden enemy truth.');
+    }
+    const inFlight = Number(contact.own_in_flight) || 0;
+    if (dom.targetInflightRow) {
+      dom.targetInflightRow.hidden = false;
+      dom.targetInflightText.textContent = battleText(
+        inFlight > 0 ? `本方已在飞 ${inFlight} 枚` : '本方没有在飞弹药',
+        inFlight > 0 ? `${inFlight} OWN ROUNDS IN FLIGHT` : 'NO OWN ROUNDS IN FLIGHT');
+      dom.targetInflightRow.title = battleText(
+        '本方射向该接触、尚未落地的弹药数；判断是否需要补射或节约弹药的依据。',
+        'Own ordnance already targeted on this contact; use it to decide between re-attack and magazine discipline.');
     }
     dom.targetRange.textContent = range === null ? '—' : `${fmtRange(range)} NM`;
     dom.targetCourse.textContent = fmtCourse(contact.est_course_deg);
@@ -3900,6 +3951,19 @@
     }
   }
 
+  function kindBreakdownText(byKind) {
+    if (!isObject(byKind)) return '';
+    const zh = document.documentElement.lang !== 'en';
+    const parts = [
+      ['ship', zh ? '舰' : 'SHIP'],
+      ['sub', zh ? '潜' : 'SUB'],
+      ['aircraft', zh ? '机' : 'AIR'],
+      ['base', zh ? '基地' : 'BASE'],
+    ].map(([k, label]) => [k, label, Number(byKind[k]) || 0]).filter(([, , n]) => n > 0);
+    if (!parts.length) return '';
+    return ' (' + parts.map(([, label, n]) => `${label} ${n}`).join(zh ? ' · ' : ' / ') + ')';
+  }
+
   function showBattleResultDialog(obs) {
     if (!dom.battleResultDialog) return;
     const result = isObject(obs.result) ? obs.result : {};
@@ -3917,9 +3981,17 @@
       : battleText('战斗进行中；这里只显示本方确认战果与损失。','Battle in progress; only own confirmed kills and losses are shown.');
     dom.battleResultReason.textContent = reason;
     const rows = [
-      [battleText('本方战果', 'OWN KILLS'), fmtInt(victory.own_confirmed_kills)],
-      [battleText('本方损失', 'OWN LOSSES'), fmtInt(victory.own_losses)],
+      [battleText('本方战果', 'OWN KILLS'),
+        fmtInt(victory.own_confirmed_kills) + kindBreakdownText(victory.own_kills_by_kind)],
+      [battleText('本方损失', 'OWN LOSSES'),
+        fmtInt(victory.own_losses) + kindBreakdownText(victory.own_losses_by_kind)],
       ...(over ? [
+        ...(result.scored ? [
+          [battleText('加权比分', 'WEIGHTED SCORE'),
+            `B ${fmtNum(result.blue_points)} / R ${fmtNum(result.red_points)}`],
+        ] : []),
+        [battleText('击杀细分 蓝方', 'BLUE KILLS BY CLASS'), kindBreakdownText(result.blue_kills_by_kind) || '—'],
+        [battleText('击杀细分 红方', 'RED KILLS BY CLASS'), kindBreakdownText(result.red_kills_by_kind) || '—'],
         [battleText('权威击杀', 'AUTHORITATIVE KILLS'), `B ${fmtInt(result.blue_kills)} / R ${fmtInt(result.red_kills)}`],
         [battleText('VP', 'VP'), `B ${fmtRange(result.vp_blue)} / R ${fmtRange(result.vp_red)}`],
       ] : []),

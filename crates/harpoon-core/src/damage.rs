@@ -611,6 +611,12 @@ pub fn sink(world: &mut World, target_id: EntityId) {
     }
     if !t.kind.is_projectile() {
         world.losses[t.side.index()] += 1;
+        if let Some(kind_key) = World::kill_kind(t.kind) {
+            world
+                .losses_by_kind
+                .entry(kind_key.to_string())
+                .or_default()[t.side.index()] += 1;
+        }
     }
 
     // Aircraft ditch / shoot-down reporting is handled by air.rs for its own
@@ -674,6 +680,12 @@ pub fn sink(world: &mut World, target_id: EntityId) {
     // resolved onto it.
     if had_confirmed_contact && !t.kind.is_projectile() {
         world.sides[enemy.index()].confirmed_kills += 1;
+        if let Some(kind_key) = World::kill_kind(t.kind) {
+            *world.sides[enemy.index()]
+                .confirmed_kills_by_kind
+                .entry(kind_key.to_string())
+                .or_insert(0) += 1;
+        }
     }
 }
 

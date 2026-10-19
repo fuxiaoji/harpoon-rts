@@ -246,7 +246,12 @@ fn check_victory(world: &mut World) {
         outcome = Some((Some(winner), "VP margin reached".into()));
     } else if world.tick >= world.duration_s {
         let (winner, reason) = if world.scenario_kill_count_at_end {
-            let winner = if blue_kills > red_kills {
+            // Weighted scores decide when the scenario configures per-class
+            // kill values; raw platform counts otherwise.
+            let winner = if world.scenario_kill_weights.is_some() {
+                let (bp, rp) = (world.kill_score(Side::Blue), world.kill_score(Side::Red));
+                if bp > rp { Some(Side::Blue) } else if rp > bp { Some(Side::Red) } else { None }
+            } else if blue_kills > red_kills {
                 Some(Side::Blue)
             } else if red_kills > blue_kills {
                 Some(Side::Red)
@@ -269,6 +274,12 @@ fn check_victory(world: &mut World) {
 
     if let Some((winner, reason)) = outcome {
         world.over = true;
+        let scored = world.scenario_kill_weights.is_some();
+        let (blue_points, red_points) = if scored {
+            (world.kill_score(Side::Blue), world.kill_score(Side::Red))
+        } else {
+            (blue_kills as f64, red_kills as f64)
+        };
         world.result = Some(crate::world::VictoryResult {
             winner,
             reason,
@@ -276,6 +287,11 @@ fn check_victory(world: &mut World) {
             vp_red,
             blue_kills,
             red_kills,
+            blue_points,
+            red_points,
+            scored,
+            blue_kills_by_kind: world.sides[Side::Blue.index()].confirmed_kills_by_kind.clone(),
+            red_kills_by_kind: world.sides[Side::Red.index()].confirmed_kills_by_kind.clone(),
         });
         world.emit(
             EventKind::ScenarioEnded { winner, reason: world.result.as_ref().unwrap().reason.clone(), vp_blue, vp_red },

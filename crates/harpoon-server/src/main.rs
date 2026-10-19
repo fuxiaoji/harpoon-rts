@@ -1324,8 +1324,14 @@ async fn ws_session(socket: WebSocket, state: AppState, side: Side) {
     let push_state = state.clone();
     let push_task = tokio::spawn(async move {
         loop {
-            if poke.recv().await.is_err() {
-                break;
+            match poke.recv().await {
+                Ok(()) => {}
+                // Falling behind only means some intermediate pokes were
+                // dropped; the next poke still carries the fresh world.
+                // Breaking here would leave the socket open but silent, and
+                // the browser stops polling once the WS reports open.
+                Err(tokio::sync::broadcast::error::RecvError::Lagged(_)) => continue,
+                Err(_) => break,
             }
             let obs = {
                 let g = push_state.game.lock().unwrap();

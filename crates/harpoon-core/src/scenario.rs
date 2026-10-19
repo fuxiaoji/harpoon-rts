@@ -53,6 +53,43 @@ pub struct Theater {
     pub imagery_date: String,
 }
 
+/// Per-platform-class kill values for weighted kill-count victory. Without a
+/// config every platform is worth 1. Ships and submarines weigh far more than
+/// aircraft: an air war won while both carriers survive must not decide a
+/// fleet battle.
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct KillWeights {
+    #[serde(default = "one_f64")]
+    pub ship: f64,
+    #[serde(default = "one_f64")]
+    pub sub: f64,
+    #[serde(default = "one_f64")]
+    pub aircraft: f64,
+    #[serde(default = "one_f64")]
+    pub base: f64,
+}
+
+fn one_f64() -> f64 {
+    1.0
+}
+
+impl Default for KillWeights {
+    fn default() -> Self {
+        Self { ship: 1.0, sub: 1.0, aircraft: 1.0, base: 1.0 }
+    }
+}
+
+impl KillWeights {
+    pub fn for_kind(&self, kind: &str) -> f64 {
+        match kind {
+            "ship" => self.ship,
+            "sub" => self.sub,
+            "aircraft" => self.aircraft,
+            _ => self.base,
+        }
+    }
+}
+
 #[derive(Clone, Debug, Default, Serialize, Deserialize)]
 pub struct VictoryConfig {
     /// Early win if one side leads by this VP margin (0 = disabled).
@@ -61,6 +98,10 @@ pub struct VictoryConfig {
     /// At the time limit, compare destroyed enemy platforms instead of VP.
     #[serde(default)]
     pub kill_count_at_end: bool,
+    /// Optional per-class kill values; present ⇒ the time limit compares
+    /// weighted scores and the result carries the per-class breakdown.
+    #[serde(default)]
+    pub kill_weights: Option<KillWeights>,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -119,7 +160,9 @@ pub fn load_scenario(sc: Scenario, db: Database) -> Result<World, String> {
         scenario_description: sc.description.clone(),
         scenario_target_vp: sc.victory.target_vp,
         scenario_kill_count_at_end: sc.victory.kill_count_at_end,
+        scenario_kill_weights: sc.victory.kill_weights.clone(),
         losses: Default::default(),
+        losses_by_kind: Default::default(),
         context: sc.context.clone(),
         mission_state: Default::default(),
         over: false,
@@ -262,6 +305,11 @@ fn validate_context(sc: &Scenario, db: &Database) -> Result<(), String> {
             || t.west >= t.east || t.south >= t.north || t.south < -90.0 || t.north > 90.0
             || t.reference_lat.abs() >= 85.0 || !t.image.starts_with("maps/") || t.image.contains("..") {
             return Err("invalid geographic theater".into());
+        }
+    }
+    if let Some(w) = &sc.victory.kill_weights {
+        if ![w.ship, w.sub, w.aircraft, w.base].iter().all(|v| v.is_finite() && *v >= 0.0) {
+            return Err("invalid kill weights".into());
         }
     }
     if let Some(m) = &sc.context.area_denial {

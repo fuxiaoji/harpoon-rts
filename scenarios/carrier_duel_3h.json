@@ -1,7 +1,7 @@
 {
   "id": "carrier_duel_3h",
   "name": "Twin Shields: Three-hour Carrier Decisive Duel",
-  "description": "Three-hour carrier duel with surface escorts removed for a decisive carrier engagement. Carriers, submarines, air wings and close positions only; destroy the enemy carriers before the deadline. At 03:00:00 the side with more destroyed enemy platforms wins; a tie is a draw.",
+  "description": "Three-hour carrier duel with surface escorts removed for a decisive carrier engagement. Carriers, submarines, air wings and close positions only; destroy the enemy carriers before the deadline. Kill values: surface ship 10, submarine 5, aircraft 1, base 10; higher weighted score wins at 03:00:00, a tie is a draw.",
   "context": {
     "theater": {
       "west": 118,
@@ -210,7 +210,13 @@
   "seed": 20261019,
   "victory": {
     "target_vp": 0,
-    "kill_count_at_end": true
+    "kill_count_at_end": true,
+    "kill_weights": {
+      "ship": 10,
+      "sub": 5,
+      "aircraft": 1,
+      "base": 10
+    }
   },
   "units": [
     {
@@ -253,8 +259,8 @@
       "class": "cn_z18j",
       "name": "LIAONING AEW",
       "pos": [
-        350,
-        355
+        368,
+        352
       ],
       "course_deg": 90,
       "speed_kts": 130,
@@ -327,8 +333,8 @@
       "class": "cn_z18j",
       "name": "SHANDONG AEW",
       "pos": [
-        365,
-        275
+        382,
+        292
       ],
       "course_deg": 90,
       "speed_kts": 130,
@@ -401,8 +407,8 @@
       "class": "us_e2d",
       "name": "FORD AEW",
       "pos": [
-        365,
-        350
+        458,
+        352
       ],
       "course_deg": 270,
       "speed_kts": 255,
@@ -475,8 +481,8 @@
       "class": "us_e2d",
       "name": "NIMITZ AEW",
       "pos": [
-        380,
-        275
+        472,
+        292
       ],
       "course_deg": 270,
       "speed_kts": 255,

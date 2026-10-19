@@ -146,7 +146,7 @@
     },
     "carrier_duel_3h": {
       "file": "carrier_duel_3h.json",
-      "source_sha256": "d3ddcc40a14b5faa3aa18b705c45ed6fca034296a12f13abf47885e2cb959539",
+      "source_sha256": "e3263fa55d21ce1de826fc025ab6cb6908d7c058ad46ee66183e85578edc82b4",
       "duration_s": 10800,
       "seed": 20261019,
       "initial_units": 20,
@@ -211,7 +211,7 @@
     },
     "dual_carrier_kills": {
       "file": "dual_carrier_kills.json",
-      "source_sha256": "9ab1f4b2950f25823828dbd154247fa799e18f87f1413d1fb484aaaeabf190bf",
+      "source_sha256": "eace8662138c4a7ed62ed53dfdac16778cc235f13cc8010ae3877eade59c02cf",
       "duration_s": 21600,
       "seed": 20261019,
       "initial_units": 34,

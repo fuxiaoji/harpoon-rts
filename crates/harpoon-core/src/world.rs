@@ -277,6 +277,9 @@ pub struct SideState {
     /// contacts. Referee truth is not included here.
     #[serde(default)]
     pub confirmed_kills: u32,
+    /// Confirmed kills per platform class ("ship"/"sub"/"aircraft"/"base").
+    #[serde(default)]
+    pub confirmed_kills_by_kind: BTreeMap<String, u32>,
 }
 
 #[derive(Clone, Debug, Default, Serialize, Deserialize)]
@@ -297,6 +300,20 @@ pub struct VictoryResult {
     pub blue_kills: u32,
     #[serde(default)]
     pub red_kills: u32,
+    /// Weighted kill scores; with no scenario weights these mirror the raw
+    /// counts so old clients keep rendering.
+    #[serde(default)]
+    pub blue_points: f64,
+    #[serde(default)]
+    pub red_points: f64,
+    /// True when per-class kill weights decided the comparison.
+    #[serde(default)]
+    pub scored: bool,
+    /// Kills per platform class ("ship"/"sub"/"aircraft"/"base").
+    #[serde(default)]
+    pub blue_kills_by_kind: BTreeMap<String, u32>,
+    #[serde(default)]
+    pub red_kills_by_kind: BTreeMap<String, u32>,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -337,9 +354,15 @@ pub struct World {
     /// Compare kill counts at the time limit (six-hour kill-count exercise).
     #[serde(default)]
     pub scenario_kill_count_at_end: bool,
+    /// Optional per-class kill values for weighted scoring.
+    #[serde(default)]
+    pub scenario_kill_weights: Option<crate::scenario::KillWeights>,
     /// Authoritative losses by side; survives entity cleanup.
     #[serde(default)]
     pub losses: [u32; 2],
+    /// Losses per platform class ("ship"/"sub"/"aircraft"/"base") by side.
+    #[serde(default)]
+    pub losses_by_kind: BTreeMap<String, [u32; 2]>,
     #[serde(default)]
     pub context: crate::scenario::ScenarioContext,
     #[serde(default)]
@@ -433,6 +456,30 @@ impl World {
     /// Projectiles do not count; ditched aircraft do not go through `sink`.
     pub fn kill_counts(&self) -> (u32, u32) {
         (self.losses[Side::Red.index()], self.losses[Side::Blue.index()])
+    }
+
+    /// Bucket name for a destroyed platform class; projectiles are uncounted.
+    pub fn kill_kind(kind: PlatformKind) -> Option<&'static str> {
+        match kind {
+            PlatformKind::Ship => Some("ship"),
+            PlatformKind::Sub => Some("sub"),
+            PlatformKind::Aircraft => Some("aircraft"),
+            PlatformKind::Base => Some("base"),
+            _ => None,
+        }
+    }
+
+    /// Weighted kill score for `side` under the scenario's kill weights.
+    /// 0.0 when the scenario has no weights (raw counts then decide).
+    pub fn kill_score(&self, side: Side) -> f64 {
+        let Some(w) = &self.scenario_kill_weights else { return 0.0 };
+        // `+ 0.0` normalizes an empty sum away from negative zero.
+        self.sides[side.index()]
+            .confirmed_kills_by_kind
+            .iter()
+            .map(|(kind, n)| *n as f64 * w.for_kind(kind))
+            .sum::<f64>()
+            + 0.0
     }
 
     /// VP currently earned by each side (kills + base damage).

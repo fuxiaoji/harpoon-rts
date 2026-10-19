@@ -4,6 +4,7 @@
 
 use crate::events::Event;
 use crate::types::{ContactId, DayNight, EntityId, PlatformKind, Side};
+use std::collections::BTreeMap;
 use crate::world::{VictoryResult, World};
 use serde::{Deserialize, Serialize};
 
@@ -88,6 +89,11 @@ pub struct ContactObs {
     pub bda_damage: f64,
     #[serde(default)]
     pub bda_hp_fraction: Option<f64>,
+    /// Own ordnance already in flight at this contact. Lets a commander (or
+    /// the AI staff) avoid stacking redundant salvos on an already-targeted
+    /// contact and keep magazines in reserve.
+    #[serde(default)]
+    pub own_in_flight: u32,
 }
 
 /// Objective display for an exercise. It deliberately exposes only the
@@ -103,6 +109,19 @@ pub struct VictoryObservation {
     pub target_vp: f64,
     pub own_confirmed_kills: u32,
     pub own_losses: u32,
+    /// Confirmed kills per class ("ship"/"sub"/"aircraft"/"base").
+    #[serde(default)]
+    pub own_kills_by_kind: BTreeMap<String, u32>,
+    /// Own losses per class.
+    #[serde(default)]
+    pub own_losses_by_kind: BTreeMap<String, u32>,
+    /// Scenario kill weights, when configured; ships/subs can outweigh
+    /// aircraft. Absent means every platform counts 1.
+    #[serde(default)]
+    pub kill_weights: Option<crate::scenario::KillWeights>,
+    /// Own weighted score under those weights (0.0 without weights).
+    #[serde(default)]
+    pub own_kill_points: f64,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -206,6 +225,20 @@ pub fn observe(world: &World, side: Side, since_seq: u64, max_events: usize) -> 
         })
         .collect();
 
+    let mut own_in_flight: std::collections::BTreeMap<EntityId, u32> = Default::default();
+    for e in world.entities.values() {
+        if !e.alive || !e.kind.is_projectile() {
+            continue;
+        }
+        if let Some(p) = &e.projectile {
+            if p.launched_by_side == side {
+                if let Some(t) = p.target {
+                    *own_in_flight.entry(t).or_insert(0) += 1;
+                }
+            }
+        }
+    }
+
     let contacts = world.sides[side.index()]
         .contacts
         .values()
@@ -224,6 +257,7 @@ pub fn observe(world: &World, side: Side, since_seq: u64, max_events: usize) -> 
             bda_hits: world.sides[side.index()].bda.get(&c.about).map(|b| b.hits).unwrap_or(0),
             bda_damage: world.sides[side.index()].bda.get(&c.about).map(|b| b.damage).unwrap_or(0.0),
             bda_hp_fraction: world.sides[side.index()].bda.get(&c.about).and_then(|b| b.hp_fraction),
+            own_in_flight: own_in_flight.get(&c.about).copied().unwrap_or(0),
         })
         .collect();
 
@@ -255,6 +289,12 @@ pub fn observe(world: &World, side: Side, since_seq: u64, max_events: usize) -> 
             target_vp: world.scenario_target_vp,
             own_confirmed_kills: world.sides[side.index()].confirmed_kills,
             own_losses: world.losses[side.index()],
+            own_kills_by_kind: world.sides[side.index()].confirmed_kills_by_kind.clone(),
+            own_losses_by_kind: world.losses_by_kind.iter()
+                .map(|(kind, n)| (kind.clone(), n[side.index()]))
+                .collect(),
+            kill_weights: world.scenario_kill_weights.clone(),
+            own_kill_points: world.kill_score(side),
         }),
         automated_side: world.context.automated_side,
         your_side: side,

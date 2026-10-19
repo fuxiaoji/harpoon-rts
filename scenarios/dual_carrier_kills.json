@@ -210,7 +210,13 @@
   "seed": 20261019,
   "victory": {
     "target_vp": 0,
-    "kill_count_at_end": true
+    "kill_count_at_end": true,
+    "kill_weights": {
+      "ship": 10,
+      "sub": 5,
+      "aircraft": 1,
+      "base": 10
+    }
   },
   "units": [
     {
@@ -321,7 +327,7 @@
       "class": "cn_z18j",
       "name": "LIAONING AEW",
       "pos": [
-        350,
+        336,
         355
       ],
       "course_deg": 90,
@@ -463,7 +469,7 @@
       "class": "cn_z18j",
       "name": "SHANDONG AEW",
       "pos": [
-        365,
+        351,
         275
       ],
       "course_deg": 90,
@@ -588,7 +594,7 @@
       "class": "us_e2d",
       "name": "FORD AEW",
       "pos": [
-        365,
+        379,
         350
       ],
       "course_deg": 270,
@@ -713,7 +719,7 @@
       "class": "us_e2d",
       "name": "NIMITZ AEW",
       "pos": [
-        380,
+        394,
         275
       ],
       "course_deg": 270,
