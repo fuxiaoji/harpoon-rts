@@ -17,14 +17,40 @@
   };
   const reason = code => reasons[code]?.[zh()?0:1] || code;
   let latest, callbacks, image, imagePath='', imageState='idle', satellite=true;
+  // 没有自带战区元数据的想定：按当前单位分布合成一个默认战区（经纬度
+  // 字段，内部按琉球纬度 26°N 换算成海里），让卫星参考底图对全部想定可用。
+  let synthTheaterCache=null, synthFor=null;
+  function synthTheater(obs) {
+    if (!obs) return null;
+    const key = obs.scenario_id || obs.scenario_name;
+    if (synthFor === key) return synthTheaterCache;
+    const pts = [...(obs.units||[]), ...(obs.contacts||[])]
+      .map(e=>e.pos||e.estimate).filter(Boolean);
+    if (!pts.length) return null;
+    let minX=Infinity,minY=Infinity,maxX=-Infinity,maxY=-Infinity;
+    for (const p of pts){minX=Math.min(minX,p.x);maxX=Math.max(maxX,p.x);minY=Math.min(minY,p.y);maxY=Math.max(maxY,p.y);}
+    const m = Math.max(40,(maxX-minX)*0.15);
+    const x0 = Math.min(0, minX-m), y0 = Math.min(0, minY-m);
+    const wNm = Math.max(320,(maxX+m)-x0), hNm = Math.max(260,(maxY+m)-y0);
+    const DEG_LON_PER_NM = 1/(60*0.899), DEG_LAT_PER_NM = 1/60; // 26°N
+    synthFor = key;
+    synthTheaterCache = { synthetic:true, reference_lat:26,
+      image:'maps/west-pacific-blue-marble.jpg',
+      west: x0*DEG_LON_PER_NM, east: (x0+wNm)*DEG_LON_PER_NM,
+      south: y0*DEG_LAT_PER_NM, north: (y0+hNm)*DEG_LAT_PER_NM };
+    return synthTheaterCache;
+  }
   function renderHUD(obs) {
     latest=obs;
     if (typeof document==='undefined') return;
     const panel=document.getElementById('mission-brief');
     const credit=document.getElementById('map-attribution');
+    if (obs && !obs.theater && obs.units) obs.theater = synthTheater(obs);
     const active=!!obs?.theater;
     document.body.classList.toggle('geographic-theater',active);
-    for(const id of ['map-theater','map-basemap','mission-open']) document.getElementById(id).hidden=!active;
+    document.getElementById('map-theater').hidden=!obs?.mission;
+    document.getElementById('map-basemap').hidden=!active;
+    document.getElementById('mission-open').hidden=!obs?.mission;
     credit.hidden=!active;
     panel.hidden=!obs?.mission;
     if (!active) return;
@@ -35,7 +61,9 @@
     const toggle=document.getElementById('map-basemap');
     toggle.textContent=satellite?text('卫星','Satellite'):text('网格','Grid');
     toggle.setAttribute('aria-pressed',String(satellite));
-    credit.textContent=`${obs.theater.attribution} · ${obs.theater.imagery_date} · ${text('地理参考底图','Geographic reference')}`;
+    credit.textContent=obs.theater.attribution
+      ? `${obs.theater.attribution} · ${obs.theater.imagery_date} · ${text('地理参考底图','Geographic reference')}`
+      : text('NASA Blue Marble 2004 · 地理参考底图','NASA Blue Marble 2004 · Geographic reference');
     credit.title=text('2004年卫星合成影像；地形不参与海岸碰撞、水深或遮蔽裁决。','2004 satellite composite; terrain does not adjudicate coastline collision, water depth or masking.');
     document.getElementById('map-imagery-status').textContent=imageState==='error'?text('影像加载失败；请切换网格','Imagery unavailable; select Grid'):imageState==='ready'?text('离线影像已载入','Offline imagery loaded'):text('正在载入离线影像','Loading offline imagery');
     if(obs.mission) {

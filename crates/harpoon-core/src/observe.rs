@@ -33,6 +33,12 @@ pub struct UnitObs {
     pub deck: Option<DeckObs>,
     pub mission: Option<String>,
     pub systems: crate::world::Systems,
+    /// 潜艇是否在跃变层之下（>150m，声纳探测 ×0.5）。
+    pub below_layer: Option<bool>,
+    /// 柴电潜艇电池余量（0-100），非潜艇为 None。
+    pub battery: Option<f64>,
+    /// 拖曳阵是否展开（航速 >25kt 自动收起）。
+    pub towed_deployed: Option<bool>,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -163,6 +169,13 @@ pub fn observe(world: &World, side: Side, since_seq: u64, max_events: usize) -> 
             }),
             mission: e.mission.as_ref().map(|m| m.tag().to_string()),
             systems: e.systems.clone(),
+            below_layer: (e.kind == PlatformKind::Sub).then(|| e.depth_m > 150.0),
+            battery: e.ext.get("battery").copied(),
+            towed_deployed: e
+                .ext
+                .get("tow_deployed")
+                .map(|v| *v > 0.5)
+                .filter(|_| e.kind == PlatformKind::Ship),
         })
         .collect();
 

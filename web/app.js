@@ -1254,6 +1254,12 @@
       } else if (kind === 'SonarPassive') {
         stateLabel = 'LISTENING';
       }
+      // 探测距离提示：对空/对海/对潜（海里），让玩家知道这个传感器管什么、看多远
+      const ranges = [];
+      if (numberOr(sensor.vs_air, 0) > 0) ranges.push(`空 ${fmtRange(sensor.vs_air)}NM`);
+      if (numberOr(sensor.vs_surface, 0) > 0) ranges.push(`海 ${fmtRange(sensor.vs_surface)}NM`);
+      if (numberOr(sensor.vs_sub, 0) > 0) ranges.push(`潜 ${fmtRange(sensor.vs_sub)}NM`);
+      const rangeText = ranges.length ? ranges.join(' · ') : '—';
       return `
         <div class="sensor-row">
           <div class="sensor-id">
@@ -1261,8 +1267,20 @@
             <b title="${escapeHtml(sensor.sensor || '')}">${escapeHtml(sensor.name || sensorName(sensor.sensor))}</b>
           </div>
           <span class="sensor-state ${online ? 'is-active' : ''}">${stateLabel}</span>
+          <div class="sensor-range">${escapeHtml(rangeText)}</div>
         </div>`;
     }).join('');
+
+    // 拖曳阵 / 跃变层 / 电池 提示
+    const hints = [];
+    if (unit.towed_deployed === true) hints.push('拖曳阵：已展开（被动听距最大）');
+    else if (unit.towed_deployed === false) hints.push('拖曳阵：收起了（航速>25节自动收；<20节30秒后展开）');
+    if (unit.below_layer === true) hints.push('跃变层之下：敌方被动声纳探测距离 ×0.5（你更难被发现，也更难听清别人）');
+    else if (unit.below_layer === false) hints.push('跃变层之上：正常声纳传播');
+    if (unit.battery !== null && unit.battery !== undefined) hints.push(`电池：${fmtRange(unit.battery)}/100（水下耗电，<20 半速）`);
+    if (hints.length) {
+      dom.sensorsList.innerHTML += `<div class="sensor-hints">${hints.map(h=>`<div>· ${escapeHtml(h)}</div>`).join('')}</div>`;
+    }
   }
 
   function renderMission(unit) {

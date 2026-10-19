@@ -2181,3 +2181,22 @@ select option {
 .tutorial-actions { margin-top: 10px; display: flex; gap: 6px; }
 .tutorial-actions .cmd-btn { font-size: 9px; }
 .tutorial-skip { opacity: 0.65; }
+
+/* 传感器探测距离 & 声纳状态提示 */
+.sensor-range {
+  width: 100%;
+  margin-top: 2px;
+  font-family: var(--mono, ui-monospace, monospace);
+  font-size: 9px;
+  letter-spacing: 0.4px;
+  color: rgba(102, 209, 255, 0.78);
+}
+.sensor-hints {
+  margin-top: 6px;
+  padding: 6px 7px;
+  border-left: 2px solid rgba(102, 209, 255, 0.45);
+  background: rgba(102, 209, 255, 0.06);
+  font-size: 10px;
+  line-height: 1.5;
+  color: rgba(200, 226, 240, 0.85);
+}
