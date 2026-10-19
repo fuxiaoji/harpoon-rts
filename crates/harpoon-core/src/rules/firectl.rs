@@ -677,6 +677,7 @@ mod tests {
             id: "firectl-test".into(),
             name: "Fire control test".into(),
             description: String::new(),
+            context: Default::default(),
             duration_s: 40_000,
             weather: Weather {
                 visibility_nm: 12.0,

@@ -8,6 +8,7 @@
 
 mod ai;
 mod tutorial;
+mod doctrine;
 
 use axum::{
     extract::{
@@ -143,6 +144,12 @@ fn run_loop(state: AppState) {
                     for i in 0..n {
                         let mut c = if i == 0 { cmds.clone() } else { empty.clone() };
                         if let Some(session) = training.as_mut() { c.extend(session.opponent_commands(world)); }
+                        if training.is_none() {
+                            if let Some(side) = world.context.automated_side {
+                                let obs = observe(world, side, world.event_seq, 0);
+                                c.extend(doctrine::orders(&obs));
+                            }
+                        }
                         harpoon_core::sim::tick(world, &c);
                         if training.as_mut().is_some_and(|session| session.after_tick(world, &c)) {
                             pause_training = true;

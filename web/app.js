@@ -687,7 +687,7 @@
     let started = false;
 
     try {
-      await postJson('/api/game', { scenario: id, seed: 123, speed: 0 });
+      await postJson('/api/game', { scenario: id, speed: 0 });
 
       state.scenarioId = id;
       state.speed = 0;
@@ -907,6 +907,7 @@
   }
 
   function updateMapBrief(obs) {
+    window.HarpoonTheater?.renderHUD(obs);
     const scenario = state.scenarios.find((sc) => sc.id === (obs ? obs.scenario_id : state.scenarioId));
     const presentation = window.HarpoonI18n?.scenario(obs?.scenario_id || state.scenarioId);
     const title = presentation?.title || (obs && obs.scenario_name
@@ -967,7 +968,7 @@
     }
 
     dom.outcomeReason.textContent = result && result.reason
-      ? result.reason
+      ? window.HarpoonTheater?.reason(result.reason) || result.reason
       : 'Scenario complete.';
     dom.outcomeVp.textContent = result
       ? `VP BLUE ${fmtRange(result.vp_blue)}  ·  RED ${fmtRange(result.vp_red)}${playerWon ? '  ·  COMMAND OBJECTIVE MET' : ''}`
@@ -1078,6 +1079,7 @@
 
     renderTargetPanel(unit, contact, obs);
     renderNavigation(unit, obs);
+    $('jump-deck').hidden=!unit?.deck;
     window.dispatchEvent(new CustomEvent('harpoon:selection', { detail: {
       unit: state.selectedUnitId, contact: state.selectedContactId,
     } }));
@@ -1282,9 +1284,10 @@
       if (!Array.isArray(entry)) continue;
       const cls = String(entry[0]);
       const count = numberOr(entry[1], 0);
-      const mission = cls.includes('helo') ? 'asw' : 'cap';
-      const missionLabel = mission === 'asw' ? 'ASW SWEEP' : 'CAP';
-      const strike = cls.includes('striker') || cls.includes('bomber') || cls.includes('fighter');
+      const roles=window.HarpoonAircraft.roles(state.platformById.get(cls),state.weaponById);
+      const mission=roles.primary;
+      const missionLabel=mission==='asw'?'ASW SWEEP':mission==='cap'?'CAP':'RECON';
+      const strike=roles.strike && contact && categoryInfo(contact.category).key==='surface';
       lines.push(
         `<div class="deck-line"><span>${escapeHtml(aircraftName(cls))}</span>` +
         `<b>×${escapeHtml(entry[1])} READY</b>` +
@@ -2120,6 +2123,10 @@
     }
     const obs = state.observation;
     const points = [];
+    if(obs?.mission) {
+      const {center,radius_nm:r}=obs.mission.config;
+      points.push({x:center.x-r,y:center.y-r},{x:center.x+r,y:center.y+r});
+    }
     if (obs) {
       for (const unit of Array.isArray(obs.units) ? obs.units : []) {
         if (unit && unit.pos) points.push(unit.pos);
@@ -2179,7 +2186,7 @@
   function maybeAutoFit() {
     if (map.w < 30 || map.h < 30) return;
     if (map.fitPending) {
-      fitMap();
+      if(state.observation?.theater) fitTheater(); else fitMap();
       map.fitPending = false;
       syncSeenContacts();
       return;
@@ -2196,6 +2203,15 @@
       }
     }
     syncSeenContacts();
+  }
+
+  function fitTheater() {
+    const t=state.observation?.theater;
+    if(!t) return fitMap();
+    const b=window.HarpoonTheater.bounds(t);
+    map.view.cx=b.width/2;map.view.cy=b.height/2;
+    map.view.scale=Math.min((map.w-36)/b.width,(map.h-36)/b.height);
+    map.viewInitialized=true;map.fitPending=false;map.userAdjusted=true;map.lastScaleKey='';
   }
 
   function syncSeenContacts() {
@@ -2299,7 +2315,10 @@
         return;
       }
     }
-    dom.cursorReadout.textContent = `X ${fmtRangeSigned(map.cursorWorld.x)} · Y ${fmtRangeSigned(map.cursorWorld.y)} NM`;
+    const geographic=state.observation?.theater && window.HarpoonTheater?.geographic(map.cursorWorld,state.observation.theater);
+    dom.cursorReadout.textContent = geographic
+      ? `${geographic.lat.toFixed(3)}°N ${geographic.lon.toFixed(3)}°E · X ${fmtRangeSigned(map.cursorWorld.x)} Y ${fmtRangeSigned(map.cursorWorld.y)} NM`
+      : `X ${fmtRangeSigned(map.cursorWorld.x)} · Y ${fmtRangeSigned(map.cursorWorld.y)} NM`;
   }
 
   function fmtRangeSigned(value) {
@@ -2470,6 +2489,7 @@
     ctx.setTransform(map.dpr, 0, 0, map.dpr, 0, 0);
     ctx.clearRect(0, 0, map.w, map.h);
     drawOcean(ctx);
+    window.HarpoonTheater?.drawBasemap(ctx,state.observation,worldToScreen,map.w,map.h);
     drawGrid(ctx);
 
     const obs = state.observation;
@@ -2480,6 +2500,7 @@
     }
 
     const selected = selectedUnit();
+    window.HarpoonTheater?.drawOverlay(ctx,obs,worldToScreen,map.view.scale);
     drawRangeRings(ctx, selected);
     drawRoutes(ctx, selected);
     drawAssignmentLine(ctx, selected);
@@ -2885,7 +2906,8 @@
     }
 
     const anonymousProjectile = (cat.key === 'missile' || cat.key === 'torpedo') && !contact.class_name;
-    if (selected || hovered || assigned || !anonymousProjectile) {
+    const compactTheater=!!state.observation?.theater && !selected && !hovered && !assigned;
+    if (!compactTheater && (selected || hovered || assigned || !anonymousProjectile)) {
       drawContactLabel(ctx, screen, size, contact, cat, selected, stale);
     }
   }
@@ -2954,9 +2976,32 @@
       });
     }
 
-    const layouts = layoutUnitLabels(entries);
+    const detailed=entries.filter(e=>!obs.theater || e.selected || (map.hover?.type==='unit' && map.hover.id===Number(e.unit.id)));
+    const layouts = layoutUnitLabels(detailed);
     for (const entry of entries) {
-      drawUnit(ctx, entry.unit, entry.screen, style, entry.selected, now, layouts.get(Number(entry.unit.id)));
+      const layout=layouts.get(Number(entry.unit.id));
+      if(obs.theater && !layout) drawCompactUnit(ctx,entry.unit,entry.screen,style);
+      else drawUnit(ctx, entry.unit, entry.screen, style, entry.selected, now, layout);
+    }
+  }
+
+  function drawCompactUnit(ctx,unit,screen,style) {
+    const angle=numberOr(unit.course_deg)*Math.PI/180;
+    ctx.save();ctx.translate(screen.x,screen.y);ctx.rotate(angle);
+    ctx.strokeStyle=style.hex;ctx.fillStyle='rgba(75,202,255,.25)';ctx.lineWidth=1.3;
+    ctx.beginPath();
+    if(unit.kind==='Aircraft') {ctx.moveTo(0,-6);ctx.lineTo(5,4);ctx.lineTo(0,1);ctx.lineTo(-5,4);ctx.closePath();}
+    else if(unit.kind==='Sub') {ctx.moveTo(0,-5);ctx.lineTo(4,0);ctx.lineTo(0,5);ctx.lineTo(-4,0);ctx.closePath();}
+    else ctx.rect(-3,-6,6,12);
+    ctx.fill();ctx.stroke();ctx.restore();
+    if(/^CV[N]?-/.test(unit.name)) {
+      ctx.save();ctx.font='600 12px "Microsoft YaHei",sans-serif';ctx.textAlign='right';
+      const width=ctx.measureText(window.HarpoonI18n?.text(unit.name)||unit.name).width;
+      const box={x:screen.x-width-12,y:screen.y-12,w:width,h:18};
+      const blocked=screenObstacles().some(o=>intersectArea(o,box)>0);
+      const labelX=blocked?screen.x+12:screen.x-12;ctx.textAlign=blocked?'left':'right';
+      ctx.strokeStyle='#061420';ctx.lineWidth=4;ctx.strokeText(unit.name,labelX,screen.y+2);
+      ctx.fillStyle=style.hex;ctx.fillText(unit.name,labelX,screen.y+2);ctx.restore();
     }
   }
 
@@ -3460,6 +3505,8 @@
         missionBody = { mission: 'strike', contact: Number(contact.id) };
       } else if (mission === 'asw') {
         missionBody = { mission: 'asw', area: { x: Number(unit.pos.x.toFixed(2)), y: Number(unit.pos.y.toFixed(2)) }, radius_nm: 12 };
+      } else if (mission === 'recon') {
+        missionBody = {mission:'recon',point:{x:Number(unit.pos.x.toFixed(2)),y:Number(unit.pos.y.toFixed(2))}};
       } else {
         missionBody = { mission: 'cap', station: { x: Number(unit.pos.x.toFixed(2)), y: Number(unit.pos.y.toFixed(2)) }, radius_nm: 25 };
       }
@@ -3509,6 +3556,11 @@
   }
 
   async function init() {
+    window.HarpoonTheater?.attach({fitTheater});
+    document.querySelector('.sidebar-quick').addEventListener('click',event=>{
+      const jump=event.target.closest('[data-jump]');
+      if(jump) $(jump.dataset.jump)?.scrollIntoView({block:'start',behavior:'instant'});
+    });
     syncInitialSideUi();
     bindUi();
     setupMapInteractions();

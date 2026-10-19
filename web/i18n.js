@@ -354,6 +354,28 @@ CIWS|近防武器系统
 76mm Gun|76毫米舰炮
 Lightweight ASW Torpedo|轻型反潜鱼雷
 Supersonic Anti-Ship Missile|超声速反舰导弹
+CV-16 LIAONING|CV-16 辽宁号
+CV-17 SHANDONG|CV-17 山东号
+CVN-78 FORD|CVN-78 福特号
+CVN-68 NIMITZ|CVN-68 尼米兹号
+LIAONING|辽宁编队
+SHANDONG|山东编队
+FORD|福特编队
+NIMITZ|尼米兹编队
+Ex-Russian Project 1143.5/Type 001 [Kuznetsov] CV|001型航母
+Type 002 [Kuznetsov Mod] CV|002型航母
+Type 055 [Renhai] CG|055型驱逐舰
+Type 052D [Luyang III] DDG|052D型驱逐舰
+Type 054A [Jiangkai II] FFG|054A型护卫舰
+Type 093A/09IIIA [Shang] SSN|093A型攻击核潜艇
+J-15 Feisha Fighter (ceil 17000 m)|歼-15舰载战斗机（升限17000米）
+Z-18F Haiying ASW Helicopter (ceil 3150 m)|直-18F反潜直升机（升限3150米）
+Z-18J Haibianfu AEW Helicopter (ceil 3150 m)|直-18J预警直升机（升限3150米）
+Gerald R. Ford CVN|福特级核动力航母
+Nimitz CVN|尼米兹级核动力航母
+F/A-18E/F Super Hornet (ceiling 15240 m)|F/A-18E/F超级大黄蜂（升限15240米）
+F/A-18E/F Super Hornet (anti-ship fit)|F/A-18E/F超级大黄蜂（反舰挂载）
+30× simulation speed|30倍模拟速度
 57 mm Unguided Rocket|57毫米无制导火箭
 Medium-Range SAM|中程防空导弹
 Active-Homing Torpedo|主动声自导鱼雷
@@ -407,6 +429,7 @@ Wake-Homing Torpedo|尾流自导鱼雷
   const original = new WeakMap();
   const originalAttributes = new WeakMap();
   const scenarios = {
+    dual_carrier_denial: { title:{zh:'双盾行动：双航母区域拒止',en:'Twin Shields: dual-carrier area denial'},summary:{zh:'辽宁、山东守卫45海里任务区；福特、尼米兹尝试连续占据3分钟。两小时虚构演习，使用RTS改编与已声明的数据库估算。',en:'Liaoning and Shandong deny a 45-nm circle against Ford and Nimitz. A two-hour fictional exercise with RTS adaptations and declared database estimates.'} },
     gunnery_dual: { title: {zh:'舰炮对决',en:'Gunnery duel'}, summary: {zh:'两方水面舰艇逐渐接近，练习接触判断、舰炮与导弹交战。',en:'Surface combatants close for a gun and missile engagement. Practise contact assessment and weapon control.'} },
     crimson_tide: { title: {zh:'赤潮行动',en:'Operation Crimson Tide'}, summary: {zh:'指挥航母编队应对水面、潜艇与航空威胁，并开展对陆打击。',en:'Command a carrier group against surface, submarine and air threats while conducting land strikes.'} },
     pacific_storm: { title: {zh:'太平洋风暴行动',en:'Operation Pacific Storm'}, summary: {zh:'八小时联合战役：协调舰队、航空与反潜力量，面对敌方基地和多方向威胁。',en:'An eight-hour joint campaign: coordinate fleet, air and ASW forces against hostile bases and multiple threat axes.'} },

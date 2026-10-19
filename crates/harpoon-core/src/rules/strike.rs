@@ -125,6 +125,7 @@ mod tests {
             id: "strike-test".into(),
             name: "Strike Test".into(),
             description: String::new(),
+            context: Default::default(),
             duration_s: 100_000,
             weather: Weather { visibility_nm: 20.0, jam: [0.0, 0.0], overcast: 0.0, rain: 0.0 },
             day_night: DayNight::Day,

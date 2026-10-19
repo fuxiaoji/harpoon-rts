@@ -311,6 +311,10 @@ pub struct World {
     pub scenario_name: String,
     /// Early-win VP margin from the scenario victory config.
     pub scenario_target_vp: f64,
+    #[serde(default)]
+    pub context: crate::scenario::ScenarioContext,
+    #[serde(default)]
+    pub mission_state: crate::mission::MissionState,
     pub over: bool,
     pub result: Option<VictoryResult>,
     pub log_commands: bool,

@@ -15,6 +15,8 @@ pub struct Scenario {
     pub name: String,
     #[serde(default)]
     pub description: String,
+    #[serde(default)]
+    pub context: ScenarioContext,
     pub duration_s: i64,
     pub weather: crate::world::Weather,
     #[serde(default)]
@@ -23,6 +25,32 @@ pub struct Scenario {
     #[serde(default)]
     pub victory: VictoryConfig,
     pub units: Vec<UnitSpawn>,
+}
+
+#[derive(Clone, Debug, Default, Serialize, Deserialize)]
+pub struct ScenarioContext {
+    pub theater: Option<Theater>,
+    pub area_denial: Option<crate::mission::AreaDenialConfig>,
+    #[serde(default)]
+    pub air_wings: std::collections::BTreeMap<String, Vec<crate::db::WingFit>>,
+    #[serde(default)]
+    pub air_missions: std::collections::BTreeMap<String, crate::commands::AirMission>,
+    pub automated_side: Option<Side>,
+}
+
+/// Local equirectangular plane: x east, y north, distances in nautical miles.
+/// lon = west + x/(60*cos(reference_lat)); lat = south + y/60.
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct Theater {
+    pub west: f64,
+    pub east: f64,
+    pub south: f64,
+    pub north: f64,
+    pub reference_lat: f64,
+    pub image: String,
+    pub attribution: String,
+    pub source_url: String,
+    pub imagery_date: String,
 }
 
 #[derive(Clone, Debug, Default, Serialize, Deserialize)]
@@ -67,6 +95,7 @@ pub struct FollowSpec {
 
 pub fn load_scenario(sc: Scenario, db: Database) -> Result<World, String> {
     db.validate().map_err(|e| e.to_string())?;
+    validate_context(&sc, &db)?;
     let seed = sc.seed;
     let mut world = World {
         db,
@@ -85,6 +114,8 @@ pub fn load_scenario(sc: Scenario, db: Database) -> Result<World, String> {
         scenario_id: sc.id.clone(),
         scenario_name: sc.name.clone(),
         scenario_target_vp: sc.victory.target_vp,
+        context: sc.context.clone(),
+        mission_state: Default::default(),
         over: false,
         result: None,
         log_commands: true,
@@ -133,14 +164,14 @@ pub fn load_scenario(sc: Scenario, db: Database) -> Result<World, String> {
         let deck = class.deck.as_ref().map(|d| DeckState {
             cycle_s: d.cycle_s,
             capacity: d.capacity,
-            ready: d.wing.iter().map(|w| (w.class.clone(), w.count)).collect(),
+            ready: sc.context.air_wings.get(&name).unwrap_or(&d.wing).iter().map(|w| (w.class.clone(), w.count)).collect(),
             cycling: Vec::new(),
         });
         let e = Entity {
             id: eid,
             side: spawn.side,
             class: class.id.clone(),
-            name,
+            name: name.clone(),
             kind: class.kind,
             pos: spawn.pos,
             course_deg: spawn.course_deg,
@@ -185,7 +216,7 @@ pub fn load_scenario(sc: Scenario, db: Database) -> Result<World, String> {
             flooding_s: 0.0,
             ext: Default::default(),
             deck,
-            mission: None,
+            mission: sc.context.air_missions.get(&name).map(crate::world::MissionState::from_air_mission),
             station: None,
             last_emit_tick: 0,
             projectile: None,
@@ -217,6 +248,59 @@ pub fn load_scenario(sc: Scenario, db: Database) -> Result<World, String> {
         Visibility::All,
     );
     Ok(world)
+}
+
+fn validate_context(sc: &Scenario, db: &Database) -> Result<(), String> {
+    if let Some(t) = &sc.context.theater {
+        if ![t.west, t.east, t.south, t.north, t.reference_lat].iter().all(|v| v.is_finite())
+            || t.west >= t.east || t.south >= t.north || t.south < -90.0 || t.north > 90.0
+            || t.reference_lat.abs() >= 85.0 || !t.image.starts_with("maps/") || t.image.contains("..") {
+            return Err("invalid geographic theater".into());
+        }
+    }
+    if let Some(m) = &sc.context.area_denial {
+        if !m.radius_nm.is_finite() || m.radius_nm <= 0.0 || !m.center.x.is_finite() || !m.center.y.is_finite()
+            || m.hold_s <= 0 || m.hold_s > sc.duration_s || !m.functional_hp_fraction.is_finite()
+            || !(0.0..1.0).contains(&m.functional_hp_fraction) || m.protected_names.is_empty() || m.intruder_names.is_empty() {
+            return Err("invalid area-denial mission".into());
+        }
+        for (side, names) in [(m.defender, &m.protected_names), (m.defender.other(), &m.intruder_names)] {
+            let unique: std::collections::BTreeSet<_> = names.iter().collect();
+            if unique.len() != names.len() { return Err("duplicate mission unit name".into()); }
+            for name in names {
+                let units: Vec<_> = sc.units.iter().filter(|u| u.name.as_ref() == Some(name)).collect();
+                if units.len() != 1 || units[0].side != side || db.platforms.get(&units[0].class).is_none_or(|p| p.kind != PlatformKind::Ship || p.deck.is_none()) {
+                    return Err(format!("invalid mission carrier {name}"));
+                }
+            }
+        }
+    }
+    for (name, wing) in &sc.context.air_wings {
+        let unit = sc.units.iter().find(|u| u.name.as_ref() == Some(name)).ok_or_else(|| format!("unknown air-wing carrier {name}"))?;
+        let deck = db.platforms.get(&unit.class).and_then(|p| p.deck.as_ref()).ok_or_else(|| format!("{name} has no deck"))?;
+        let mut classes = std::collections::BTreeSet::new();
+        if wing.iter().map(|w| w.count as u16).sum::<u16>() > deck.capacity as u16 { return Err(format!("{name}: wing exceeds deck capacity")); }
+        for w in wing {
+            if w.count == 0 || !classes.insert(&w.class) || db.platforms.get(&w.class).is_none_or(|p| p.kind != PlatformKind::Aircraft) {
+                return Err(format!("{name}: invalid wing aircraft {}", w.class));
+            }
+        }
+    }
+    for (name, mission) in &sc.context.air_missions {
+        let unit = sc.units.iter().find(|u| u.name.as_ref() == Some(name)).ok_or_else(|| format!("unknown mission aircraft {name}"))?;
+        if db.platforms.get(&unit.class).is_none_or(|p| p.kind != PlatformKind::Aircraft) || unit.waypoints.as_ref().is_some_and(|w| !w.is_empty()) {
+            return Err(format!("{name}: initial air mission requires an aircraft without waypoint orders"));
+        }
+        use crate::commands::AirMission;
+        let valid = match mission {
+            AirMission::Cap { station, radius_nm } => station.x.is_finite() && station.y.is_finite() && radius_nm.is_finite() && *radius_nm > 0.0,
+            AirMission::Recon { point } => point.x.is_finite() && point.y.is_finite(),
+            AirMission::Asw { area, radius_nm } => area.x.is_finite() && area.y.is_finite() && radius_nm.is_finite() && *radius_nm > 0.0,
+            _ => false,
+        };
+        if !valid { return Err(format!("{name}: unsupported initial air mission")); }
+    }
+    Ok(())
 }
 
 /// Parse a scenario from JSON text.
