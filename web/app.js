@@ -291,6 +291,7 @@
   // Application state
   // ------------------------------------------------------------------
   const state = {
+    showRanges: false, // 探测范围圈：选中单位始终显示，按钮切换全队显示
     side: readStorage('harpoon.side') === 'Red' ? 'Red' : 'Blue',
     scenarios: [],
     scenarioId: null,
@@ -700,7 +701,7 @@
       if (!initial) restartTransport();
 
       const scenario = state.scenarios.find((sc) => sc.id === id);
-      showToast(`SCENARIO DEPLOYED · ${scenario ? scenario.name : id}`, 'ok');
+      showToast(`想定已部署 · ${scenario ? scenario.name : id}`, 'ok');
 
       const [obs] = await Promise.all([
         fetchObservation(state.side).catch(() => null),
@@ -896,7 +897,7 @@
     if (obs && obs.over) {
       dom.overChip.hidden = false;
       const result = isObject(obs.result) ? obs.result : null;
-      dom.overChip.textContent = result && result.winner ? `${String(result.winner).toUpperCase()} WIN` : 'OVER';
+      dom.overChip.textContent = result && result.winner ? `${String(result.winner).toUpperCase()} WIN` : '终局';
       dom.overChip.title = result
         ? `${result.winner || 'Draw'} · ${result.reason || 'Scenario complete'}`
         : 'Scenario complete';
@@ -1046,7 +1047,7 @@
     const contact = selectedContact();
     const over = !!(obs && obs.over);
 
-    dom.unitCount.textContent = `${units.length} IN PICTURE`;
+    dom.unitCount.textContent = `${units.length} 个在图`;
 
     if (!unit) {
       dom.unitEmpty.hidden = false;
@@ -1135,7 +1136,7 @@
       chips.push(`<span class="chip">MISSION ${escapeHtml(String(unit.mission).toUpperCase())}</span>`);
     }
     if (obs && obs.over) {
-      chips.push('<span class="chip chip--danger">SCENARIO OVER</span>');
+      chips.push('<span class="chip chip--danger">SCENARIO 终局</span>');
     }
     dom.unitChips.innerHTML = chips.join('');
   }
@@ -1146,7 +1147,7 @@
     dom.btnWeaponsFree.classList.toggle('is-on', !!unit.fire_on);
     dom.btnWeaponsFree.setAttribute('aria-pressed', String(!!unit.fire_on));
     dom.weaponsFreeState.textContent = unit.fire_on ? 'ACTIVE' : 'HOLD';
-    dom.weaponsStateChip.textContent = unit.fire_on ? 'WEAPONS FREE' : 'WEAPONS HOLD';
+    dom.weaponsStateChip.textContent = unit.fire_on ? '武器自由' : 'WEAPONS HOLD';
     dom.weaponsStateChip.classList.toggle('is-free', !!unit.fire_on);
 
     dom.chaffCount.textContent = String(numberOr(unit.chaff, 0));
@@ -1155,13 +1156,13 @@
 
     dom.btnStop.disabled = disabled;
     dom.btnRecover.disabled = disabled || !unit.deck;
-    dom.recoverState.textContent = unit.deck ? 'FLIGHT DECK' : 'NO FLIGHT DECK';
+    dom.recoverState.textContent = unit.deck ? '有飞行甲板' : '无飞行甲板';
 
     if (unit.assigned !== null && unit.assigned !== undefined) {
       dom.assignedTarget.textContent = `DESIGNATED TARGET · C${unit.assigned}`;
       dom.assignedTarget.classList.add('has-target');
     } else {
-      dom.assignedTarget.textContent = 'NO TARGET ASSIGNED';
+      dom.assignedTarget.textContent = '未指派目标';
       dom.assignedTarget.classList.remove('has-target');
     }
   }
@@ -1170,7 +1171,7 @@
     const weapons = Array.isArray(unit.weapons) ? unit.weapons : [];
     dom.weaponsCount.textContent = `${weapons.length} MOUNT${weapons.length === 1 ? '' : 'S'}`;
     if (!weapons.length) {
-      dom.weaponsList.innerHTML = '<div class="deck-empty" style="padding:7px">NO WEAPON MOUNTS</div>';
+      dom.weaponsList.innerHTML = '<div class="deck-empty" style="padding:7px">无武器</div>';
       return;
     }
     dom.weaponsList.innerHTML = weapons.map((mount) => {
@@ -1183,12 +1184,12 @@
             <small>${escapeHtml(mount.weapon || '')}</small>
           </div>
           <div class="weapon-stat">
-            <span>AMMO</span>
+            <spanAMMO/span>
             <b class="${ammo <= 0 ? 'is-empty' : ''}">${ammo}</b>
           </div>
           <div class="weapon-stat">
             <span>CD</span>
-            <b class="${cooldown > 0 ? 'is-cooling' : ''}">${cooldown > 0 ? `${fmt1(cooldown)}s` : 'RDY'}</b>
+            <b class="${cooldown > 0 ? 'is-cooling' : ''}">${cooldown > 0 ? `${fmt1(cooldown)}s` : '就绪'}</b>
           </div>
         </div>`;
     }).join('');
@@ -1198,7 +1199,7 @@
     const sensors = Array.isArray(unit.sensors) ? unit.sensors : [];
     dom.sensorsCount.textContent = `${sensors.length} SET${sensors.length === 1 ? '' : 'S'}`;
     if (!sensors.length) {
-      dom.sensorsList.innerHTML = '<div class="deck-empty" style="padding:7px">NO SENSOR SETS</div>';
+      dom.sensorsList.innerHTML = '<div class="deck-empty" style="padding:7px">无传感器</div>';
       return;
     }
     dom.sensorsList.innerHTML = sensors.map((sensor) => {
@@ -1226,16 +1227,16 @@
   }
 
   function renderMission(unit) {
-    const mission = unit.mission ? String(unit.mission).toUpperCase() : 'NO TASKING';
+    const mission = unit.mission ? String(unit.mission).toUpperCase() : '无任务指派';
     dom.missionValue.textContent = mission;
     dom.missionDetail.textContent = unit.mission
-      ? 'Air tasking assigned by the flight deck.'
-      : 'No air mission is currently assigned.';
+      ? '由飞行甲板分配的航空任务。'
+      : '当前没有航空任务。';
   }
 
   function renderDeck(unit, obs) {
     if (!unit.deck) {
-      dom.deckList.innerHTML = '<span class="deck-empty">NO FLIGHT DECK</span>';
+      dom.deckList.innerHTML = '<span class="deck-empty">NO 飞行甲板</span>';
       return;
     }
 
@@ -1249,7 +1250,7 @@
       const cls = String(entry[0]);
       const count = numberOr(entry[1], 0);
       const mission = cls.includes('helo') ? 'asw' : 'cap';
-      const missionLabel = mission === 'asw' ? 'ASW SWEEP' : 'CAP';
+      const missionLabel = mission === 'asw' ? '反潜扫描' : 'CAP';
       const strike = cls.includes('striker') || cls.includes('bomber') || cls.includes('fighter');
       lines.push(
         `<div class="deck-line"><span>${escapeHtml(aircraftName(cls))}</span>` +
@@ -1258,7 +1259,7 @@
         (count > 0 && !over
           ? `<button class="cmd-btn" data-deck-launch="1" data-class="${escapeHtml(cls)}" data-count="${Math.min(2, count)}" data-mission="${mission}" style="font-size:8px;padding:2px 5px">${missionLabel}</button>` +
             (strike && contact
-              ? `<button class="cmd-btn" data-deck-launch="1" data-class="${escapeHtml(cls)}" data-count="${Math.min(2, count)}" data-mission="strike" style="font-size:8px;padding:2px 5px">STRIKE</button>`
+              ? `<button class="cmd-btn" data-deck-launch="1" data-class="${escapeHtml(cls)}" data-count="${Math.min(2, count)}" data-mission="strike" style="font-size:8px;padding:2px 5px">打击</button>`
               : '')
           : '') +
         `</span></div>`,
@@ -1269,7 +1270,7 @@
       const readyAt = numberOr(entry[2], 0);
       const tick = obs ? numberOr(obs.tick, 0) : 0;
       const remaining = Math.max(0, Math.ceil(readyAt - tick));
-      lines.push(`<div class="deck-line"><span>${escapeHtml(aircraftName(entry[0]))}</span><b>×${escapeHtml(entry[1])} · ${remaining}s</b></div>`);
+      lines.push(`<div class="deck-line"><span>${escapeHtml(aircraftName(entry[0]))}</span><b>×${escapeHtml(entry[1])} · ${remaining}秒</b></div>`);
     }
     dom.deckList.innerHTML = lines.length
       ? lines.join('')
@@ -1366,7 +1367,7 @@
     const assigned = unit && unit.assigned !== null && unit.assigned !== undefined
       && Number(unit.assigned) === Number(contact.id);
     dom.btnAssign.disabled = !unit || over;
-    dom.btnAssign.textContent = assigned ? 'TARGET ASSIGNED' : 'ASSIGN TARGET';
+    dom.btnAssign.textContent = assigned ? 'TARGET ASSIGNED' : '指派目标';
     dom.btnAssign.classList.toggle('is-on', !!assigned);
     dom.btnClearTarget.disabled = !unit || unit.assigned === null || unit.assigned === undefined || over;
 
@@ -1525,7 +1526,7 @@
     if (result.ok) {
       if (!quiet) {
         const paused = state.speed === 0 ? ' · SIMULATION PAUSED' : '';
-        showToast(`${label || 'ORDER'} QUEUED${paused}`, state.speed === 0 ? 'warn' : 'ok');
+        showToast(`${label || 'ORDER'} 已排队${paused}`, state.speed === 0 ? 'warn' : 'ok');
       }
     } else if (!quiet) {
       showToast(`Order rejected: ${result.message}`, 'error');
@@ -1566,7 +1567,7 @@
       return;
     }
     if (!unit) {
-      showToast('Select a friendly unit before plotting a course.', 'warn');
+      showToast('请先选中我方单位，再规划航线。', 'warn');
       return;
     }
 
@@ -1580,7 +1581,7 @@
     if (rangeNm(previousPoint, point) < 0.35) return;
 
     if (route.length >= MAX_WAYPOINTS) {
-      showToast(`Waypoint limit reached (${MAX_WAYPOINTS}). Use ALL STOP to clear the route.`, 'warn');
+      showToast(`已达航路点上限 (${MAX_WAYPOINTS}). Use 全停 to clear the route.`, 'warn');
       return;
     }
 
@@ -1599,7 +1600,7 @@
         if (side !== state.side || generation !== state.gameGeneration) return;
         if (ok) {
           const paused = state.speed === 0 ? ' · SIMULATION PAUSED' : '';
-          showToast(`WAYPOINT ${route.length} QUEUED · X ${fmtRange(point.x)} / Y ${fmtRange(point.y)} NM${paused}`, state.speed === 0 ? 'warn' : 'ok');
+          showToast(`航路点 ${route.length} 已下达 · X ${fmtRange(point.x)} / Y ${fmtRange(point.y)} NM${paused}`, state.speed === 0 ? 'warn' : 'ok');
         } else {
           if (state.routes.get(key) === route) state.routes.delete(key);
           showToast('Waypoint order rejected by the referee.', 'error');
@@ -1636,7 +1637,7 @@
     if (!unit || (state.observation && state.observation.over)) return;
     dom.btnWeaponsFree.disabled = true;
     try {
-      await postCommand({ cmd: 'set_weapons_free', unit: Number(unit.id), free: !unit.fire_on }, 'WEAPONS STATE');
+      await postCommand({ cmd: 'set_weapons_free', unit: Number(unit.id), free: !unit.fire_on }, '武器状态');
     } finally {
       dom.btnWeaponsFree.disabled = false;
       renderOrders(unit, !!(state.observation && state.observation.over));
@@ -1648,7 +1649,7 @@
     if (!unit || (state.observation && state.observation.over)) return;
     dom.btnChaff.disabled = true;
     try {
-      await postCommand({ cmd: 'deploy_chaff', unit: Number(unit.id) }, 'CHAFF');
+      await postCommand({ cmd: 'deploy_chaff', unit: Number(unit.id) }, '箔条');
     } finally {
       dom.btnChaff.disabled = false;
       renderOrders(unit, !!(state.observation && state.observation.over));
@@ -1669,7 +1670,7 @@
           /* the pending goto already reports its own failure */
         }
       }
-      const ok = await postCommand({ cmd: 'stop', unit: Number(unit.id) }, 'ALL STOP');
+      const ok = await postCommand({ cmd: 'stop', unit: Number(unit.id) }, '全停');
       if (ok) state.routes.delete(key);
     } finally {
       dom.btnStop.disabled = false;
@@ -1682,7 +1683,7 @@
     if (!unit || !unit.deck || (state.observation && state.observation.over)) return;
     dom.btnRecover.disabled = true;
     try {
-      await postCommand({ cmd: 'recover_aircraft', unit: Number(unit.id) }, 'RECOVER AIRCRAFT');
+      await postCommand({ cmd: 'recover_aircraft', unit: Number(unit.id) }, '回收舰载机');
     } finally {
       dom.btnRecover.disabled = false;
       renderOrders(unit, !!(state.observation && state.observation.over));
@@ -1699,7 +1700,7 @@
         cmd: 'assign_target',
         unit: Number(unit.id),
         contact: Number(contact.id),
-      }, 'TARGET DESIGNATION');
+      }, '目标指派');
     } finally {
       dom.btnAssign.disabled = false;
       renderTargetPanel(unit, contact, state.observation);
@@ -1711,7 +1712,7 @@
     if (!unit || (state.observation && state.observation.over)) return;
     dom.btnClearTarget.disabled = true;
     try {
-      await postCommand({ cmd: 'clear_target', unit: Number(unit.id) }, 'CLEAR TARGET');
+      await postCommand({ cmd: 'clear_target', unit: Number(unit.id) }, '解除目标');
     } finally {
       dom.btnClearTarget.disabled = false;
       const contact = selectedContact();
@@ -1788,128 +1789,128 @@
     switch (kind) {
       case 'scenario_started':
         return {
-          headline: `SCENARIO STARTED · ${event.name || 'UNNAMED'}`,
-          detail: 'Referee clock is running. Double-blind contact picture initialised.',
+          headline: `想定开始 · ${event.name || 'UNNAMED'}`,
+          detail: '裁判时钟运行中，双盲接触图已初始化。',
           tone: 'scenario',
         };
       case 'detection':
         return {
-          headline: `DETECTION · ${contact} ${String(event.category || 'CONTACT').toUpperCase()}`,
+          headline: `发现接触 · ${contact} ${String(event.category || 'CONTACT').toUpperCase()}`,
           detail: `${sensorName(event.sensor || 'sensor')}${eventPosition(event)}`,
           tone: 'intel',
         };
       case 'contact_identified':
         return {
-          headline: `CONTACT IDENTIFIED · ${contact}`,
-          detail: `Classified as ${event.class_name || 'unknown class'}${side ? ` · ${side}` : ''}`,
+          headline: `接触识别 · ${contact}`,
+          detail: `识别为 ${event.class_name || '未知级别'}${side ? ` · ${side}` : ''}`,
           tone: 'intel',
         };
       case 'contact_lost':
-        return { headline: `CONTACT LOST · ${contact}`, detail: 'Track decayed past the stale threshold.', tone: 'intel' };
+        return { headline: `接触丢失 · ${contact}`, detail: '跟踪衰减超过失效阈值。', tone: 'intel' };
       case 'contact_sank':
-        return { headline: `CONTACT SUNK · ${contact}`, detail: 'Target removed from the contact picture.', tone: 'loss' };
+        return { headline: `CONTACT 击沉 · ${contact}`, detail: '目标已从接触图中移除。', tone: 'loss' };
       case 'counter_detected':
         return {
-          headline: `COUNTER-DETECTED · ${unit}`,
-          detail: `Emissions exposed this unit to ${event.by_side || 'the enemy'}.`,
+          headline: `发射暴露 · ${unit}`,
+          detail: `本单位辐射暴露给 ${event.by_side === 'Blue' ? '蓝方' : '红方'}。`,
           tone: 'intel',
         };
       case 'weapons_release':
         return {
-          headline: `WEAPONS RELEASE · ${shooter}`,
+          headline: `武器发射 · ${shooter}`,
           detail: `${weapon} × ${numberOr(event.count, 1)}${side ? ` · ${side}` : ''}`,
           tone: 'weapon',
         };
       case 'incoming':
         return {
-          headline: `INCOMING · ${contact}`,
-          detail: `Impact estimate in ${fmtEta(event.eta_s)}.`,
+          headline: `来袭警报 · ${contact}`,
+          detail: `预计 ${fmtEta(event.eta_s)} 后到达。`,
           tone: 'danger',
         };
       case 'sam_shot':
         return {
-          headline: `SAM LAUNCH · ${shooter}`,
+          headline: `防空拦截 · ${shooter}`,
           detail: `${weapon} → ${contactRef(event.target_contact)}`,
           tone: 'weapon',
         };
       case 'intercept':
         return {
-          headline: `INTERCEPT ${event.intercepted ? 'SUCCESS' : 'FAILED'}`,
+          headline: event.intercepted ? `拦截成功` : `拦截失败`,
           detail: event.contact !== null && event.contact !== undefined
             ? `Engagement against ${contact}`
-            : 'Terminal engagement',
+            : '末段交战',
           tone: event.intercepted ? 'status' : 'weapon',
         };
       case 'chaff_deployed':
-        return { headline: `CHAFF DEPLOYED · ${unit}`, detail: 'Localised obscuration active.', tone: 'status' };
+        return { headline: `箔条施放 · ${unit}`, detail: 'Localised obscuration active.', tone: 'status' };
       case 'decoy_fooled':
         return {
-          headline: 'DECOY FOOLED SEEKER',
-          detail: event.contact !== null && event.contact !== undefined ? `Track ${contact} left the threat axis.` : 'Incoming weapon seduced by countermeasures.',
+          headline: '诱饵奏效 SEEKER',
+          detail: event.contact !== null && event.contact !== undefined ? `目标 ${contact} 已脱离威胁轴。` : '来袭武器被反制措施诱偏。',
           tone: 'status',
         };
       case 'gun_action':
         return {
-          headline: `GUN ACTION · ${shooter}`,
-          detail: `${numberOr(event.hits, 0)} hit${numberOr(event.hits, 0) === 1 ? '' : 's'} on ${contact}`,
+          headline: `舰炮开火 · ${shooter}`,
+          detail: `对 ${contact} 取得 ${numberOr(event.hits, 0)} 次命中`,
           tone: 'weapon',
         };
       case 'torpedo_detected':
-        return { headline: `TORPEDO DETECTED · ${contact}`, detail: 'Torpedo wake acquired by own sensors.', tone: 'danger' };
+        return { headline: `鱼雷来袭 · ${contact}`, detail: '我方传感器捕捉到鱼雷尾流。', tone: 'danger' };
       case 'impact':
         return {
-          headline: `IMPACT · ${unitName || unit}`,
-          detail: `${weapon} · ${fmt1(event.damage)} damage · ${fmt1(event.hp_left)} HP remaining`,
+          headline: `命中 · ${unitName || unit}`,
+          detail: `${weapon} · 伤害 ${fmt1(event.damage)} · 剩余 HP ${fmt1(event.hp_left)}`,
           tone: 'danger',
         };
       case 'critical_hit':
         return {
-          headline: `CRITICAL HIT · ${unitName || unit}`,
-          detail: `${titleCaseWords(event.system || 'system')} degraded or offline.`,
+          headline: `关键命中 · ${unitName || unit}`,
+          detail: `${titleCaseWords(event.system || 'system')} 受损或离线。`,
           tone: 'danger',
         };
       case 'sunk':
-        return { headline: `UNIT LOST · ${unitName || unit}`, detail: 'Hull destroyed. Unit removed from the picture.', tone: 'loss' };
+        return { headline: `单位损失 · ${unitName || unit}`, detail: '船体损毁，单位从海图中移除。', tone: 'loss' };
       case 'ditched':
-        return { headline: `AIRCRAFT DITCHED · ${unitName || unit}`, detail: 'Airframe lost after fuel or damage failure.', tone: 'loss' };
+        return { headline: `战机坠海 · ${unitName || unit}`, detail: '燃料耗尽或损伤导致坠海。', tone: 'loss' };
       case 'air_shot_down':
         return {
-          headline: `AIRCRAFT DOWN · ${unitName || unit}`,
-          detail: `Shot down by ${event.by_side || 'hostile air defences'}.`,
+          headline: `战机坠毁 · ${unitName || unit}`,
+          detail: `被 ${event.by_side || '敌方防空'} 击落。`,
           tone: 'loss',
         };
       case 'air_launch':
         return {
-          headline: `AIR LAUNCH · ${numberOr(event.count, 1)} × ${event.class || 'aircraft'}`,
-          detail: `Carrier ${unitRef(event.carrier)} · mission ${String(event.mission || 'unknown').toUpperCase()}`,
+          headline: `舰载机出动 · ${numberOr(event.count, 1)} × ${event.class || 'aircraft'}`,
+          detail: `母舰 ${unitRef(event.carrier)} · 任务 ${String(event.mission || 'unknown').toUpperCase()}`,
           tone: 'status',
         };
       case 'air_recovered':
         return {
-          headline: `AIR RECOVERED · ${numberOr(event.count, 1)} × ${event.class || 'aircraft'}`,
-          detail: `Recovered aboard ${unitRef(event.carrier)}.`,
+          headline: `舰载机回收 · ${numberOr(event.count, 1)} × ${event.class || 'aircraft'}`,
+          detail: `已降落在 ${unitRef(event.carrier)}。`,
           tone: 'status',
         };
       case 'deck_busy':
-        return { headline: `DECK BUSY · ${unitRef(event.carrier)}`, detail: 'Flight operations already in progress.', tone: 'intel' };
+        return { headline: `甲板占用 · ${unitRef(event.carrier)}`, detail: 'Flight operations already in progress.', tone: 'intel' };
       case 'base_damaged':
         return {
-          headline: `BASE DAMAGED · ${event.base_name || unitRef(event.base)}`,
-          detail: `${fmt1(event.damage)} damage · ${fmt1(event.hp_left)} HP remaining.`,
+          headline: `基地受损 · ${event.base_name || unitRef(event.base)}`,
+          detail: `伤害 ${fmt1(event.damage)} · 剩余 HP ${fmt1(event.hp_left)}。`,
           tone: 'danger',
         };
       case 'base_destroyed':
-        return { headline: `BASE DESTROYED · ${event.base_name || unitRef(event.base)}`, detail: 'Facility removed from the order of battle.', tone: 'loss' };
+        return { headline: `基地摧毁 · ${event.base_name || unitRef(event.base)}`, detail: 'Facility removed from the order of battle.', tone: 'loss' };
       case 'scenario_ended':
         return {
-          headline: `SCENARIO ENDED · ${event.winner ? `${String(event.winner).toUpperCase()} VICTORY` : 'DRAW'}`,
-          detail: `${event.reason || 'Scenario complete'} · VP B${fmtRange(event.vp_blue)} / R${fmtRange(event.vp_red)}`,
+          headline: `想定结束 · ${event.winner ? `${String(event.winner).toUpperCase()} VICTORY` : 'DRAW'}`,
+          detail: `${event.reason || '想定结束'} · 蓝VP ${fmtRange(event.vp_blue)} / 红VP ${fmtRange(event.vp_red)}`,
           tone: 'scenario',
         };
       default:
         return {
           headline: kind.replace(/_/g, ' ').toUpperCase(),
-          detail: [event.side ? `SIDE ${event.side}` : '', event.contact !== undefined ? `CONTACT ${contact}` : '', event.unit !== undefined ? `UNIT ${unit}` : '']
+          detail: [event.side ? `阵营 ${event.side}` : '', event.contact !== undefined ? `接触 ${contact}` : '', event.unit !== undefined ? `单位 ${unit}` : '']
             .filter(Boolean)
             .join(' · '),
           tone: 'status',
@@ -1979,7 +1980,7 @@
 
   function updateLogMeta() {
     const count = state.eventMap.size;
-    dom.logMeta.textContent = `NEWEST FIRST · ${count} EVENT${count === 1 ? '' : 'S'}`;
+    dom.logMeta.textContent = `最新在上 · ${count} EVENT${count === 1 ? '' : 'S'}`;
   }
 
   function clearEventLog() {
@@ -3099,6 +3100,7 @@
     }
 
     if (selected) drawSelectionBrackets(ctx, screen.x, screen.y, size + 8, color, now, 0.34);
+    if (state.showRanges || selected) drawSensorRings(ctx, unit, layout);
     drawUnitLabel(ctx, screen, size, unit, style, selected, labelBox);
   }
 
@@ -3146,6 +3148,35 @@
       ctx.stroke();
     }
     ctx.restore();
+  }
+
+  // 探测范围圈：对空/对海/对潜三色环（虚线=对空）
+  function drawSensorRings(ctx, unit, layout) {
+    const sensors = Array.isArray(unit.sensors) ? unit.sensors : [];
+    const c = worldToScreen(unit.pos.x, unit.pos.y);
+    const rings = [
+      ['vs_air', 'rgba(102,209,255,0.50)', [5, 4]],
+      ['vs_surface', 'rgba(102,209,255,0.85)', []],
+      ['vs_sub', 'rgba(85,221,163,0.60)', [2, 4]],
+    ];
+    for (const [key, color, dash] of rings) {
+      let maxNm = 0;
+      for (const sn of sensors) {
+        const v = numberOr(sn[key], 0);
+        if (v > maxNm) maxNm = v;
+      }
+      const r = maxNm * map.view.scale;
+      if (maxNm > 0.2 && r > 6 && r < 5000) {
+        ctx.save();
+        ctx.strokeStyle = color;
+        ctx.setLineDash(dash);
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.arc(c.x, c.y, r, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.restore();
+      }
+    }
   }
 
   function drawUnitLabel(ctx, screen, iconRadius, unit, style, selected, layout) {
@@ -3340,6 +3371,13 @@
     });
 
     dom.btnWeaponsFree.addEventListener('click', () => void issueWeaponsFree());
+    const rangesBtn = document.getElementById('map-ranges');
+    if (rangesBtn) {
+      rangesBtn.addEventListener('click', () => {
+        state.showRanges = !state.showRanges;
+        rangesBtn.classList.toggle('is-active', state.showRanges);
+      });
+    }
     dom.btnChaff.addEventListener('click', () => void issueDeployChaff());
     dom.btnStop.addEventListener('click', () => void issueStop());
     dom.btnRecover.addEventListener('click', () => void issueRecoverAircraft());
@@ -3374,7 +3412,7 @@
         class: cls,
         count,
         mission: missionBody,
-      }, 'LAUNCH ' + String(cls).toUpperCase());
+      }, '弹射 ' + String(cls).toUpperCase());
     });
 
     dom.fireWeapon.addEventListener('change', () => {

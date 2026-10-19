@@ -48,6 +48,10 @@ pub struct SensorObs {
     pub sensor: String,
     pub name: String,
     pub active: bool,
+    /// Nominal detection range vs air/surface/sub targets in nm (UI rings).
+    pub vs_air: Option<f64>,
+    pub vs_surface: Option<f64>,
+    pub vs_sub: Option<f64>,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -129,15 +133,22 @@ pub fn observe(world: &World, side: Side, since_seq: u64, max_events: usize) -> 
             sensors: e
                 .sensors
                 .iter()
-                .map(|s| SensorObs {
-                    sensor: s.sensor.clone(),
-                    name: world
-                        .db
-                        .sensors
-                        .get(&s.sensor)
-                        .map(|d| d.name.clone())
-                        .unwrap_or_else(|| s.sensor.clone()),
-                    active: s.active,
+                .map(|s| {
+                    let (a, sf, sb) =
+                        crate::sensors::nominal_ranges(&world.db, e, s);
+                    SensorObs {
+                        sensor: s.sensor.clone(),
+                        name: world
+                            .db
+                            .sensors
+                            .get(&s.sensor)
+                            .map(|d| d.name.clone())
+                            .unwrap_or_else(|| s.sensor.clone()),
+                        active: s.active,
+                        vs_air: a,
+                        vs_surface: sf,
+                        vs_sub: sb,
+                    }
                 })
                 .collect(),
             chaff: e.chaff,

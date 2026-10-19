@@ -635,3 +635,40 @@ pub fn chaff_breaks_lock(world: &mut World, unit: EntityId) {
         }
     }
 }
+
+/// Nominal detection ranges for the UI (day, no jam, nominal target):
+/// (vs_air@6000m, vs_surface, vs_sub@60m). `None` = cannot detect that
+/// domain with this sensor. Mirrors `effective_range` at standard
+/// conditions so the map rings match what the referee actually uses.
+pub fn nominal_ranges(db: &Database, o: &crate::world::Entity, inst: &crate::world::SensorInstance) -> (Option<f64>, Option<f64>, Option<f64>) {
+    let Some(def) = db.sensors.get(&inst.sensor) else { return (None, None, None) };
+    if o.systems.radar <= 0.05 && matches!(def.kind, SensorKind::Radar) {
+        return (None, None, None);
+    }
+    if o.systems.sonar <= 0.05 && matches!(def.kind, SensorKind::SonarPassive | SensorKind::SonarActive) {
+        return (None, None, None);
+    }
+    if def.kind == SensorKind::SonarActive && !inst.active {
+        return (None, None, None);
+    }
+    let horizon_to = |t_alt: f64| horizon_nm(def.alt_m, t_alt);
+    let (mut a, mut sf, mut sb) = (None, None, None);
+    if def.air_range_nm > 0.0 {
+        let v = def.air_range_nm.min(horizon_to(6000.0));
+        a = Some(v);
+    }
+    if def.surface_range_nm > 0.0 {
+        let v = def.surface_range_nm.min(horizon_to(0.0)).max(0.0);
+        sf = Some(v);
+    }
+    if def.sub_range_nm > 0.0 {
+        let v = match def.kind {
+            SensorKind::SonarPassive => def.sub_range_nm * 1.0,   // nominal speed/noise
+            SensorKind::SonarActive => def.sub_range_nm * 0.75,
+            SensorKind::Magnetic => def.sub_range_nm * 0.5,
+            _ => def.sub_range_nm * 0.5,
+        };
+        sb = Some(v);
+    }
+    (a, sf, sb)
+}
