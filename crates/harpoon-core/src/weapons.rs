@@ -338,6 +338,11 @@ fn pick_free_target(world: &World, shooter: &ShooterCtx) -> Option<(ContactId, E
             if e.kind == PlatformKind::Torpedo {
                 return None;
             }
+            // Sonobuoys are expendable sensors; weapons-free never spends
+            // missiles on them even though they resolve as surface contacts.
+            if e.class == crate::rules::asw::SONOBUOY_CLASS {
+                return None;
+            }
             Some((shooter.pos.range_to(e.pos), c.id, e.id))
         })
         .collect();

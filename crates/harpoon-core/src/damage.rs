@@ -609,7 +609,10 @@ pub fn sink(world: &mut World, target_id: EntityId) {
         t.hp = 0.0;
         t.last_emit_tick = world.tick; // death timestamp for cleanup linger
     }
-    if !t.kind.is_projectile() {
+    // Sonobuoys are expendable sensors (1 DP), not scored platforms: their
+    // loss must never count toward kill counts or weighted scores.
+    let is_buoy = t.class == crate::rules::asw::SONOBUOY_CLASS;
+    if !t.kind.is_projectile() && !is_buoy {
         world.losses[t.side.index()] += 1;
         if let Some(kind_key) = World::kill_kind(t.kind) {
             world
@@ -678,7 +681,7 @@ pub fn sink(world: &mut World, target_id: EntityId) {
     }
     // One confirmed kill per destroyed platform, even if several tracks
     // resolved onto it.
-    if had_confirmed_contact && !t.kind.is_projectile() {
+    if had_confirmed_contact && !t.kind.is_projectile() && !is_buoy {
         world.sides[enemy.index()].confirmed_kills += 1;
         if let Some(kind_key) = World::kill_kind(t.kind) {
             *world.sides[enemy.index()]

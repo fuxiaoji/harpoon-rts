@@ -1716,6 +1716,7 @@ format!(
 - When you hold a submarine contact (category Sub), react: launch ASW helos (mission asw) over the contact, vector ASW-capable ships, and weapons-free ASW rockets inside range. Enemy submarines sink your carriers for heavy points.
 - Your own submarines hunt: transit toward the enemy's last known position, and once inside torpedo range of a tracked ship, fire a 2-4 torpedo salvo. Do not trail the fleet passively.
 - Surface ships and submarines usually score far more than aircraft — see `victory.kill_weights` in the observation. Shooting down aircraft alone will lose a weighted battle; kill hulls.
+- Sonobuoy contacts are 1-DP expendable sensors, not scoreable platforms. Never fire ASMs, guns or torpedoes at a contact identified as Sonobuoy; a missile on a buoy is a wasted magazine. (The contact list below already filters them.)
 
 {director_block}
 
@@ -1781,7 +1782,16 @@ fn build_user_prompt(
             })
         })
         .collect();
-    let mut contact_refs: Vec<&harpoon_core::observe::ContactObs> = obs.contacts.iter().collect();
+    // Sonobuoys flood the contact list after re-detection and are worthless
+    // targets; the staff never sees them unless there is nothing else.
+    let mut contact_refs: Vec<&harpoon_core::observe::ContactObs> = obs
+        .contacts
+        .iter()
+        .filter(|c| c.class_name.as_deref() != Some("Sonobuoy"))
+        .collect();
+    if contact_refs.is_empty() {
+        contact_refs = obs.contacts.iter().collect();
+    }
     contact_refs.sort_by(|a, b| {
         a.stale
             .cmp(&b.stale)

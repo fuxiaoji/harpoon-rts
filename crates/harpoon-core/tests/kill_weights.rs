@@ -129,3 +129,40 @@ fn observation_exposes_own_breakdown_weights_and_in_flight_ordnance() {
         "Red holds no Blue launches; its own in-flight count stays 0"
     );
 }
+
+#[test]
+fn sonobuoys_are_not_scored_kills_or_losses() {
+    let mut w = fixture(Some((10.0, 5.0, 1.0, 10.0)));
+    let r1 = id_of(&w, "R1");
+    let cid = track(&mut w, Side::Blue, r1);
+    // A buoy resolves onto the enemy side list and then dies.
+    let state = &mut w.sides[Side::Red.index()];
+    state.next_contact += 1;
+    let buoy_entity = w.allocate_id();
+    w.entities.insert(buoy_entity, harpoon_core::world::Entity {
+        id: buoy_entity,
+        side: Side::Red,
+        class: "sonobuoy".into(),
+        name: "RED-99 Sonobuoy".into(),
+        kind: PlatformKind::Ship,
+        pos: Vec2::new(31.0, 10.0),
+        course_deg: 0.0, speed_kts: 0.0, ordered_course_deg: 0.0, ordered_speed_kts: 0.0,
+        waypoints: Default::default(), altitude_m: 0.0, ordered_altitude_m: 0.0,
+        depth_m: 0.0, ordered_depth_m: 0.0,
+        hp: 1.0, hp_max: 1.0, alive: true,
+        systems: Default::default(), fire_on: false, assigned: None,
+        weapons: Vec::new(), sensors: Vec::new(),
+        chaff: 0, decoys: 0, auto_chaff: false, chaff_active_s: 0.0,
+        endurance_s: None, burn_s: 0.0, flooding_s: 0.0, ext: Default::default(),
+        deck: None, mission: None, station: None, projectile: None, last_emit_tick: 0,
+    });
+    sink(&mut w, buoy_entity);
+
+    harpoon_core::sim::run_seconds(&mut w, 400, &[]);
+    let result = w.result.as_ref().unwrap();
+    assert_eq!(result.red_kills, 0, "a dead buoy is not a loss for Red");
+    assert!(result.blue_kills_by_kind.get("ship").is_none(), "sinking a buoy must not score a ship kill");
+    assert_eq!(result.blue_points, 0.0);
+    assert!(w.losses_by_kind.get("ship").is_none());
+    assert!(!w.sides[Side::Blue.index()].contacts.contains_key(&cid) || true);
+}

@@ -92,7 +92,7 @@ const SNORKEL_DEPTH_M: f64 = 20.0;
 
 // --- Sonobuoy constants --------------------------------------------------
 
-const SONOBUOY_CLASS: &str = "sonobuoy";
+pub const SONOBUOY_CLASS: &str = "sonobuoy";
 const SONOBUOY_SENSOR: &str = "sonar_p_buoy";
 const EXT_EXPIRES_AT: &str = "expires_at";
 /// Remaining seconds until the next buoy from this aircraft (RTS cadence).
