@@ -2120,7 +2120,17 @@
   function renderFrame(now) {
     const dt = map.lastFrame ? clamp(now - map.lastFrame, 0, 100) : 16;
     map.lastFrame = now;
-    if (map.w > 0 && map.h > 0) drawMap(now, dt);
+    // 单帧绘制异常绝不允许杀死渲染循环（否则地图会永久冻结）；
+    // 同一异常只上报一次，避免刷爆控制台。
+    try {
+      if (map.w > 0 && map.h > 0) drawMap(now, dt);
+    } catch (err) {
+      const key = String(err && err.message || err);
+      if (map.drawErrorKey !== key) {
+        map.drawErrorKey = key;
+        console.error('[map] draw failed, frame skipped:', err);
+      }
+    }
     requestAnimationFrame(renderFrame);
   }
 
@@ -3234,7 +3244,7 @@
     }
 
     if (selected) drawSelectionBrackets(ctx, screen.x, screen.y, size + 8, color, now, 0.34);
-    if (state.showRanges || selected) drawSensorRings(ctx, unit, layout);
+    if (state.showRanges || selected) drawSensorRings(ctx, unit);
     drawUnitLabel(ctx, screen, size, unit, style, selected, labelBox);
   }
 
@@ -3285,7 +3295,7 @@
   }
 
   // 探测范围圈：对空(虚线青)/对海(实线青)/对潜(虚线绿)
-  function drawSensorRings(ctx, unit, layout) {
+  function drawSensorRings(ctx, unit) {
     const sensors = Array.isArray(unit.sensors) ? unit.sensors : [];
     const c = worldToScreen(unit.pos.x, unit.pos.y);
     const rings = [
