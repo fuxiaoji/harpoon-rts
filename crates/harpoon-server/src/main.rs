@@ -8,6 +8,7 @@
 
 mod ai;
 mod agent;
+mod director;
 mod tutorial;
 mod doctrine;
 
@@ -35,6 +36,7 @@ use std::collections::BTreeSet;
 use std::path::PathBuf;
 use std::sync::atomic::{AtomicU64, Ordering};
 use std::sync::{Arc, Mutex};
+use std::time::Duration;
 use tower_http::cors::CorsLayer;
 use tower_http::services::ServeDir;
 
@@ -47,6 +49,9 @@ struct AppState {
     db: Arc<Database>,
     /// In-game AI staff state (player-view observations + memory).
     agents: Arc<agent::Runtime>,
+    /// Two-sided adversarial director status and id allocator.
+    director: Arc<Mutex<director::State>>,
+    director_seq: Arc<AtomicU64>,
 }
 
 /// Merge every database/volumes/*.json (underscore-prefixed files skipped)
@@ -89,12 +94,16 @@ struct Game {
     training: Option<tutorial::Session>,
     training_completed: BTreeSet<String>,
     progress_saved: bool,
+    /// A two-sided director owns the clock; the normal run loop must not tick.
+    director_active: bool,
+    director_id: u64,
 }
 
 impl Game {
     fn new() -> Self {
         Self { world: None, speed: 0.0, accumulator: 0.0, inbox: Vec::new(),
-            training: None, training_completed: tutorial::load_progress(), progress_saved: true }
+            training: None, training_completed: tutorial::load_progress(), progress_saved: true,
+            director_active: false, director_id: 0 }
     }
     fn training_view(&self) -> serde_json::Value {
         json!({"session": self.training.as_ref().zip(self.world.as_ref()).map(|(s,w)| s.view(w)),
@@ -121,13 +130,13 @@ fn run_loop(state: AppState) {
             let work: Option<(i64, Vec<(Side, Command)>)> = {
                 let mut g = state.game.lock().unwrap();
                 let over = g.world.as_ref().map(|w| w.over).unwrap_or(true);
-                if !over && g.training.is_none() && g.speed <= 0.0 {
+                if !over && g.training.is_none() && g.speed <= 0.0 && !g.director_active {
                     if let Some(speed) = state.agents.auto_run_speed() {
                         g.speed = speed;
                         g.accumulator = 0.0;
                     }
                 }
-                if g.speed > 0.0 && !over {
+                if g.speed > 0.0 && !over && !g.director_active {
                     g.accumulator += g.speed * 0.1; // 100 ms wall step
                     let n = g.accumulator.floor() as i64;
                     g.accumulator -= n as f64;
@@ -177,7 +186,7 @@ fn run_loop(state: AppState) {
                 let _ = state.update_tx.send(());
                 let due = {
                     let g = state.game.lock().unwrap();
-                    if g.training.is_some() {
+                    if g.training.is_some() || g.director_active {
                         Vec::new()
                     } else if let Some(world) = g.world.as_ref() {
                         if world.over {
@@ -279,7 +288,8 @@ async fn new_game(
     let mut g = state.game.lock().unwrap();
     let completed = g.training_completed.clone();
     *g = Game { world: Some(world), speed: req.speed, accumulator: 0.0, inbox: Vec::new(),
-        training: None, training_completed: completed, progress_saved: true };
+        training: None, training_completed: completed, progress_saved: true,
+        director_active: false, director_id: 0 };
     drop(g);
     state.agents.start_game(&scenario_id, seed, tick);
     Ok(Json(json!({"started": true, "scenario": name, "seeded_at_tick": tick})))
@@ -594,6 +604,7 @@ async fn training_start(State(state): State<AppState>, Json(req): Json<TrainingS
         .map_err(|e| (StatusCode::BAD_REQUEST, e))?;
     let mut g = state.game.lock().unwrap();
     g.world = Some(world); g.training = Some(session); g.speed = 0.0; g.accumulator = 0.0; g.inbox.clear();
+    g.director_active = false; g.director_id = 0;
     drop(g);
     state.agents.start_game(&tutorial_scenario, tutorial_seed, tutorial_tick);
     let _ = state.update_tx.send(());
@@ -631,6 +642,477 @@ async fn training_action(State(state): State<AppState>, Json(req): Json<tutorial
     g.record_training();
     let _ = state.update_tx.send(());
     Ok(Json(g.training_view()))
+}
+
+
+// ---------------------------------------------------------------------------
+// Two-sided adversarial director
+// ---------------------------------------------------------------------------
+
+#[derive(Deserialize)]
+struct DirectorReq {
+    scenario: String,
+    seed: Option<u64>,
+    max_ticks: Option<i64>,
+}
+
+fn director_is_active(state: &AppState, id: u64) -> bool {
+    let g = state.game.lock().unwrap();
+    g.director_active
+        && g.director_id == id
+        && g.world.as_ref().is_some_and(|world| !world.over)
+}
+
+fn update_director(state: &AppState, id: u64, f: impl FnOnce(&mut director::State)) {
+    let mut st = state.director.lock().unwrap();
+    if st.id == id {
+        f(&mut st);
+    }
+}
+
+async fn director_start(
+    State(state): State<AppState>,
+    Json(req): Json<DirectorReq>,
+) -> Result<Json<serde_json::Value>, (StatusCode, String)> {
+    let path = state
+        .scenario_dir
+        .join(format!("{}.json", req.scenario))
+        .canonicalize()
+        .map_err(|_| (StatusCode::NOT_FOUND, format!("scenario {} not found", req.scenario)))?;
+    if !path.starts_with(state.scenario_dir.canonicalize().unwrap_or_default()) {
+        return Err((StatusCode::FORBIDDEN, "path traversal".into()));
+    }
+    let txt = std::fs::read_to_string(&path).map_err(|e| (StatusCode::NOT_FOUND, e.to_string()))?;
+    let mut sc = scenario_from_json(&txt).map_err(|e| (StatusCode::BAD_REQUEST, e.to_string()))?;
+    if let Some(seed) = req.seed {
+        sc.seed = seed;
+    }
+    if !state.agents.status()["configured"].as_bool().unwrap_or(false) {
+        return Err((StatusCode::BAD_REQUEST, "LLM API key is not configured".into()));
+    }
+    let world = load_scenario(sc, (*state.db).clone())
+        .map_err(|e| (StatusCode::BAD_REQUEST, e))?;
+    let scenario_id = world.scenario_id.clone();
+    let seed = world.seed;
+    let duration = world.duration_s;
+    let tick = world.tick;
+    let id = state.director_seq.fetch_add(1, Ordering::Relaxed) + 1;
+    let max_ticks = req.max_ticks.unwrap_or(duration).clamp(1, duration.max(1));
+
+    {
+        let mut g = state.game.lock().unwrap();
+        g.director_active = false;
+        g.director_id = 0;
+        let completed = g.training_completed.clone();
+        *g = Game {
+            world: Some(world),
+            speed: 0.0,
+            accumulator: 0.0,
+            inbox: Vec::new(),
+            training: None,
+            training_completed: completed,
+            progress_saved: true,
+            director_active: true,
+            director_id: id,
+        };
+    }
+    state.agents.start_game(&scenario_id, seed, tick);
+    for side in ["Blue", "Red"] {
+        let cfg = agent::AgentConfigReq {
+            side: Some(side.to_string()),
+            enabled: Some(true),
+            autonomy: Some("execute".into()),
+            cadence_s: None,
+            max_tokens: None,
+            auto_run: Some(false),
+            auto_speed: None,
+            model: None,
+            base_url: None,
+            api_key: None,
+            language: None,
+        };
+        if let Err(e) = state.agents.set_config(&cfg, tick) {
+            let mut g = state.game.lock().unwrap();
+            g.director_active = false;
+            g.director_id = 0;
+            return Err((StatusCode::BAD_REQUEST, e));
+        }
+    }
+
+    let blue = director::WakeRuntime::new(Side::Blue);
+    let red = director::WakeRuntime::new(Side::Red);
+    {
+        let mut st = state.director.lock().unwrap();
+        *st = director::State {
+            active: true,
+            phase: "planning".into(),
+            id,
+            scenario_id: scenario_id.clone(),
+            tick,
+            duration_s: duration,
+            trigger: Vec::new(),
+            blue_speed: blue.desired_speed,
+            red_speed: red.desired_speed,
+            global_speed: 15.0,
+            blue_rules: blue.rules.clone(),
+            red_rules: red.rules.clone(),
+            blue_report: String::new(),
+            red_report: String::new(),
+            last_plan_tick: tick,
+            planning_started_unix: director::now_unix(),
+            error: None,
+            over: false,
+            result: None,
+            blue_kills: 0,
+            red_kills: 0,
+            blue_losses: 0,
+            red_losses: 0,
+        };
+    }
+    tokio::spawn(run_director(state.clone(), id, blue, red, max_ticks));
+    Ok(Json(json!({
+        "started": true,
+        "id": id,
+        "scenario": scenario_id,
+        "seed": seed,
+        "duration_s": duration,
+        "max_ticks": max_ticks,
+        "mode": "private_wake_simultaneous_planning_min_speed",
+    })))
+}
+
+async fn director_stop(State(state): State<AppState>) -> Json<serde_json::Value> {
+    {
+        let mut g = state.game.lock().unwrap();
+        g.director_active = false;
+        g.director_id = 0;
+        g.speed = 0.0;
+        g.accumulator = 0.0;
+    }
+    let mut st = state.director.lock().unwrap();
+    st.active = false;
+    st.phase = "stopped".into();
+    Json(serde_json::to_value(&*st).unwrap_or_else(|_| json!({"active": false})))
+}
+
+async fn director_status(State(state): State<AppState>) -> Json<serde_json::Value> {
+    Json(serde_json::to_value(&*state.director.lock().unwrap()).unwrap_or_else(|_| json!({"active": false})))
+}
+
+async fn run_director(
+    state: AppState,
+    id: u64,
+    mut blue: director::WakeRuntime,
+    mut red: director::WakeRuntime,
+    max_ticks: i64,
+) {
+    let mut trigger_detail = "initial director planning".to_string();
+    loop {
+        if !director_is_active(&state, id) {
+            return;
+        }
+        let (obs_blue, obs_red, tick_now, over) = {
+            let g = state.game.lock().unwrap();
+            let Some(world) = g.world.as_ref() else { return };
+            let ob = blue.planning_observation(world);
+            let or = red.planning_observation(world);
+            (ob, or, world.tick, world.over)
+        };
+        if over || tick_now >= max_ticks {
+            finish_director(&state, id);
+            return;
+        }
+        update_director(&state, id, |st| {
+            st.phase = "planning".into();
+            st.tick = tick_now;
+            st.blue_rules = blue.rules.clone();
+            st.red_rules = red.rules.clone();
+            st.planning_started_unix = director::now_unix();
+            st.trigger = if trigger_detail == "initial director planning" {
+                Vec::new()
+            } else {
+                st.trigger.clone()
+            };
+        });
+        let _ = state.update_tx.send(());
+
+        let ctx_blue = match state.agents.prepare_director_turn(
+            Side::Blue,
+            tick_now,
+            blue.rules.clone(),
+            trigger_detail.clone(),
+        ) {
+            Ok(ctx) => ctx,
+            Err(e) => {
+                update_director(&state, id, |st| {
+                    st.phase = "error".into();
+                    st.error = Some(format!("blue prepare: {}", e.message()));
+                });
+                return;
+            }
+        };
+        let ctx_red = match state.agents.prepare_director_turn(
+            Side::Red,
+            tick_now,
+            red.rules.clone(),
+            trigger_detail.clone(),
+        ) {
+            Ok(ctx) => ctx,
+            Err(e) => {
+                state.agents.abort_turn(&ctx_blue, "director peer failed".into());
+                update_director(&state, id, |st| {
+                    st.phase = "error".into();
+                    st.error = Some(format!("red prepare: {}", e.message()));
+                });
+                return;
+            }
+        };
+        let last_seq_blue = obs_blue
+            .events
+            .iter()
+            .map(|e| e.seq)
+            .max()
+            .unwrap_or(ctx_blue.memory.last_event_seq);
+        let last_seq_red = obs_red
+            .events
+            .iter()
+            .map(|e| e.seq)
+            .max()
+            .unwrap_or(ctx_red.memory.last_event_seq);
+
+        let db_blue = state.db.clone();
+        let db_red = state.db.clone();
+        let ctx_blue_for_call = ctx_blue.clone();
+        let ctx_red_for_call = ctx_red.clone();
+        let call_blue = tokio::task::spawn_blocking(move || {
+            agent::execute_turn(&ctx_blue_for_call, &obs_blue, &db_blue, None)
+        });
+        let call_red = tokio::task::spawn_blocking(move || {
+            agent::execute_turn(&ctx_red_for_call, &obs_red, &db_red, None)
+        });
+        let joined = tokio::time::timeout(Duration::from_secs(90), async {
+            tokio::join!(call_blue, call_red)
+        })
+        .await;
+        let (decision_blue, decision_red) = match joined {
+            Ok((Ok(b), Ok(r))) => (b, r),
+            Ok((Err(e), _)) => {
+                state.agents.abort_turn(&ctx_blue, format!("blue task failed: {e}"));
+                state.agents.abort_turn(&ctx_red, "peer task failed".into());
+                update_director(&state, id, |st| {
+                    st.phase = "error".into();
+                    st.error = Some(format!("blue task failed: {e}"));
+                });
+                return;
+            }
+            Ok((_, Err(e))) => {
+                state.agents.abort_turn(&ctx_blue, "peer task failed".into());
+                state.agents.abort_turn(&ctx_red, format!("red task failed: {e}"));
+                update_director(&state, id, |st| {
+                    st.phase = "error".into();
+                    st.error = Some(format!("red task failed: {e}"));
+                });
+                return;
+            }
+            Err(_) => {
+                state.agents.abort_turn(&ctx_blue, "director planning timeout (90s)".into());
+                state.agents.abort_turn(&ctx_red, "director planning timeout (90s)".into());
+                update_director(&state, id, |st| {
+                    st.phase = "error".into();
+                    st.error = Some("director planning timeout (90s)".into());
+                });
+                return;
+            }
+        };
+
+        {
+            let g = state.game.lock().unwrap();
+            if !g.director_active || g.director_id != id {
+                drop(g);
+                state.agents.abort_turn(&ctx_blue, "director stopped".into());
+                state.agents.abort_turn(&ctx_red, "director stopped".into());
+                return;
+            }
+        }
+        let blue_speed = if decision_blue.error.is_none() {
+            decision_blue.desired_speed.unwrap_or(blue.desired_speed).clamp(5.0, 60.0)
+        } else {
+            blue.desired_speed.max(5.0)
+        };
+        let red_speed = if decision_red.error.is_none() {
+            decision_red.desired_speed.unwrap_or(red.desired_speed).clamp(5.0, 60.0)
+        } else {
+            red.desired_speed.max(5.0)
+        };
+        let blue_rules = if decision_blue.wake_conditions.is_empty() {
+            blue.rules.clone()
+        } else {
+            director::effective_rules(&decision_blue.wake_conditions)
+        };
+        let red_rules = if decision_red.wake_conditions.is_empty() {
+            red.rules.clone()
+        } else {
+            director::effective_rules(&decision_red.wake_conditions)
+        };
+        let commands_blue = decision_blue.commands.clone();
+        let commands_red = decision_red.commands.clone();
+        let applied_blue = decision_blue.error.is_none() && !commands_blue.is_empty();
+        let applied_red = decision_red.error.is_none() && !commands_red.is_empty();
+        let error_blue = decision_blue.error.clone();
+        let error_red = decision_red.error.clone();
+        let report_blue = state
+            .agents
+            .finish_turn(&ctx_blue, decision_blue, applied_blue, last_seq_blue);
+        let report_red = state
+            .agents
+            .finish_turn(&ctx_red, decision_red, applied_red, last_seq_red);
+        blue.set_rules(blue_rules);
+        red.set_rules(red_rules);
+        blue.desired_speed = blue_speed;
+        red.desired_speed = red_speed;
+        let global = blue_speed.min(red_speed).clamp(5.0, 60.0);
+        {
+            let mut g = state.game.lock().unwrap();
+            g.speed = global;
+            g.accumulator = 0.0;
+            g.director_active = true;
+            g.director_id = id;
+        }
+        update_director(&state, id, |st| {
+            st.phase = "running".into();
+            st.tick = tick_now;
+            st.blue_speed = blue_speed;
+            st.red_speed = red_speed;
+            st.global_speed = global;
+            st.blue_rules = blue.rules.clone();
+            st.red_rules = red.rules.clone();
+            st.blue_report = if error_blue.is_some() {
+                format!("ERROR: {}", error_blue.clone().unwrap_or_default())
+            } else {
+                report_blue.report.clone()
+            };
+            st.red_report = if error_red.is_some() {
+                format!("ERROR: {}", error_red.clone().unwrap_or_default())
+            } else {
+                report_red.report.clone()
+            };
+            st.error = error_blue.clone().or(error_red.clone());
+            st.trigger.clear();
+            st.planning_started_unix = 0;
+            st.refresh_outcome(
+                state.game.lock().unwrap().world.as_ref().unwrap(),
+            );
+        });
+        let _ = state.update_tx.send(());
+
+        let mut pending: Vec<(Side, Command)> = Vec::new();
+        pending.extend(commands_blue.into_iter().map(|c| (Side::Blue, c)));
+        pending.extend(commands_red.into_iter().map(|c| (Side::Red, c)));
+        let mut accumulator = 0.0f64;
+        let mut hits: Vec<director::WakeHit> = Vec::new();
+        let mut over_now = None;
+        'advance: loop {
+            if !director_is_active(&state, id) {
+                return;
+            }
+            tokio::time::sleep(Duration::from_millis(100)).await;
+            accumulator += global * 0.1;
+            let n = accumulator.floor() as i64;
+            accumulator -= n as f64;
+            let n = n.min(MAX_TICKS_PER_STEP);
+            if n <= 0 {
+                continue;
+            }
+            for i in 0..n {
+                let (over, hb, hr, tick) = {
+                    let mut g = state.game.lock().unwrap();
+                    let Some(world) = g.world.as_mut() else { return };
+                    let applied: &[(Side, Command)] = if i == 0 { &pending } else { &[] };
+                    harpoon_core::sim::tick(world, applied);
+                    let hb = blue.evaluate(world);
+                    let hr = red.evaluate(world);
+                    (world.over, hb, hr, world.tick)
+                };
+                if i == 0 {
+                    pending.clear();
+                }
+                if let Some(hit) = hb {
+                    hits.push(hit);
+                }
+                if let Some(hit) = hr {
+                    hits.push(hit);
+                }
+                over_now = Some(over);
+                if tick % 15 == 0 || over || !hits.is_empty() {
+                    update_director(&state, id, |st| {
+                        st.tick = tick;
+                        st.refresh_outcome(
+                            state.game.lock().unwrap().world.as_ref().unwrap(),
+                        );
+                    });
+                }
+                if over || !hits.is_empty() {
+                    break 'advance;
+                }
+            }
+            let _ = state.update_tx.send(());
+        }
+        if over_now.unwrap_or(false) {
+            finish_director(&state, id);
+            return;
+        }
+        if hits.is_empty() {
+            return;
+        }
+        blue.mark_wake(tick_now);
+        red.mark_wake(tick_now);
+        trigger_detail = hits
+            .iter()
+            .map(|hit| format!("{}:{} ({})", hit.side.name(), hit.rule, hit.detail))
+            .collect::<Vec<_>>()
+            .join("; ");
+        update_director(&state, id, |st| {
+            st.phase = "planning".into();
+            st.trigger = hits.clone();
+            st.blue_rules = blue.rules.clone();
+            st.red_rules = red.rules.clone();
+            st.planning_started_unix = director::now_unix();
+        });
+        let _ = state.update_tx.send(());
+    }
+}
+
+fn finish_director(state: &AppState, id: u64) {
+    let (over, result, kills, losses, tick) = {
+        let g = state.game.lock().unwrap();
+        let Some(world) = g.world.as_ref() else { return };
+        (
+            world.over,
+            world.result.clone(),
+            world.kill_counts(),
+            world.losses,
+            world.tick,
+        )
+    };
+    update_director(state, id, |st| {
+        st.active = false;
+        st.phase = if over { "over".into() } else { "stopped".into() };
+        st.tick = tick;
+        st.over = over;
+        st.result = result;
+        st.blue_kills = kills.0;
+        st.red_kills = kills.1;
+        st.blue_losses = losses[Side::Blue.index()];
+        st.red_losses = losses[Side::Red.index()];
+        st.planning_started_unix = 0;
+    });
+    if let Ok(mut g) = state.game.lock() {
+        g.director_active = false;
+        g.director_id = 0;
+        g.speed = 0.0;
+        g.accumulator = 0.0;
+    }
+    let _ = state.update_tx.send(());
 }
 
 async fn db_handler(State(state): State<AppState>) -> impl IntoResponse {
@@ -861,6 +1343,8 @@ async fn main() {
         update_tx: Arc::new(update_tx),
         db: Arc::new(merged_db),
         agents: Arc::new(agent::Runtime::new()),
+        director: Arc::new(Mutex::new(director::State::default())),
+        director_seq: Arc::new(AtomicU64::new(0)),
     };
 
     run_loop(state.clone());
@@ -885,6 +1369,9 @@ async fn main() {
         .route("/api/agent/config", post(agent_config))
         .route("/api/agent/reset", post(agent_reset))
         .route("/api/agent/duel", post(agent_duel_start).get(agent_duel_status))
+        .route("/api/director", get(director_status))
+        .route("/api/director/start", post(director_start))
+        .route("/api/director/stop", post(director_stop))
         .route("/api/agent/:side/status", get(agent_side_status))
         .route("/api/agent/:side/report", post(agent_report))
         .route("/api/agent/:side/chat", post(agent_chat))

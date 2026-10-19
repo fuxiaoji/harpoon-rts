@@ -130,6 +130,118 @@ pub struct UsageStats {
     pub cache_miss_tokens: u64,
 }
 
+/// One server-evaluated wake condition. The model may only use these
+/// whitelisted predicates; it never supplies executable code.
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
+#[serde(tag = "type", rename_all = "snake_case")]
+pub enum WakeCondition {
+    /// Fire when this many simulated seconds have elapsed since the last plan.
+    Time { every_s: i64 },
+    /// First observation of a contact (optionally filtered by category/quality).
+    NewContact {
+        #[serde(default)]
+        category: Option<String>,
+        #[serde(default)]
+        min_quality: Option<f64>,
+    },
+    /// A visible incoming-weapon event.
+    Incoming {
+        #[serde(default)]
+        max_eta_s: Option<f64>,
+    },
+    /// Any own platform loss event.
+    OwnLoss,
+    /// Own damage/critical event above the selected materiality.
+    OwnDamage {
+        #[serde(default)]
+        min_damage: Option<f64>,
+        #[serde(default)]
+        hp_fraction_below: Option<f64>,
+    },
+    /// A contact of the selected category/quality inside `max_nm` of own units.
+    ContactRange {
+        max_nm: f64,
+        #[serde(default)]
+        category: Option<String>,
+        #[serde(default)]
+        min_quality: Option<f64>,
+    },
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct WakeRule {
+    pub id: String,
+    #[serde(flatten)]
+    pub condition: WakeCondition,
+    #[serde(default)]
+    pub cooldown_s: i64,
+    #[serde(default)]
+    pub one_shot: bool,
+}
+
+fn validate_wake_rule(rule: &WakeRule) -> Result<(), String> {
+    if rule.id.trim().is_empty() {
+        return Err("wake rule id must not be empty".into());
+    }
+    if !(0..=3600).contains(&rule.cooldown_s) {
+        return Err("wake rule cooldown_s must be 0..3600".into());
+    }
+    match rule.condition {
+        WakeCondition::Time { every_s } => {
+            if !(120..=3600).contains(&every_s) {
+                return Err("time wake every_s must be 120..3600".into());
+            }
+        }
+        WakeCondition::NewContact { ref category, min_quality } => {
+            validate_wake_filters(category, min_quality)?;
+        }
+        WakeCondition::Incoming { max_eta_s } => {
+            if let Some(v) = max_eta_s {
+                if !v.is_finite() || v < 0.0 {
+                    return Err("incoming max_eta_s must be finite and >= 0".into());
+                }
+            }
+        }
+        WakeCondition::OwnLoss => {}
+        WakeCondition::OwnDamage { min_damage, hp_fraction_below } => {
+            if let Some(v) = min_damage {
+                if !v.is_finite() || !(0.0..=10_000.0).contains(&v) {
+                    return Err("own_damage min_damage must be finite 0..10000".into());
+                }
+            }
+            if let Some(v) = hp_fraction_below {
+                if !v.is_finite() || !(0.0..=1.0).contains(&v) {
+                    return Err("own_damage hp_fraction_below must be finite 0..1".into());
+                }
+            }
+        }
+        WakeCondition::ContactRange { max_nm, ref category, min_quality } => {
+            if !max_nm.is_finite() || max_nm <= 0.0 || max_nm > 1000.0 {
+                return Err("contact_range max_nm must be finite 0..1000".into());
+            }
+            validate_wake_filters(category, min_quality)?;
+        }
+    }
+    Ok(())
+}
+
+fn validate_wake_filters(category: &Option<String>, min_quality: Option<f64>) -> Result<(), String> {
+    if let Some(v) = min_quality {
+        if !v.is_finite() || !(0.0..=1.0).contains(&v) {
+            return Err("wake min_quality must be finite 0..1".into());
+        }
+    }
+    if let Some(category) = category {
+        let c = category.to_ascii_lowercase();
+        if !["surface", "air", "subsurface", "sub", "missile", "torpedo", "land", "unknown"]
+            .contains(&c.as_str())
+        {
+            return Err(format!("unsupported wake category `{category}`"));
+        }
+    }
+    Ok(())
+}
+
 impl UsageStats {
     fn add(&mut self, usage: &Usage) {
         self.turns += 1;
@@ -169,6 +281,10 @@ pub struct TurnReport {
     pub latency_ms: u64,
     #[serde(default)]
     pub usage: Usage,
+    #[serde(default)]
+    pub desired_speed: Option<f64>,
+    #[serde(default)]
+    pub wake_conditions: Vec<WakeRule>,
 }
 
 struct SideAgent {
@@ -219,6 +335,12 @@ pub(crate) struct TurnContext {
     /// Simulated tick at which this turn was triggered (not when the LLM
     /// happened to finish; a slow call must not relabel a 5-minute report).
     pub tick: i64,
+    /// True when this turn was requested by the two-sided director.
+    pub director: bool,
+    /// Wake rules active before this turn; the model may replace them.
+    pub wake_rules: Vec<WakeRule>,
+    /// Human-readable trigger reason for the director turn.
+    pub trigger_detail: String,
 }
 
 #[derive(Clone, Debug)]
@@ -231,6 +353,8 @@ pub(crate) struct TurnDecision {
     pub error: Option<String>,
     pub usage: Usage,
     pub latency_ms: u64,
+    pub desired_speed: Option<f64>,
+    pub wake_conditions: Vec<WakeRule>,
 }
 
 #[derive(Debug)]
@@ -382,7 +506,26 @@ impl Runtime {
             scenario_id,
             seed,
             tick: current_tick,
+            director: false,
+            wake_rules: Vec::new(),
+            trigger_detail: String::new(),
         })
+    }
+
+    /// Prepare a director turn. The director does not use the per-side
+    /// scheduled cadence; it pauses both sides and asks them to plan.
+    pub(crate) fn prepare_director_turn(
+        &self,
+        side: Side,
+        tick: i64,
+        wake_rules: Vec<WakeRule>,
+        trigger_detail: String,
+    ) -> Result<TurnContext, TurnError> {
+        let mut ctx = self.prepare_turn(side, "wake", tick)?;
+        ctx.director = true;
+        ctx.wake_rules = wake_rules;
+        ctx.trigger_detail = trigger_detail;
+        Ok(ctx)
     }
 
     pub(crate) fn finish_turn(
@@ -412,6 +555,8 @@ impl Runtime {
             model: ctx.settings.model.clone(),
             latency_ms: decision.latency_ms,
             usage: decision.usage.clone(),
+            desired_speed: decision.desired_speed,
+            wake_conditions: decision.wake_conditions.clone(),
         };
         if generation != ctx.generation {
             return report;
@@ -473,6 +618,8 @@ impl Runtime {
             model: ctx.settings.model.clone(),
             latency_ms: 0,
             usage: Usage::default(),
+            desired_speed: None,
+            wake_conditions: Vec::new(),
         };
         if inner.generation == ctx.generation {
             let slot = &mut inner.sides[ctx.side.index()];
@@ -867,6 +1014,8 @@ pub(crate) fn execute_turn(
                 error: Some(e),
                 usage: Usage::default(),
                 latency_ms: started.elapsed().as_millis() as u64,
+                desired_speed: None,
+                wake_conditions: Vec::new(),
             };
         }
     };
@@ -983,6 +1132,8 @@ fn parse_decision(content: &str, obs: &Observation, side: Side) -> TurnDecision 
             error: Some("model output was not valid JSON".into()),
             usage: Usage::default(),
             latency_ms: 0,
+            desired_speed: None,
+            wake_conditions: Vec::new(),
         };
     };
     let report = value.get("report").and_then(Value::as_str).unwrap_or("").to_string();
@@ -993,7 +1144,31 @@ fn parse_decision(content: &str, obs: &Observation, side: Side) -> TurnDecision 
         .and_then(Value::as_array)
         .cloned()
         .unwrap_or_default();
-    let (commands, rejected) = parse_and_validate_commands(&raw_commands, obs, side);
+    let (commands, mut rejected) = parse_and_validate_commands(&raw_commands, obs, side);
+    let desired_speed = value
+        .get("desired_speed")
+        .and_then(Value::as_f64)
+        .filter(|v| v.is_finite())
+        .map(|v| v.clamp(5.0, 60.0));
+    let mut wake_conditions = Vec::new();
+    let mut wake_ids = std::collections::BTreeSet::new();
+    if let Some(list) = value.get("wake_conditions").and_then(Value::as_array) {
+        for item in list {
+            match serde_json::from_value::<WakeRule>(item.clone()) {
+                Ok(rule) => {
+                    if !wake_ids.insert(rule.id.clone()) {
+                        rejected.push(format!("duplicate wake rule id `{}`", rule.id));
+                        continue;
+                    }
+                    match validate_wake_rule(&rule) {
+                        Ok(()) => wake_conditions.push(rule),
+                        Err(e) => rejected.push(format!("wake rule `{}`: {e}", rule.id)),
+                    }
+                }
+                Err(e) => rejected.push(format!("invalid wake rule {item}: {e}")),
+            }
+        }
+    }
     let error = if value.get("error").and_then(Value::as_str).is_some_and(|s| !s.is_empty()) {
         value.get("error").and_then(Value::as_str).map(str::to_string)
     } else {
@@ -1008,6 +1183,8 @@ fn parse_decision(content: &str, obs: &Observation, side: Side) -> TurnDecision 
         error,
         usage: Usage::default(),
         latency_ms: 0,
+        desired_speed,
+        wake_conditions,
     }
 }
 
@@ -1473,10 +1650,23 @@ You are not an external MCP client; you are the in-game staff. Return commands d
 {schema}
 
 ## Mission-specific guidance
-- The six-hour kill-count exercise rewards destroying more enemy platforms than the opponent. Detect, close or use stand-off weapons, and keep your carriers alive. Do not wait for a perfect picture; use what you have and preserve a reserve.
+- The kill-count exercise rewards destroying more enemy platforms than the opponent. Detect, close or use stand-off weapons, and keep your carriers alive. Do not wait for a perfect picture; use what you have and preserve a reserve.
 - At every scheduled turn, if you have a usable contact and a valid weapon, consider weapons free / assign_target / fire; if the enemy is undetected, move sensors and aircraft to find them.
 - Never invent unit ids, contact ids, weapon ids or coordinates. If a command is uncertain, omit it rather than hallucinate.
 - In advise mode your commands are proposals; in execute mode the server will apply every valid command. Keep each turn's list small and mutually consistent.
+
+## Director / wake mode
+When the turn trigger is `wake`, you are in a two-sided adversarial director match. Both sides are paused at the same tick and plan simultaneously. Return:
+- `desired_speed`: 5–60 simulated seconds per real second. The director advances at the **minimum** of both sides' requested speeds.
+- `wake_conditions`: the conditions that should pause both sides again. They are evaluated only against your own observation. Use them deliberately; a time wake can force a planning window and interrupt the opponent's tempo.
+Allowed wake rule types (JSON):
+  {{"id":"time","type":"time","every_s":300,"cooldown_s":0,"one_shot":false}}
+  {{"id":"contact","type":"new_contact","category":"surface","min_quality":0.5,"cooldown_s":60,"one_shot":false}}
+  {{"id":"incoming","type":"incoming","max_eta_s":120,"cooldown_s":0,"one_shot":false}}
+  {{"id":"loss","type":"own_loss","cooldown_s":0,"one_shot":false}}
+  {{"id":"damage","type":"own_damage","min_damage":20,"hp_fraction_below":0.5,"cooldown_s":0,"one_shot":false}}
+  {{"id":"range","type":"contact_range","max_nm":80,"category":"surface","min_quality":0.5,"cooldown_s":30,"one_shot":false}}
+Do not invent other condition types. Always leave a time fallback. A private trigger pauses both sides, so consider the information/tempo trade-off.
 
 ## Output contract
 Return exactly one JSON object, no markdown fences:
@@ -1485,6 +1675,8 @@ Return exactly one JSON object, no markdown fences:
   "report": "concise staff briefing for the human commander at the current simulated time (<= 260 Chinese chars / 180 English words)",
   "memory": "updated long-term memory summary (mission progress, own losses, confirmed kills, standing plans, lessons; no hidden enemy truth; <= 900 chars)",
   "commands": [ ... zero or more command objects; at most 8 ... ],
+  "desired_speed": 15,
+  "wake_conditions": [ ... zero or more wake rule objects ... ],
   "error": null
 }}
 {report_language}
@@ -1564,6 +1756,9 @@ fn build_user_prompt(
         "mission": obs.mission,
         "weather": obs.weather,
         "day_night": obs.day_night,
+        "director": ctx.director,
+        "director_trigger": ctx.trigger_detail,
+        "current_wake_rules": ctx.wake_rules,
         "own_units": units,
         "own_contacts": contacts,
         "visible_events": event_values,
@@ -1597,6 +1792,9 @@ fn build_user_prompt(
             } else {
                 format!("The player says:\n{}\n\nAnswer the player and issue commands if needed.", truncate_chars(msg, 4000))
             }
+        }
+        ("wake", _) => {
+            if zh { "导演器唤醒：双方已同时暂停。请给出简报、命令、期望推进速度（5–60）和下一组唤醒条件；时间唤醒是合法的对抗手段，但请留下兜底时间条件。".to_string() } else { "Director wake: both sides are paused. Give a briefing, commands, a desired speed (5–60), and the next wake rules. A time wake is a legitimate adversarial tool, but keep a time fallback.".to_string() }
         }
         ("manual", _) => {
             if zh { "玩家要求立即汇报。请给出当前态势简报和命令建议。".to_string() } else { "The player requested an immediate report. Give a current staff briefing and recommended orders.".to_string() }
@@ -1639,6 +1837,23 @@ Remember: never use hidden enemy truth. Return one JSON object with intent, repo
     )
 }
 
+fn human_duration(seconds: i64, zh: bool) -> String {
+    let s = seconds.max(1);
+    if s >= 3600 {
+        let h = s as f64 / 3600.0;
+        if zh {
+            if (h - h.round()).abs() < 0.01 { format!("{:.0} 小时", h) } else { format!("{:.1} 小时", h) }
+        } else if (h - h.round()).abs() < 0.01 {
+            format!("{:.0} hours", h)
+        } else {
+            format!("{:.1} hours", h)
+        }
+    } else {
+        let m = ((s + 30) / 60).max(1);
+        if zh { format!("{m} 分钟") } else { format!("{m} minutes") }
+    }
+}
+
 fn mission_text(obs: &Observation, zh: bool) -> String {
     let remaining = obs.victory.as_ref().map(|v| v.remaining_s).unwrap_or(0);
     let clock = fmt_hms(remaining);
@@ -1666,13 +1881,17 @@ fn mission_text(obs: &Observation, zh: bool) -> String {
     if v.kill_count_at_end {
         return if zh {
             format!(
-                "## 剧本胜利条件\n剧本「{}」，六小时击杀数决胜。剩余 {}（模拟时间）。到 06:00:00 时，击毁敌方平台更多的一方获胜；相等为平局。分数按平台计数：舰艇、潜艇、飞机、基地各计 1；导弹/鱼雷不计；燃油迫降不计为敌方击杀。当前本方确认击杀 {}，本方损失 {}。敌方真实损失在终局前不公开。\n{}",
-                obs.scenario_name, clock, v.own_confirmed_kills, v.own_losses, obs.scenario_description
+                "## 剧本胜利条件
+剧本「{}」，{}击杀数决胜。剩余 {}（模拟时间）。到 {} 时，击毁敌方平台更多的一方获胜；相等为平局。分数按平台计数：舰艇、潜艇、飞机、基地各计 1；导弹/鱼雷不计；燃油迫降不计为敌方击杀。当前本方确认击杀 {}，本方损失 {}。敌方真实损失在终局前不公开。
+{}",
+                obs.scenario_name, human_duration(v.duration_s, true), clock, human_duration(v.duration_s, true), v.own_confirmed_kills, v.own_losses, obs.scenario_description
             )
         } else {
             format!(
-                "## Scenario victory conditions\nScenario \"{}\" is decided by kills after six hours. Remaining {}. At 06:00:00 the side with more destroyed enemy platforms wins; equal counts are a draw. Score counts platforms: ships, submarines, aircraft and bases each count 1; missiles/torpedoes do not; aircraft lost to fuel do not count as enemy kills. Own confirmed kills {}, own losses {}. The enemy's true losses stay hidden until the end.\n{}",
-                obs.scenario_name, clock, v.own_confirmed_kills, v.own_losses, obs.scenario_description
+                "## Scenario victory conditions
+Scenario \"{}\" is decided by kill count. Remaining {}. At {} the side with more destroyed enemy platforms wins; equal counts are a draw. Score counts platforms: ships, submarines, aircraft and bases each count 1; missiles/torpedoes do not; aircraft lost to fuel do not count as enemy kills. Own confirmed kills {}, own losses {}. The enemy's true losses stay hidden until the end.
+{}",
+                obs.scenario_name, clock, human_duration(v.duration_s, false), v.own_confirmed_kills, v.own_losses, obs.scenario_description
             )
         };
     }
@@ -1948,6 +2167,9 @@ async fn run_duel_job(
                 scenario_id: scenario_id.clone(),
                 seed,
                 tick,
+                director: false,
+                wake_rules: Vec::new(),
+                trigger_detail: String::new(),
             });
         }
         let blue_obs = observations[0].take().unwrap();
@@ -1985,6 +2207,8 @@ async fn run_duel_job(
                 model: settings.model.clone(),
                 latency_ms: decision.latency_ms,
                 usage: decision.usage.clone(),
+                desired_speed: decision.desired_speed,
+                wake_conditions: decision.wake_conditions.clone(),
             };
             if decision.error.is_none() {
                 let memory = &mut memories[side.index()];
@@ -2321,6 +2545,8 @@ mod tests {
                     cache_miss_tokens: Some(2),
                 },
                 latency_ms: 5,
+                desired_speed: None,
+                wake_conditions: Vec::new(),
             },
             false,
             0,
