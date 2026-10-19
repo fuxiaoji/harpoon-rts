@@ -259,6 +259,7 @@ mod tests {
             id: "sensing-test".into(),
             name: "Sensing test".into(),
             description: String::new(),
+            context: Default::default(),
             duration_s: 600,
             weather: Weather {
                 visibility_nm: 12.0,

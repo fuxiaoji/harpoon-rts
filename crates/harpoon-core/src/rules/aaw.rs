@@ -355,6 +355,7 @@ mod tests {
             id: "aaw-test".into(),
             name: "AAW test".into(),
             description: String::new(),
+            context: Default::default(),
             duration_s: 600,
             weather: Weather {
                 visibility_nm: 20.0,

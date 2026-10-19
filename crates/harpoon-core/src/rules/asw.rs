@@ -596,6 +596,7 @@ mod tests {
             id: "asw-test".into(),
             name: "ASW test".into(),
             description: String::new(),
+            context: Default::default(),
             duration_s: 40_000,
             weather: Weather { visibility_nm: 12.0, jam: [0.0, 0.0], overcast: 0.0, rain: 0.0 },
             day_night: DayNight::Day,

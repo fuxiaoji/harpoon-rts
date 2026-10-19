@@ -1,0 +1,37 @@
+{
+  "id": "academy_submarine",
+  "name": "Academy 6 — Underwater control and silence",
+  "description": "Manage speed, actual depth and active sonar.",
+  "duration_s": 7200,
+  "seed": 777106,
+  "weather": {
+    "visibility_nm": 12,
+    "jam": [
+      0,
+      0
+    ]
+  },
+  "day_night": "Day",
+  "victory": {
+    "target_vp": 0
+  },
+  "units": [
+    {
+      "side": "Blue",
+      "class": "ssk",
+      "name": "TRAINING COMMAND",
+      "pos": [
+        0,
+        0
+      ],
+      "course_deg": 0,
+      "speed_kts": 0,
+      "fire_on": false,
+      "depth_m": 20
+    }
+  ],
+  "training_metadata": {
+    "profile": "rts_adapted",
+    "scenario_assumption": "Purpose-designed training positions, targets and starting inventory; no fixed hits or altered adjudication."
+  }
+}

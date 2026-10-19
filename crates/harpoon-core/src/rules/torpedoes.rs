@@ -372,6 +372,7 @@ mod tests {
             id: "torpedo-test".into(),
             name: "Torpedo rules test".into(),
             description: String::new(),
+            context: Default::default(),
             duration_s: 3_600,
             weather: Weather {
                 visibility_nm: 12.0,

@@ -130,6 +130,7 @@ mod tests {
             id: "t".into(),
             name: "T".into(),
             description: String::new(),
+            context: Default::default(),
             duration_s: 3600,
             weather: crate::world::Weather { visibility_nm: 12.0, jam: [0.0, 0.0], overcast: 0.0, rain: 0.0 },
             day_night: crate::types::DayNight::Day,

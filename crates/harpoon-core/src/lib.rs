@@ -20,6 +20,7 @@ pub mod damage;
 pub mod events;
 pub mod geom;
 pub mod movement;
+pub mod mission;
 pub mod observe;
 pub mod rules;
 pub mod rng;
@@ -50,6 +51,7 @@ mod tests {
             id: "mini".into(),
             name: "Mini".into(),
             description: String::new(),
+            context: Default::default(),
             duration_s: 600,
             weather: world::Weather { visibility_nm: 12.0, jam: [0.0, 0.0], overcast: 0.0, rain: 0.0 },
             day_night: DayNight::Day,

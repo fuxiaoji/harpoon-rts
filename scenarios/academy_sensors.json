@@ -1,0 +1,48 @@
+{
+  "id": "academy_sensors",
+  "name": "Academy 3 — Detection and uncertainty",
+  "description": "Operate active sonar, then acquire and inspect your own contact.",
+  "duration_s": 7200,
+  "seed": 777103,
+  "weather": {
+    "visibility_nm": 12,
+    "jam": [
+      0,
+      0
+    ]
+  },
+  "day_night": "Day",
+  "victory": {
+    "target_vp": 0
+  },
+  "units": [
+    {
+      "side": "Blue",
+      "class": "ddg_aegis",
+      "name": "TRAINING COMMAND",
+      "pos": [
+        0,
+        0
+      ],
+      "course_deg": 0,
+      "speed_kts": 0,
+      "fire_on": false
+    },
+    {
+      "side": "Red",
+      "class": "mgb",
+      "name": "TRAINING OPPONENT",
+      "pos": [
+        6,
+        0
+      ],
+      "course_deg": 0,
+      "speed_kts": 0,
+      "fire_on": false
+    }
+  ],
+  "training_metadata": {
+    "profile": "rts_adapted",
+    "scenario_assumption": "Purpose-designed training positions, targets and starting inventory; no fixed hits or altered adjudication."
+  }
+}

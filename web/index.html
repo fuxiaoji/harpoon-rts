@@ -1,325 +1,45 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="zh-CN">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="color-scheme" content="dark">
-  <meta name="theme-color" content="#050d16">
-  <title>HARPOON // Fleet Command</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#071521"><meta name="color-scheme" content="dark">
+  <title>鱼叉 · 指挥大厅</title>
+  <link rel="stylesheet" href="lobby.css?v=20261019-1">
+  <script defer src="i18n.js?v=lobby-20261019-1"></script>
+  <script defer src="lobby-model.js?v=20261019-1"></script>
+  <script defer src="lobby.js?v=20261019-1"></script>
 </head>
-<body data-side="Blue">
-  <div id="app">
-    <header class="topbar">
-      <div class="brand" aria-label="Harpoon Fleet Command">
-        <div class="brand-mark" aria-hidden="true"></div>
-        <div class="brand-copy">
-          <strong>HARPOON</strong>
-          <span>舰队指挥 // 战术级</span>
+<body data-i18n-native>
+  <a class="skip-link" href="#lobby-main" data-zh="跳到大厅内容" data-en="Skip to lobby content">跳到大厅内容</a>
+  <header class="lobby-header">
+    <a class="lobby-brand" href="#home" aria-label="鱼叉大厅 / Harpoon lobby"><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M20 2 38 20 20 38 2 20Z M8 20h24 M20 8v24"/></svg><span><strong>鱼叉 <small>HARPOON</small></strong><span data-zh="海空联合作战推演" data-en="Naval & air tactical command">海空联合作战推演</span></span></a>
+    <div class="header-actions"><span id="server-status" role="status" data-state="loading" data-zh="正在连接裁判服务" data-en="Connecting to referee">正在连接裁判服务</span><button id="refresh-lobby" class="quiet" data-zh="刷新状态" data-en="Refresh status">刷新状态</button><select id="language-select" aria-label="语言 / Language"><option value="zh-CN">简体中文</option><option value="en">English</option></select></div>
+  </header>
+  <div class="lobby-shell">
+    <aside class="lobby-rail"><nav id="main-navigation" aria-label="大厅导航 / Lobby navigation">
+      <a href="#home" data-page="home" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7v11H3Z M9 21v-8h6v8"/></svg><span data-zh="指挥大厅" data-en="Command lobby">指挥大厅</span></a>
+      <a href="#operations" data-page="operations"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 5 6-2 6 2 6-2v16l-6 2-6-2-6 2Z M9 3v16 M15 5v16"/></svg><span data-zh="作战任务" data-en="Operations">作战任务</span></a>
+      <a href="#academy" data-page="academy"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m2 8 10-5 10 5-10 5Z M6 10v7q6 5 12 0v-7 M22 8v9"/></svg><span data-zh="训练学院" data-en="Training academy">训练学院</span></a>
+      <a href="#replays" data-page="replays"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18v14H3Z m7 3 6 4-6 4Z M3 9h3 M3 15h3"/></svg><span data-zh="战局复盘" data-en="Battle replays">战局复盘</span></a>
+      <a href="#settings" data-page="settings"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16 M4 12h16 M4 18h16 M8 3v6 M16 9v6 M10 15v6"/></svg><span data-zh="设置与帮助" data-en="Settings & help">设置与帮助</span></a>
+    </nav><div class="rail-bottom"><span class="local-mode" data-zh="本地热座指挥" data-en="Local hotseat command">本地热座指挥</span><p data-zh="从准备、下令，到复盘。" data-en="Prepare. Command. Review.">从准备、下令，到复盘。</p><a href="https://github.com/fuxiaoji/harpoon-rts" target="_blank" rel="noopener">GitHub</a></div></aside>
+    <main id="lobby-main" tabindex="-1">
+      <p id="lobby-notice" role="status" hidden></p>
+      <section id="page-home" class="lobby-page">
+        <div class="page-heading"><div><span class="section-label" data-zh="舰队待命" data-en="Fleet standing by">舰队待命</span><h1 data-zh="欢迎回到舰桥" data-en="Welcome to the bridge">欢迎回到舰桥</h1></div><span class="build-badge" data-zh="RTS 开发版" data-en="RTS development build">RTS 开发版</span></div>
+        <div class="home-stage">
+          <article class="theater-feature"><div class="feature-chart" aria-hidden="true"></div><div class="feature-content"><span class="feature-region" data-zh="西太平洋 · 双盾行动" data-en="Western Pacific · Twin Shields">西太平洋 · 双盾行动</span><h2 data-zh="海空联合作战，\n由你指挥。" data-en="The fleet awaits\nyour command.">海空联合作战，<br>由你指挥。</h2><p data-zh="选择一项任务，掌握自己的态势，在每一次命令后核对真实战果。" data-en="Choose an operation, build your tactical picture and follow every order through to its outcome.">选择一项任务，掌握自己的态势，在每一次命令后核对真实战果。</p><div class="feature-actions"><a href="#operations" class="primary" data-zh="选择作战任务" data-en="Choose an operation">选择作战任务</a><a href="#academy" class="secondary" data-zh="从训练开始" data-en="Start with training">从训练开始</a></div></div><span class="imagery-credit">NASA Blue Marble / 2004-08</span></article>
+          <article class="current-battle"><div class="section-heading"><h2 data-zh="当前战局" data-en="Current battle">当前战局</h2><span id="battle-state" class="state-chip">—</span></div><h3 id="current-title" data-zh="正在读取战局…" data-en="Reading current battle…">正在读取战局…</h3><p id="current-description"></p><dl class="current-metrics"><div><dt data-zh="模拟时间" data-en="Simulation time">模拟时间</dt><dd id="current-clock">—</dd></div><div><dt data-zh="时间控制" data-en="Time control">时间控制</dt><dd id="current-speed">—</dd></div></dl><p id="current-training"></p><button id="continue-game" class="primary" disabled data-zh="继续指挥" data-en="Continue command">继续指挥</button><p class="current-note" data-zh="进入大厅保持当前战局状态。创建新任务前会再次确认。" data-en="Opening the lobby preserves the battle. Starting a new operation requires confirmation.">进入大厅保持当前战局状态。创建新任务前会再次确认。</p></article>
         </div>
-      </div>
-
-      <div class="topbar-block side-block">
-        <span class="field-label">指挥方</span>
-        <div class="side-toggle" id="side-toggle" role="group" aria-label="Select commanding side">
-          <button type="button" data-side="Blue" class="is-active" aria-pressed="true">
-            <span class="side-dot" aria-hidden="true"></span>BLUE
-          </button>
-          <button type="button" data-side="Red" aria-pressed="false">
-            <span class="side-dot" aria-hidden="true"></span>红方
-          </button>
-        </div>
-      </div>
-
-      <div class="topbar-block">
-        <span class="field-label">训练</span>
-        <button id="btn-tutorial" type="button" class="pill-button" title="Start the guided tutorial" aria-label="Start the guided tutorial">新手教程</button>
-      </div>
-      <div class="topbar-block scenario-block">
-        <label class="field-label" for="scenario-select">想定</label>
-        <div class="select-row">
-          <select id="scenario-select" aria-label="Scenario" disabled>
-            <option>Loading…</option>
-          </select>
-          <button id="btn-start" type="button" class="square-button" title="Start selected scenario" aria-label="Start selected scenario" disabled>⟳</button>
-        </div>
-      </div>
-
-      <div class="topbar-block speed-block">
-        <span class="field-label">时间控制</span>
-        <div class="speed-group" id="speed-group" role="group" aria-label="Simulation speed">
-          <button type="button" data-speed="0" title="Pause simulation" aria-label="Pause simulation" aria-pressed="false">II</button>
-          <button type="button" data-speed="1" title="1× simulation speed" aria-pressed="false">1×</button>
-          <button type="button" data-speed="15" title="15× simulation speed" aria-pressed="false">15×</button>
-          <button type="button" data-speed="60" title="60× simulation speed" aria-pressed="true" class="is-active">60×</button>
-          <button type="button" data-speed="300" title="300× simulation speed" aria-pressed="false">300×</button>
-        </div>
-      </div>
-
-      <div class="clock-block">
-        <div class="tick-line">
-          <span class="field-label">时钟</span>
-          <b id="tick-value">000000</b>
-        </div>
-        <div class="clock-line" id="clock-value">000:00:00</div>
-        <div class="over-chip" id="over-chip" hidden>OVER</div>
-      </div>
-
-      <div class="link-chip" id="link-chip" data-mode="connecting" title="Connecting to the referee feed">
-        <span class="link-dot" aria-hidden="true"></span>
-        <span id="link-text">LINKING</span>
-      </div>
-    </header>
-
-    <main class="workspace">
-      <section class="map-shell" id="map-shell" aria-label="Tactical map">
-        <canvas id="map-canvas" tabindex="0" aria-label="作战海图：点选单位或接触；点击开阔海域追加航路点。"></canvas>
-
-        <div class="map-brief hud-panel">
-          <div class="field-label">当前想定</div>
-          <div class="map-scenario" id="map-scenario">No scenario</div>
-          <div class="map-desc" id="map-desc">Awaiting deployment orders.</div>
-          <div class="weather-chips" id="weather-chips"></div>
-        </div>
-
-        <div class="map-legend hud-panel" aria-label="Map legend">
-          <div class="legend-title field-label">符号图例</div>
-          <div class="legend-grid">
-            <span class="legend-item"><i class="lg lg-unit" aria-hidden="true"></i>我方</span>
-            <span class="legend-item"><i class="lg lg-air" aria-hidden="true"></i>空中</span>
-            <span class="legend-item"><i class="lg lg-surface" aria-hidden="true"></i>水面</span>
-            <span class="legend-item"><i class="lg lg-sub" aria-hidden="true"></i>水下</span>
-            <span class="legend-item"><i class="lg lg-missile" aria-hidden="true"></i>导弹</span>
-            <span class="legend-item"><i class="lg lg-torpedo" aria-hidden="true"></i>鱼雷</span>
-            <span class="legend-item legend-item--wide"><i class="lg lg-stale" aria-hidden="true"></i>失效 / 虚线</span>
-          </div>
-        </div>
-
-        <div class="map-tools" role="group" aria-label="Map tools">
-          <button type="button" id="map-ranges" title="显示我方探测范围" aria-label="Toggle detection ranges">探测</button>
-          <button type="button" id="map-fit" title="适配视野" aria-label="Fit picture to map">适配</button>
-          <button type="button" id="map-zoom-in" title="Zoom in" aria-label="Zoom in">+</button>
-          <button type="button" id="map-zoom-out" title="Zoom out" aria-label="Zoom out">−</button>
-        </div>
-
-        <div class="outcome-panel" id="outcome-panel" hidden>
-          <span class="outcome-kicker">SCENARIO ENDED</span>
-          <strong class="outcome-title" id="outcome-title">CEASEFIRE</strong>
-          <span class="outcome-reason" id="outcome-reason"></span>
-          <span class="outcome-vp" id="outcome-vp"></span>
-        </div>
-
-        <div class="map-footer">
-          <div class="scale-readout" title="Map scale">
-            <span class="field-label">SCALE</span>
-            <span class="scale-bar" id="scale-bar"><i></i></span>
-            <span class="scale-text" id="scale-text">— NM</span>
-          </div>
-          <div class="cursor-readout" id="cursor-readout">X — · Y — NM</div>
-          <div class="map-help">LMB SELECT · OPEN WATER = GOTO · DRAG PAN · WHEEL ZOOM</div>
-        </div>
-
-        <div class="toast-stack" id="toast-stack" aria-live="polite" aria-atomic="false"></div>
+        <div class="home-bottom"><section class="onboarding"><h2 data-zh="第一次接管舰队？" data-en="Your first command?"></h2><p data-zh="先从值更与暂停学起，再逐步掌握航行、探测、交战和航空任务。" data-en="Begin with the watch and time controls, then learn navigation, detection, combat and air operations."></p><a href="#academy" data-zh="查看训练路线" data-en="Explore the training path"></a><a id="tutorial-video" hidden target="_blank" rel="noopener" data-zh="观看连续实操教学" data-en="Watch the continuous tutorial"></a></section><section class="recent-work"><h2 data-zh="这次可以玩什么" data-en="Ready to explore"></h2><a href="#operations"><strong data-zh="双航母区域拒止" data-en="Dual-carrier area denial"></strong><span data-zh="任务对抗与双边手操两个版本" data-en="Mission opposition and two-seat hotseat variants"></span></a><a href="#replays"><strong data-zh="看懂同一场战斗" data-en="Understand the same battle"></strong><span data-zh="蓝方、红方与上帝视角切换复盘" data-en="Review Blue, Red and God perspectives"></span></a></section></div>
       </section>
-
-      <aside class="sidebar" aria-label="Selected unit and target details">
-        <div class="sidebar-scroll">
-          <section class="panel" id="unit-panel">
-            <div class="panel-head">
-              <span class="kicker">我方单位</span>
-              <span class="panel-tag" id="unit-count">0 IN PICTURE</span>
-            </div>
-            <div class="empty-state" id="unit-empty">
-              <span class="empty-glyph" aria-hidden="true">◇</span>
-              <b>NO UNIT SELECTED</b>
-              <span>左键点击海图上的我方单位即可接管指挥。</span>
-            </div>
-            <div id="unit-content" hidden>
-              <div class="unit-summary">
-                <div class="unit-kind-badge" id="unit-kind-badge">—</div>
-                <div class="unit-title">
-                  <h2 id="unit-name">—</h2>
-                  <div class="unit-sub">
-                    <span id="unit-class">—</span>
-                    <span class="sep">/</span>
-                    <span id="unit-id">#—</span>
-                  </div>
-                </div>
-                <span class="side-chip" id="unit-side-badge">蓝方</span>
-              </div>
-
-              <div class="hp-row">
-                <span class="field-label">船体</span>
-                <span class="bar bar--hp"><i id="unit-hp-bar"></i></span>
-                <b id="unit-hp-text">— / —</b>
-              </div>
-
-              <div class="unit-metrics">
-                <div>
-                  <span class="field-label">航速</span>
-                  <b id="unit-speed">—</b>
-                  <small id="unit-speed-order">ORD —</small>
-                </div>
-                <div>
-                  <span class="field-label">航向</span>
-                  <b id="unit-course">—</b>
-                  <small id="unit-course-order">ORD —</small>
-                </div>
-                <div>
-                  <span class="field-label" id="unit-depth-label">深度</span>
-                  <b id="unit-depth">水面</b>
-                  <small id="unit-depth-order">—</small>
-                </div>
-              </div>
-              <div class="chip-row" id="unit-chips"></div>
-            </div>
-          </section>
-
-          <section class="panel" id="target-panel">
-            <div class="panel-head">
-              <span class="kicker">目标指派</span>
-              <span class="panel-tag" id="target-quality-chip">NO TRACK</span>
-            </div>
-            <div class="empty-state" id="target-empty">
-              <span class="empty-glyph" aria-hidden="true">◇</span>
-              <b>NO CONTACT SELECTED</b>
-              <span>左键点击接触符号查看估计信息并指派武器。</span>
-            </div>
-            <div id="target-content" hidden>
-              <div class="target-summary">
-                <div class="target-kind-badge" id="target-symbol">?</div>
-                <div class="unit-title">
-                  <h3 id="target-name">UNKNOWN</h3>
-                  <div class="unit-sub"><span id="target-sub">—</span></div>
-                </div>
-                <span class="target-lock-tag" id="target-lock-tag">TRACK</span>
-              </div>
-
-              <div class="quality-row">
-                <span class="field-label">火控解质量</span>
-                <span class="bar bar--quality"><i id="target-quality-bar"></i></span>
-                <b id="target-quality-text">—</b>
-              </div>
-
-              <div class="target-metrics">
-                <div><span class="field-label">距离</span><b id="target-range">—</b></div>
-                <div><span class="field-label">航向</span><b id="target-course">—</b></div>
-                <div><span class="field-label">航速</span><b id="target-speed">—</b></div>
-                <div><span class="field-label">最后接触</span><b id="target-lastseen">—</b></div>
-              </div>
-
-              <div class="chip-row" id="target-tags"></div>
-
-              <div class="target-actions">
-                <button type="button" class="btn btn--secondary" id="btn-assign">指派目标</button>
-                <button type="button" class="btn btn--ghost" id="btn-clear-target">解除</button>
-              </div>
-
-              <div class="fire-controls">
-                <label class="field-label" for="fire-weapon">WEAPON</label>
-                <div class="fire-row">
-                  <select id="fire-weapon" aria-label="Weapon to fire" disabled>
-                    <option>Select a unit</option>
-                  </select>
-                  <button type="button" class="btn btn--fire" id="btn-fire" disabled>开火</button>
-                </div>
-                <div class="fire-note" id="fire-note">Select a friendly unit and a contact to open the firing solution.</div>
-              </div>
-            </div>
-          </section>
-
-          <section class="panel" id="orders-panel" hidden>
-            <div class="panel-head">
-              <span class="kicker">指挥</span>
-              <span class="weapons-state-chip" id="weapons-state-chip">WEAPONS HOLD</span>
-            </div>
-            <div class="order-grid">
-              <button type="button" class="command-btn" id="btn-weapons-free">
-                <b>武器自由</b>
-                <small id="weapons-free-state">HOLD</small>
-              </button>
-              <button type="button" class="command-btn" id="btn-chaff">
-                <b>施放箔条</b>
-                <small><span id="chaff-count">0</span> READY</small>
-              </button>
-              <button type="button" class="command-btn" id="btn-stop">
-                <b>全停</b>
-                <small>SET 0 KT</small>
-              </button>
-              <button type="button" class="command-btn" id="btn-recover">
-                <b>回收飞机</b>
-                <small id="recover-state">飞行甲板</small>
-              </button>
-            </div>
-            <div class="assigned-line" id="assigned-target">NO TARGET ASSIGNED</div>
-          </section>
-
-          <section class="panel" id="weapons-panel" hidden>
-            <div class="panel-head">
-              <span class="kicker">武器</span>
-              <span class="panel-tag" id="weapons-count">0 MOUNTS</span>
-            </div>
-            <div class="weapon-list" id="weapons-list"></div>
-          </section>
-
-          <section class="panel" id="sensors-panel" hidden>
-            <div class="panel-head">
-              <span class="kicker">传感器</span>
-              <span class="panel-tag" id="sensors-count">0 SETS</span>
-            </div>
-            <div class="sensor-list" id="sensors-list"></div>
-          </section>
-
-          <div class="split-grid">
-            <section class="panel" id="mission-panel" hidden>
-              <div class="panel-head">
-                <span class="kicker">任务</span>
-              </div>
-              <div class="mission-value" id="mission-value">NO TASKING</div>
-              <div class="mission-detail" id="mission-detail">Orders not assigned.</div>
-            </section>
-
-            <section class="panel" id="deck-panel" hidden>
-              <div class="panel-head">
-                <span class="kicker">飞行甲板</span>
-              </div>
-              <div class="deck-list" id="deck-list">NO FLIGHT DECK</div>
-            </section>
-          </div>
-
-          <section class="panel" id="systems-panel" hidden>
-            <div class="panel-head">
-              <span class="kicker">系统状态</span>
-              <span class="panel-tag">损管</span>
-            </div>
-            <div class="systems-list" id="systems-list"></div>
-          </section>
-        </div>
-      </aside>
+      <section id="page-operations" class="lobby-page" hidden><div class="page-heading"><div><span class="section-label" data-zh="准备行动" data-en="Prepare an operation"></span><h1 data-zh="选择作战任务" data-en="Choose an operation"></h1></div><span id="operation-count" class="build-badge"></span></div><div class="catalog-toolbar"><input id="scenario-search" type="search" aria-label="搜索任务 / Search operations" placeholder="搜索任务"><select id="scenario-filter" aria-label="任务类型 / Operation type"><option value="all" data-zh="全部任务" data-en="All operations"></option><option value="large" data-zh="大型行动" data-en="Large operations"></option><option value="hotseat" data-zh="双边手操" data-en="Hotseat exercise"></option><option value="practice" data-zh="入门与练习" data-en="Introductory exercises"></option></select></div><div class="catalog-layout"><div id="scenario-list" class="item-list" aria-label="任务列表 / Operation list"></div><article id="scenario-preview" class="briefing-preview"></article></div></section>
+      <section id="page-academy" class="lobby-page" hidden><div class="page-heading"><div><span class="section-label" data-zh="从值更到独立指挥" data-en="From first watch to independent command"></span><h1 data-zh="训练学院" data-en="Training academy"></h1></div><span id="academy-progress" class="build-badge"></span></div><p class="page-intro" data-zh="按课程逐步练习，实际操作由裁判服务核验。已有结业记录会保留。" data-en="Build your skills lesson by lesson. The referee verifies actual actions and retains completion records."></p><div class="catalog-layout"><div id="course-list" class="item-list" aria-label="课程列表 / Course list"></div><article id="course-preview" class="briefing-preview"></article></div></section>
+      <section id="page-replays" class="lobby-page" hidden><div class="page-heading"><div><span class="section-label" data-zh="回看命令与结果" data-en="Review orders and outcomes"></span><h1 data-zh="战局复盘" data-en="Battle replays"></h1></div><a class="secondary" href="replay.html" data-zh="导入 / 管理复盘" data-en="Import / manage replays"></a></div><p class="page-intro" data-zh="切换双方当时的受限态势与上帝视角，沿时间轴查看记录和战果。" data-en="Compare each side’s recorded picture with God view, then inspect events along the timeline."></p><div id="recording-list"></div></section>
+      <section id="page-settings" class="lobby-page" hidden><div class="page-heading"><div><span class="section-label" data-zh="按自己的习惯指挥" data-en="Command your way"></span><h1 data-zh="设置与帮助" data-en="Settings & help"></h1></div></div><div class="settings-layout"><section class="settings-panel"><h2 data-zh="界面偏好" data-en="Interface preferences"></h2><label><span><strong data-zh="界面语言" data-en="Interface language"></strong><small data-zh="与指挥台、复盘共享语言偏好" data-en="Shared with command and replay screens"></small></span><select id="settings-language" aria-label="界面语言 / Interface language"><option value="zh-CN">简体中文</option><option value="en">English</option></select></label><label><span><strong data-zh="大厅字号" data-en="Lobby text size"></strong><small data-zh="调整大厅文字的阅读大小" data-en="Adjust reading size in the lobby"></small></span><select id="text-size" aria-label="大厅字号 / Lobby text size"><option value="normal" data-zh="标准" data-en="Standard"></option><option value="large" data-zh="较大" data-en="Large"></option></select></label><label><span><strong data-zh="减少动效" data-en="Reduce motion"></strong><small data-zh="关闭大厅的界面过渡效果" data-en="Disable lobby interface transitions"></small></span><input type="checkbox" id="reduce-motion"></label><button id="fullscreen" class="secondary" data-zh="全屏显示大厅" data-en="Show lobby fullscreen"></button></section><section class="help-panel"><h2 data-zh="导航与战局" data-en="Navigation and battles"></h2><dl><dt>Tab / Shift + Tab</dt><dd data-zh="按顺序移动到下一个 / 上一个控件" data-en="Move to the next / previous control"></dd><dt>Enter / Space</dt><dd data-zh="激活已选中的按钮" data-en="Activate the focused button"></dd><dt>Esc</dt><dd data-zh="关闭确认窗口，或返回大厅首页" data-en="Close confirmation or return to the home page"></dd></dl><p data-zh="大厅浏览不会自动暂停或推进战局。进行中的战局会按当前时间控制运行；可在指挥台暂停。" data-en="Browsing the lobby does not change time controls. An active battle keeps its current speed; pause it in the command console."></p><p data-zh="这是本地热座版本。作战与训练共用当前战局，新开任务或课程会替换它。" data-en="This is the local hotseat edition. Operations and training share the current battle; starting either replaces it."></p><a href="#academy" data-zh="打开训练学院" data-en="Open training academy"></a></section></div></section>
+      <footer class="lobby-footer"><span data-zh="Harpoon V · RTS 改编开发版" data-en="Harpoon V · RTS adaptation in development"></span><span data-zh="键盘 Tab 导航 · Enter 确认 · Esc 返回" data-en="Tab: navigate · Enter: select · Esc: back"></span></footer>
     </main>
-
-    <section class="log-dock" aria-label="Event feed">
-      <div class="log-head">
-        <div class="log-title">
-          <span class="kicker">事件流</span>
-          <span class="log-side-badge" id="log-side-badge">本方+公共</span>
-        </div>
-        <div class="log-meta" id="log-meta">NEWEST FIRST · 0 EVENTS</div>
-      </div>
-      <div class="event-log" id="event-log">
-        <div class="log-empty" id="log-empty">
-          <span class="empty-glyph" aria-hidden="true">⌁</span>
-          <div>
-            <b>NO TRAFFIC</b>
-            <span>Detection and combat reports will appear here.</span>
-          </div>
-        </div>
-        <div class="event-list" id="event-list"></div>
-      </div>
-    </section>
   </div>
-
-  <script src="tutorial.js" defer></script>
-  <script src="app.js" defer></script>
+  <dialog id="launch-dialog" aria-labelledby="launch-title"><form id="launch-form"><span class="section-label" data-zh="准备就绪" data-en="Ready for command"></span><h2 id="launch-title"></h2><p id="launch-description"></p><p id="replace-warning" class="replace-warning"></p><p id="launch-error" role="alert" hidden></p><div class="dialog-actions"><button type="button" id="cancel-launch" class="secondary" data-zh="返回" data-en="Back"></button><button type="submit" id="confirm-launch" class="primary" data-zh="确认开始" data-en="Confirm start"></button></div></form></dialog>
 </body>
 </html>

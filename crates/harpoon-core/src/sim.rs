@@ -231,7 +231,10 @@ fn check_victory(world: &mut World) {
         .any(|e| e.alive && e.side == Side::Red && !e.kind.is_projectile());
 
     let mut outcome: Option<(Option<Side>, String)> = None;
-    if !blue_alive && !red_alive {
+    if world.context.area_denial.is_some() {
+        // Scenario objectives supersede the generic VP/time-limit outcome.
+        outcome = crate::mission::adjudicate(world);
+    } else if !blue_alive && !red_alive {
         outcome = Some((None, "mutual annihilation".into()));
     } else if !blue_alive {
         outcome = Some((Some(Side::Red), "Blue forces destroyed".into()));

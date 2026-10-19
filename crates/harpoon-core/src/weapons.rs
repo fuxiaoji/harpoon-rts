@@ -1108,6 +1108,7 @@ mod tests {
             id: "weapons-test".into(),
             name: "Weapons test".into(),
             description: String::new(),
+            context: Default::default(),
             duration_s: 40_000,
             weather: crate::world::Weather {
                 visibility_nm: 12.0,

@@ -1,0 +1,200 @@
+{
+  "version": 1,
+  "scenarios": {
+    "academy_assessment": {
+      "file": "academy_assessment.json",
+      "source_sha256": "ddee8f025df2f250863cca8b21588c3543e031911c063acd9ddd2ffcde59c6b3",
+      "duration_s": 7200,
+      "seed": 777108,
+      "initial_units": 2,
+      "sides": {
+        "Blue": 1,
+        "Red": 1
+      },
+      "automated_side": null,
+      "satellite": false
+    },
+    "academy_aviation": {
+      "file": "academy_aviation.json",
+      "source_sha256": "4275eba618d62087c3dbf7341c56ca812b8997b47561edec7b19a1935ca3ce13",
+      "duration_s": 7200,
+      "seed": 777107,
+      "initial_units": 1,
+      "sides": {
+        "Blue": 1,
+        "Red": 0
+      },
+      "automated_side": null,
+      "satellite": false
+    },
+    "academy_bridge": {
+      "file": "academy_bridge.json",
+      "source_sha256": "bf3e1ee6a589524c95966bd81dcf35e22c055d8aef12ac0b407cfe7b95641688",
+      "duration_s": 7200,
+      "seed": 777101,
+      "initial_units": 1,
+      "sides": {
+        "Blue": 1,
+        "Red": 0
+      },
+      "automated_side": null,
+      "satellite": false
+    },
+    "academy_defence": {
+      "file": "academy_defence.json",
+      "source_sha256": "87d5d80ced07087c8c842b92099691230459cf99f2b833bf0a74e9b5dd4e3924",
+      "duration_s": 7200,
+      "seed": 777105,
+      "initial_units": 2,
+      "sides": {
+        "Blue": 1,
+        "Red": 1
+      },
+      "automated_side": null,
+      "satellite": false
+    },
+    "academy_gunnery": {
+      "file": "academy_gunnery.json",
+      "source_sha256": "fb474721ecc2f513b2d0e4985d4c67458b6dd102f87bf66ec47624533e4e9bad",
+      "duration_s": 7200,
+      "seed": 777104,
+      "initial_units": 2,
+      "sides": {
+        "Blue": 1,
+        "Red": 1
+      },
+      "automated_side": null,
+      "satellite": false
+    },
+    "academy_navigation": {
+      "file": "academy_navigation.json",
+      "source_sha256": "ac725cfe7a1278447c29dfa015dfffa5e777701661eb1766b3655342d72912aa",
+      "duration_s": 7200,
+      "seed": 777102,
+      "initial_units": 1,
+      "sides": {
+        "Blue": 1,
+        "Red": 0
+      },
+      "automated_side": null,
+      "satellite": false
+    },
+    "academy_sensors": {
+      "file": "academy_sensors.json",
+      "source_sha256": "be5554b35c036db16f8bdc44840be46e49c67b99879fd7d039c026716397166c",
+      "duration_s": 7200,
+      "seed": 777103,
+      "initial_units": 2,
+      "sides": {
+        "Blue": 1,
+        "Red": 1
+      },
+      "automated_side": null,
+      "satellite": false
+    },
+    "academy_submarine": {
+      "file": "academy_submarine.json",
+      "source_sha256": "511d755697588c1d1248351551bc5a611493f8dbc3d04236e43084c215b97620",
+      "duration_s": 7200,
+      "seed": 777106,
+      "initial_units": 1,
+      "sides": {
+        "Blue": 1,
+        "Red": 0
+      },
+      "automated_side": null,
+      "satellite": false
+    },
+    "crimson_tide": {
+      "file": "crimson_tide.json",
+      "source_sha256": "8112567f0dd5040466fd5d0c0b1f08d5a9064f58262e5d99c24da4e4d6f912ab",
+      "duration_s": 28800,
+      "seed": 20251018,
+      "initial_units": 10,
+      "sides": {
+        "Blue": 4,
+        "Red": 6
+      },
+      "automated_side": null,
+      "satellite": false
+    },
+    "dual_carrier_denial": {
+      "file": "dual_carrier_denial.json",
+      "source_sha256": "e0950d86e39f1c69cc3be13243fba4e772fddf0003a61628296e4a90f25ada08",
+      "duration_s": 7200,
+      "seed": 20261019,
+      "initial_units": 34,
+      "sides": {
+        "Blue": 18,
+        "Red": 16
+      },
+      "automated_side": "Red",
+      "satellite": true
+    },
+    "dual_carrier_hotseat": {
+      "file": "dual_carrier_hotseat.json",
+      "source_sha256": "9c321a486d44a5e22470a8ff72a685678c869bdf83b26fc62303dfec80df2f36",
+      "duration_s": 21600,
+      "seed": 20261019,
+      "initial_units": 34,
+      "sides": {
+        "Blue": 18,
+        "Red": 16
+      },
+      "automated_side": null,
+      "satellite": true
+    },
+    "gunnery_dual": {
+      "file": "gunnery_dual.json",
+      "source_sha256": "240dc9e545ac38b49d59d9d6aeb6b0a4b06a975ade3e8d5c9519694180c46d64",
+      "duration_s": 3600,
+      "seed": 20251018,
+      "initial_units": 3,
+      "sides": {
+        "Blue": 1,
+        "Red": 2
+      },
+      "automated_side": null,
+      "satellite": false
+    },
+    "pacific_storm": {
+      "file": "pacific_storm.json",
+      "source_sha256": "08518acc3ca2e20cdacdfbba07d1b7e41f92cd3cfd25208abd6c5843cc734455",
+      "duration_s": 28800,
+      "seed": 20251020,
+      "initial_units": 13,
+      "sides": {
+        "Blue": 5,
+        "Red": 8
+      },
+      "automated_side": null,
+      "satellite": false
+    },
+    "tattletail_1991": {
+      "file": "tattletail.json",
+      "source_sha256": "34851f8f82f233a9494b1050b5b21355fb00a7f84f3ff87a11012e54cc66285b",
+      "duration_s": 7200,
+      "seed": 19910515,
+      "initial_units": 6,
+      "sides": {
+        "Blue": 5,
+        "Red": 1
+      },
+      "automated_side": null,
+      "satellite": false
+    },
+    "tutorial_01": {
+      "file": "tutorial_01.json",
+      "source_sha256": "d8a6681d6faa885d84658952d03e355a9ae6347de8b3d395f9e6a1f1e76bca98",
+      "duration_s": 5400,
+      "seed": 777001,
+      "initial_units": 2,
+      "sides": {
+        "Blue": 1,
+        "Red": 1
+      },
+      "automated_side": null,
+      "satellite": false
+    }
+  }
+}

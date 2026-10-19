@@ -1,0 +1,48 @@
+{
+  "id": "academy_defence",
+  "name": "Academy 5 — Incoming threats and chaff",
+  "description": "Respond to a real incoming threat with manual chaff and inspect the defence chain.",
+  "duration_s": 7200,
+  "seed": 777105,
+  "weather": {
+    "visibility_nm": 12,
+    "jam": [
+      0,
+      0
+    ]
+  },
+  "day_night": "Day",
+  "victory": {
+    "target_vp": 0
+  },
+  "units": [
+    {
+      "side": "Blue",
+      "class": "ddg_aegis",
+      "name": "TRAINING COMMAND",
+      "pos": [
+        0,
+        0
+      ],
+      "course_deg": 0,
+      "speed_kts": 0,
+      "fire_on": false
+    },
+    {
+      "side": "Red",
+      "class": "mgb",
+      "name": "TRAINING OPPONENT",
+      "pos": [
+        6,
+        0
+      ],
+      "course_deg": 0,
+      "speed_kts": 0,
+      "fire_on": false
+    }
+  ],
+  "training_metadata": {
+    "profile": "rts_adapted",
+    "scenario_assumption": "Purpose-designed training positions, targets and starting inventory; no fixed hits or altered adjudication."
+  }
+}

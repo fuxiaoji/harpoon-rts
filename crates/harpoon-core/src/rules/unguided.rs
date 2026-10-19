@@ -245,6 +245,7 @@ mod tests {
             id: "unguided-loadout".into(),
             name: "Unguided Loadout".into(),
             description: String::new(),
+            context: Default::default(),
             duration_s: 600,
             weather: Weather {
                 visibility_nm: 20.0,
