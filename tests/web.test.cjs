@@ -30,12 +30,13 @@ test('every course has a unique scenario, complete bilingual guidance and a vali
     for (const step of course.steps) {
       assert.ok(!steps.has(step.id)); steps.add(step.id);
       for (const field of ['title', 'body', 'why']) for (const lang of ['zh', 'en']) assert.ok(step[field][lang].trim());
-      assert.equal(step.hints.length, 3);
-      for (const hint of step.hints) for (const lang of ['zh', 'en']) assert.ok(hint[lang].trim());
+      // The three practical lessons added upstream use a shorter optional hint
+      // ladder. Keep the bilingual guarantee without forcing an exact count.
+      for (const hint of step.hints || []) for (const lang of ['zh', 'en']) assert.ok(hint[lang].trim());
       if (step.objective === 'question') assert.ok(step.options.some(o => o.id === step.answer));
     }
   }
-  assert.equal(ids.size, 8);
-  assert.equal(data.courses.reduce((n, c) => n + c.steps.length, 0), 55);
+  assert.equal(ids.size, 11);
+  assert.equal(data.courses.reduce((n, c) => n + c.steps.length, 0), 76);
   assert.ok(!fs.existsSync(path.join(__dirname, '../web/training/courses.json')), 'answer keys must stay outside static web root');
 });
