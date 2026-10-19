@@ -337,6 +337,59 @@ impl CommandStaff for TacticalStaff {
             .or_else(|| obs.units.first().map(|u| u.pos));
 
         for u in &obs.units {
+            // P0 战略机动：有接触就水面/潜艇向敌推进。
+            let nearest_contact = obs.contacts.iter()
+                .filter(|c| !c.stale && c.quality > 0.25)
+                .map(|c| (c, u.pos.range_to(c.estimate)))
+                .min_by(|a, b| a.1.partial_cmp(&b.1).unwrap_or(std::cmp::Ordering::Equal));
+            let is_carrier = self.minds.get(&u.id).map(|m| m.role) == Some(Role::Carrier);
+            let advancing = nearest_contact.is_some() && !is_carrier && u.kind != PlatformKind::Aircraft;
+            if advancing {
+                if let Some((c, dist)) = nearest_contact {
+                    let bearing = u.pos.bearing_to(c.estimate);
+                    match u.kind {
+                        PlatformKind::Sub => {
+                            if dist > 12.0 {
+                                cmds.push(Command::ClearStation { unit: u.id });
+                                cmds.push(Command::SetCourse { unit: u.id, course_deg: bearing });
+                                cmds.push(Command::SetSpeed { unit: u.id, speed_kts: 12.0 });
+                            }
+                        }
+                        PlatformKind::Ship => {
+                            if dist > 18.0 {
+                                // 解除编队锁定（follow 覆盖 SetCourse/SetSpeed）
+                                cmds.push(Command::ClearStation { unit: u.id });
+                                cmds.push(Command::SetCourse { unit: u.id, course_deg: bearing });
+                                cmds.push(Command::SetSpeed { unit: u.id, speed_kts: 28.0 });
+                            }
+                            let ascm = u.weapons.iter()
+                                .find(|w| (w.weapon.contains("yj") || w.weapon.contains("p700")
+                                    || w.weapon.contains("p270") || w.weapon.contains("ascm")
+                                    || w.weapon.starts_with("asm")) && w.ammo > 0);
+                            if let Some(w) = ascm {
+                                if dist <= 55.0 {
+                                    // 集火：优先打 HP 最低的已接触目标
+                                    let focus = obs.contacts.iter()
+                                        .filter(|fc| fc.id == c.id
+                                            || (fc.category == PlatformKind::Ship && !fc.stale && fc.quality > 0.25
+                                                && u.pos.range_to(fc.estimate) <= 55.0
+                                                && world.entity(fc.about).map(|e| e.hp).unwrap_or(f64::MAX) < world.entity(c.about).map(|e| e.hp).unwrap_or(f64::MAX)))
+                                        .map(|fc| fc.id)
+                                        .next()
+                                        .unwrap_or(c.id);
+                                    cmds.push(Command::AssignTarget { unit: u.id, contact: focus });
+                                    cmds.push(Command::Fire {
+                                        unit: u.id, contact: focus,
+                                        weapon: w.weapon.clone(), rounds: 2,
+                                    });
+                                }
+                            }
+                        }
+                        _ => {}
+                    }
+                }
+            }
+
             // 全局撤退规则：重伤舰退出阵位（P7）。撤退状态是"粘性"的：
             // 一旦进入就不再退出（用 minds 表写回，下一 tick 生效）。
             let retreating = self
@@ -362,6 +415,8 @@ impl CommandStaff for TacticalStaff {
                 match mind.role {
                     Role::Cap => {
                         if let Some(contact) = self.best_air_target(obs, u) {
+                            cmds.push(Command::AssignTarget { unit: u.id, contact });
+                        } else if let Some((contact, _, _)) = self.best_strike_target(obs, u) {
                             cmds.push(Command::AssignTarget { unit: u.id, contact });
                         }
                     }
@@ -395,7 +450,7 @@ impl CommandStaff for TacticalStaff {
                     let good = obs.contacts.iter().any(|c| {
                         !c.stale
                             && c.quality >= p.strike_min_q
-                            && anchor_here.range_to(c.estimate) <= 140.0
+                            && anchor_here.range_to(c.estimate) <= 200.0
                             && matches!(c.category, PlatformKind::Ship | PlatformKind::Base)
                     });
                     if !good {
@@ -407,7 +462,7 @@ impl CommandStaff for TacticalStaff {
                         .filter(|c| {
                             !c.stale
                                 && c.quality >= p.strike_min_q
-                                && anchor_here.range_to(c.estimate) <= 140.0
+                                && anchor_here.range_to(c.estimate) <= 200.0
                                 && matches!(c.category, PlatformKind::Ship | PlatformKind::Base)
                         })
                         .map(|c| c.id)
@@ -515,10 +570,8 @@ impl CommandStaff for TacticalStaff {
                                 unit: u.id,
                                 course_deg: u.pos.bearing_to(contact_pos(obs, contact, u.pos)),
                             });
-                            cmds.push(Command::SetSpeed {
-                                unit: u.id,
-                                speed_kts: p.sub_patrol_speed_kts,
-                            });
+                            let approach = if dist > 20.0 { 16.0 } else { p.sub_patrol_speed_kts };
+                            cmds.push(Command::SetSpeed { unit: u.id, speed_kts: approach });
                         }
                     } else {
                         cmds.push(Command::SetSpeed {
@@ -570,7 +623,7 @@ impl CommandStaff for TacticalStaff {
 
         // P8: 基地打击——任一 Slcm 舰对已识别岸上目标齐射。
         for u in &obs.units {
-            if !u.alive || u.kind != PlatformKind::Ship {
+            if u.kind != PlatformKind::Ship {
                 continue;
             }
             let has_slcm = u.weapons.iter().any(|w| w.weapon == "slcm" && w.ammo > 0);

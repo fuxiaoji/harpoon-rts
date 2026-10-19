@@ -6,8 +6,8 @@
 //!   REST/WS surface and only ever receives double-blind observations.
 //! - POST /api/selfplay runs a fully deterministic headless rollout.
 
-mod ai;
-mod tactical;
+pub mod ai;
+pub mod tactical;
 mod agent;
 mod director;
 mod tutorial;
