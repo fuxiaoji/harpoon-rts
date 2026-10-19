@@ -22,6 +22,11 @@
   - 训练接口：`crates/harpoon-py` —— PyO3 绑定 + Gym 风格环境
   - 信息读取：REST `GET /api/state`、`GET /api/db`、WebSocket 推送
 
+## 新手先读
+
+**[图文规则教学手册](docs/manual/规则教学.md)** —— 界面导览、五个核心概念、
+手把手第一局、真实战报案例、RTS 改编对照，全部基于真实截图与实测数据。
+
 ## 快速开始
 
 ```bash

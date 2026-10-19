@@ -631,8 +631,10 @@ fn tdl_sync(world: &mut World) {
         prune_shadows(world, &own, tick);
         let injected = inject_missing(world, side, &tdl);
 
-        let synced = !tdl.is_empty()
-            || (tick % NON_TDL_INTERVAL_S == 0 && !non_tdl.is_empty());
+        // Only emit when the net actually moved track data — empty-heartbeat
+        // events were spamming the player's event feed.
+        let synced = (relayed + delayed + injected) > 0
+            && (!tdl.is_empty() || (tick % NON_TDL_INTERVAL_S == 0 && !non_tdl.is_empty()));
         if synced {
             if let Some(anchor) = own.first() {
                 if let Some(e) = world.entity_mut(*anchor) {
