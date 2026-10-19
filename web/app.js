@@ -13,6 +13,7 @@
   const MAX_WAYPOINTS = 24;
   const POLL_MS = 500;
   const RECONNECT_MS = 3000;
+  const contactTrack = c => window.HarpoonContactTrack.describe(c, window.HarpoonI18n?.language);
   const SIDE_STYLE = {
     Blue: { hex: '#4bcaff', rgb: '75,202,255' },
     Red: { hex: '#ff7162', rgb: '255,113,98' },
@@ -280,6 +281,20 @@
     systemsPanel: $('systems-panel'),
     systemsList: $('systems-list'),
 
+    agentStatus: $('agent-status'),
+    agentModel: $('agent-model'),
+    agentNext: $('agent-next'),
+    agentToggle: $('agent-toggle'),
+    agentAutonomy: $('agent-autonomy'),
+    agentReport: $('agent-report'),
+    agentExecute: $('agent-execute'),
+    agentReports: $('agent-reports'),
+    agentMemory: $('agent-memory'),
+    agentChat: $('agent-chat'),
+    agentForm: $('agent-form'),
+    agentInput: $('agent-input'),
+    agentSend: $('agent-send'),
+
     logSideBadge: $('log-side-badge'),
     logMeta: $('log-meta'),
     eventLog: $('event-log'),
@@ -313,6 +328,14 @@
     startingScenario: false,
     gameGeneration: 0,
     transport: '',
+    agent: {
+      status: null,
+      scenarioId: null,
+      chat: { Blue: [], Red: [] },
+      chatBusy: false,
+      reportBusy: false,
+      timer: null,
+    },
   };
 
   const map = {
@@ -345,14 +368,15 @@
   // API plumbing
   // ------------------------------------------------------------------
   async function requestJson(url, options = {}) {
+    const { timeoutMs = 7000, ...fetchOptions } = options;
     const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 7000);
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
     let response;
     try {
       response = await fetch(url, {
         cache: 'no-store',
-        ...options,
-        signal: options.signal || controller.signal,
+        ...fetchOptions,
+        signal: fetchOptions.signal || controller.signal,
       });
     } finally {
       clearTimeout(timer);
@@ -974,8 +998,11 @@
     dom.outcomeReason.textContent = result && result.reason
       ? window.HarpoonTheater?.reason(result.reason) || result.reason
       : 'Scenario complete.';
+    const killLine = result && Number.isFinite(Number(result.blue_kills)) && Number.isFinite(Number(result.red_kills))
+      ? `  ·  KILLS BLUE ${fmtInt(result.blue_kills)} / RED ${fmtInt(result.red_kills)}`
+      : '';
     dom.outcomeVp.textContent = result
-      ? `VP BLUE ${fmtRange(result.vp_blue)}  ·  RED ${fmtRange(result.vp_red)}${playerWon ? '  ·  COMMAND OBJECTIVE MET' : ''}`
+      ? `VP BLUE ${fmtRange(result.vp_blue)}  ·  RED ${fmtRange(result.vp_red)}${killLine}${playerWon ? '  ·  COMMAND OBJECTIVE MET' : ''}`
       : 'FINAL SCORE UNAVAILABLE';
   }
 
@@ -1028,6 +1055,8 @@
     resetRuntime();
     updateMapBrief(null);
     if (announce) showToast(`COMMANDING ${side.toUpperCase()} FORCES`, 'warn');
+    renderAgentPanel();
+    void refreshAgentStatus();
     restartTransport();
   }
 
@@ -1093,9 +1122,9 @@
     const friendlyHtml = (obs?.units || []).filter(u => !['Missile', 'Torpedo'].includes(u.kind)).map(u =>
       `<button type="button" data-select-unit="${Number(u.id)}" aria-pressed="${Number(u.id) === state.selectedUnitId}">${escapeHtml(u.name || `#${u.id}`)}</button>`).join('');
     const contactHtml = (obs?.contacts || []).map(c =>
-      `<button type="button" data-select-contact="${Number(c.id)}" aria-pressed="${Number(c.id) === state.selectedContactId}">C${c.id} · ${escapeHtml(categoryInfo(c.category).label)}${c.stale ? ' · STALE' : ''}</button>`).join('');
+      `<button type="button" data-select-contact="${Number(c.id)}" title="${escapeHtml(contactTrack(c).explanation)}" aria-pressed="${Number(c.id) === state.selectedContactId}">C${c.id} · ${escapeHtml(categoryInfo(c.category).label)}${contactTrack(c).coasting ? ` · ${escapeHtml(contactTrack(c).label)}` : ''}</button>`).join('');
     const friendlyKey = JSON.stringify([state.selectedUnitId, ...(obs?.units || []).map(u => [u.id,u.name])]);
-    const contactKey = JSON.stringify([state.selectedContactId, ...(obs?.contacts || []).map(c => [c.id,c.category,c.stale])]);
+    const contactKey = JSON.stringify([state.selectedContactId, window.HarpoonI18n?.language, ...(obs?.contacts || []).map(c => [c.id,c.category,contactTrack(c).label])]);
     if ($('friendly-list').dataset.renderKey !== friendlyKey) { $('friendly-list').innerHTML = friendlyHtml; $('friendly-list').dataset.renderKey = friendlyKey; }
     if ($('contact-list').dataset.renderKey !== contactKey) { $('contact-list').innerHTML = contactHtml; $('contact-list').dataset.renderKey = contactKey; }
     $('nav-inputs').hidden = !unit;
@@ -1391,6 +1420,7 @@
       || cat.label;
     const bearingOnly = !!contact.bearing_only;
     const stale = !!contact.stale;
+    const track = contactTrack(contact);
     const range = unit ? rangeNm(unit.pos, contact.estimate) : null;
     const qualityPct = Math.round(quality * 100);
 
@@ -1401,8 +1431,9 @@
     dom.targetName.textContent = String(displayName).toUpperCase();
     dom.targetName.title = displayName;
     dom.targetSub.textContent = `C${contact.id} · ${cat.label}${bearingOnly ? ' · BEARING ONLY' : ''}${stale ? ' · STALE' : ''}`;
-    dom.targetLockTag.textContent = stale ? 'STALE' : bearingOnly ? 'BEARING' : 'TRACK';
-    dom.targetLockTag.classList.toggle('is-stale', stale);
+    dom.targetLockTag.textContent = track.coasting ? track.status : bearingOnly ? 'BEARING' : 'TRACK';
+    dom.targetLockTag.title = track.explanation;
+    dom.targetLockTag.classList.toggle('is-stale', track.coasting);
     dom.targetQualityBar.style.width = `${qualityPct}%`;
     dom.targetQualityText.textContent = `${qualityPct}%`;
     dom.targetRange.textContent = range === null ? '—' : `${fmtRange(range)} NM`;
@@ -1415,6 +1446,7 @@
     if (contact.class_name) tags.push('<span class="chip">IDENTIFIED</span>');
     else tags.push('<span class="chip">UNIDENTIFIED</span>');
     if (stale) tags.push('<span class="chip chip--warn">STALE</span>');
+    if (track.coasting) tags.push(`<span class="chip chip--warn">${escapeHtml(track.label)} · ${escapeHtml(track.explanation)}</span>`);
     if (bearingOnly) tags.push('<span class="chip chip--warn">BEARING ONLY</span>');
     const sensors = Array.isArray(contact.sensors) ? contact.sensors.slice(0, 3) : [];
     for (const sensor of sensors) {
@@ -2834,7 +2866,7 @@
   function drawContact(ctx, contact, screen, now) {
     const cat = categoryInfo(contact.category);
     const quality = clamp(numberOr(contact.quality, 0), 0, 1);
-    const stale = !!contact.stale;
+    const stale = contactTrack(contact).coasting;
     const selected = state.selectedContactId !== null && Number(contact.id) === state.selectedContactId;
     const hovered = !!(map.hover && map.hover.type === 'contact' && map.hover.id === Number(contact.id));
     const assigned = (() => {
@@ -2952,7 +2984,7 @@
     const line2Parts = [`Q${quality}`];
     if (speed > 0) line2Parts.push(`${Math.round(speed)}KT`);
     if (contact.bearing_only) line2Parts.push('BRG');
-    if (stale) line2Parts.push('STALE');
+    if (stale) line2Parts.push(contactTrack(contact).label);
     const line2 = line2Parts.join(' · ');
 
     ctx.save();
@@ -3611,6 +3643,250 @@
     });
   }
 
+
+  // ------------------------------------------------------------------
+  // In-game AI staff panel
+  // ------------------------------------------------------------------
+  const AGENT_POLL_MS = 3000;
+
+  function agentLanguage() {
+    return window.HarpoonI18n?.language === 'en' ? 'en' : 'zh-CN';
+  }
+
+  function agentText(zh, en) {
+    return agentLanguage() === 'en' ? en : zh;
+  }
+
+  function agentSideState() {
+    return state.agent.status && state.agent.status.sides
+      ? state.agent.status.sides[state.side] || null
+      : null;
+  }
+
+  function agentChatMessages() {
+    return state.agent.chat[state.side] || [];
+  }
+
+  function addAgentMessage(role, text, tick, isError = false, meta = '') {
+    const messages = state.agent.chat[state.side];
+    messages.push({ role, text: String(text || ''), tick, isError, meta });
+    if (messages.length > 30) messages.splice(0, messages.length - 30);
+    renderAgentPanel();
+  }
+
+  function agentReportHtml(report) {
+    const tick = Number.isFinite(Number(report.tick)) ? fmtEventTick(report.tick) : 'T+—';
+    const trigger = String(report.trigger || 'manual').toUpperCase();
+    const triggerLabel = { SCHEDULED: agentText('定时', 'SCHEDULED'), MANUAL: agentText('手动', 'MANUAL'), CHAT: agentText('对话', 'CHAT') }[trigger] || trigger;
+    const status = report.error
+      ? agentText('错误', 'ERROR')
+      : report.applied
+        ? agentText('已执行', 'EXECUTED')
+        : agentText('建议', 'ADVISORY');
+    const body = report.error ? report.error : report.report;
+    const orders = Array.isArray(report.commands) ? report.commands.length : 0;
+    const rejected = Array.isArray(report.rejected) ? report.rejected.length : 0;
+    const tokens = report.usage && Number(report.usage.completion_tokens) ? ` · ${report.usage.completion_tokens} TOK` : '';
+    return `<article class="agent-report ${report.error ? 'is-error' : ''}">
+      <header><span>${escapeHtml(tick)} · ${escapeHtml(triggerLabel)}</span><span>${escapeHtml(status)}</span></header>
+      <p>${escapeHtml(body || '—')}</p>
+      <footer>${orders} ${agentText('条命令', 'ORDERS')}${rejected ? ` · ${rejected} ${agentText('条被拒', 'REJECTED')}` : ''}${tokens}</footer>
+    </article>`;
+  }
+
+  function agentChatHtml() {
+    const messages = agentChatMessages();
+    if (!messages.length) {
+      return `<div class="agent-empty">${escapeHtml(agentText('尚未对话。启用参谋后可直接提问，或点“立即汇报”。', 'No conversation yet. Enable the staff and ask a question, or request a report.'))}</div>`;
+    }
+    return messages.slice(-12).map((m) => `<div class="agent-msg ${m.role === 'user' ? 'user' : ''} ${m.isError ? 'is-error' : ''}">
+      <header>${m.role === 'user' ? agentText('你', 'YOU') : agentText('参谋', 'ASSISTANT')}${m.tick !== null && m.tick !== undefined ? ` · ${fmtEventTick(m.tick)}` : ''}${m.meta ? ` · ${escapeHtml(m.meta)}` : ''}</header>${escapeHtml(m.text || '—')}
+    </div>`).join('');
+  }
+
+  function renderAgentPanel() {
+    if (!dom.agentStatus) return;
+    const status = state.agent.status;
+    const side = agentSideState();
+    const configured = !!(status && status.configured);
+    const busy = !!(side && side.busy);
+    let chip = 'OFFLINE';
+    let chipState = 'off';
+    if (status && !configured) { chip = 'NO KEY'; chipState = 'error'; }
+    else if (side && busy) { chip = 'WORKING'; chipState = 'working'; }
+    else if (side && side.enabled) { chip = 'ONLINE'; chipState = 'on'; }
+    else if (status) { chip = 'STANDBY'; chipState = 'off'; }
+    if (side && side.last_error && !busy) { chip = 'ERROR'; chipState = 'error'; }
+    const chipZh = { OFFLINE: '离线', ONLINE: '在线', WORKING: '分析中', STANDBY: '待机', ERROR: '错误', 'NO KEY': '未配置密钥' }[chip] || chip;
+    dom.agentStatus.textContent = agentText(chipZh, chip);
+    dom.agentStatus.dataset.state = chipState;
+    dom.agentModel.textContent = status
+      ? `${status.model} · ${Math.round(Number(status.cadence_s || 300) / 60)} ${agentText('分', 'MIN')}`
+      : '—';
+    if (status && side) {
+      const next = side.next_report_in_s;
+      dom.agentNext.textContent = side.enabled
+        ? `${agentText('下次汇报', 'NEXT REPORT')} ${next === null || next === undefined ? '—' : fmtEta(next)}`
+        : (configured ? agentText('就绪', 'READY') : agentText('未配置密钥', 'NO API KEY'));
+    } else {
+      dom.agentNext.textContent = '—';
+    }
+    dom.agentToggle.textContent = side && side.enabled ? agentText('停用', 'DISABLE') : agentText('启用', 'ENABLE');
+    dom.agentToggle.classList.toggle('is-on', !!(side && side.enabled));
+    dom.agentToggle.disabled = !configured || !!state.agent.reportBusy;
+    dom.agentAutonomy.checked = !!(side && side.autonomy === 'execute');
+    dom.agentAutonomy.disabled = !side || !side.enabled || busy;
+    dom.agentReport.disabled = !configured || busy || state.agent.reportBusy;
+    dom.agentExecute.hidden = !(side && side.autonomy !== 'execute' && Array.isArray(side.last_proposals) && side.last_proposals.length > 0);
+    const memoryText = (side && side.memory && side.memory.trim()) || agentText('尚无记忆。', 'No memory yet.');
+    if (dom.agentMemory.textContent !== memoryText) dom.agentMemory.textContent = memoryText;
+    const reports = side && Array.isArray(side.reports) ? side.reports : [];
+    const reportKey = JSON.stringify([agentLanguage(), reports.slice(0, 4).map((r) => [r.tick, r.trigger, r.report, r.error, r.applied, r.commands?.length, r.rejected?.length])]);
+    if (dom.agentReports.dataset.renderKey !== reportKey) {
+      dom.agentReports.dataset.renderKey = reportKey;
+      dom.agentReports.innerHTML = reports.length
+        ? reports.slice(0, 4).map(agentReportHtml).join('')
+        : `<div class="agent-empty">${escapeHtml(agentText('尚无参谋汇报。启用参谋或点“立即汇报”。', 'No staff reports yet. Enable the staff or request a report.'))}</div>`;
+    }
+    const messages = agentChatMessages();
+    const chatKey = JSON.stringify([agentLanguage(), messages.map((m) => [m.role, m.text, m.tick, m.isError, m.meta])]);
+    if (dom.agentChat.dataset.renderKey !== chatKey) {
+      dom.agentChat.dataset.renderKey = chatKey;
+      dom.agentChat.innerHTML = agentChatHtml();
+      dom.agentChat.scrollTop = dom.agentChat.scrollHeight;
+    }
+    dom.agentSend.disabled = state.agent.chatBusy || !configured;
+    dom.agentInput.disabled = state.agent.chatBusy || !configured;
+    dom.agentInput.placeholder = agentText('向参谋提问…', 'Message the AI staff');
+  }
+
+  async function refreshAgentStatus() {
+    try {
+      const status = await requestJson('/api/agent/status');
+      if (status && status.scenario_id !== state.agent.scenarioId) {
+        state.agent.scenarioId = status.scenario_id || null;
+        state.agent.chat = { Blue: [], Red: [] };
+      }
+      state.agent.status = status;
+      renderAgentPanel();
+    } catch {
+      /* status is optional; the tactical feed is primary */
+    }
+  }
+
+  async function configureAgent(patch) {
+    try {
+      const status = await postJson('/api/agent/config', { side: state.side, ...patch });
+      state.agent.status = status;
+      renderAgentPanel();
+      return status;
+    } catch (err) {
+      showToast(`AI STAFF: ${errorText(err)}`, 'error', 5000);
+      void refreshAgentStatus();
+      return null;
+    }
+  }
+
+  async function requestAgentReport() {
+    if (state.agent.reportBusy) return;
+    state.agent.reportBusy = true;
+    renderAgentPanel();
+    try {
+      const response = await requestJson(`/api/agent/${state.side}/report`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: '{}',
+        timeoutMs: 180000,
+      });
+      if (response.status && response.status.sides) state.agent.status = response.status;
+      else await refreshAgentStatus();
+      const report = response.report || {};
+      addAgentMessage('assistant', report.report || report.error || '—', report.tick, !!report.error,
+        `${Array.isArray(report.commands) ? report.commands.length : 0} ${agentText('条命令', 'ORDERS')}`);
+    } catch (err) {
+      addAgentMessage('assistant', errorText(err), null, true);
+      showToast(`AI STAFF: ${errorText(err)}`, 'error', 5000);
+    } finally {
+      state.agent.reportBusy = false;
+      renderAgentPanel();
+    }
+  }
+
+  async function sendAgentMessage(text) {
+    const message = String(text || '').trim();
+    if (!message || state.agent.chatBusy) return;
+    addAgentMessage('user', message);
+    state.agent.chatBusy = true;
+    renderAgentPanel();
+    try {
+      const response = await requestJson(`/api/agent/${state.side}/chat`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message }),
+        timeoutMs: 180000,
+      });
+      if (response.status && response.status.sides) state.agent.status = response.status;
+      else await refreshAgentStatus();
+      const orders = Array.isArray(response.commands) ? response.commands.length : 0;
+      const rejected = Array.isArray(response.rejected) ? response.rejected : [];
+      const meta = `${orders} ${agentText('条命令', 'ORDERS')}${response.applied ? ` · ${agentText('已执行', 'EXECUTED')}` : ''}${rejected.length ? ` · ${rejected.length} ${agentText('条被拒', 'REJECTED')}` : ''}`;
+      addAgentMessage('assistant', response.reply || '—', response.tick, false, meta);
+      if (rejected.length) showToast(`AI STAFF: ${rejected[0]}`, 'warn', 5000);
+    } catch (err) {
+      addAgentMessage('assistant', errorText(err), null, true);
+      showToast(`AI STAFF: ${errorText(err)}`, 'error', 5000);
+    } finally {
+      state.agent.chatBusy = false;
+      renderAgentPanel();
+    }
+  }
+
+  async function executeAgentProposals() {
+    try {
+      const result = await postJson(`/api/agent/${state.side}/execute`, {});
+      showToast(`AI STAFF: ${result.queued || 0} ${agentText('条命令已排队', 'ORDERS QUEUED')}`, 'ok', 4000);
+      if (Array.isArray(result.rejected) && result.rejected.length) showToast(result.rejected[0], 'warn', 5000);
+      void refreshAgentStatus();
+    } catch (err) {
+      showToast(`AI STAFF: ${errorText(err)}`, 'error', 5000);
+    }
+  }
+
+  function initAgentPanel() {
+    if (!dom.agentStatus) return;
+    dom.agentToggle.addEventListener('click', () => {
+      const side = agentSideState();
+      void configureAgent({ enabled: !(side && side.enabled) });
+    });
+    dom.agentAutonomy.addEventListener('change', () => {
+      void configureAgent({ autonomy: dom.agentAutonomy.checked ? 'execute' : 'advise' });
+    });
+    dom.agentReport.addEventListener('click', () => { void requestAgentReport(); });
+    dom.agentExecute.addEventListener('click', () => { void executeAgentProposals(); });
+    const submitChat = () => {
+      const message = dom.agentInput.value;
+      dom.agentInput.value = '';
+      void sendAgentMessage(message);
+    };
+    dom.agentForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      submitChat();
+    });
+    dom.agentSend.addEventListener('click', (event) => {
+      event.preventDefault();
+      submitChat();
+    });
+    dom.agentInput.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        submitChat();
+      }
+    });
+    renderAgentPanel();
+    void refreshAgentStatus();
+    if (!state.agent.timer) state.agent.timer = window.setInterval(() => { void refreshAgentStatus(); }, AGENT_POLL_MS);
+  }
+
   function syncInitialSideUi() {
     document.body.dataset.side = state.side;
     updateSideControls();
@@ -3632,6 +3908,7 @@
     });
     syncInitialSideUi();
     bindUi();
+    initAgentPanel();
     setupMapInteractions();
     resizeMapCanvas();
     startRenderLoop();
@@ -3654,12 +3931,20 @@
       if (presentation) { option.textContent = presentation.title; option.title = presentation.summary; }
     }
     updateMapBrief(state.observation);
+    renderSidebar();
     const unit = selectedUnit();
     if (unit) renderOrders(unit, !!state.observation?.over);
     repaintEventLanguage();
     map.lastScaleKey = '';
   }
   window.addEventListener('harpoon:language', localizePresentation);
+  window.addEventListener('harpoon:language', () => {
+    renderAgentPanel();
+    const language = window.HarpoonI18n?.language === 'en' ? 'en' : 'zh-CN';
+    void postJson('/api/agent/config', { language })
+      .then((status) => { state.agent.status = status; renderAgentPanel(); })
+      .catch(() => {});
+  });
   window.addEventListener('harpoon:catalogue', localizePresentation);
 
   void init();

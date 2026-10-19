@@ -14,6 +14,11 @@
     mission_zone_held:['美方航母连续占据任务区满3分钟','A US carrier held the mission area for 3 continuous minutes'],
     mission_area_denied:['到期拒止成功，中方两艘航母保持作战能力','Area denied until the deadline; both Chinese carriers remain functional'],
     mission_denied_with_carrier_loss:['区域拒止，但中方航母受损超标：平局','Area denied with excessive Chinese carrier damage: draw'],
+    'time limit: kill count':['六小时击杀数决胜','Six-hour kill count decision'],
+    'Blue forces destroyed':['红方全歼蓝方','Red destroyed all Blue forces'],
+    'Red forces destroyed':['蓝方全歼红方','Blue destroyed all Red forces'],
+    'mutual annihilation':['双方同归于尽：平局','Mutual annihilation: draw'],
+    'VP margin reached':['VP差额达到提前胜利条件','VP margin reached'],
   };
   const reason = code => reasons[code]?.[zh()?0:1] || code;
   let latest, callbacks, image, imagePath='', imageState='idle', satellite=true;
@@ -47,12 +52,14 @@
     const credit=document.getElementById('map-attribution');
     if (obs && !obs.theater && obs.units) obs.theater = synthTheater(obs);
     const active=!!obs?.theater;
+    const killCount=obs?.victory?.mode==='kill_count';
+    const hasBrief=!!(obs?.mission || killCount);
     document.body.classList.toggle('geographic-theater',active);
     document.getElementById('map-theater').hidden=!obs?.mission;
     document.getElementById('map-basemap').hidden=!active;
-    document.getElementById('mission-open').hidden=!obs?.mission;
+    document.getElementById('mission-open').hidden=!hasBrief;
     credit.hidden=!active;
-    panel.hidden=!obs?.mission;
+    panel.hidden=!hasBrief;
     if (!active) return;
     for(const [id,cn,en] of [['nav-controls','编队列表','Fleet'],['orders-panel','交战命令','Engagement'],['deck-panel','飞行甲板','Flight deck']]) {
       document.querySelector(`[data-jump="${id}"]`).textContent=text(cn,en);
@@ -77,6 +84,14 @@
       document.getElementById('mission-ai').textContent=obs.automated_side
         ?text('美方规则参谋已启用；暂停时不行动','US rule-based staff enabled; inactive while paused')
         :text('双边手操；自动参谋关闭；已下达的任务继续执行','Hotseat command; automated staff off; standing tasks still execute');
+      document.getElementById('mission-open').textContent=text('任务简报与操作顺序','Briefing and first orders');
+    } else if(killCount) {
+      const v=obs.victory, remaining=v.remaining_s;
+      const clock=`${String(Math.floor(remaining/3600)).padStart(2,'0')}:${String(Math.floor(remaining/60)%60).padStart(2,'0')}:${String(remaining%60).padStart(2,'0')}`;
+      document.getElementById('mission-clock').textContent=`${text('任务剩余','Remaining')} ${clock}`;
+      document.getElementById('mission-own').textContent=text(`确认击杀 ${v.own_confirmed_kills} · 损失 ${v.own_losses}`,`Confirmed kills ${v.own_confirmed_kills} · losses ${v.own_losses}`);
+      document.getElementById('mission-objective').textContent=text('六小时后击毁敌方平台更多的一方获胜；相等为平局。导弹/鱼雷不计，燃油迫降不计为敌方击杀。','At 06:00:00 the side with more destroyed enemy platforms wins; equal counts draw. Missiles/torpedoes do not count, and fuel ditching is not an enemy kill.');
+      document.getElementById('mission-ai').textContent=text('右侧 AI 参谋可启用并对话；开启“允许下令”后可由 AI 下达单位命令。','Enable the AI staff on the right; with “Allow orders” it can issue unit commands.');
       document.getElementById('mission-open').textContent=text('任务简报与操作顺序','Briefing and first orders');
     }
   }
@@ -116,11 +131,33 @@
   }
   function showBriefing() {
     const m=latest?.mission;
-    if(!m) return;
-    const hours=(m.remaining_s+latest.tick)/3600;
-    const manual=!latest.automated_side;
+    const v=latest?.victory;
+    const killCount=!m && v?.mode==='kill_count';
+    if(!m && !killCount) return;
     root.HarpoonUI?.setSpeed(0);
     const content=document.getElementById('mission-briefing-content');
+    if(killCount) {
+      const hours=(v.duration_s)/3600;
+      const ownKills=v.own_confirmed_kills, ownLosses=v.own_losses;
+      content.innerHTML=zh()?`
+        <h2>双盾行动：六小时击杀数</h2>
+        <p>辽宁、山东对福特、尼米兹，六小时虚构演习。区域拒止圆区已取消，双方航母都从停航开始。胜负只看击毁敌方平台数量。</p>
+        <h3>怎样才算赢</h3><p>到 ${hours.toFixed(0)}:00:00 时，击毁敌方平台更多的一方获胜；数量相同为平局。舰艇、潜艇、飞机、基地各计 1；导弹和鱼雷不计；飞机燃油迫降不计为敌方击杀。当前本方确认击杀 ${ownKills}，己方损失 ${ownLosses}。敌方真实损失在终局前不公开。</p>
+        <h3>AI 参谋</h3><p>右侧 “AI 参谋” 面板可以启用、提问、要求立即汇报；开启“允许下令”后，参谋会把合法命令直接送入权威引擎。每 5 分钟模拟时间自动汇报一次，记忆会跨汇报保留。想要观战两名 AI 完整对局，可用服务端 <code>/api/agent/duel</code>，双方使用各自的双盲观察。</p>
+        <h3>从这里开始</h3><ol><li>保持暂停，先选“AI 参谋”，点“启用”并勾选“允许下令”；也可以先提问“你的首轮计划是什么？”</li><li>参谋会建议航母东进、AEW 前出、战斗机巡逻和护航舰自动选敌。命令排队后需要推进模拟时间才生效。</li><li>用 30× 或更低倍速推进；每 300 模拟秒（5 分钟）参谋主动汇报。暂停时不会自动汇报，可点“立即汇报”。</li><li>想自己接管时，取消“允许下令”，在编队列表、交战命令和飞行甲板正常操作。AI 记忆和最近简报仍可查看。</li></ol>
+        <p class="mission-note">虚构演习，阵位、编组和挂载为设计假设；当前 RTS 数据库含已声明估算。卫星影像仅用于地理参考，不参与海岸碰撞、水深或遮蔽裁决。</p>`:`
+        <h2>Twin Shields: six-hour kill count</h2>
+        <p>Liaoning and Shandong against Ford and Nimitz in a six-hour fictional exercise. The area-denial circle is removed and both carrier groups start stopped. Only destroyed enemy platforms decide the result.</p>
+        <h3>Victory</h3><p>At ${hours.toFixed(0)}:00:00 the side with more destroyed enemy platforms wins; equal counts draw. Ships, submarines, aircraft and bases each count 1; missiles and torpedoes do not count; aircraft lost to fuel are not enemy kills. Own confirmed kills ${ownKills}, own losses ${ownLosses}. The enemy's true losses stay hidden until the end.</p>
+        <h3>AI staff</h3><p>The AI STAFF panel on the right can be enabled, queried, or asked for an immediate report. With “Allow orders” enabled, valid commands go straight into the authoritative engine. It reports every five simulated minutes and keeps memory across reports. Two staff officers can play a full match through the server's <code>/api/agent/duel</code>, each using only its own double-blind observation.</p>
+        <h3>First orders</h3><ol><li>Stay paused. In AI STAFF click Enable and check Allow orders; or ask “What is your first plan?”</li><li>The staff will recommend moving the carriers east, pushing AEW forward, setting CAP, and letting escorts auto-engage. Queued orders need simulated time to execute.</li><li>Use 30× or slower. It reports every 300 simulated seconds (5 minutes). It does not report while paused; use Report now.</li><li>To take over, uncheck Allow orders and use the normal unit, engagement and flight-deck controls. Memory and recent reports remain visible.</li></ol>
+        <p class="mission-note">Fictional exercise with authored positions, groups and loadouts. The current RTS database includes declared estimates. Satellite imagery is geographic reference only; coastline collision, water depth and terrain masking are not adjudicated.</p>`;
+      document.getElementById('mission-close').textContent=text('接管指挥，保持暂停','Take command, remain paused');
+      document.getElementById('mission-dialog').showModal();
+      return;
+    }
+    const hours=(m.remaining_s+latest.tick)/3600;
+    const manual=!latest.automated_side;
     content.innerHTML=zh()?`
       <h2>双盾行动：双航母区域拒止</h2>
       <p>${manual?'双边手操教学：顶部蓝/红按钮切换指挥席，双方自动参谋均关闭；四艘航母起始停航，等待你下令。':'你指挥中国蓝方。'}辽宁、山东各有055、两艘052D、054A、093A与舰载航空力量；美国红方由福特、尼米兹两支编队组成。本想定初始34个在海、在空单位，另有甲板待命飞机。</p>

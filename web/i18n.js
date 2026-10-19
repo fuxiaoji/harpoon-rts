@@ -386,6 +386,30 @@ Seeker Gen 1 Torpedo|第一代自导鱼雷
 Seeker Gen 2 Torpedo|第二代自导鱼雷
 Seeker Gen 3 Torpedo|第三代自导鱼雷
 Wake-Homing Torpedo|尾流自导鱼雷
+AI 参谋 / AGENT|AI 参谋 / AGENT
+ENABLE|启用
+DISABLE|停用
+ALLOW ORDERS|允许下令
+REPORT NOW|立即汇报
+EXECUTE PROPOSALS|执行建议
+MEMORY|记忆
+SEND|发送
+Message the AI staff|给AI参谋发消息
+No memory yet|尚无记忆
+No staff reports yet. Enable the staff or request a report.|尚无参谋汇报。启用参谋或点击“立即汇报”。
+ERROR|错误
+NO KEY|未配置密钥
+WORKING|分析中
+NEXT REPORT|下次汇报
+REJECTED|已拒绝
+EXECUTED|已执行
+SCHEDULED|定时
+MANUAL|手动
+Staff report|参谋汇报
+Assistant|参谋
+You|你
+Six-hour kill-count exercise|六小时击杀数演习
+At 06:00:00 the side that destroyed more enemy platforms wins.|06:00:00 时击毁敌方平台更多的一方获胜。
 `.trim().split('\n').map(line => line.split('|')));
   const escape = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   let phrasePattern;
@@ -433,6 +457,7 @@ Wake-Homing Torpedo|尾流自导鱼雷
   const originalAttributes = new WeakMap();
   const scenarios = {
     dual_carrier_hotseat: { title:{zh:'双盾行动：六小时双边手操',en:'Twin Shields: six-hour hotseat'},summary:{zh:'双方自动参谋关闭，四艘航母起始停航，由玩家切换指挥。六小时虚构演习，胜负条件与区域拒止版相同。',en:'Both automated staffs off. Four carriers hold until commanded. A six-hour fictional hotseat exercise with the same denial conditions.'} },
+    dual_carrier_kills: { title:{zh:'双盾行动：六小时击杀数',en:'Twin Shields: six-hour kill count'},summary:{zh:'辽宁、山东对福特、尼米兹的六小时虚构演习。取消区域拒止，06:00:00 时击毁敌方平台更多的一方获胜；可由双方游戏内 AI 参谋完整对局。',en:'A six-hour fictional exercise: Liaoning and Shandong against Ford and Nimitz. Area denial is removed; at 06:00:00 the side with more destroyed enemy platforms wins. Two in-game AI staff officers can play it end to end.'} },
     dual_carrier_denial: { title:{zh:'双盾行动：双航母区域拒止',en:'Twin Shields: dual-carrier area denial'},summary:{zh:'辽宁、山东守卫45海里任务区；福特、尼米兹尝试连续占据3分钟。两小时虚构演习，使用RTS改编与已声明的数据库估算。',en:'Liaoning and Shandong deny a 45-nm circle against Ford and Nimitz. A two-hour fictional exercise with RTS adaptations and declared database estimates.'} },
     gunnery_dual: { title: {zh:'舰炮对决',en:'Gunnery duel'}, summary: {zh:'两方水面舰艇逐渐接近，练习接触判断、舰炮与导弹交战。',en:'Surface combatants close for a gun and missile engagement. Practise contact assessment and weapon control.'} },
     crimson_tide: { title: {zh:'赤潮行动',en:'Operation Crimson Tide'}, summary: {zh:'指挥航母编队应对水面、潜艇与航空威胁，并开展对陆打击。',en:'Command a carrier group against surface, submarine and air threats while conducting land strikes.'} },

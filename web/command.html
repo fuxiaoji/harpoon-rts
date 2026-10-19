@@ -145,10 +145,34 @@
       <aside class="sidebar" aria-label="Selected unit and target details">
         <div class="sidebar-scroll">
           <div class="sidebar-quick" data-i18n-native>
+            <button type="button" data-jump="agent-panel">AI参谋 / AGENT</button>
             <button type="button" data-jump="nav-controls">编队列表</button>
             <button type="button" data-jump="orders-panel">交战命令</button>
             <button type="button" data-jump="deck-panel" id="jump-deck" hidden>飞行甲板</button>
           </div>
+          <section class="panel agent-panel" id="agent-panel" aria-label="AI staff officer">
+            <div class="panel-head">
+              <span class="kicker">AI 参谋 / AGENT</span>
+              <span class="panel-tag agent-status" id="agent-status" data-state="off" data-i18n-native>STANDBY</span>
+            </div>
+            <div class="agent-meta">
+              <span id="agent-model" data-i18n-native>deepseek-flash</span>
+              <span id="agent-next" data-i18n-native>—</span>
+            </div>
+            <div class="agent-controls">
+              <button type="button" id="agent-toggle" class="btn btn--secondary">ENABLE</button>
+              <label class="agent-check"><input type="checkbox" id="agent-autonomy"> ALLOW ORDERS</label>
+              <button type="button" id="agent-report" class="btn btn--ghost">REPORT NOW</button>
+              <button type="button" id="agent-execute" class="btn btn--ghost" hidden>EXECUTE PROPOSALS</button>
+            </div>
+            <div class="agent-reports" id="agent-reports" data-i18n-native></div>
+            <details class="agent-memory-box"><summary>MEMORY</summary><div id="agent-memory" data-i18n-native></div></details>
+            <div class="agent-chat" id="agent-chat" data-i18n-native></div>
+            <form class="agent-form" id="agent-form">
+              <input id="agent-input" type="text" maxlength="4000" placeholder="Message the AI staff" autocomplete="off" aria-label="Message the AI staff">
+              <button type="submit" id="agent-send">SEND</button>
+            </form>
+          </section>
           <section class="panel nav-panel" id="nav-controls" aria-label="MANOEUVRE">
             <div class="panel-head"><span class="field-label">MANOEUVRE</span></div>
             <div id="friendly-list" class="selection-list" aria-label="Friendly units"></div>
@@ -365,7 +389,8 @@
   <script src="theater.js?v=rts-20261019-4" defer></script>
   <script src="aircraft-roles.js?v=theater-20261019-1" defer></script>
   <script src="combat-help.js?v=combat-20261018-1" defer></script>
-  <script src="app.js?v=rts-20261019-5" defer></script>
+  <script src="contact-track.js?v=missiles-20261019-1" defer></script>
+  <script src="app.js?v=missiles-20261019-1" defer></script>
   <script src="training-guide.js?v=rts-20261019-2" defer></script>
   <script src="tutorial.js?v=guided-20261018-3" defer></script>
 </body>
