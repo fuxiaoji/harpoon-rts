@@ -53,6 +53,8 @@ $env:HARPOON_AGENT_API_KEY = "<runtime-only-key>"
 cargo run --release -p harpoon-server -- --port 8799 --speed 0
 ```
 
+大厅“作战任务”表单新增 AI 选项：勾选“与 AI 参谋对战”让红方由 Agent 指挥；“我的助手”可选关闭、半自动（只给建议）或全自动（AI 托管）；规划窗速度可选 1×/15×/30×/60×。该模式严格双盲、固定每 300 模拟秒规划，不使用私有事件暂停。新增 **3 小时舰队决战** `fleet_decisive_3h`，无区域任务，到期按击毁平台数决胜。
+
 打开 `command.html`，在右侧 AI 参谋面板启用并勾选“允许下令”。服务端还提供独立双 Agent 对局：
 
 ```bash
