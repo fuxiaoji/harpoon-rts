@@ -97,13 +97,18 @@ struct Game {
     /// A two-sided director owns the clock; the normal run loop must not tick.
     director_active: bool,
     director_id: u64,
+    /// Fixed scheduled planning hold (public 5-minute window), not a private wake.
+    agent_hold: bool,
+    resume_speed: f64,
+    planning_outstanding: u32,
 }
 
 impl Game {
     fn new() -> Self {
         Self { world: None, speed: 0.0, accumulator: 0.0, inbox: Vec::new(),
             training: None, training_completed: tutorial::load_progress(), progress_saved: true,
-            director_active: false, director_id: 0 }
+            director_active: false, director_id: 0,
+            agent_hold: false, resume_speed: 0.0, planning_outstanding: 0 }
     }
     fn training_view(&self) -> serde_json::Value {
         json!({"session": self.training.as_ref().zip(self.world.as_ref()).map(|(s,w)| s.view(w)),
@@ -130,13 +135,13 @@ fn run_loop(state: AppState) {
             let work: Option<(i64, Vec<(Side, Command)>)> = {
                 let mut g = state.game.lock().unwrap();
                 let over = g.world.as_ref().map(|w| w.over).unwrap_or(true);
-                if !over && g.training.is_none() && g.speed <= 0.0 && !g.director_active {
+                if !over && g.training.is_none() && g.speed <= 0.0 && !g.director_active && !g.agent_hold {
                     if let Some(speed) = state.agents.auto_run_speed() {
                         g.speed = speed;
                         g.accumulator = 0.0;
                     }
                 }
-                if g.speed > 0.0 && !over && !g.director_active {
+                if g.speed > 0.0 && !over && !g.director_active && !g.agent_hold {
                     g.accumulator += g.speed * 0.1; // 100 ms wall step
                     let n = g.accumulator.floor() as i64;
                     g.accumulator -= n as f64;
@@ -185,21 +190,41 @@ fn run_loop(state: AppState) {
             if poked {
                 let _ = state.update_tx.send(());
                 let due = {
-                    let g = state.game.lock().unwrap();
+                    let mut g = state.game.lock().unwrap();
                     if g.training.is_some() || g.director_active {
                         Vec::new()
                     } else if let Some(world) = g.world.as_ref() {
                         if world.over {
                             Vec::new()
                         } else {
-                            state.agents.due_sides(world.tick)
+                            let due = state.agents.due_sides(world.tick);
+                            let hold_sides = due
+                                .iter()
+                                .filter(|side| state.agents.is_execute(**side))
+                                .count();
+                            if hold_sides > 0 {
+                                g.resume_speed = g.speed;
+                                g.speed = 0.0;
+                                g.accumulator = 0.0;
+                                g.agent_hold = true;
+                                g.planning_outstanding = hold_sides as u32;
+                            }
+                            due
                         }
                     } else {
                         Vec::new()
                     }
                 };
                 for side in due {
-                    tokio::spawn(run_agent_turn(state.clone(), side, "scheduled", None));
+                    let state2 = state.clone();
+                    let state3 = state.clone();
+                    let counts_for_hold = state.agents.is_execute(side);
+                    tokio::spawn(async move {
+                        let _ = run_agent_turn(state3, side, "scheduled", None).await;
+                        if counts_for_hold {
+                            scheduled_turn_done(&state2);
+                        }
+                    });
                 }
             }
         }
@@ -289,7 +314,8 @@ async fn new_game(
     let completed = g.training_completed.clone();
     *g = Game { world: Some(world), speed: req.speed, accumulator: 0.0, inbox: Vec::new(),
         training: None, training_completed: completed, progress_saved: true,
-        director_active: false, director_id: 0 };
+        director_active: false, director_id: 0,
+        agent_hold: false, resume_speed: 0.0, planning_outstanding: 0 };
     drop(g);
     state.agents.start_game(&scenario_id, seed, tick);
     Ok(Json(json!({"started": true, "scenario": name, "seeded_at_tick": tick})))
@@ -364,6 +390,23 @@ fn agent_error(err: agent::TurnError) -> (StatusCode, String) {
         agent::TurnError::NotConfigured => StatusCode::BAD_REQUEST,
     };
     (status, err.message().to_string())
+}
+
+fn scheduled_turn_done(state: &AppState) {
+    let mut g = state.game.lock().unwrap();
+    if g.planning_outstanding > 0 {
+        g.planning_outstanding -= 1;
+    }
+    if g.planning_outstanding == 0 && g.agent_hold {
+        g.agent_hold = false;
+        let over = g.world.as_ref().map(|w| w.over).unwrap_or(true);
+        g.speed = if over {
+            0.0
+        } else {
+            state.agents.auto_run_speed().unwrap_or(g.resume_speed).max(0.0)
+        };
+        g.accumulator = 0.0;
+    }
 }
 
 /// One player-view staff turn. The LLM sees only `observe(world, side)` plus
@@ -605,6 +648,7 @@ async fn training_start(State(state): State<AppState>, Json(req): Json<TrainingS
     let mut g = state.game.lock().unwrap();
     g.world = Some(world); g.training = Some(session); g.speed = 0.0; g.accumulator = 0.0; g.inbox.clear();
     g.director_active = false; g.director_id = 0;
+    g.agent_hold = false; g.resume_speed = 0.0; g.planning_outstanding = 0;
     drop(g);
     state.agents.start_game(&tutorial_scenario, tutorial_seed, tutorial_tick);
     let _ = state.update_tx.send(());
@@ -714,6 +758,9 @@ async fn director_start(
             progress_saved: true,
             director_active: true,
             director_id: id,
+            agent_hold: false,
+            resume_speed: 0.0,
+            planning_outstanding: 0,
         };
     }
     state.agents.start_game(&scenario_id, seed, tick);

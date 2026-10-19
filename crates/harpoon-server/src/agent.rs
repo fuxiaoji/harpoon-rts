@@ -32,13 +32,14 @@ const DEFAULT_BASE_URL: &str = "https://api.deepseek.com";
 const DEFAULT_MODEL: &str = "deepseek-flash";
 const DEFAULT_CADENCE_S: i64 = 300;
 const DEFAULT_MAX_TOKENS: u32 = 65_536;
-const DEFAULT_TIMEOUT_S: u64 = 90;
+const DEFAULT_TIMEOUT_S: u64 = 60;
 const MAX_REPORTS: usize = 24;
-const MAX_RECENT_FOR_PROMPT: usize = 4;
+const MAX_RECENT_FOR_PROMPT: usize = 3;
 const MAX_MEMORY_TURNS: usize = 16;
 const MAX_MEMORY_CHARS: usize = 2400;
 const MAX_COMMANDS: usize = 16;
-const MAX_EVENTS_FOR_PROMPT: usize = 50;
+const MAX_EVENTS_FOR_PROMPT: usize = 40;
+const MAX_CONTACTS_FOR_PROMPT: usize = 60;
 const MEMORY_VERSION: u32 = 1;
 const DUEL_ARTIFACT_DIR: &str = "tmp/agent-duels";
 
@@ -81,7 +82,10 @@ impl Settings {
                 .and_then(|v| v.parse::<u32>().ok())
                 .unwrap_or(DEFAULT_MAX_TOKENS)
                 .clamp(512, 65_536),
-            timeout_s: DEFAULT_TIMEOUT_S,
+            timeout_s: env_first(&["HARPOON_AGENT_TIMEOUT_S"])
+                .and_then(|v| v.parse::<u64>().ok())
+                .unwrap_or(DEFAULT_TIMEOUT_S)
+                .clamp(15, 120),
         }
     }
 
@@ -300,6 +304,8 @@ struct SideAgent {
     usage: UsageStats,
     auto_run: bool,
     auto_speed: f64,
+    /// Last model-requested pace. Auto-run uses the minimum of both sides.
+    desired_speed: Option<f64>,
 }
 
 impl SideAgent {
@@ -317,6 +323,7 @@ impl SideAgent {
             usage: UsageStats::default(),
             auto_run: false,
             auto_speed: 15.0,
+            desired_speed: None,
         }
     }
 }
@@ -432,6 +439,7 @@ impl Runtime {
                 .take(MAX_REPORTS)
                 .collect();
             slot.usage = load_usage(scenario_id, seed, side).unwrap_or_default();
+            slot.desired_speed = None;
             slot.next_report_tick = if slot.enabled { tick + 1 } else { i64::MAX };
         }
     }
@@ -442,18 +450,26 @@ impl Runtime {
 
     /// The server-side autopilot speed requested by an enabled side. The
     /// browser does not need to stay open for time to advance.
+    pub(crate) fn is_execute(&self, side: Side) -> bool {
+        let inner = self.inner.lock().unwrap();
+        let slot = &inner.sides[side.index()];
+        slot.enabled && slot.autonomy == "execute"
+    }
+
     pub(crate) fn auto_run_speed(&self) -> Option<f64> {
         let inner = self.inner.lock().unwrap();
         if !inner.settings.configured() {
             return None;
         }
+        let mut speeds: Vec<f64> = Vec::new();
         for side in [Side::Blue, Side::Red] {
             let slot = &inner.sides[side.index()];
-            if slot.enabled && slot.auto_run && slot.auto_speed > 0.0 {
-                return Some(slot.auto_speed);
+            if slot.enabled && slot.auto_run {
+                let speed = slot.desired_speed.unwrap_or(slot.auto_speed).clamp(5.0, 60.0);
+                speeds.push(speed);
             }
         }
-        None
+        speeds.into_iter().reduce(f64::min)
     }
 
     pub fn due_sides(&self, tick: i64) -> Vec<Side> {
@@ -563,6 +579,11 @@ impl Runtime {
         }
         let slot = &mut inner.sides[ctx.side.index()];
         slot.usage.add(&decision.usage);
+        if decision.error.is_none() {
+            if let Some(speed) = decision.desired_speed {
+                slot.desired_speed = Some(speed.clamp(5.0, 60.0));
+            }
+        }
         slot.busy = false;
         if ctx.trigger == "scheduled" && game_tick > ctx.tick.saturating_add(cadence) {
             // Do not replay every missed 5-minute boundary back-to-back when a
@@ -742,6 +763,7 @@ impl Runtime {
             slot.last_error = None;
             slot.last_turn_tick = None;
             slot.usage = UsageStats::default();
+            slot.desired_speed = None;
             slot.next_report_tick = if slot.enabled { current_tick + 1 } else { i64::MAX };
             if purge_memory && !scenario_id.is_empty() {
                 let _ = std::fs::remove_file(memory_path(&scenario_id, seed, side));
@@ -884,6 +906,7 @@ impl Inner {
             "memory_turns": slot.memory.turns.len(),
             "auto_run": slot.auto_run,
             "auto_speed": slot.auto_speed,
+            "desired_speed": slot.desired_speed,
             "usage": slot.usage.value(),
             "reports": reports,
             "last_proposals": slot.last_proposals,
@@ -1640,7 +1663,27 @@ You are not an external MCP client; you are the in-game staff. Return commands d
     } else {
         "Write the report in English; keep command JSON field names in English. Lead with the conclusion, then evidence, then next actions; do not reveal private chain-of-thought."
     };
-    format!(
+        let director_block = if ctx.director {
+        r#"## Director / wake mode
+When the turn trigger is `wake`, both sides are paused at the same tick and plan simultaneously. Return:
+- `desired_speed`: 5–60 simulated seconds per real second. The director advances at the **minimum** of both sides' requested speeds.
+- `wake_conditions`: the conditions that should pause both sides again. They are evaluated only against your own observation. A time wake is a legitimate adversarial tool but keep a time fallback.
+Allowed wake rule types (JSON):
+  {"id":"time","type":"time","every_s":300,"cooldown_s":0,"one_shot":false}
+  {"id":"contact","type":"new_contact","category":"surface","min_quality":0.5,"cooldown_s":60,"one_shot":false}
+  {"id":"incoming","type":"incoming","max_eta_s":120,"cooldown_s":0,"one_shot":false}
+  {"id":"loss","type":"own_loss","cooldown_s":0,"one_shot":false}
+  {"id":"damage","type":"own_damage","min_damage":20,"hp_fraction_below":0.5,"cooldown_s":0,"one_shot":false}
+  {"id":"range","type":"contact_range","max_nm":80,"category":"surface","min_quality":0.5,"cooldown_s":30,"one_shot":false}
+Do not invent other condition types. Always leave a time fallback. A private trigger pauses both sides, so consider the information/tempo trade-off.
+"#
+    } else {
+        r#"## Strict scheduled mode
+This is a fixed five-minute planning window. Both sides plan from their own double-blind observation at the same simulated tick; private events never pause the clock. Return only a `desired_speed` (5–60) for the next segment. Do not return `wake_conditions` in this mode.
+"#
+    };
+
+format!(
         r#"You are the in-game AI staff officer (参谋) for the {side} side in HARPOON RTS. You are competent, concise and intellectually honest about uncertainty. You serve the human commander, but when the game is running in autonomous execute mode you may issue valid orders directly.
 
 {rules}
@@ -1655,18 +1698,13 @@ You are not an external MCP client; you are the in-game staff. Return commands d
 - Never invent unit ids, contact ids, weapon ids or coordinates. If a command is uncertain, omit it rather than hallucinate.
 - In advise mode your commands are proposals; in execute mode the server will apply every valid command. Keep each turn's list small and mutually consistent.
 
-## Director / wake mode
-When the turn trigger is `wake`, you are in a two-sided adversarial director match. Both sides are paused at the same tick and plan simultaneously. Return:
-- `desired_speed`: 5–60 simulated seconds per real second. The director advances at the **minimum** of both sides' requested speeds.
-- `wake_conditions`: the conditions that should pause both sides again. They are evaluated only against your own observation. Use them deliberately; a time wake can force a planning window and interrupt the opponent's tempo.
-Allowed wake rule types (JSON):
-  {{"id":"time","type":"time","every_s":300,"cooldown_s":0,"one_shot":false}}
-  {{"id":"contact","type":"new_contact","category":"surface","min_quality":0.5,"cooldown_s":60,"one_shot":false}}
-  {{"id":"incoming","type":"incoming","max_eta_s":120,"cooldown_s":0,"one_shot":false}}
-  {{"id":"loss","type":"own_loss","cooldown_s":0,"one_shot":false}}
-  {{"id":"damage","type":"own_damage","min_damage":20,"hp_fraction_below":0.5,"cooldown_s":0,"one_shot":false}}
-  {{"id":"range","type":"contact_range","max_nm":80,"category":"surface","min_quality":0.5,"cooldown_s":30,"one_shot":false}}
-Do not invent other condition types. Always leave a time fallback. A private trigger pauses both sides, so consider the information/tempo trade-off.
+## Decisive fleet battle doctrine
+- In a kill-count or fleet-decisive scenario, no patch of water is worth holding: find the enemy, fix the contact, and destroy platforms.
+- Prefer enemy carriers, then the escorts and aircraft that enable their strikes; mass missiles in coordinated salvos instead of trickling them into Aegis.
+- Keep your own carriers functional and use AEW/CAP to preserve the picture. Submarines are for close ambush; aircraft are for search, CAP, ASW and stand-off strike.
+- Do not fire without a usable track and fire-control solution, and do not sacrifice the last carrier air group for a marginal damage roll.
+
+{director_block}
 
 ## Output contract
 Return exactly one JSON object, no markdown fences:
@@ -1682,6 +1720,7 @@ Return exactly one JSON object, no markdown fences:
 {report_language}
 "#,
         side = ctx.side.name(),
+        director_block = director_block,
         rules = rules,
         mcp = mcp,
         schema = schema,
@@ -1729,9 +1768,16 @@ fn build_user_prompt(
             })
         })
         .collect();
-    let contacts: Vec<Value> = obs
-        .contacts
-        .iter()
+    let mut contact_refs: Vec<&harpoon_core::observe::ContactObs> = obs.contacts.iter().collect();
+    contact_refs.sort_by(|a, b| {
+        a.stale
+            .cmp(&b.stale)
+            .then_with(|| b.quality.partial_cmp(&a.quality).unwrap_or(std::cmp::Ordering::Equal))
+            .then_with(|| a.last_seen_s.partial_cmp(&b.last_seen_s).unwrap_or(std::cmp::Ordering::Equal))
+    });
+    contact_refs.truncate(MAX_CONTACTS_FOR_PROMPT);
+    let contacts: Vec<Value> = contact_refs
+        .into_iter()
         .map(|c| {
             json!({
                 "id": c.id.0, "category": c.category, "class_name": c.class_name,
@@ -2522,6 +2568,43 @@ mod tests {
             )
             .unwrap();
         assert_eq!(runtime.auto_run_speed(), Some(15.0));
+        runtime
+            .set_config(
+                &AgentConfigReq {
+                    side: Some("Red".into()),
+                    enabled: Some(true),
+                    autonomy: Some("execute".into()),
+                    cadence_s: None,
+                    max_tokens: None,
+                    auto_run: Some(true),
+                    auto_speed: Some(30.0),
+                    model: None,
+                    base_url: None,
+                    api_key: None,
+                    language: None,
+                },
+                0,
+            )
+            .unwrap();
+        assert_eq!(runtime.auto_run_speed(), Some(15.0));
+        runtime
+            .set_config(
+                &AgentConfigReq {
+                    side: Some("Red".into()),
+                    enabled: Some(false),
+                    autonomy: None,
+                    cadence_s: None,
+                    max_tokens: None,
+                    auto_run: None,
+                    auto_speed: None,
+                    model: None,
+                    base_url: None,
+                    api_key: None,
+                    language: None,
+                },
+                0,
+            )
+            .unwrap();
         assert_eq!(runtime.due_sides(0), Vec::<Side>::new());
         assert_eq!(runtime.due_sides(1), vec![Side::Blue]);
         let ctx = runtime.prepare_turn(Side::Blue, "scheduled", 1).unwrap();
