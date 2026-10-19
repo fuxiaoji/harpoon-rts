@@ -19,6 +19,7 @@
   DP/SDPS 量级标定、舰炮射界带、被动声纳航速-噪声关系。逐条改编见
   [docs/design/adaptations.md](docs/design/adaptations.md)，独立规则合规审计见
   [docs/compliance/rules-audit-001.md](docs/compliance/rules-audit-001.md)。
+- **游戏内 AI 参谋**：右侧“AI 参谋 / AGENT”面板可启用 DeepSeek Flash 等模型参谋。每回合只接收与玩家相同的双盲 `Observation`，具备长期记忆、每 5 分钟模拟时间主动汇报、对话、建议/执行两种自主度；所有命令仍由引擎按己方单位、接触、武器和甲板状态二次校验。支持独立双 Agent 完整对局。见[游戏内 AI 参谋与双 Agent 对局](docs/agent-assistant.md)。
 - **预留接口**：
   - AI 接口：`CommandStaff` trait + 启发式参谋 + OpenAI 兼容 LLM 提供方
     （`HARPOON_LLM_BASE_URL/API_KEY/MODEL`，DeepSeek/GLM/vLLM/Ollama 均可）
@@ -39,9 +40,27 @@
 
 Windows本地可双击 `启动鱼叉.cmd`（本机桌面另有“鱼叉一键启动”快捷方式）：自动检查构建并打开8795端口，初始暂停，重复启动保留战局。新增 [双盾行动：双航母区域拒止](docs/dual-carrier-denial.md)，包含辽宁/山东对福特/尼米兹四编队、权威区域任务胜负、规则参谋和有出处的NASA离线卫星底图。影像用于地理参考，地形裁决范围见简报。
 
-新增 [训练学院与中英双语使用说明](docs/training-academy.md)：顶部“训练中心”进入8课55目标的递进教学，顶部或课程目录切换中文 / English。教学基于当前RTS改编配置，实际目标由服务器核验，支持检查点重试与结业记录。
+新增 [训练学院与中英双语使用说明](docs/training-academy.md)：顶部“训练中心”进入11课76目标的递进教学（8课核心 + 3课实战），顶部或课程目录切换中文 / English。教学基于当前RTS改编配置，实际目标由服务器核验，支持检查点重试与结业记录。
 
 看不懂开火与自主行动时，先点顶部“怎么玩”：会暂停并解释单发射击、指定目标持续交战、自动选敌、探测和战报。参见 [玩家操作说明](docs/player-operations.md)。
+
+游戏内 AI 参谋使用 OpenAI 兼容端点，DeepSeek Flash 的最小配置：
+
+```powershell
+$env:HARPOON_AGENT_BASE_URL = "https://api.deepseek.com"
+$env:HARPOON_AGENT_MODEL = "deepseek-flash"
+$env:HARPOON_AGENT_API_KEY = "<runtime-only-key>"
+cargo run --release -p harpoon-server -- --port 8799 --speed 0
+```
+
+打开 `command.html`，在右侧 AI 参谋面板启用并勾选“允许下令”。服务端还提供独立双 Agent 对局：
+
+```bash
+curl -X POST localhost:8799/api/agent/duel -H 'content-type: application/json'      -d '{"scenario":"dual_carrier_kills","seed":20261019,"cadence_s":300,"max_ticks":21600}'
+curl localhost:8799/api/agent/duel
+```
+
+`dual_carrier_kills` 是六小时击杀数想定：移除区域拒止，到期时击毁敌方平台更多的一方获胜。完整 API、记忆/节拍语义、用量统计和验收见 [游戏内 AI 参谋与双 Agent 对局](docs/agent-assistant.md)。
 
 新增 [15分钟前端实操教学视频与章节索引](docs/frontend-video-tutorial.md)：在真实“太平洋风暴”一局中演示选舰、人工射击、持续目标指派、机动、航空和中文战报，完整推进到八小时裁决。
 
