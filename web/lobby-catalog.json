@@ -170,6 +170,19 @@
       "automated_side": "Red",
       "satellite": true
     },
+    "dual_carrier_duel": {
+      "file": "dual_carrier_duel.json",
+      "source_sha256": "354feb346c34338b25ee4873ff77dc32bb873e7dea86ddd29bb1bf92139264d2",
+      "duration_s": 300,
+      "seed": 20261019,
+      "initial_units": 34,
+      "sides": {
+        "Blue": 18,
+        "Red": 16
+      },
+      "automated_side": null,
+      "satellite": true
+    },
     "dual_carrier_hotseat": {
       "file": "dual_carrier_hotseat.json",
       "source_sha256": "9c321a486d44a5e22470a8ff72a685678c869bdf83b26fc62303dfec80df2f36",
