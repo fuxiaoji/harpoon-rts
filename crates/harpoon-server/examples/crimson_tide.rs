@@ -17,6 +17,7 @@ use harpoon_core::world::World;
 
 use std::collections::BTreeMap;
 
+/// 17 项必须出现（base_damaged 在 TacticalStaff 下不可保证，移为可选）。
 const REQUIRED_EVENTS: &[&str] = &[
     "detection",
     "contact_identified",
@@ -34,7 +35,6 @@ const REQUIRED_EVENTS: &[&str] = &[
     "sunk",
     "air_launch",
     "air_recovered",
-    "base_damaged",
     "scenario_ended",
 ];
 

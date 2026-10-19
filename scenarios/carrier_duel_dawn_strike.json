@@ -1,0 +1,45 @@
+{
+  "id": "carrier_duel_dawn_strike",
+  "name": "Carrier Duel — Dawn Strike",
+  "description": "Race for the first strike at dawn in the Philippine Sea. Both carrier groups know roughly where the enemy is (from dawn AEW picks) but not exactly. Blue fields two Aegis escorts and long-range AEW; Red fields a dense short-range air-defence group with two carriers. First coordinated strike usually decides the fight: air wing against deck, missiles against escorts, submarine against the carrier. Fixed seed.",
+  "context": {
+    "theater": {
+      "west": 122,
+      "east": 148,
+      "south": 14,
+      "north": 30,
+      "reference_lat": 22,
+      "image": "maps/west-pacific-blue-marble.jpg",
+      "attribution": "NASA GIBS / MODIS / NASA Earth Observatory",
+      "source_url": "https://gibs.earthdata.nasa.gov/layer-metadata/v1.0/BlueMarble_NextGeneration.json",
+      "imagery_date": "2004-08"
+    },
+    "automated_side": null,
+    "air_wings": {
+      "CVN-70 VINSON": [{"class": "us_f35c", "count": 14}, {"class": "us_f18e", "count": 14}, {"class": "us_e2d", "count": 4}, {"class": "us_mh60r", "count": 6}],
+      "CV-18 FUJIAN": [{"class": "cn_j15", "count": 22}, {"class": "cn_j15d", "count": 4}, {"class": "cn_kj600", "count": 3}, {"class": "cn_z18f", "count": 6}]
+    },
+    "air_missions": {
+      "VINSON AEW-1": {"mission": "recon", "point": [112, 122]},
+      "FUJIAN AEW-1": {"mission": "recon", "point": [136, 128]}
+    }
+  },
+  "duration_s": 18000,
+  "weather": {"visibility_nm": 10, "jam": [0, 0.2], "overcast": 0.4, "rain": 0.1},
+  "day_night": "Day",
+  "seed": 19820614,
+  "victory": {"target_vp": 100},
+  "units": [
+    {"side": "Blue", "class": "us_nimitz", "name": "CVN-70 VINSON", "pos": [104, 116], "course_deg": 90, "speed_kts": 20, "fire_on": true},
+    {"side": "Blue", "class": "us_burke_3", "name": "VINSON DDG-A", "pos": [120, 122], "course_deg": 90, "speed_kts": 20, "fire_on": true, "follow": {"leader_name": "CVN-70 VINSON", "bearing_rel_deg": 45, "distance_nm": 18}},
+    {"side": "Blue", "class": "us_burke_2a", "name": "VINSON DDG-B", "pos": [120, 110], "course_deg": 90, "speed_kts": 20, "fire_on": true, "follow": {"leader_name": "CVN-70 VINSON", "bearing_rel_deg": 315, "distance_nm": 18}},
+    {"side": "Blue", "class": "us_e2d", "name": "VINSON AEW-1", "pos": [112, 116], "course_deg": 90, "speed_kts": 340, "altitude_m": 8500, "fire_on": false},
+
+    {"side": "Red", "class": "cn_003", "name": "CV-18 FUJIAN", "pos": [140, 120], "course_deg": 270, "speed_kts": 16, "fire_on": true},
+    {"side": "Red", "class": "cn_055", "name": "FUJIAN CG", "pos": [130, 120], "course_deg": 270, "speed_kts": 16, "fire_on": true, "follow": {"leader_name": "CV-18 FUJIAN", "bearing_rel_deg": 270, "distance_nm": 10}},
+    {"side": "Red", "class": "cn_052d", "name": "FUJIAN DDG-A", "pos": [132, 128], "course_deg": 270, "speed_kts": 16, "fire_on": true, "follow": {"leader_name": "CV-18 FUJIAN", "bearing_rel_deg": 45, "distance_nm": 10}},
+    {"side": "Red", "class": "cn_054a", "name": "FUJIAN FFG", "pos": [132, 112], "course_deg": 270, "speed_kts": 16, "fire_on": true, "follow": {"leader_name": "CV-18 FUJIAN", "bearing_rel_deg": 315, "distance_nm": 10}},
+    {"side": "Red", "class": "cn_093a", "name": "FUJIAN SSN", "pos": [116, 124], "course_deg": 270, "speed_kts": 14, "depth_m": 140, "fire_on": true},
+    {"side": "Red", "class": "cn_kj600", "name": "FUJIAN AEW-1", "pos": [132, 122], "course_deg": 270, "speed_kts": 340, "altitude_m": 8500, "fire_on": false}
+  ]
+}

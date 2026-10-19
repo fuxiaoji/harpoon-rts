@@ -7,6 +7,7 @@
 //! - POST /api/selfplay runs a fully deterministic headless rollout.
 
 mod ai;
+mod tactical;
 mod agent;
 mod director;
 mod tutorial;
@@ -1057,6 +1058,7 @@ async fn run_director(
         pending.extend(commands_red.into_iter().map(|c| (Side::Red, c)));
         let mut accumulator = 0.0f64;
         let mut hits: Vec<director::WakeHit> = Vec::new();
+        #[allow(unused_assignments)]
         let mut over_now = None;
         'advance: loop {
             if !director_is_active(&state, id) {
@@ -1243,8 +1245,8 @@ impl SelfplayCtx {
     }
     fn run(&self, sc: &Scenario, max_ticks: i64) -> serde_json::Value {
         let mut world = load_scenario(sc.clone(), self.db.clone()).expect("load");
-    let mut blue = ai::HeuristicStaff::new(Side::Blue);
-    let mut red = ai::HeuristicStaff::new(Side::Red);
+    let mut blue = ai::make_staff(Side::Blue);
+    let mut red = ai::make_staff(Side::Red);
     let digest = AtomicU64::new(0xcbf2_9ce4_8422_2325);
     let mut event_counts: HashMap<String, u64> = HashMap::new();
     let mut last_events_seq = 0u64;

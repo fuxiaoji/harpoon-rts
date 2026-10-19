@@ -352,7 +352,8 @@ pub fn parse_llm_commands(content: &str, obs: &Observation) -> Vec<Command> {
 pub fn make_staff(side: Side) -> Box<dyn CommandStaff> {
     match OpenAiCompatStaff::from_env(side) {
         Some(s) => Box::new(s),
-        None => Box::new(HeuristicStaff::new(side)),
+        // 默认参谋：状态机战术 AI（docs/design/naval-doctrine.md）。
+        None => Box::new(crate::tactical::TacticalStaff::new(side)),
     }
 }
 
