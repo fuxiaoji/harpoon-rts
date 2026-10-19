@@ -1,0 +1,3144 @@
+{
+  "platforms": {
+    "cn_001": {
+      "id": "cn_001",
+      "name": "Ex-Russian Project 1143.5/Type 001 [Kuznetsov] CV",
+      "kind": "Ship",
+      "hp": 1010,
+      "max_speed_kts": 29,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 1.3,
+      "rcs": "Large",
+      "noise_db": 66,
+      "vp_value": 68,
+      "sensors": [
+        "cn_ljg346",
+        "cn_ljq382",
+        "cn_ljq364",
+        "radar_surf_med",
+        "radar_nav",
+        "esm_std",
+        "sonar_p_hull",
+        "sonar_a_hull",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cn_hq10",
+          "mounts": 3,
+          "ammo": 18
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 3,
+          "ammo": 30
+        },
+        {
+          "weapon": "cn_whh004",
+          "mounts": 2,
+          "ammo": 6
+        }
+      ],
+      "chaff": 60,
+      "decoys": 14,
+      "deck": {
+        "capacity": 36,
+        "cycle_s": 120,
+        "wing": [
+          {
+            "class": "cn_j15",
+            "count": 24
+          },
+          {
+            "class": "cn_z18f",
+            "count": 6
+          },
+          {
+            "class": "cn_z18j",
+            "count": 4
+          },
+          {
+            "class": "cn_z9c",
+            "count": 2
+          }
+        ]
+      }
+    },
+    "cn_002": {
+      "id": "cn_002",
+      "name": "Type 002 [Kuznetsov Mod] CV",
+      "kind": "Ship",
+      "hp": 1023,
+      "max_speed_kts": 29,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 1.3,
+      "rcs": "Large",
+      "noise_db": 66,
+      "vp_value": 70,
+      "sensors": [
+        "cn_ljg346a",
+        "cn_ljq382",
+        "cn_ljq364",
+        "radar_surf_med",
+        "radar_nav",
+        "esm_std",
+        "sonar_p_hull",
+        "sonar_a_hull",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cn_hq10",
+          "mounts": 3,
+          "ammo": 18
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 3,
+          "ammo": 30
+        },
+        {
+          "weapon": "cn_whh004",
+          "mounts": 2,
+          "ammo": 6
+        }
+      ],
+      "chaff": 60,
+      "decoys": 14,
+      "deck": {
+        "capacity": 40,
+        "cycle_s": 120,
+        "wing": [
+          {
+            "class": "cn_j15",
+            "count": 24
+          },
+          {
+            "class": "cn_j15d",
+            "count": 3
+          },
+          {
+            "class": "cn_z18f",
+            "count": 6
+          },
+          {
+            "class": "cn_z18j",
+            "count": 4
+          },
+          {
+            "class": "cn_z9c",
+            "count": 2
+          }
+        ]
+      }
+    },
+    "cn_003": {
+      "id": "cn_003",
+      "name": "Type 003 CV",
+      "kind": "Ship",
+      "hp": 1278,
+      "max_speed_kts": 31,
+      "cruise_speed_kts": 20,
+      "turn_rate_deg_s": 1.3,
+      "rcs": "Large",
+      "noise_db": 66,
+      "vp_value": 85,
+      "sensors": [
+        "cn_ljg346b",
+        "cn_aesa_xband",
+        "radar_surf_med",
+        "radar_nav",
+        "esm_std",
+        "sonar_p_hull",
+        "sonar_a_hull",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cn_hq10",
+          "mounts": 4,
+          "ammo": 18
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 4,
+          "ammo": 30
+        },
+        {
+          "weapon": "cn_whh004",
+          "mounts": 2,
+          "ammo": 6
+        }
+      ],
+      "chaff": 60,
+      "decoys": 14,
+      "deck": {
+        "capacity": 62,
+        "cycle_s": 90,
+        "wing": [
+          {
+            "class": "cn_j15",
+            "count": 48
+          },
+          {
+            "class": "cn_kj600",
+            "count": 4
+          },
+          {
+            "class": "cn_z18f",
+            "count": 10
+          }
+        ]
+      }
+    },
+    "cn_094": {
+      "id": "cn_094",
+      "name": "Type 094/094A [Jin] SSBN",
+      "kind": "Sub",
+      "hp": 217,
+      "max_speed_kts": 22,
+      "cruise_speed_kts": 6,
+      "turn_rate_deg_s": 2.5,
+      "rcs": "Small",
+      "noise_db": 54,
+      "vp_value": 45,
+      "sensors": [
+        "cn_sqz265a",
+        "cn_sqz265a_tow",
+        "cn_sqg207",
+        "radar_nav",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cn_yu6",
+          "mounts": 2,
+          "ammo": 4
+        },
+        {
+          "weapon": "cn_yu10",
+          "mounts": 1,
+          "ammo": 4
+        }
+      ],
+      "visual_factor": 0.15,
+      "decoys": 10,
+      "max_depth_m": 300
+    },
+    "cn_093a": {
+      "id": "cn_093a",
+      "name": "Type 093A/09IIIA [Shang] SSN",
+      "kind": "Sub",
+      "hp": 145,
+      "max_speed_kts": 28,
+      "cruise_speed_kts": 6,
+      "turn_rate_deg_s": 2.5,
+      "rcs": "Small",
+      "noise_db": 48,
+      "vp_value": 36,
+      "sensors": [
+        "cn_sqz265a",
+        "cn_sqz265a_tow",
+        "cn_sqg207",
+        "cn_sqg204a",
+        "radar_nav",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cn_yu6",
+          "mounts": 2,
+          "ammo": 6
+        },
+        {
+          "weapon": "cn_yu10",
+          "mounts": 1,
+          "ammo": 4
+        },
+        {
+          "weapon": "cn_yj18",
+          "mounts": 1,
+          "ammo": 2
+        }
+      ],
+      "visual_factor": 0.15,
+      "decoys": 10,
+      "max_depth_m": 300
+    },
+    "cn_093": {
+      "id": "cn_093",
+      "name": "Type 093/09III [Shang] SSN",
+      "kind": "Sub",
+      "hp": 145,
+      "max_speed_kts": 28,
+      "cruise_speed_kts": 6,
+      "turn_rate_deg_s": 2.5,
+      "rcs": "Small",
+      "noise_db": 52,
+      "vp_value": 34,
+      "sensors": [
+        "cn_sqz265a",
+        "cn_sqg207",
+        "cn_sqg204a",
+        "radar_nav",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cn_yu6",
+          "mounts": 2,
+          "ammo": 6
+        },
+        {
+          "weapon": "cn_yu10",
+          "mounts": 1,
+          "ammo": 4
+        },
+        {
+          "weapon": "cn_yj18",
+          "mounts": 1,
+          "ammo": 2
+        }
+      ],
+      "visual_factor": 0.15,
+      "decoys": 10,
+      "max_depth_m": 300
+    },
+    "cn_039a": {
+      "id": "cn_039a",
+      "name": "Type 039A/039B/039C [Yuan] SSP",
+      "kind": "Sub",
+      "hp": 100,
+      "max_speed_kts": 19,
+      "cruise_speed_kts": 5,
+      "turn_rate_deg_s": 2.5,
+      "rcs": "VerySmall",
+      "noise_db": 28,
+      "vp_value": 28,
+      "sensors": [
+        "cn_sqz265a",
+        "cn_sqg207",
+        "cn_sqg204a",
+        "radar_nav",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cn_yu6",
+          "mounts": 2,
+          "ammo": 3
+        },
+        {
+          "weapon": "cn_yu9",
+          "mounts": 1,
+          "ammo": 4
+        },
+        {
+          "weapon": "cn_yj18",
+          "mounts": 1,
+          "ammo": 2
+        }
+      ],
+      "visual_factor": 0.15,
+      "decoys": 10,
+      "max_depth_m": 250
+    },
+    "cn_039g": {
+      "id": "cn_039g",
+      "name": "Type 039G1 [Song Mod] SS",
+      "kind": "Sub",
+      "hp": 74,
+      "max_speed_kts": 18,
+      "cruise_speed_kts": 5,
+      "turn_rate_deg_s": 2.5,
+      "rcs": "VerySmall",
+      "noise_db": 40,
+      "vp_value": 16,
+      "sensors": [
+        "cn_sqz262",
+        "cn_sqg2b",
+        "radar_nav",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cn_yu6",
+          "mounts": 2,
+          "ammo": 5
+        },
+        {
+          "weapon": "cn_yj82",
+          "mounts": 1,
+          "ammo": 2
+        }
+      ],
+      "visual_factor": 0.15,
+      "decoys": 6,
+      "max_depth_m": 165
+    },
+    "cn_kilo": {
+      "id": "cn_kilo",
+      "name": "Pr. 636/636M [Improved Kilo] SS",
+      "kind": "Sub",
+      "hp": 91,
+      "max_speed_kts": 20,
+      "cruise_speed_kts": 6,
+      "turn_rate_deg_s": 2.5,
+      "rcs": "VerySmall",
+      "noise_db": 30,
+      "vp_value": 22,
+      "sensors": [
+        "sonar_p_hull",
+        "sonar_a_hull",
+        "radar_nav",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cn_53_65k",
+          "mounts": 2,
+          "ammo": 6
+        },
+        {
+          "weapon": "cn_te2_01",
+          "mounts": 1,
+          "ammo": 6
+        },
+        {
+          "weapon": "cn_3m54e",
+          "mounts": 1,
+          "ammo": 4
+        }
+      ],
+      "visual_factor": 0.15,
+      "decoys": 8,
+      "max_depth_m": 200
+    },
+    "cn_055": {
+      "id": "cn_055",
+      "name": "Type 055 [Renhai] CG",
+      "kind": "Ship",
+      "hp": 283,
+      "max_speed_kts": 31,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 1.8,
+      "rcs": "Small",
+      "noise_db": 46,
+      "vp_value": 45,
+      "sensors": [
+        "cn_ljg346b",
+        "cn_aesa_xband",
+        "cn_aesa_targeting",
+        "radar_surf_med",
+        "cn_sjd11",
+        "cn_sjg311",
+        "radar_nav",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cn_hhq9",
+          "mounts": 1,
+          "ammo": 64
+        },
+        {
+          "weapon": "cn_yj18",
+          "mounts": 1,
+          "ammo": 24
+        },
+        {
+          "weapon": "cn_dh10",
+          "mounts": 1,
+          "ammo": 16
+        },
+        {
+          "weapon": "cn_yu8",
+          "mounts": 1,
+          "ammo": 8
+        },
+        {
+          "weapon": "cn_hq10",
+          "mounts": 1,
+          "ammo": 24
+        },
+        {
+          "weapon": "cn_pj45a",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 1,
+          "ammo": 30
+        },
+        {
+          "weapon": "cn_yu7",
+          "mounts": 2,
+          "ammo": 3
+        }
+      ],
+      "chaff": 80,
+      "decoys": 20,
+      "deck": {
+        "capacity": 2,
+        "cycle_s": 180,
+        "wing": [
+          {
+            "class": "cn_z9c",
+            "count": 2
+          }
+        ]
+      }
+    },
+    "cn_052d": {
+      "id": "cn_052d",
+      "name": "Type 052D [Luyang III] DDG",
+      "kind": "Ship",
+      "hp": 204,
+      "max_speed_kts": 29,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 2.0,
+      "rcs": "Medium",
+      "noise_db": 58,
+      "vp_value": 35,
+      "sensors": [
+        "cn_ljg346a",
+        "cn_ljq364",
+        "cn_ljq517b",
+        "cn_ljq366",
+        "cn_sjd9",
+        "cn_sjg311",
+        "radar_nav",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cn_hhq9",
+          "mounts": 1,
+          "ammo": 32
+        },
+        {
+          "weapon": "cn_yj18",
+          "mounts": 1,
+          "ammo": 16
+        },
+        {
+          "weapon": "cn_dh10",
+          "mounts": 1,
+          "ammo": 8
+        },
+        {
+          "weapon": "cn_yu8",
+          "mounts": 1,
+          "ammo": 8
+        },
+        {
+          "weapon": "cn_hq10",
+          "mounts": 1,
+          "ammo": 24
+        },
+        {
+          "weapon": "cn_pj45a",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 1,
+          "ammo": 30
+        },
+        {
+          "weapon": "cn_yu7",
+          "mounts": 2,
+          "ammo": 3
+        }
+      ],
+      "chaff": 64,
+      "decoys": 16,
+      "deck": {
+        "capacity": 1,
+        "cycle_s": 180,
+        "wing": [
+          {
+            "class": "cn_z9c",
+            "count": 1
+          }
+        ]
+      }
+    },
+    "cn_052c": {
+      "id": "cn_052c",
+      "name": "Type 052C [Luyang II] DDG",
+      "kind": "Ship",
+      "hp": 201,
+      "max_speed_kts": 29,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 2.0,
+      "rcs": "Medium",
+      "noise_db": 58,
+      "vp_value": 31,
+      "sensors": [
+        "cn_ljg346",
+        "cn_ljq364",
+        "cn_ljq517b",
+        "cn_ljq366",
+        "cn_sjd9",
+        "cn_sjg206",
+        "radar_nav",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cn_hhq9a",
+          "mounts": 1,
+          "ammo": 48
+        },
+        {
+          "weapon": "cn_yj62",
+          "mounts": 2,
+          "ammo": 4
+        },
+        {
+          "weapon": "cn_pj87",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 2,
+          "ammo": 30
+        },
+        {
+          "weapon": "cn_yu7",
+          "mounts": 2,
+          "ammo": 3
+        }
+      ],
+      "chaff": 50,
+      "decoys": 12,
+      "deck": {
+        "capacity": 1,
+        "cycle_s": 180,
+        "wing": [
+          {
+            "class": "cn_z9c",
+            "count": 1
+          }
+        ]
+      }
+    },
+    "cn_052b": {
+      "id": "cn_052b",
+      "name": "Type 052B [Luyang I] DDG",
+      "kind": "Ship",
+      "hp": 198,
+      "max_speed_kts": 29,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 2.2,
+      "rcs": "Medium",
+      "noise_db": 58,
+      "vp_value": 31,
+      "sensors": [
+        "radar_air_long",
+        "radar_surf_med",
+        "cn_ljq364",
+        "cn_sjd9",
+        "radar_nav",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cn_shtil1",
+          "mounts": 2,
+          "ammo": 12
+        },
+        {
+          "weapon": "cn_yj83",
+          "mounts": 4,
+          "ammo": 4
+        },
+        {
+          "weapon": "cn_pj87",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 2,
+          "ammo": 40
+        },
+        {
+          "weapon": "cn_whh003",
+          "mounts": 2,
+          "ammo": 5
+        },
+        {
+          "weapon": "cn_yu7",
+          "mounts": 2,
+          "ammo": 3
+        }
+      ],
+      "chaff": 40,
+      "decoys": 10,
+      "deck": {
+        "capacity": 1,
+        "cycle_s": 180,
+        "wing": [
+          {
+            "class": "cn_z9c",
+            "count": 1
+          }
+        ]
+      }
+    },
+    "cn_052": {
+      "id": "cn_052",
+      "name": "Type 052 [Luhu] DD",
+      "kind": "Ship",
+      "hp": 155,
+      "max_speed_kts": 30,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 2.2,
+      "rcs": "Small",
+      "noise_db": 58,
+      "vp_value": 24,
+      "sensors": [
+        "cn_ljq517b",
+        "cn_ljq364",
+        "cn_sjd9",
+        "cn_sjg206",
+        "radar_nav",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cn_hq7",
+          "mounts": 1,
+          "ammo": 16
+        },
+        {
+          "weapon": "cn_yj83",
+          "mounts": 2,
+          "ammo": 4
+        },
+        {
+          "weapon": "cn_pj33b",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 2,
+          "ammo": 40
+        },
+        {
+          "weapon": "cn_whh003",
+          "mounts": 2,
+          "ammo": 5
+        },
+        {
+          "weapon": "cn_yu7",
+          "mounts": 2,
+          "ammo": 3
+        }
+      ],
+      "chaff": 32,
+      "decoys": 8,
+      "deck": {
+        "capacity": 2,
+        "cycle_s": 180,
+        "wing": [
+          {
+            "class": "cn_z9c",
+            "count": 2
+          }
+        ]
+      }
+    },
+    "cn_051c": {
+      "id": "cn_051c",
+      "name": "Type 051C [Luzhou] DDG",
+      "kind": "Ship",
+      "hp": 216,
+      "max_speed_kts": 31,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 1.9,
+      "rcs": "Medium",
+      "noise_db": 58,
+      "vp_value": 33,
+      "sensors": [
+        "radar_air_long",
+        "radar_surf_med",
+        "cn_ljq364",
+        "cn_sjd9",
+        "radar_nav",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cn_48n6",
+          "mounts": 6,
+          "ammo": 8
+        },
+        {
+          "weapon": "cn_yj83",
+          "mounts": 4,
+          "ammo": 2
+        },
+        {
+          "weapon": "cn_pj87",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 2,
+          "ammo": 40
+        },
+        {
+          "weapon": "cn_yu7",
+          "mounts": 2,
+          "ammo": 3
+        }
+      ],
+      "chaff": 40,
+      "decoys": 10
+    },
+    "cn_051b": {
+      "id": "cn_051b",
+      "name": "Type 051B [Luhai] (2016) DDG",
+      "kind": "Ship",
+      "hp": 199,
+      "max_speed_kts": 30,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 2.0,
+      "rcs": "Small",
+      "noise_db": 58,
+      "vp_value": 30,
+      "sensors": [
+        "cn_ljq382",
+        "cn_ljq364",
+        "cn_sjd9",
+        "cn_sjg206",
+        "radar_nav",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cn_hhq16",
+          "mounts": 1,
+          "ammo": 16
+        },
+        {
+          "weapon": "cn_yu8",
+          "mounts": 1,
+          "ammo": 16
+        },
+        {
+          "weapon": "cn_yj12",
+          "mounts": 4,
+          "ammo": 4
+        },
+        {
+          "weapon": "cn_pj33b",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 2,
+          "ammo": 30
+        },
+        {
+          "weapon": "cn_yu7",
+          "mounts": 2,
+          "ammo": 3
+        }
+      ],
+      "chaff": 40,
+      "decoys": 10,
+      "deck": {
+        "capacity": 2,
+        "cycle_s": 180,
+        "wing": [
+          {
+            "class": "cn_z9c",
+            "count": 2
+          }
+        ]
+      }
+    },
+    "cn_956e": {
+      "id": "cn_956e",
+      "name": "Pr. 956E [Sovremenny III] DDG",
+      "kind": "Ship",
+      "hp": 223,
+      "max_speed_kts": 32,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 1.8,
+      "rcs": "Medium",
+      "noise_db": 60,
+      "vp_value": 34,
+      "sensors": [
+        "cn_ljq382",
+        "cn_ljq364",
+        "cn_ljq366",
+        "cn_mgk335",
+        "radar_nav",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cn_hhq16",
+          "mounts": 2,
+          "ammo": 16
+        },
+        {
+          "weapon": "cn_yj12",
+          "mounts": 2,
+          "ammo": 4
+        },
+        {
+          "weapon": "cn_hq10",
+          "mounts": 1,
+          "ammo": 24
+        },
+        {
+          "weapon": "cn_ak130",
+          "mounts": 2,
+          "ammo": 40
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 4,
+          "ammo": 30
+        },
+        {
+          "weapon": "cn_yu7",
+          "mounts": 2,
+          "ammo": 3
+        }
+      ],
+      "chaff": 40,
+      "decoys": 10,
+      "deck": {
+        "capacity": 1,
+        "cycle_s": 180,
+        "wing": [
+          {
+            "class": "cn_ka28",
+            "count": 1
+          }
+        ]
+      }
+    },
+    "cn_956em": {
+      "id": "cn_956em",
+      "name": "Pr. 956EM [Sovremenny II] DDG",
+      "kind": "Ship",
+      "hp": 223,
+      "max_speed_kts": 32,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 1.8,
+      "rcs": "Medium",
+      "noise_db": 60,
+      "vp_value": 34,
+      "sensors": [
+        "radar_air_long",
+        "radar_surf_med",
+        "radar_surf_sm",
+        "cn_mgk335",
+        "radar_nav",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cn_48n6",
+          "mounts": 2,
+          "ammo": 24
+        },
+        {
+          "weapon": "cn_moskit_mve",
+          "mounts": 2,
+          "ammo": 4
+        },
+        {
+          "weapon": "cn_ak130",
+          "mounts": 2,
+          "ammo": 40
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 2,
+          "ammo": 32
+        },
+        {
+          "weapon": "cn_rbu1000",
+          "mounts": 2,
+          "ammo": 4
+        },
+        {
+          "weapon": "cn_53_65k",
+          "mounts": 2,
+          "ammo": 2
+        }
+      ],
+      "chaff": 40,
+      "decoys": 10,
+      "deck": {
+        "capacity": 1,
+        "cycle_s": 180,
+        "wing": [
+          {
+            "class": "cn_ka28",
+            "count": 1
+          }
+        ]
+      }
+    },
+    "cn_054a": {
+      "id": "cn_054a",
+      "name": "Type 054A [Jiangkai II] FFG",
+      "kind": "Ship",
+      "hp": 140,
+      "max_speed_kts": 27,
+      "cruise_speed_kts": 16,
+      "turn_rate_deg_s": 2.4,
+      "rcs": "Small",
+      "noise_db": 56,
+      "vp_value": 22,
+      "sensors": [
+        "cn_ljq382",
+        "cn_ljq364",
+        "cn_ljq366",
+        "cn_sjd9",
+        "cn_sjg206",
+        "radar_nav",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cn_hhq16",
+          "mounts": 1,
+          "ammo": 24
+        },
+        {
+          "weapon": "cn_yu8",
+          "mounts": 1,
+          "ammo": 8
+        },
+        {
+          "weapon": "cn_yj83",
+          "mounts": 4,
+          "ammo": 2
+        },
+        {
+          "weapon": "cn_pj26",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 2,
+          "ammo": 40
+        },
+        {
+          "weapon": "cn_whh003",
+          "mounts": 2,
+          "ammo": 5
+        },
+        {
+          "weapon": "cn_yu7",
+          "mounts": 2,
+          "ammo": 3
+        }
+      ],
+      "chaff": 32,
+      "decoys": 8,
+      "deck": {
+        "capacity": 1,
+        "cycle_s": 180,
+        "wing": [
+          {
+            "class": "cn_z9c",
+            "count": 1
+          }
+        ]
+      }
+    },
+    "cn_054": {
+      "id": "cn_054",
+      "name": "Type 054 [Jiangkai I] FFG",
+      "kind": "Ship",
+      "hp": 138,
+      "max_speed_kts": 27,
+      "cruise_speed_kts": 16,
+      "turn_rate_deg_s": 2.4,
+      "rcs": "Small",
+      "noise_db": 56,
+      "vp_value": 20,
+      "sensors": [
+        "cn_ljq360",
+        "cn_ljq364",
+        "cn_sjd9",
+        "radar_nav",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cn_hq7",
+          "mounts": 1,
+          "ammo": 16
+        },
+        {
+          "weapon": "cn_yj83",
+          "mounts": 2,
+          "ammo": 4
+        },
+        {
+          "weapon": "cn_pj87",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "cn_pj13",
+          "mounts": 4,
+          "ammo": 40
+        },
+        {
+          "weapon": "cn_whh003",
+          "mounts": 2,
+          "ammo": 5
+        },
+        {
+          "weapon": "cn_yu7",
+          "mounts": 2,
+          "ammo": 3
+        }
+      ],
+      "chaff": 24,
+      "decoys": 6,
+      "deck": {
+        "capacity": 1,
+        "cycle_s": 180,
+        "wing": [
+          {
+            "class": "cn_z9c",
+            "count": 1
+          }
+        ]
+      }
+    },
+    "cn_053h3": {
+      "id": "cn_053h3",
+      "name": "Type 053H3 [Jiangwei II] FF",
+      "kind": "Ship",
+      "hp": 102,
+      "max_speed_kts": 27,
+      "cruise_speed_kts": 16,
+      "turn_rate_deg_s": 2.6,
+      "rcs": "Small",
+      "noise_db": 58,
+      "vp_value": 15,
+      "sensors": [
+        "cn_ljq517h1",
+        "cn_ljq360",
+        "cn_sjd5a",
+        "radar_nav",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cn_hq7",
+          "mounts": 1,
+          "ammo": 16
+        },
+        {
+          "weapon": "cn_yj83",
+          "mounts": 2,
+          "ammo": 4
+        },
+        {
+          "weapon": "cn_pj33b",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "cn_pj76",
+          "mounts": 4,
+          "ammo": 40
+        },
+        {
+          "weapon": "cn_whh003",
+          "mounts": 2,
+          "ammo": 5
+        }
+      ],
+      "chaff": 20,
+      "decoys": 5,
+      "deck": {
+        "capacity": 1,
+        "cycle_s": 180,
+        "wing": [
+          {
+            "class": "cn_z9c",
+            "count": 1
+          }
+        ]
+      }
+    },
+    "cn_053h1g": {
+      "id": "cn_053h1g",
+      "name": "Type 053H1G [Jianghu I Upgrade] (2007) FF",
+      "kind": "Ship",
+      "hp": 102,
+      "max_speed_kts": 26,
+      "cruise_speed_kts": 15,
+      "turn_rate_deg_s": 2.6,
+      "rcs": "Small",
+      "noise_db": 58,
+      "vp_value": 12,
+      "sensors": [
+        "cn_ljq361a",
+        "radar_surf_sm",
+        "cn_sjd5a",
+        "radar_nav",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cn_yj83",
+          "mounts": 2,
+          "ammo": 4
+        },
+        {
+          "weapon": "cn_pj33b",
+          "mounts": 2,
+          "ammo": 40
+        },
+        {
+          "weapon": "cn_pj76",
+          "mounts": 4,
+          "ammo": 40
+        },
+        {
+          "weapon": "cn_whh003",
+          "mounts": 2,
+          "ammo": 5
+        }
+      ],
+      "chaff": 16,
+      "decoys": 4
+    },
+    "cn_056a": {
+      "id": "cn_056a",
+      "name": "Type 056A [Jiangdao] FFL",
+      "kind": "Ship",
+      "hp": 71,
+      "max_speed_kts": 28,
+      "cruise_speed_kts": 16,
+      "turn_rate_deg_s": 3.2,
+      "rcs": "Small",
+      "noise_db": 54,
+      "vp_value": 10,
+      "sensors": [
+        "cn_ljq361a",
+        "radar_surf_sm",
+        "cn_sjd9",
+        "cn_sjg311",
+        "radar_nav",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cn_yj83",
+          "mounts": 2,
+          "ammo": 2
+        },
+        {
+          "weapon": "cn_hq10",
+          "mounts": 1,
+          "ammo": 8
+        },
+        {
+          "weapon": "cn_pj26",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "cn_pj13",
+          "mounts": 2,
+          "ammo": 20
+        },
+        {
+          "weapon": "cn_yu7",
+          "mounts": 2,
+          "ammo": 3
+        }
+      ],
+      "chaff": 16,
+      "decoys": 4,
+      "deck": {
+        "capacity": 1,
+        "cycle_s": 180,
+        "wing": [
+          {
+            "class": "cn_z9c",
+            "count": 1
+          }
+        ]
+      }
+    },
+    "cn_056": {
+      "id": "cn_056",
+      "name": "Type 056 [Jiangdao] FFL",
+      "kind": "Ship",
+      "hp": 71,
+      "max_speed_kts": 28,
+      "cruise_speed_kts": 16,
+      "turn_rate_deg_s": 3.2,
+      "rcs": "Small",
+      "noise_db": 54,
+      "vp_value": 9,
+      "sensors": [
+        "cn_ljq361a",
+        "radar_surf_sm",
+        "cn_sjd9",
+        "radar_nav",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cn_yj83",
+          "mounts": 2,
+          "ammo": 2
+        },
+        {
+          "weapon": "cn_hq10",
+          "mounts": 1,
+          "ammo": 8
+        },
+        {
+          "weapon": "cn_pj26",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "cn_pj13",
+          "mounts": 2,
+          "ammo": 20
+        },
+        {
+          "weapon": "cn_yu7",
+          "mounts": 2,
+          "ammo": 3
+        }
+      ],
+      "chaff": 16,
+      "decoys": 4,
+      "deck": {
+        "capacity": 1,
+        "cycle_s": 180,
+        "wing": [
+          {
+            "class": "cn_z9c",
+            "count": 1
+          }
+        ]
+      }
+    },
+    "cn_022": {
+      "id": "cn_022",
+      "name": "Type 22 [Houbei] PGG",
+      "kind": "Ship",
+      "hp": 16,
+      "max_speed_kts": 48,
+      "cruise_speed_kts": 32,
+      "turn_rate_deg_s": 6.0,
+      "rcs": "VerySmall",
+      "noise_db": 52,
+      "vp_value": 5,
+      "sensors": [
+        "cn_ljq362",
+        "radar_nav",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cn_yj83",
+          "mounts": 2,
+          "ammo": 4
+        },
+        {
+          "weapon": "cn_pj13",
+          "mounts": 1,
+          "ammo": 20
+        }
+      ],
+      "chaff": 8,
+      "decoys": 2
+    },
+    "cn_071": {
+      "id": "cn_071",
+      "name": "Type 071 [Yuzhao] LPD",
+      "kind": "Ship",
+      "hp": 358,
+      "max_speed_kts": 25,
+      "cruise_speed_kts": 16,
+      "turn_rate_deg_s": 1.2,
+      "rcs": "Medium",
+      "noise_db": 60,
+      "vp_value": 45,
+      "sensors": [
+        "cn_ljq360",
+        "cn_ljq364",
+        "radar_surf_med",
+        "radar_nav",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cn_pj26",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "cn_pj13",
+          "mounts": 4,
+          "ammo": 40
+        }
+      ],
+      "deck": {
+        "capacity": 2,
+        "cycle_s": 240,
+        "wing": [
+          {
+            "class": "cn_z18f",
+            "count": 2
+          }
+        ]
+      }
+    },
+    "cn_075": {
+      "id": "cn_075",
+      "name": "Type 075 [Yushen] LHD",
+      "kind": "Ship",
+      "hp": 548,
+      "max_speed_kts": 23,
+      "cruise_speed_kts": 15,
+      "turn_rate_deg_s": 1.0,
+      "rcs": "Large",
+      "noise_db": 62,
+      "vp_value": 65,
+      "sensors": [
+        "cn_ljq382",
+        "cn_aesa_xband",
+        "radar_surf_med",
+        "radar_nav",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cn_hq10",
+          "mounts": 2,
+          "ammo": 24
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 2,
+          "ammo": 30
+        }
+      ],
+      "chaff": 40,
+      "decoys": 10,
+      "deck": {
+        "capacity": 24,
+        "cycle_s": 120,
+        "wing": [
+          {
+            "class": "cn_z18f",
+            "count": 6
+          },
+          {
+            "class": "cn_z20f",
+            "count": 6
+          },
+          {
+            "class": "cn_z9c",
+            "count": 8
+          }
+        ]
+      }
+    },
+    "cn_072a": {
+      "id": "cn_072a",
+      "name": "Type 072A/072B [Yuting II] LST",
+      "kind": "Ship",
+      "hp": 122,
+      "max_speed_kts": 20,
+      "cruise_speed_kts": 14,
+      "turn_rate_deg_s": 2.0,
+      "rcs": "Small",
+      "noise_db": 58,
+      "vp_value": 18,
+      "sensors": [
+        "radar_surf_sm",
+        "radar_nav",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cn_pj76",
+          "mounts": 1,
+          "ammo": 20
+        }
+      ],
+      "chaff": 8,
+      "decoys": 2,
+      "deck": {
+        "capacity": 1,
+        "cycle_s": 240,
+        "wing": [
+          {
+            "class": "cn_z9c",
+            "count": 1
+          }
+        ]
+      }
+    },
+    "cn_903a": {
+      "id": "cn_903a",
+      "name": "Type 903A [Fuchi Mod] AOR",
+      "kind": "Ship",
+      "hp": 226,
+      "max_speed_kts": 19,
+      "cruise_speed_kts": 14,
+      "turn_rate_deg_s": 1.8,
+      "rcs": "Large",
+      "noise_db": 60,
+      "vp_value": 30,
+      "sensors": [
+        "radar_surf_sm",
+        "radar_nav",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cn_pj13",
+          "mounts": 4,
+          "ammo": 20
+        }
+      ],
+      "chaff": 8,
+      "decoys": 2,
+      "deck": {
+        "capacity": 1,
+        "cycle_s": 240,
+        "wing": [
+          {
+            "class": "cn_z18f",
+            "count": 1
+          }
+        ]
+      }
+    },
+    "cn_815a": {
+      "id": "cn_815a",
+      "name": "Type 815A [Dongdiao II] AGM/AGI",
+      "kind": "Ship",
+      "hp": 141,
+      "max_speed_kts": 20,
+      "cruise_speed_kts": 15,
+      "turn_rate_deg_s": 2.5,
+      "rcs": "Small",
+      "noise_db": 60,
+      "vp_value": 20,
+      "sensors": [
+        "cn_ljq366",
+        "cn_ljq361a",
+        "radar_nav",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cn_pj13",
+          "mounts": 4,
+          "ammo": 20
+        }
+      ],
+      "chaff": 8,
+      "decoys": 2,
+      "deck": {
+        "capacity": 1,
+        "cycle_s": 240,
+        "wing": [
+          {
+            "class": "cn_z9c",
+            "count": 1
+          }
+        ]
+      }
+    },
+    "cn_j15": {
+      "id": "cn_j15",
+      "name": "J-15 Feisha Fighter (ceil 17000 m)",
+      "kind": "Aircraft",
+      "hp": 35,
+      "max_speed_kts": 1240,
+      "cruise_speed_kts": 485,
+      "turn_rate_deg_s": 12,
+      "rcs": "Medium",
+      "noise_db": 50,
+      "vp_value": 18,
+      "sensors": [
+        "cn_klj4",
+        "radar_nav",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cn_pl12",
+          "mounts": 1,
+          "ammo": 6
+        },
+        {
+          "weapon": "cn_pl8",
+          "mounts": 1,
+          "ammo": 4
+        },
+        {
+          "weapon": "cn_yj83k",
+          "mounts": 1,
+          "ammo": 2
+        }
+      ],
+      "chaff": 12,
+      "endurance_s": 8425
+    },
+    "cn_j15d": {
+      "id": "cn_j15d",
+      "name": "J-15D EW Fighter (ceil 17000 m)",
+      "kind": "Aircraft",
+      "hp": 35,
+      "max_speed_kts": 1240,
+      "cruise_speed_kts": 485,
+      "turn_rate_deg_s": 11,
+      "rcs": "Medium",
+      "noise_db": 50,
+      "vp_value": 19,
+      "sensors": [
+        "cn_klj4",
+        "radar_nav",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cn_pl15",
+          "mounts": 1,
+          "ammo": 2
+        },
+        {
+          "weapon": "cn_yj91",
+          "mounts": 1,
+          "ammo": 2
+        }
+      ],
+      "chaff": 12,
+      "endurance_s": 6530
+    },
+    "cn_j11b": {
+      "id": "cn_j11b",
+      "name": "J-11B [Flanker L] Fighter (ceil 18500 m)",
+      "kind": "Aircraft",
+      "hp": 35,
+      "max_speed_kts": 1350,
+      "cruise_speed_kts": 485,
+      "turn_rate_deg_s": 12,
+      "rcs": "Medium",
+      "noise_db": 50,
+      "vp_value": 16,
+      "sensors": [
+        "cn_klj4",
+        "radar_nav",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cn_pl12",
+          "mounts": 1,
+          "ammo": 6
+        },
+        {
+          "weapon": "cn_pl8",
+          "mounts": 1,
+          "ammo": 4
+        }
+      ],
+      "chaff": 12,
+      "endurance_s": 10874
+    },
+    "cn_jh7a": {
+      "id": "cn_jh7a",
+      "name": "JH-7A Feibao [Flounder] Attack (ceil 15500 m)",
+      "kind": "Aircraft",
+      "hp": 30,
+      "max_speed_kts": 1004,
+      "cruise_speed_kts": 480,
+      "turn_rate_deg_s": 9,
+      "rcs": "Medium",
+      "noise_db": 50,
+      "vp_value": 16,
+      "sensors": [
+        "radar_surf_sm",
+        "radar_nav",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cn_yj83k",
+          "mounts": 1,
+          "ammo": 4
+        },
+        {
+          "weapon": "cn_pl8",
+          "mounts": 1,
+          "ammo": 2
+        }
+      ],
+      "chaff": 10,
+      "endurance_s": 6937
+    },
+    "cn_h6j": {
+      "id": "cn_h6j",
+      "name": "H-6J Naval Bomber (ceil 13000 m)",
+      "kind": "Aircraft",
+      "hp": 47,
+      "max_speed_kts": 530,
+      "cruise_speed_kts": 470,
+      "turn_rate_deg_s": 5,
+      "rcs": "Large",
+      "noise_db": 50,
+      "vp_value": 25,
+      "sensors": [
+        "radar_surf_med",
+        "radar_nav",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cn_yj12",
+          "mounts": 1,
+          "ammo": 6
+        }
+      ],
+      "chaff": 16,
+      "endurance_s": 29872
+    },
+    "cn_kj600": {
+      "id": "cn_kj600",
+      "name": "KJ-600 AEW (ceil 15000 m)",
+      "kind": "Aircraft",
+      "hp": 42,
+      "max_speed_kts": 374,
+      "cruise_speed_kts": 300,
+      "turn_rate_deg_s": 5,
+      "rcs": "Medium",
+      "noise_db": 50,
+      "vp_value": 24,
+      "sensors": [
+        "cn_klc7",
+        "radar_nav",
+        "esm_std"
+      ],
+      "weapons": [],
+      "endurance_s": 15300
+    },
+    "cn_z18f": {
+      "id": "cn_z18f",
+      "name": "Z-18F Haiying ASW Helicopter (ceil 3150 m)",
+      "kind": "Aircraft",
+      "hp": 13,
+      "max_speed_kts": 180,
+      "cruise_speed_kts": 130,
+      "turn_rate_deg_s": 20,
+      "rcs": "Medium",
+      "noise_db": 50,
+      "vp_value": 9,
+      "sensors": [
+        "cn_z18f_radar",
+        "radar_nav",
+        "sonar_dipping",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cn_yu7",
+          "mounts": 1,
+          "ammo": 4
+        }
+      ],
+      "decoys": 4,
+      "endurance_s": 13431,
+      "dipping_sonar": true
+    },
+    "cn_z18j": {
+      "id": "cn_z18j",
+      "name": "Z-18J Haibianfu AEW Helicopter (ceil 3150 m)",
+      "kind": "Aircraft",
+      "hp": 13,
+      "max_speed_kts": 180,
+      "cruise_speed_kts": 130,
+      "turn_rate_deg_s": 20,
+      "rcs": "Medium",
+      "noise_db": 50,
+      "vp_value": 10,
+      "sensors": [
+        "cn_z18j_radar",
+        "radar_nav",
+        "esm_std"
+      ],
+      "weapons": [],
+      "decoys": 4,
+      "endurance_s": 13431
+    },
+    "cn_z9c": {
+      "id": "cn_z9c",
+      "name": "Z-9C Haitun ASW Helicopter (ceil 4300 m)",
+      "kind": "Aircraft",
+      "hp": 12,
+      "max_speed_kts": 160,
+      "cruise_speed_kts": 135,
+      "turn_rate_deg_s": 28,
+      "rcs": "Small",
+      "noise_db": 50,
+      "vp_value": 6,
+      "sensors": [
+        "radar_surf_sm",
+        "sonar_dipping",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cn_yu7",
+          "mounts": 1,
+          "ammo": 2
+        }
+      ],
+      "decoys": 2,
+      "endurance_s": 7067,
+      "dipping_sonar": true
+    },
+    "cn_z9d": {
+      "id": "cn_z9d",
+      "name": "Z-9D Haitun Attack Helicopter (ceil 4300 m)",
+      "kind": "Aircraft",
+      "hp": 12,
+      "max_speed_kts": 160,
+      "cruise_speed_kts": 135,
+      "turn_rate_deg_s": 28,
+      "rcs": "Small",
+      "noise_db": 50,
+      "vp_value": 6,
+      "sensors": [
+        "radar_surf_sm",
+        "radar_nav",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cn_yj9",
+          "mounts": 1,
+          "ammo": 4
+        }
+      ],
+      "decoys": 2,
+      "endurance_s": 7067
+    },
+    "cn_z20f": {
+      "id": "cn_z20f",
+      "name": "Z-20F ASW Helicopter (ceil 6000 m)",
+      "kind": "Aircraft",
+      "hp": 17,
+      "max_speed_kts": 174,
+      "cruise_speed_kts": 140,
+      "turn_rate_deg_s": 26,
+      "rcs": "Small",
+      "noise_db": 50,
+      "vp_value": 7,
+      "sensors": [
+        "cn_z20f_radar",
+        "radar_nav",
+        "sonar_dipping",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cn_yu7",
+          "mounts": 1,
+          "ammo": 2
+        }
+      ],
+      "decoys": 2,
+      "endurance_s": 8100,
+      "dipping_sonar": true
+    },
+    "cn_ka28": {
+      "id": "cn_ka28",
+      "name": "Ka-28 [Helix A] ASW Helicopter (ceil 5000 m)",
+      "kind": "Aircraft",
+      "hp": 18,
+      "max_speed_kts": 146,
+      "cruise_speed_kts": 124,
+      "turn_rate_deg_s": 25,
+      "rcs": "Small",
+      "noise_db": 50,
+      "vp_value": 7,
+      "sensors": [
+        "radar_surf_sm",
+        "sonar_dipping",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cn_apr3e",
+          "mounts": 1,
+          "ammo": 1
+        }
+      ],
+      "decoys": 2,
+      "endurance_s": 9145,
+      "dipping_sonar": true
+    },
+    "cn_y8q": {
+      "id": "cn_y8q",
+      "name": "Y-8Q (KQ-200) Maritime Patrol Aircraft (ceil 10400 m)",
+      "kind": "Aircraft",
+      "hp": 66,
+      "max_speed_kts": 420,
+      "cruise_speed_kts": 300,
+      "turn_rate_deg_s": 4,
+      "rcs": "Large",
+      "noise_db": 50,
+      "vp_value": 30,
+      "sensors": [
+        "cn_kq200",
+        "radar_surf_med",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cn_yu7",
+          "mounts": 1,
+          "ammo": 6
+        }
+      ],
+      "chaff": 8,
+      "decoys": 4,
+      "endurance_s": 30780
+    }
+  },
+  "weapons": {
+    "cn_pj45a": {
+      "id": "cn_pj45a",
+      "name": "PJ-45A 130mm/70 Gun",
+      "kind": "Gun",
+      "targets": {
+        "air": true,
+        "surface": true,
+        "sub": false,
+        "missile": false,
+        "land": true
+      },
+      "range_nm": 15.7,
+      "speed_kts": 0,
+      "pk": 0.3,
+      "salvo": 2,
+      "reload_s": 10,
+      "damage": 25,
+      "guidance": "BallisticGun"
+    },
+    "cn_ak130": {
+      "id": "cn_ak130",
+      "name": "AK-130 130mm/70 Gun",
+      "kind": "Gun",
+      "targets": {
+        "air": true,
+        "surface": true,
+        "sub": false,
+        "missile": false,
+        "land": true
+      },
+      "range_nm": 12.4,
+      "speed_kts": 0,
+      "pk": 0.3,
+      "salvo": 2,
+      "reload_s": 10,
+      "damage": 26,
+      "guidance": "BallisticGun"
+    },
+    "cn_pj87": {
+      "id": "cn_pj87",
+      "name": "PJ-87 100mm/55 Gun",
+      "kind": "Gun",
+      "targets": {
+        "air": true,
+        "surface": true,
+        "sub": false,
+        "missile": false,
+        "land": true
+      },
+      "range_nm": 9.4,
+      "speed_kts": 0,
+      "pk": 0.28,
+      "salvo": 2,
+      "reload_s": 9,
+      "damage": 20,
+      "guidance": "BallisticGun"
+    },
+    "cn_pj33b": {
+      "id": "cn_pj33b",
+      "name": "PJ-33B 100mm/56 Gun",
+      "kind": "Gun",
+      "targets": {
+        "air": true,
+        "surface": true,
+        "sub": false,
+        "missile": false,
+        "land": true
+      },
+      "range_nm": 12.2,
+      "speed_kts": 0,
+      "pk": 0.28,
+      "salvo": 2,
+      "reload_s": 9,
+      "damage": 19,
+      "guidance": "BallisticGun"
+    },
+    "cn_pj26": {
+      "id": "cn_pj26",
+      "name": "PJ-26 76mm/59 Gun",
+      "kind": "Gun",
+      "targets": {
+        "air": true,
+        "surface": true,
+        "sub": false,
+        "missile": false,
+        "land": true
+      },
+      "range_nm": 7.4,
+      "speed_kts": 0,
+      "pk": 0.25,
+      "salvo": 3,
+      "reload_s": 5,
+      "damage": 16,
+      "guidance": "BallisticGun"
+    },
+    "cn_pj76": {
+      "id": "cn_pj76",
+      "name": "PJ-76 37mm/67 Gun",
+      "kind": "Gun",
+      "targets": {
+        "air": true,
+        "surface": true,
+        "sub": false,
+        "missile": false,
+        "land": false
+      },
+      "range_nm": 1.09,
+      "speed_kts": 0,
+      "pk": 0.15,
+      "salvo": 4,
+      "reload_s": 6,
+      "damage": 4,
+      "guidance": "BallisticGun"
+    },
+    "cn_pj13": {
+      "id": "cn_pj13",
+      "name": "PJ-13 30mm Gun",
+      "kind": "Gun",
+      "targets": {
+        "air": true,
+        "surface": true,
+        "sub": false,
+        "missile": false,
+        "land": false
+      },
+      "range_nm": 0.94,
+      "speed_kts": 0,
+      "pk": 0.15,
+      "salvo": 4,
+      "reload_s": 6,
+      "damage": 5,
+      "guidance": "BallisticGun"
+    },
+    "cn_hhq9": {
+      "id": "cn_hhq9",
+      "name": "HQ-9B Long-Range SAM",
+      "kind": "Sam",
+      "targets": {
+        "air": true,
+        "surface": false,
+        "sub": false,
+        "missile": true,
+        "land": false
+      },
+      "range_nm": 162,
+      "speed_kts": 3438,
+      "pk": 0.55,
+      "salvo": 2,
+      "reload_s": 7,
+      "damage": 37,
+      "guidance": "HomingAir",
+      "min_range_nm": 3.8,
+      "directors": 6
+    },
+    "cn_hhq16": {
+      "id": "cn_hhq16",
+      "name": "HQ-16B Medium-Range SAM",
+      "kind": "Sam",
+      "targets": {
+        "air": true,
+        "surface": false,
+        "sub": false,
+        "missile": true,
+        "land": false
+      },
+      "range_nm": 37.8,
+      "speed_kts": 2008,
+      "pk": 0.52,
+      "salvo": 2,
+      "reload_s": 6,
+      "damage": 29,
+      "guidance": "HomingAir",
+      "min_range_nm": 2.2,
+      "directors": 4
+    },
+    "cn_hq10": {
+      "id": "cn_hq10",
+      "name": "HQ-10 Point-Defense SAM",
+      "kind": "Sam",
+      "targets": {
+        "air": true,
+        "surface": false,
+        "sub": false,
+        "missile": true,
+        "land": false
+      },
+      "range_nm": 5.0,
+      "speed_kts": 1319,
+      "pk": 0.5,
+      "salvo": 2,
+      "reload_s": 3,
+      "damage": 15,
+      "guidance": "HomingAir",
+      "min_range_nm": 0.3,
+      "directors": 3
+    },
+    "cn_hq7": {
+      "id": "cn_hq7",
+      "name": "HQ-7A Point-Defense SAM",
+      "kind": "Sam",
+      "targets": {
+        "air": true,
+        "surface": false,
+        "sub": false,
+        "missile": true,
+        "land": false
+      },
+      "range_nm": 8.1,
+      "speed_kts": 1750,
+      "pk": 0.45,
+      "salvo": 2,
+      "reload_s": 5,
+      "damage": 17,
+      "guidance": "HomingAir",
+      "min_range_nm": 0.5,
+      "directors": 2
+    },
+    "cn_shtil1": {
+      "id": "cn_shtil1",
+      "name": "Shtil-1 (9M317) SAM",
+      "kind": "Sam",
+      "targets": {
+        "air": true,
+        "surface": false,
+        "sub": false,
+        "missile": true,
+        "land": false
+      },
+      "range_nm": 22,
+      "speed_kts": 2008,
+      "pk": 0.5,
+      "salvo": 2,
+      "reload_s": 6,
+      "damage": 27,
+      "guidance": "HomingAir",
+      "min_range_nm": 1.6,
+      "directors": 4
+    },
+    "cn_48n6": {
+      "id": "cn_48n6",
+      "name": "48N6 (SA-N-20) SAM",
+      "kind": "Sam",
+      "targets": {
+        "air": true,
+        "surface": false,
+        "sub": false,
+        "missile": true,
+        "land": false
+      },
+      "range_nm": 81,
+      "speed_kts": 3690,
+      "pk": 0.55,
+      "salvo": 2,
+      "reload_s": 7,
+      "damage": 39,
+      "guidance": "HomingAir",
+      "min_range_nm": 1.6,
+      "directors": 4
+    },
+    "cn_yj83": {
+      "id": "cn_yj83",
+      "name": "YJ-83 Anti-Ship Missile",
+      "kind": "Ascm",
+      "targets": {
+        "air": false,
+        "surface": true,
+        "sub": false,
+        "missile": false,
+        "land": true
+      },
+      "range_nm": 97,
+      "speed_kts": 594,
+      "pk": 0.55,
+      "salvo": 2,
+      "reload_s": 45,
+      "damage": 38,
+      "guidance": "SeaSkimmer",
+      "min_range_nm": 8.1
+    },
+    "cn_yj83k": {
+      "id": "cn_yj83k",
+      "name": "YJ-83K Air-Launched ASM",
+      "kind": "Ascm",
+      "targets": {
+        "air": false,
+        "surface": true,
+        "sub": false,
+        "missile": false,
+        "land": true
+      },
+      "range_nm": 135,
+      "speed_kts": 594,
+      "pk": 0.55,
+      "salvo": 1,
+      "reload_s": 30,
+      "damage": 38,
+      "guidance": "SeaSkimmer",
+      "min_range_nm": 8.1
+    },
+    "cn_yj12": {
+      "id": "cn_yj12",
+      "name": "YJ-12A Supersonic ASM",
+      "kind": "Ascm",
+      "targets": {
+        "air": false,
+        "surface": true,
+        "sub": false,
+        "missile": false,
+        "land": true
+      },
+      "range_nm": 216,
+      "speed_kts": 1719,
+      "pk": 0.5,
+      "salvo": 1,
+      "reload_s": 60,
+      "damage": 48,
+      "guidance": "SeaSkimmer",
+      "min_range_nm": 21.6
+    },
+    "cn_yj18": {
+      "id": "cn_yj18",
+      "name": "YJ-18 Supersonic-Terminal ASM",
+      "kind": "Ascm",
+      "targets": {
+        "air": false,
+        "surface": true,
+        "sub": false,
+        "missile": false,
+        "land": true
+      },
+      "range_nm": 165.5,
+      "speed_kts": 1980,
+      "pk": 0.52,
+      "salvo": 1,
+      "reload_s": 60,
+      "damage": 33,
+      "guidance": "SeaSkimmer",
+      "min_range_nm": 10.8
+    },
+    "cn_yj62": {
+      "id": "cn_yj62",
+      "name": "YJ-62 Anti-Ship Missile",
+      "kind": "Ascm",
+      "targets": {
+        "air": false,
+        "surface": true,
+        "sub": false,
+        "missile": false,
+        "land": true
+      },
+      "range_nm": 189,
+      "speed_kts": 528,
+      "pk": 0.55,
+      "salvo": 1,
+      "reload_s": 60,
+      "damage": 44,
+      "guidance": "SeaSkimmer",
+      "min_range_nm": 21.6
+    },
+    "cn_yj82": {
+      "id": "cn_yj82",
+      "name": "YJ-82 Sub-Launched ASM",
+      "kind": "Ascm",
+      "targets": {
+        "air": false,
+        "surface": true,
+        "sub": false,
+        "missile": false,
+        "land": true
+      },
+      "range_nm": 16.2,
+      "speed_kts": 594,
+      "pk": 0.5,
+      "salvo": 1,
+      "reload_s": 45,
+      "damage": 37,
+      "guidance": "SeaSkimmer",
+      "min_range_nm": 4.3
+    },
+    "cn_3m54e": {
+      "id": "cn_3m54e",
+      "name": "3M54E Klub ASM",
+      "kind": "Ascm",
+      "targets": {
+        "air": false,
+        "surface": true,
+        "sub": false,
+        "missile": false,
+        "land": true
+      },
+      "range_nm": 118,
+      "speed_kts": 528,
+      "pk": 0.55,
+      "salvo": 1,
+      "reload_s": 60,
+      "damage": 42,
+      "guidance": "SeaSkimmer",
+      "min_range_nm": 10.8
+    },
+    "cn_yj9": {
+      "id": "cn_yj9",
+      "name": "YJ-9 Light ASM",
+      "kind": "Ascm",
+      "targets": {
+        "air": false,
+        "surface": true,
+        "sub": false,
+        "missile": false,
+        "land": false
+      },
+      "range_nm": 8.1,
+      "speed_kts": 561,
+      "pk": 0.45,
+      "salvo": 1,
+      "reload_s": 20,
+      "damage": 20,
+      "guidance": "SeaSkimmer",
+      "min_range_nm": 1.0
+    },
+    "cn_yj91": {
+      "id": "cn_yj91",
+      "name": "YJ-91 Anti-Radiation Missile",
+      "kind": "Ascm",
+      "targets": {
+        "air": false,
+        "surface": true,
+        "sub": false,
+        "missile": false,
+        "land": true
+      },
+      "range_nm": 64.8,
+      "speed_kts": 1940,
+      "pk": 0.4,
+      "salvo": 1,
+      "reload_s": 30,
+      "damage": 10,
+      "guidance": "SeaSkimmer",
+      "min_range_nm": 8.1
+    },
+    "cn_moskit_mve": {
+      "id": "cn_moskit_mve",
+      "name": "Moskit-MVE (3M80MVE) ASM",
+      "kind": "Ascm",
+      "targets": {
+        "air": false,
+        "surface": true,
+        "sub": false,
+        "missile": false,
+        "land": true
+      },
+      "range_nm": 130,
+      "speed_kts": 1650,
+      "pk": 0.5,
+      "salvo": 1,
+      "reload_s": 60,
+      "damage": 52,
+      "guidance": "SeaSkimmer",
+      "min_range_nm": 6.5
+    },
+    "cn_dh10": {
+      "id": "cn_dh10",
+      "name": "DH-10 Land-Attack Cruise Missile",
+      "kind": "Slcm",
+      "targets": {
+        "air": false,
+        "surface": false,
+        "sub": false,
+        "missile": false,
+        "land": true
+      },
+      "range_nm": 1080,
+      "speed_kts": 528,
+      "pk": 0.75,
+      "salvo": 1,
+      "reload_s": 60,
+      "damage": 52,
+      "guidance": "SeaSkimmer",
+      "min_range_nm": 30
+    },
+    "cn_akd88": {
+      "id": "cn_akd88",
+      "name": "AKD-88 Air-to-Ground Missile",
+      "kind": "Ascm",
+      "targets": {
+        "air": false,
+        "surface": true,
+        "sub": false,
+        "missile": false,
+        "land": true
+      },
+      "range_nm": 124,
+      "speed_kts": 594,
+      "pk": 0.55,
+      "salvo": 1,
+      "reload_s": 30,
+      "damage": 36,
+      "guidance": "SeaSkimmer",
+      "min_range_nm": 8.1
+    },
+    "cn_yu6": {
+      "id": "cn_yu6",
+      "name": "Yu-6 Heavy Torpedo",
+      "kind": "Torpedo",
+      "targets": {
+        "air": false,
+        "surface": true,
+        "sub": true,
+        "missile": false,
+        "land": false
+      },
+      "range_nm": 16.4,
+      "speed_kts": 50,
+      "pk": 0.7,
+      "salvo": 1,
+      "reload_s": 30,
+      "damage": 120,
+      "guidance": "TorpedoActive",
+      "enable_range_nm": 2.5
+    },
+    "cn_yu10": {
+      "id": "cn_yu10",
+      "name": "Yu-10 Heavy Torpedo",
+      "kind": "Torpedo",
+      "targets": {
+        "air": false,
+        "surface": true,
+        "sub": true,
+        "missile": false,
+        "land": false
+      },
+      "range_nm": 21.8,
+      "speed_kts": 60,
+      "pk": 0.7,
+      "salvo": 1,
+      "reload_s": 30,
+      "damage": 120,
+      "guidance": "TorpedoActive",
+      "enable_range_nm": 2.5
+    },
+    "cn_yu7": {
+      "id": "cn_yu7",
+      "name": "Yu-7 Lightweight ASW Torpedo",
+      "kind": "Lwt",
+      "targets": {
+        "air": false,
+        "surface": false,
+        "sub": true,
+        "missile": false,
+        "land": false
+      },
+      "range_nm": 5.1,
+      "speed_kts": 43,
+      "pk": 0.55,
+      "salvo": 1,
+      "reload_s": 20,
+      "damage": 49,
+      "guidance": "TorpedoActive",
+      "enable_range_nm": 0.5
+    },
+    "cn_53_65k": {
+      "id": "cn_53_65k",
+      "name": "53-65K Wake-Homing Torpedo",
+      "kind": "Torpedo",
+      "targets": {
+        "air": false,
+        "surface": true,
+        "sub": false,
+        "missile": false,
+        "land": false
+      },
+      "range_nm": 10.4,
+      "speed_kts": 45,
+      "pk": 0.65,
+      "salvo": 1,
+      "reload_s": 30,
+      "damage": 150,
+      "guidance": "WakeHome",
+      "enable_range_nm": 1.5
+    },
+    "cn_te2_01": {
+      "id": "cn_te2_01",
+      "name": "TE-2-01 Wake-Homing Torpedo",
+      "kind": "Torpedo",
+      "targets": {
+        "air": false,
+        "surface": true,
+        "sub": true,
+        "missile": false,
+        "land": false
+      },
+      "range_nm": 16.2,
+      "speed_kts": 45,
+      "pk": 0.62,
+      "salvo": 1,
+      "reload_s": 30,
+      "damage": 128,
+      "guidance": "WakeHome",
+      "enable_range_nm": 2.0
+    },
+    "cn_apr3e": {
+      "id": "cn_apr3e",
+      "name": "APR-3E Lightweight Torpedo",
+      "kind": "Lwt",
+      "targets": {
+        "air": false,
+        "surface": false,
+        "sub": true,
+        "missile": false,
+        "land": false
+      },
+      "range_nm": 1.1,
+      "speed_kts": 65,
+      "pk": 0.55,
+      "salvo": 1,
+      "reload_s": 20,
+      "damage": 57,
+      "guidance": "TorpedoActive",
+      "enable_range_nm": 0.2
+    },
+    "cn_yu8": {
+      "id": "cn_yu8",
+      "name": "Yu-8 ASW Standoff Rocket",
+      "kind": "AswRocket",
+      "targets": {
+        "air": false,
+        "surface": false,
+        "sub": true,
+        "missile": false,
+        "land": false
+      },
+      "range_nm": 16.2,
+      "speed_kts": 660,
+      "pk": 0.35,
+      "salvo": 1,
+      "reload_s": 30,
+      "damage": 49,
+      "guidance": "AswBallistic",
+      "enable_range_nm": 1.0
+    },
+    "cn_whh003": {
+      "id": "cn_whh003",
+      "name": "WHH-003 ASW Rocket Launcher",
+      "kind": "AswRocket",
+      "targets": {
+        "air": false,
+        "surface": false,
+        "sub": true,
+        "missile": false,
+        "land": false
+      },
+      "range_nm": 1.7,
+      "speed_kts": 0,
+      "pk": 0.15,
+      "salvo": 2,
+      "reload_s": 15,
+      "damage": 22,
+      "guidance": "AswBallistic"
+    },
+    "cn_whh004": {
+      "id": "cn_whh004",
+      "name": "WHH-004 ASW Rocket Launcher",
+      "kind": "AswRocket",
+      "targets": {
+        "air": false,
+        "surface": false,
+        "sub": true,
+        "missile": false,
+        "land": false
+      },
+      "range_nm": 1.6,
+      "speed_kts": 0,
+      "pk": 0.2,
+      "salvo": 2,
+      "reload_s": 15,
+      "damage": 30,
+      "guidance": "AswBallistic"
+    },
+    "cn_pl8": {
+      "id": "cn_pl8",
+      "name": "PL-8 IR AAM",
+      "kind": "Aam",
+      "targets": {
+        "air": true,
+        "surface": false,
+        "sub": false,
+        "missile": false,
+        "land": false
+      },
+      "range_nm": 8.1,
+      "speed_kts": 1721,
+      "pk": 0.5,
+      "salvo": 1,
+      "reload_s": 3,
+      "damage": 20,
+      "guidance": "HomingAir",
+      "min_range_nm": 0.3,
+      "ir": true
+    },
+    "cn_pl10": {
+      "id": "cn_pl10",
+      "name": "PL-10 Imaging-IR AAM",
+      "kind": "Aam",
+      "targets": {
+        "air": true,
+        "surface": false,
+        "sub": false,
+        "missile": false,
+        "land": false
+      },
+      "range_nm": 10.8,
+      "speed_kts": 2295,
+      "pk": 0.55,
+      "salvo": 1,
+      "reload_s": 3,
+      "damage": 20,
+      "guidance": "HomingAir",
+      "min_range_nm": 0.3,
+      "ir": true
+    },
+    "cn_pl12": {
+      "id": "cn_pl12",
+      "name": "PL-12 Active-Radar AAM",
+      "kind": "Aam",
+      "targets": {
+        "air": true,
+        "surface": false,
+        "sub": false,
+        "missile": false,
+        "land": false
+      },
+      "range_nm": 37.8,
+      "speed_kts": 2295,
+      "pk": 0.55,
+      "salvo": 1,
+      "reload_s": 3,
+      "damage": 25,
+      "guidance": "HomingAir",
+      "min_range_nm": 0.5,
+      "directors": 2
+    },
+    "cn_pl15": {
+      "id": "cn_pl15",
+      "name": "PL-15 Long-Range AAM",
+      "kind": "Aam",
+      "targets": {
+        "air": true,
+        "surface": false,
+        "sub": false,
+        "missile": false,
+        "land": false
+      },
+      "range_nm": 108,
+      "speed_kts": 2295,
+      "pk": 0.55,
+      "salvo": 1,
+      "reload_s": 3,
+      "damage": 28,
+      "guidance": "HomingAir",
+      "min_range_nm": 0.5,
+      "directors": 2
+    },
+    "cn_hhq9a": {
+      "id": "cn_hhq9a",
+      "name": "HQ-9A Long-Range SAM",
+      "kind": "Sam",
+      "targets": {
+        "air": true,
+        "surface": false,
+        "sub": false,
+        "missile": true,
+        "land": false
+      },
+      "range_nm": 80,
+      "min_range_nm": 3.8,
+      "speed_kts": 3438,
+      "pk": 0.55,
+      "salvo": 2,
+      "reload_s": 7,
+      "damage": 37,
+      "guidance": "HomingAir",
+      "directors": 6
+    },
+    "cn_rbu1000": {
+      "id": "cn_rbu1000",
+      "name": "RBU-1000 Smerch-3 ASW Rocket Launcher",
+      "kind": "AswRocket",
+      "targets": {
+        "air": false,
+        "surface": false,
+        "sub": true,
+        "missile": false,
+        "land": false
+      },
+      "range_nm": 0.5,
+      "speed_kts": 0,
+      "pk": 0.11,
+      "salvo": 2,
+      "reload_s": 15,
+      "damage": 11,
+      "guidance": "AswBallistic"
+    },
+    "cn_yu9": {
+      "id": "cn_yu9",
+      "name": "Yu-9 Dual-Wire/Wake-Homing Torpedo",
+      "kind": "Torpedo",
+      "targets": {
+        "air": false,
+        "surface": true,
+        "sub": true,
+        "missile": false,
+        "land": false
+      },
+      "range_nm": 9.7,
+      "speed_kts": 42,
+      "enable_range_nm": 2.0,
+      "pk": 0.68,
+      "salvo": 1,
+      "reload_s": 30,
+      "damage": 110,
+      "guidance": "TorpedoActive"
+    }
+  },
+  "sensors": {
+    "cn_ljg346b": {
+      "id": "cn_ljg346b",
+      "name": "LJG-346B AESA 3D Radar",
+      "kind": "Radar",
+      "air_range_nm": 250,
+      "surface_range_nm": 38,
+      "sub_range_nm": 0,
+      "missile_range_nm": 71,
+      "alt_m": 30,
+      "radar_class": "LAS"
+    },
+    "cn_ljg346a": {
+      "id": "cn_ljg346a",
+      "name": "LJG-346A AESA 3D Radar",
+      "kind": "Radar",
+      "air_range_nm": 150,
+      "surface_range_nm": 35,
+      "sub_range_nm": 0,
+      "missile_range_nm": 44,
+      "alt_m": 28,
+      "radar_class": "LAS"
+    },
+    "cn_ljg346": {
+      "id": "cn_ljg346",
+      "name": "LJG-346 AESA 3D Radar",
+      "kind": "Radar",
+      "air_range_nm": 125,
+      "surface_range_nm": 30,
+      "sub_range_nm": 0,
+      "missile_range_nm": 36,
+      "alt_m": 26,
+      "radar_class": "LAS"
+    },
+    "cn_ljq382": {
+      "id": "cn_ljq382",
+      "name": "LJQ-382 3D Air-Search Radar",
+      "kind": "Radar",
+      "air_range_nm": 162,
+      "surface_range_nm": 27,
+      "sub_range_nm": 0,
+      "missile_range_nm": 49,
+      "alt_m": 30,
+      "radar_class": "LAS"
+    },
+    "cn_ljq517b": {
+      "id": "cn_ljq517b",
+      "name": "LJQ-517B Air-Search Radar",
+      "kind": "Radar",
+      "air_range_nm": 189,
+      "surface_range_nm": 30,
+      "sub_range_nm": 0,
+      "missile_range_nm": 38,
+      "alt_m": 30,
+      "radar_class": "LAS"
+    },
+    "cn_ljq517h1": {
+      "id": "cn_ljq517h1",
+      "name": "LJQ-517H-1 Air-Search Radar",
+      "kind": "Radar",
+      "air_range_nm": 135,
+      "surface_range_nm": 30,
+      "sub_range_nm": 0,
+      "missile_range_nm": 27,
+      "alt_m": 28,
+      "radar_class": "LAS"
+    },
+    "cn_ljq364": {
+      "id": "cn_ljq364",
+      "name": "LJQ-364 Air/Surface Radar",
+      "kind": "Radar",
+      "air_range_nm": 54,
+      "surface_range_nm": 35,
+      "sub_range_nm": 0,
+      "missile_range_nm": 22,
+      "alt_m": 25,
+      "radar_class": "LAS"
+    },
+    "cn_ljq366": {
+      "id": "cn_ljq366",
+      "name": "LJQ-366 Band Stand Targeting Radar",
+      "kind": "Radar",
+      "air_range_nm": 45,
+      "surface_range_nm": 120,
+      "sub_range_nm": 0,
+      "missile_range_nm": 40,
+      "alt_m": 25,
+      "radar_class": "SS"
+    },
+    "cn_ljq361a": {
+      "id": "cn_ljq361a",
+      "name": "LJQ-361A Air/Surface Radar",
+      "kind": "Radar",
+      "air_range_nm": 35,
+      "surface_range_nm": 35,
+      "sub_range_nm": 0,
+      "missile_range_nm": 20,
+      "alt_m": 20,
+      "radar_class": "LAS"
+    },
+    "cn_ljq362": {
+      "id": "cn_ljq362",
+      "name": "LJQ-362 Mod Air/Surface Radar",
+      "kind": "Radar",
+      "air_range_nm": 35,
+      "surface_range_nm": 65,
+      "sub_range_nm": 0,
+      "missile_range_nm": 11,
+      "alt_m": 20,
+      "radar_class": "LAS"
+    },
+    "cn_ljq360": {
+      "id": "cn_ljq360",
+      "name": "LJQ-360 Air/Surface Radar",
+      "kind": "Radar",
+      "air_range_nm": 81,
+      "surface_range_nm": 57,
+      "sub_range_nm": 0,
+      "missile_range_nm": 29,
+      "alt_m": 25,
+      "radar_class": "LAS"
+    },
+    "cn_aesa_xband": {
+      "id": "cn_aesa_xband",
+      "name": "AESA X-Band Search/Track Radar",
+      "kind": "Radar",
+      "air_range_nm": 75,
+      "surface_range_nm": 40,
+      "sub_range_nm": 0,
+      "missile_range_nm": 25,
+      "alt_m": 25,
+      "radar_class": "LAS"
+    },
+    "cn_klj4": {
+      "id": "cn_klj4",
+      "name": "KLJ-4 Airborne Radar",
+      "kind": "Radar",
+      "air_range_nm": 81,
+      "surface_range_nm": 81,
+      "sub_range_nm": 0,
+      "missile_range_nm": 26,
+      "alt_m": 5000,
+      "radar_class": "LAS"
+    },
+    "cn_klc7": {
+      "id": "cn_klc7",
+      "name": "KLC-7 AEW Radar",
+      "kind": "Radar",
+      "air_range_nm": 342,
+      "surface_range_nm": 60,
+      "sub_range_nm": 0,
+      "missile_range_nm": 68,
+      "alt_m": 8500,
+      "radar_class": "LAS"
+    },
+    "cn_kq200": {
+      "id": "cn_kq200",
+      "name": "KQ-200 Maritime Search Radar",
+      "kind": "Radar",
+      "air_range_nm": 210,
+      "surface_range_nm": 67,
+      "sub_range_nm": 0,
+      "missile_range_nm": 38,
+      "alt_m": 3000,
+      "radar_class": "SS"
+    },
+    "cn_z18j_radar": {
+      "id": "cn_z18j_radar",
+      "name": "Z-18J AEW Radar",
+      "kind": "Radar",
+      "air_range_nm": 214,
+      "surface_range_nm": 60,
+      "sub_range_nm": 0,
+      "missile_range_nm": 43,
+      "alt_m": 3000,
+      "radar_class": "LAS"
+    },
+    "cn_z18f_radar": {
+      "id": "cn_z18f_radar",
+      "name": "Z-18F Search Radar",
+      "kind": "Radar",
+      "air_range_nm": 67,
+      "surface_range_nm": 120,
+      "sub_range_nm": 0,
+      "missile_range_nm": 22,
+      "alt_m": 1500,
+      "radar_class": "SS"
+    },
+    "cn_z20f_radar": {
+      "id": "cn_z20f_radar",
+      "name": "Z-20F Search Radar",
+      "kind": "Radar",
+      "air_range_nm": 67,
+      "surface_range_nm": 120,
+      "sub_range_nm": 0,
+      "missile_range_nm": 22,
+      "alt_m": 1500,
+      "radar_class": "SS"
+    },
+    "cn_sjd11": {
+      "id": "cn_sjd11",
+      "name": "SJD-11 Bow Sonar",
+      "kind": "SonarActive",
+      "air_range_nm": 0,
+      "surface_range_nm": 0,
+      "sub_range_nm": 4.3,
+      "missile_range_nm": 0,
+      "alt_m": 20,
+      "radar_class": ""
+    },
+    "cn_sjd9": {
+      "id": "cn_sjd9",
+      "name": "SJD-9 Bow Sonar",
+      "kind": "SonarActive",
+      "air_range_nm": 0,
+      "surface_range_nm": 0,
+      "sub_range_nm": 3.6,
+      "missile_range_nm": 0,
+      "alt_m": 20,
+      "radar_class": ""
+    },
+    "cn_sjd5a": {
+      "id": "cn_sjd5a",
+      "name": "SJD-5A Bow Sonar",
+      "kind": "SonarActive",
+      "air_range_nm": 0,
+      "surface_range_nm": 0,
+      "sub_range_nm": 1.8,
+      "missile_range_nm": 0,
+      "alt_m": 20,
+      "radar_class": ""
+    },
+    "cn_sjg206": {
+      "id": "cn_sjg206",
+      "name": "SJG-206 Towed Passive Array",
+      "kind": "SonarPassive",
+      "air_range_nm": 0,
+      "surface_range_nm": 0,
+      "sub_range_nm": 6.0,
+      "missile_range_nm": 0,
+      "alt_m": 20,
+      "radar_class": ""
+    },
+    "cn_sjg311": {
+      "id": "cn_sjg311",
+      "name": "SJG-311 Towed Array",
+      "kind": "SonarPassive",
+      "air_range_nm": 0,
+      "surface_range_nm": 0,
+      "sub_range_nm": 7.0,
+      "missile_range_nm": 0,
+      "alt_m": 20,
+      "radar_class": ""
+    },
+    "cn_sqz265a": {
+      "id": "cn_sqz265a",
+      "name": "SQZ-265A Bow Array",
+      "kind": "SonarPassive",
+      "air_range_nm": 0,
+      "surface_range_nm": 0,
+      "sub_range_nm": 2.5,
+      "missile_range_nm": 0,
+      "alt_m": 20,
+      "radar_class": ""
+    },
+    "cn_sqz265a_tow": {
+      "id": "cn_sqz265a_tow",
+      "name": "SQZ-265A Towed Array",
+      "kind": "SonarPassive",
+      "air_range_nm": 0,
+      "surface_range_nm": 0,
+      "sub_range_nm": 4.0,
+      "missile_range_nm": 0,
+      "alt_m": 20,
+      "radar_class": ""
+    },
+    "cn_sqz262": {
+      "id": "cn_sqz262",
+      "name": "SQZ-262C Bow Sonar",
+      "kind": "SonarActive",
+      "air_range_nm": 0,
+      "surface_range_nm": 0,
+      "sub_range_nm": 2.1,
+      "missile_range_nm": 0,
+      "alt_m": 20,
+      "radar_class": ""
+    },
+    "cn_sqg204a": {
+      "id": "cn_sqg204a",
+      "name": "SQG-204A Flank Ranging Sonar",
+      "kind": "SonarPassive",
+      "air_range_nm": 0,
+      "surface_range_nm": 0,
+      "sub_range_nm": 2.5,
+      "missile_range_nm": 0,
+      "alt_m": 20,
+      "radar_class": ""
+    },
+    "cn_sqg207": {
+      "id": "cn_sqg207",
+      "name": "SQG-207 Flank Array",
+      "kind": "SonarPassive",
+      "air_range_nm": 0,
+      "surface_range_nm": 0,
+      "sub_range_nm": 3.0,
+      "missile_range_nm": 0,
+      "alt_m": 20,
+      "radar_class": ""
+    },
+    "cn_sqg2b": {
+      "id": "cn_sqg2b",
+      "name": "SQG-2B Flank Ranging Sonar",
+      "kind": "SonarPassive",
+      "air_range_nm": 0,
+      "surface_range_nm": 0,
+      "sub_range_nm": 1.9,
+      "missile_range_nm": 0,
+      "alt_m": 20,
+      "radar_class": ""
+    },
+    "cn_mgk335": {
+      "id": "cn_mgk335",
+      "name": "MGK-335EM Sonar",
+      "kind": "SonarActive",
+      "air_range_nm": 0,
+      "surface_range_nm": 0,
+      "sub_range_nm": 4.3,
+      "missile_range_nm": 0,
+      "alt_m": 20,
+      "radar_class": ""
+    },
+    "cn_aesa_targeting": {
+      "id": "cn_aesa_targeting",
+      "name": "AESA Targeting Complex",
+      "kind": "Radar",
+      "air_range_nm": 45,
+      "surface_range_nm": 135,
+      "sub_range_nm": 0,
+      "missile_range_nm": 56,
+      "alt_m": 25,
+      "radar_class": "SS"
+    }
+  }
+}

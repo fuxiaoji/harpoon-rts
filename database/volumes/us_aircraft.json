@@ -1,0 +1,429 @@
+{
+  "platforms": {
+    "us_f18c": {
+      "id": "us_f18c", "name": "F/A-18C/D Hornet (ceiling 15240 m)", "kind": "Aircraft",
+      "hp": 27, "max_speed_kts": 1030, "cruise_speed_kts": 490, "turn_rate_deg_s": 16,
+      "rcs": "Small", "vp_value": 14,
+      "sensors": ["radar_air_med", "esm_std", "visual"],
+      "weapons": [
+        {"weapon": "us_aim9x", "mounts": 2, "ammo": 1},
+        {"weapon": "us_aim120", "mounts": 2, "ammo": 1},
+        {"weapon": "us_agm84", "mounts": 2, "ammo": 1}
+      ],
+      "chaff": 30, "decoys": 15, "endurance_s": 5620
+    },
+    "us_f18e": {
+      "id": "us_f18e", "name": "F/A-18E/F Super Hornet (ceiling 15240 m)", "kind": "Aircraft",
+      "hp": 29, "max_speed_kts": 920, "cruise_speed_kts": 460, "turn_rate_deg_s": 15,
+      "rcs": "Small", "vp_value": 16,
+      "sensors": ["radar_air_med", "esm_std", "visual"],
+      "weapons": [
+        {"weapon": "us_aim9x", "mounts": 2, "ammo": 1},
+        {"weapon": "us_aim120", "mounts": 2, "ammo": 1},
+        {"weapon": "us_lgby", "mounts": 4, "ammo": 1}
+      ],
+      "chaff": 30, "decoys": 15, "endurance_s": 7004
+    },
+    "us_f18e_b": {
+      "id": "us_f18e_b", "name": "F/A-18E/F Super Hornet Block III (ceiling 15240 m)", "kind": "Aircraft",
+      "hp": 29, "max_speed_kts": 920, "cruise_speed_kts": 460, "turn_rate_deg_s": 15,
+      "rcs": "VerySmall", "vp_value": 17,
+      "sensors": ["radar_air_med", "esm_std", "visual"],
+      "weapons": [
+        {"weapon": "us_aim9x", "mounts": 2, "ammo": 1},
+        {"weapon": "us_aim120", "mounts": 2, "ammo": 1},
+        {"weapon": "us_aim174b", "mounts": 2, "ammo": 1}
+      ],
+      "chaff": 30, "decoys": 15, "endurance_s": 7004
+    },
+    "us_ea18g": {
+      "id": "us_ea18g", "name": "EA-18G Growler (ceiling 15240 m)", "kind": "Aircraft",
+      "hp": 30, "max_speed_kts": 920, "cruise_speed_kts": 460, "turn_rate_deg_s": 14,
+      "rcs": "VerySmall", "vp_value": 18,
+      "sensors": ["radar_air_med", "esm_std", "visual"],
+      "weapons": [
+        {"weapon": "us_aim120", "mounts": 2, "ammo": 1}
+      ],
+      "chaff": 30, "decoys": 15, "endurance_s": 5987
+    },
+    "us_f35a": {
+      "id": "us_f35a", "name": "F-35A Lightning II (ceiling 15240 m)", "kind": "Aircraft",
+      "hp": 24, "max_speed_kts": 920, "cruise_speed_kts": 580, "turn_rate_deg_s": 16,
+      "rcs": "VerySmall", "vp_value": 20,
+      "sensors": ["radar_air_med", "esm_std", "visual"],
+      "weapons": [
+        {"weapon": "us_aim9x", "mounts": 2, "ammo": 1},
+        {"weapon": "us_aim120", "mounts": 2, "ammo": 1},
+        {"weapon": "us_gbu31", "mounts": 2, "ammo": 1}
+      ],
+      "chaff": 30, "decoys": 15, "endurance_s": 6021
+    },
+    "us_f35b": {
+      "id": "us_f35b", "name": "F-35B Lightning II (ceiling 15240 m)", "kind": "Aircraft",
+      "hp": 24, "max_speed_kts": 920, "cruise_speed_kts": 580, "turn_rate_deg_s": 14,
+      "rcs": "VerySmall", "vp_value": 20,
+      "sensors": ["radar_air_med", "esm_std", "visual"],
+      "weapons": [
+        {"weapon": "us_aim9x", "mounts": 2, "ammo": 1},
+        {"weapon": "us_aim120", "mounts": 2, "ammo": 1},
+        {"weapon": "us_gbu31", "mounts": 2, "ammo": 1}
+      ],
+      "chaff": 30, "decoys": 15, "endurance_s": 5400
+    },
+    "us_f35c": {
+      "id": "us_f35c", "name": "F-35C Lightning II (ceiling 15240 m)", "kind": "Aircraft",
+      "hp": 25, "max_speed_kts": 920, "cruise_speed_kts": 580, "turn_rate_deg_s": 15,
+      "rcs": "VerySmall", "vp_value": 20,
+      "sensors": ["radar_air_med", "esm_std", "visual"],
+      "weapons": [
+        {"weapon": "us_aim9x", "mounts": 2, "ammo": 1},
+        {"weapon": "us_aim120", "mounts": 2, "ammo": 1},
+        {"weapon": "us_gbu31", "mounts": 2, "ammo": 1}
+      ],
+      "chaff": 30, "decoys": 15, "endurance_s": 6331
+    },
+    "us_e2d": {
+      "id": "us_e2d", "name": "E-2D Advanced Hawkeye (ceiling 10576 m)", "kind": "Aircraft",
+      "hp": 38, "max_speed_kts": 325, "cruise_speed_kts": 255, "turn_rate_deg_s": 5,
+      "rcs": "Medium", "vp_value": 24,
+      "sensors": ["radar_air_xlong", "esm_std", "visual"],
+      "weapons": [],
+      "chaff": 0, "decoys": 0, "endurance_s": 19765
+    },
+    "us_p8a": {
+      "id": "us_p8a", "name": "P-8A Poseidon (ceiling 12500 m)", "kind": "Aircraft",
+      "hp": 45, "max_speed_kts": 490, "cruise_speed_kts": 440, "turn_rate_deg_s": 5,
+      "rcs": "Large", "vp_value": 22,
+      "sensors": ["radar_air_long", "radar_surf_med", "esm_std", "us_sonobuoy", "visual"],
+      "weapons": [
+        {"weapon": "us_mk54", "mounts": 5, "ammo": 1},
+        {"weapon": "us_agm84", "mounts": 4, "ammo": 1}
+      ],
+      "chaff": 0, "decoys": 20, "endurance_s": 37677
+    },
+    "us_p3c": {
+      "id": "us_p3c", "name": "P-3C Orion Update III (ceiling 8625 m)", "kind": "Aircraft",
+      "hp": 62, "max_speed_kts": 405, "cruise_speed_kts": 330, "turn_rate_deg_s": 5,
+      "rcs": "Large", "vp_value": 20,
+      "sensors": ["radar_air_long", "radar_surf_med", "esm_std", "us_sonobuoy", "us_mad", "visual"],
+      "weapons": [
+        {"weapon": "us_mk54", "mounts": 7, "ammo": 1},
+        {"weapon": "us_agm84", "mounts": 4, "ammo": 1}
+      ],
+      "chaff": 0, "decoys": 15, "endurance_s": 44782
+    },
+    "us_mh60r": {
+      "id": "us_mh60r", "name": "MH-60R Seahawk (ceiling 4525 m)", "kind": "Aircraft",
+      "hp": 18, "max_speed_kts": 140, "cruise_speed_kts": 100, "turn_rate_deg_s": 25,
+      "rcs": "Small", "vp_value": 10,
+      "sensors": ["radar_surf_med", "esm_std", "sonar_dipping", "us_sonobuoy", "visual"],
+      "weapons": [
+        {"weapon": "us_mk54", "mounts": 2, "ammo": 1}
+      ],
+      "chaff": 0, "decoys": 10, "endurance_s": 9540, "dipping_sonar": true
+    },
+    "us_mh60s": {
+      "id": "us_mh60s", "name": "MH-60S Seahawk (ceiling 5352 m)", "kind": "Aircraft",
+      "hp": 18, "max_speed_kts": 150, "cruise_speed_kts": 110, "turn_rate_deg_s": 25,
+      "rcs": "Small", "vp_value": 8,
+      "sensors": ["visual"],
+      "weapons": [
+        {"weapon": "us_hydra70", "mounts": 2, "ammo": 19}
+      ],
+      "chaff": 0, "decoys": 10, "endurance_s": 7364
+    },
+    "us_sh60b": {
+      "id": "us_sh60b", "name": "SH-60B Seahawk (ceiling 5790 m)", "kind": "Aircraft",
+      "hp": 18, "max_speed_kts": 145, "cruise_speed_kts": 125, "turn_rate_deg_s": 25,
+      "rcs": "Small", "vp_value": 8,
+      "sensors": ["radar_surf_sm", "esm_std", "us_sonobuoy", "us_mad", "visual"],
+      "weapons": [
+        {"weapon": "us_mk46", "mounts": 3, "ammo": 1}
+      ],
+      "chaff": 0, "decoys": 0, "endurance_s": 8640
+    },
+    "us_mv22b": {
+      "id": "us_mv22b", "name": "MV-22B Osprey (ceiling 7620 m)", "kind": "Aircraft",
+      "hp": 35, "max_speed_kts": 280, "cruise_speed_kts": 240, "turn_rate_deg_s": 12,
+      "rcs": "Medium", "vp_value": 10,
+      "sensors": ["esm_std", "visual"],
+      "weapons": [],
+      "chaff": 0, "decoys": 10, "endurance_s": 9300
+    },
+    "us_cmv22b": {
+      "id": "us_cmv22b", "name": "CMV-22B Osprey (ceiling 7620 m)", "kind": "Aircraft",
+      "hp": 35, "max_speed_kts": 280, "cruise_speed_kts": 240, "turn_rate_deg_s": 12,
+      "rcs": "Medium", "vp_value": 12,
+      "sensors": ["esm_std", "visual"],
+      "weapons": [],
+      "chaff": 0, "decoys": 10, "endurance_s": 16500
+    },
+    "us_ch53e": {
+      "id": "us_ch53e", "name": "CH-53E Super Stallion (ceiling 5640 m)", "kind": "Aircraft",
+      "hp": 34, "max_speed_kts": 150, "cruise_speed_kts": 135, "turn_rate_deg_s": 20,
+      "rcs": "Medium", "vp_value": 12,
+      "sensors": ["esm_std", "visual"],
+      "weapons": [],
+      "chaff": 0, "decoys": 10, "endurance_s": 11333
+    },
+    "us_ch53k": {
+      "id": "us_ch53k", "name": "CH-53K King Stallion (ceiling 4880 m)", "kind": "Aircraft",
+      "hp": 28, "max_speed_kts": 170, "cruise_speed_kts": 145, "turn_rate_deg_s": 20,
+      "rcs": "Medium", "vp_value": 14,
+      "sensors": ["esm_std", "visual"],
+      "weapons": [],
+      "chaff": 0, "decoys": 10, "endurance_s": 7945
+    },
+    "us_ah1z": {
+      "id": "us_ah1z", "name": "AH-1Z Viper (ceiling 6095 m)", "kind": "Aircraft",
+      "hp": 17, "max_speed_kts": 158, "cruise_speed_kts": 140, "turn_rate_deg_s": 30,
+      "rcs": "Small", "vp_value": 8,
+      "sensors": ["visual"],
+      "weapons": [
+        {"weapon": "aam_ir", "mounts": 2, "ammo": 1},
+        {"weapon": "us_hydra70", "mounts": 4, "ammo": 19}
+      ],
+      "chaff": 10, "decoys": 10, "endurance_s": 6686
+    },
+    "us_uh1y": {
+      "id": "us_uh1y", "name": "UH-1Y Venom (ceiling 6100 m)", "kind": "Aircraft",
+      "hp": 17, "max_speed_kts": 165, "cruise_speed_kts": 135, "turn_rate_deg_s": 28,
+      "rcs": "Small", "vp_value": 7,
+      "sensors": ["visual"],
+      "weapons": [
+        {"weapon": "us_hydra70", "mounts": 2, "ammo": 19}
+      ],
+      "chaff": 10, "decoys": 10, "endurance_s": 7333
+    },
+    "us_ea6b": {
+      "id": "us_ea6b", "name": "EA-6B Prowler ICAP II/III (ceiling 12550 m)", "kind": "Aircraft",
+      "hp": 30, "max_speed_kts": 470, "cruise_speed_kts": 410, "turn_rate_deg_s": 8,
+      "rcs": "Medium", "vp_value": 16,
+      "sensors": ["radar_air_med", "esm_std", "visual"],
+      "weapons": [],
+      "chaff": 30, "decoys": 15, "endurance_s": 9615
+    },
+    "us_s3b": {
+      "id": "us_s3b", "name": "S-3B Viking (ceiling 10760 m)", "kind": "Aircraft",
+      "hp": 32, "max_speed_kts": 450, "cruise_speed_kts": 350, "turn_rate_deg_s": 7,
+      "rcs": "Medium", "vp_value": 16,
+      "sensors": ["radar_surf_med", "esm_std", "us_sonobuoy", "us_mad", "visual"],
+      "weapons": [
+        {"weapon": "us_mk46", "mounts": 2, "ammo": 1},
+        {"weapon": "us_agm84", "mounts": 1, "ammo": 1},
+        {"weapon": "us_mk82", "mounts": 2, "ammo": 1}
+      ],
+      "chaff": 0, "decoys": 15, "endurance_s": 23657
+    },
+    "us_mq4c": {
+      "id": "us_mq4c", "name": "MQ-4C Triton (ceiling 18288 m)", "kind": "Aircraft",
+      "hp": 18, "max_speed_kts": 345, "cruise_speed_kts": 310, "turn_rate_deg_s": 4,
+      "rcs": "Large", "vp_value": 14,
+      "sensors": ["radar_air_long", "radar_surf_med", "esm_std", "visual"],
+      "weapons": [],
+      "chaff": 0, "decoys": 0, "endurance_s": 113226
+    },
+    "us_mq25a": {
+      "id": "us_mq25a", "name": "MQ-25A Stingray (ceiling 15240 m, est.)", "kind": "Aircraft",
+      "hp": 17, "max_speed_kts": 450, "cruise_speed_kts": 400, "turn_rate_deg_s": 6,
+      "rcs": "VerySmall", "vp_value": 12,
+      "sensors": ["esm_std", "visual"],
+      "weapons": [],
+      "chaff": 0, "decoys": 0, "endurance_s": 22950
+    },
+    "us_e3": {
+      "id": "us_e3", "name": "E-3 Sentry (ceiling 9145 m)", "kind": "Aircraft",
+      "hp": 60, "max_speed_kts": 460, "cruise_speed_kts": 430, "turn_rate_deg_s": 4,
+      "rcs": "Large", "vp_value": 25,
+      "sensors": ["radar_air_xlong", "esm_std", "visual"],
+      "weapons": [],
+      "chaff": 0, "decoys": 0, "endurance_s": 35456
+    },
+    "us_c130j": {
+      "id": "us_c130j", "name": "C-130J Hercules (ceiling 10060 m)", "kind": "Aircraft",
+      "hp": 65, "max_speed_kts": 355, "cruise_speed_kts": 320, "turn_rate_deg_s": 4,
+      "rcs": "Large", "vp_value": 14,
+      "sensors": ["radar_surf_sm", "visual"],
+      "weapons": [],
+      "chaff": 0, "decoys": 0, "endurance_s": 27394
+    },
+    "us_kc130j": {
+      "id": "us_kc130j", "name": "KC-130J Super Hercules (ceiling 10060 m)", "kind": "Aircraft",
+      "hp": 65, "max_speed_kts": 355, "cruise_speed_kts": 320, "turn_rate_deg_s": 4,
+      "rcs": "Large", "vp_value": 14,
+      "sensors": ["esm_std", "visual"],
+      "weapons": [],
+      "chaff": 0, "decoys": 15, "endurance_s": 39206
+    },
+    "us_c17a": {
+      "id": "us_c17a", "name": "C-17A Globemaster III (ceiling 13715 m)", "kind": "Aircraft",
+      "hp": 100, "max_speed_kts": 500, "cruise_speed_kts": 440, "turn_rate_deg_s": 4,
+      "rcs": "Large", "vp_value": 20,
+      "sensors": ["radar_surf_med", "visual"],
+      "weapons": [],
+      "chaff": 0, "decoys": 15, "endurance_s": 32686
+    },
+    "us_f22a": {
+      "id": "us_f22a", "name": "F-22A Raptor (ceiling 18290 m)", "kind": "Aircraft",
+      "hp": 33, "max_speed_kts": 1290, "cruise_speed_kts": 670, "turn_rate_deg_s": 20,
+      "rcs": "VerySmall", "vp_value": 22,
+      "sensors": ["radar_air_med", "esm_std", "visual"],
+      "weapons": [
+        {"weapon": "us_aim9x", "mounts": 2, "ammo": 1},
+        {"weapon": "us_aim120", "mounts": 2, "ammo": 1},
+        {"weapon": "us_gbu32", "mounts": 2, "ammo": 1}
+      ],
+      "chaff": 0, "decoys": 15, "endurance_s": 4863
+    },
+    "us_f15e": {
+      "id": "us_f15e", "name": "F-15E Strike Eagle (ceiling 15240 m)", "kind": "Aircraft",
+      "hp": 30, "max_speed_kts": 1175, "cruise_speed_kts": 495, "turn_rate_deg_s": 15,
+      "rcs": "Medium", "vp_value": 18,
+      "sensors": ["radar_air_med", "esm_std", "visual"],
+      "weapons": [
+        {"weapon": "us_aim9x", "mounts": 4, "ammo": 1},
+        {"weapon": "us_aim120", "mounts": 4, "ammo": 1},
+        {"weapon": "us_lgby", "mounts": 8, "ammo": 1}
+      ],
+      "chaff": 30, "decoys": 15, "endurance_s": 10400
+    },
+    "us_f16cj": {
+      "id": "us_f16cj", "name": "F-16CJ Fighting Falcon Block 50/52 (ceiling 15240 m)", "kind": "Aircraft",
+      "hp": 20, "max_speed_kts": 1175, "cruise_speed_kts": 490, "turn_rate_deg_s": 18,
+      "rcs": "VerySmall", "vp_value": 14,
+      "sensors": ["radar_air_med", "esm_std", "visual"],
+      "weapons": [
+        {"weapon": "us_aim9x", "mounts": 2, "ammo": 1},
+        {"weapon": "us_aim120", "mounts": 2, "ammo": 1},
+        {"weapon": "us_lgby", "mounts": 4, "ammo": 1}
+      ],
+      "chaff": 0, "decoys": 15, "endurance_s": 5657
+    },
+    "us_a10c": {
+      "id": "us_a10c", "name": "A-10C Thunderbolt II (ceiling 13715 m)", "kind": "Aircraft",
+      "hp": 37, "max_speed_kts": 350, "cruise_speed_kts": 340, "turn_rate_deg_s": 10,
+      "rcs": "Small", "vp_value": 15,
+      "sensors": ["esm_std", "visual"],
+      "weapons": [
+        {"weapon": "aam_ir", "mounts": 2, "ammo": 1},
+        {"weapon": "us_lgby", "mounts": 4, "ammo": 1},
+        {"weapon": "us_hydra70", "mounts": 2, "ammo": 7}
+      ],
+      "chaff": 0, "decoys": 15, "endurance_s": 9159
+    },
+    "us_b1b": {
+      "id": "us_b1b", "name": "B-1B Lancer (ceiling 15240 m)", "kind": "Aircraft",
+      "hp": 76, "max_speed_kts": 720, "cruise_speed_kts": 460, "turn_rate_deg_s": 5,
+      "rcs": "Small", "vp_value": 28,
+      "sensors": ["radar_surf_med", "esm_std", "visual"],
+      "weapons": [
+        {"weapon": "us_agm158c", "mounts": 24, "ammo": 1}
+      ],
+      "chaff": 30, "decoys": 20, "endurance_s": 43083
+    },
+    "us_b2a": {
+      "id": "us_b2a", "name": "B-2A Spirit (ceiling 15240 m)", "kind": "Aircraft",
+      "hp": 71, "max_speed_kts": 545, "cruise_speed_kts": 485, "turn_rate_deg_s": 4,
+      "rcs": "VerySmall", "vp_value": 32,
+      "sensors": ["radar_surf_med", "esm_std", "visual"],
+      "weapons": [
+        {"weapon": "us_gbu31", "mounts": 16, "ammo": 1}
+      ],
+      "chaff": 30, "decoys": 20, "endurance_s": 55522
+    },
+    "us_b52h": {
+      "id": "us_b52h", "name": "B-52H Stratofortress (1993) (ceiling 14500 m)", "kind": "Aircraft",
+      "hp": 105, "max_speed_kts": 526, "cruise_speed_kts": 442, "turn_rate_deg_s": 3,
+      "rcs": "Large", "vp_value": 30,
+      "sensors": ["radar_surf_med", "esm_std", "visual"],
+      "weapons": [
+        {"weapon": "us_agm84", "mounts": 8, "ammo": 1}
+      ],
+      "chaff": 30, "decoys": 20, "endurance_s": 58439
+    }
+  },
+  "weapons": {
+    "us_aim9x": {
+      "id": "us_aim9x", "name": "AIM-9X Sidewinder", "kind": "Aam", "ir": true,
+      "targets": {"air": true},
+      "range_nm": 12, "min_range_nm": 0.3, "speed_kts": 1434, "pk": 0.5, "salvo": 1,
+      "reload_s": 3, "damage": 20, "guidance": "HomingAir"
+    },
+    "us_aim120": {
+      "id": "us_aim120", "name": "AIM-120 AMRAAM", "kind": "Aam",
+      "targets": {"air": true},
+      "range_nm": 30, "min_range_nm": 2, "speed_kts": 2295, "pk": 0.6, "salvo": 1,
+      "reload_s": 3, "damage": 20, "guidance": "HomingAir"
+    },
+    "us_aim174b": {
+      "id": "us_aim174b", "name": "AIM-174B (SM-6 air-launched)", "kind": "Aam",
+      "targets": {"air": true},
+      "range_nm": 140, "min_range_nm": 5, "speed_kts": 2006, "pk": 0.6, "salvo": 1,
+      "reload_s": 4, "damage": 25, "guidance": "HomingAir"
+    },
+    "us_agm84": {
+      "id": "us_agm84", "name": "AGM-84D Harpoon IC", "kind": "Ascm",
+      "targets": {"surface": true},
+      "range_nm": 80, "min_range_nm": 3, "speed_kts": 561, "pk": 0.55, "salvo": 1,
+      "reload_s": 30, "damage": 40, "guidance": "SeaSkimmer"
+    },
+    "us_agm158c": {
+      "id": "us_agm158c", "name": "AGM-158C LRASM", "kind": "Ascm",
+      "targets": {"surface": true},
+      "range_nm": 300, "min_range_nm": 10, "speed_kts": 540, "pk": 0.6, "salvo": 1,
+      "reload_s": 45, "damage": 46, "guidance": "SeaSkimmer"
+    },
+    "us_lgby": {
+      "id": "us_lgby", "name": "GBU-12 Paveway II LGB", "kind": "Bomb",
+      "targets": {"surface": true, "land": true},
+      "range_nm": 6.5, "min_range_nm": 0.5, "speed_kts": 528, "pk": 0.7, "salvo": 1,
+      "reload_s": 180, "damage": 35, "guidance": "BallisticGun"
+    },
+    "us_gbu31": {
+      "id": "us_gbu31", "name": "GBU-31 JDAM (Mk 84)", "kind": "Bomb",
+      "targets": {"surface": true, "land": true},
+      "range_nm": 13, "min_range_nm": 1, "speed_kts": 528, "pk": 0.75, "salvo": 1,
+      "reload_s": 180, "damage": 59, "guidance": "BallisticGun"
+    },
+    "us_gbu32": {
+      "id": "us_gbu32", "name": "GBU-32 JDAM", "kind": "Bomb",
+      "targets": {"surface": true, "land": true},
+      "range_nm": 13, "min_range_nm": 1, "speed_kts": 528, "pk": 0.75, "salvo": 1,
+      "reload_s": 180, "damage": 46, "guidance": "BallisticGun"
+    },
+    "us_mk82": {
+      "id": "us_mk82", "name": "Mk 82 500 lb Bomb", "kind": "Bomb",
+      "targets": {"surface": true, "land": true},
+      "range_nm": 0.8, "min_range_nm": 0.1, "speed_kts": 0, "pk": 0.35, "salvo": 1,
+      "reload_s": 180, "damage": 35, "guidance": "BallisticGun"
+    },
+    "us_hydra70": {
+      "id": "us_hydra70", "name": "Hydra 70 Rocket Pod", "kind": "Rocket",
+      "targets": {"surface": true, "land": true},
+      "range_nm": 3, "min_range_nm": 0.2, "speed_kts": 0, "pk": 0.25, "salvo": 4,
+      "reload_s": 180, "damage": 9, "guidance": "BallisticGun"
+    },
+    "us_mk46": {
+      "id": "us_mk46", "name": "Mk 46 Mod 5A(SW) Torpedo", "kind": "Lwt",
+      "targets": {"sub": true},
+      "range_nm": 8, "min_range_nm": 0.4, "speed_kts": 30, "enable_range_nm": 0.8,
+      "pk": 0.55, "salvo": 1, "reload_s": 30, "damage": 52, "guidance": "TorpedoActive"
+    },
+    "us_mk54": {
+      "id": "us_mk54", "name": "Mk 54 Torpedo", "kind": "Lwt",
+      "targets": {"sub": true},
+      "range_nm": 8, "min_range_nm": 0.4, "speed_kts": 30, "enable_range_nm": 0.8,
+      "pk": 0.6, "salvo": 1, "reload_s": 30, "damage": 52, "guidance": "TorpedoActive"
+    }
+  },
+  "sensors": {
+    "us_sonobuoy": {
+      "id": "us_sonobuoy", "name": "Sonobuoy Field", "kind": "SonarPassive",
+      "sub_range_nm": 8, "alt_m": 0
+    },
+    "us_mad": {
+      "id": "us_mad", "name": "Magnetic Anomaly Detector", "kind": "Magnetic",
+      "sub_range_nm": 2, "alt_m": 0
+    }
+  }
+}

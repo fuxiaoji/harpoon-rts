@@ -1,0 +1,1457 @@
+{
+  "platforms": {
+    "uk_f35b": {
+      "id": "uk_f35b",
+      "name": "Lightning (F-35B) Fighter (ceiling 15,240 m)",
+      "kind": "Aircraft",
+      "hp": 24.0,
+      "max_speed_kts": 920.0,
+      "cruise_speed_kts": 460.0,
+      "turn_rate_deg_s": 12.0,
+      "accel_kts_per_s": 6.0,
+      "rcs": "VerySmall",
+      "vp_value": 11.0,
+      "sensors": [
+        "radar_air_long",
+        "cw_flir",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cw_air_amraam",
+          "mounts": 1,
+          "ammo": 4
+        },
+        {
+          "weapon": "cw_asraam",
+          "mounts": 1,
+          "ammo": 2
+        },
+        {
+          "weapon": "bomb_mk82",
+          "mounts": 1,
+          "ammo": 4
+        }
+      ],
+      "chaff": 12,
+      "decoys": 8,
+      "endurance_s": 6809.0,
+      "max_depth_m": 0.0,
+      "dipping_sonar": false
+    },
+    "uk_typhoon": {
+      "id": "uk_typhoon",
+      "name": "Typhoon F.2/FGR.4 Fighter (ceiling 16,765 m)",
+      "kind": "Aircraft",
+      "hp": 31.0,
+      "max_speed_kts": 1030.0,
+      "cruise_speed_kts": 480.0,
+      "turn_rate_deg_s": 14.0,
+      "accel_kts_per_s": 6.0,
+      "rcs": "VerySmall",
+      "vp_value": 14.0,
+      "sensors": [
+        "radar_air_long",
+        "cw_flir",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cw_meteor",
+          "mounts": 1,
+          "ammo": 4
+        },
+        {
+          "weapon": "cw_asraam",
+          "mounts": 1,
+          "ammo": 4
+        },
+        {
+          "weapon": "gun_30mm",
+          "mounts": 1,
+          "ammo": 150
+        }
+      ],
+      "chaff": 16,
+      "decoys": 10,
+      "endurance_s": 5738.0,
+      "max_depth_m": 0.0,
+      "dipping_sonar": false
+    },
+    "uk_poseidon": {
+      "id": "uk_poseidon",
+      "name": "Poseidon MRA.1 Maritime Patrol (ceiling 12,500 m)",
+      "kind": "Aircraft",
+      "hp": 56.0,
+      "max_speed_kts": 490.0,
+      "cruise_speed_kts": 440.0,
+      "turn_rate_deg_s": 4.0,
+      "accel_kts_per_s": 1.5,
+      "rcs": "Large",
+      "vp_value": 22.0,
+      "sensors": [
+        "cw_radar_mpa",
+        "cw_air_sonobuoy",
+        "cw_flir",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cw_mk54",
+          "mounts": 1,
+          "ammo": 3
+        },
+        {
+          "weapon": "cw_stingray",
+          "mounts": 1,
+          "ammo": 2
+        }
+      ],
+      "chaff": 30,
+      "decoys": 20,
+      "endurance_s": 37677.0,
+      "max_depth_m": 0.0,
+      "dipping_sonar": false
+    },
+    "uk_merlin_hm2": {
+      "id": "uk_merlin_hm2",
+      "name": "Merlin HM.1/HM.2 ASW (ceiling 4,600 m)",
+      "kind": "Aircraft",
+      "hp": 23.0,
+      "max_speed_kts": 150.0,
+      "cruise_speed_kts": 140.0,
+      "turn_rate_deg_s": 18.0,
+      "accel_kts_per_s": 1.5,
+      "rcs": "Medium",
+      "vp_value": 8.0,
+      "sensors": [
+        "cw_radar_helo",
+        "sonar_dipping",
+        "cw_air_sonobuoy",
+        "cw_flir",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cw_stingray",
+          "mounts": 1,
+          "ammo": 4
+        }
+      ],
+      "chaff": 8,
+      "decoys": 4,
+      "endurance_s": 12086.0,
+      "max_depth_m": 0.0,
+      "dipping_sonar": true
+    },
+    "uk_merlin_crowsnest": {
+      "id": "uk_merlin_crowsnest",
+      "name": "Merlin HM.2 (Crowsnest) AEW (ceiling 4,600 m)",
+      "kind": "Aircraft",
+      "hp": 23.0,
+      "max_speed_kts": 130.0,
+      "cruise_speed_kts": 110.0,
+      "turn_rate_deg_s": 18.0,
+      "accel_kts_per_s": 1.5,
+      "rcs": "Medium",
+      "vp_value": 9.0,
+      "sensors": [
+        "radar_air_long",
+        "radar_surf_med",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [],
+      "chaff": 8,
+      "decoys": 4,
+      "endurance_s": 14073.0,
+      "max_depth_m": 0.0,
+      "dipping_sonar": false
+    },
+    "uk_wildcat_hma2": {
+      "id": "uk_wildcat_hma2",
+      "name": "Wildcat HMA.2 ASW (ceiling 3,050 m)",
+      "kind": "Aircraft",
+      "hp": 16.0,
+      "max_speed_kts": 157.0,
+      "cruise_speed_kts": 115.0,
+      "turn_rate_deg_s": 20.0,
+      "accel_kts_per_s": 1.5,
+      "rcs": "Small",
+      "vp_value": 6.0,
+      "sensors": [
+        "cw_radar_helo",
+        "cw_flir",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cw_stingray",
+          "mounts": 1,
+          "ammo": 2
+        },
+        {
+          "weapon": "cw_sea_venom",
+          "mounts": 1,
+          "ammo": 4
+        }
+      ],
+      "chaff": 8,
+      "decoys": 4,
+      "endurance_s": 7670.0,
+      "max_depth_m": 0.0,
+      "dipping_sonar": false
+    },
+    "uk_seaharrier_fa2": {
+      "id": "uk_seaharrier_fa2",
+      "name": "Sea Harrier FA.2 Attack (ceiling 15,600 m)",
+      "kind": "Aircraft",
+      "hp": 19.0,
+      "max_speed_kts": 650.0,
+      "cruise_speed_kts": 450.0,
+      "turn_rate_deg_s": 11.0,
+      "accel_kts_per_s": 4.0,
+      "rcs": "Small",
+      "vp_value": 9.0,
+      "sensors": [
+        "radar_air_med",
+        "cw_flir",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cw_air_amraam",
+          "mounts": 1,
+          "ammo": 4
+        },
+        {
+          "weapon": "aam_ir",
+          "mounts": 1,
+          "ammo": 4
+        },
+        {
+          "weapon": "cw_air_sea_eagle",
+          "mounts": 1,
+          "ammo": 2
+        },
+        {
+          "weapon": "bomb_mk82",
+          "mounts": 1,
+          "ammo": 3
+        }
+      ],
+      "chaff": 12,
+      "decoys": 8,
+      "endurance_s": 4040.0,
+      "max_depth_m": 0.0,
+      "dipping_sonar": false
+    },
+    "uk_nimrod_mr2": {
+      "id": "uk_nimrod_mr2",
+      "name": "Nimrod MR.2 Maritime Patrol (ceiling 12,800 m)",
+      "kind": "Aircraft",
+      "hp": 59.0,
+      "max_speed_kts": 500.0,
+      "cruise_speed_kts": 430.0,
+      "turn_rate_deg_s": 4.0,
+      "accel_kts_per_s": 1.5,
+      "rcs": "Large",
+      "vp_value": 24.0,
+      "sensors": [
+        "cw_radar_mpa",
+        "cw_air_sonobuoy",
+        "cw_air_mad",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cw_stingray",
+          "mounts": 1,
+          "ammo": 6
+        },
+        {
+          "weapon": "cw_harpoon_a",
+          "mounts": 1,
+          "ammo": 3
+        }
+      ],
+      "chaff": 30,
+      "decoys": 20,
+      "endurance_s": 32023.0,
+      "max_depth_m": 0.0,
+      "dipping_sonar": false
+    },
+    "uk_sentry": {
+      "id": "uk_sentry",
+      "name": "Sentry AEW.1 AEW (ceiling 12,200 m)",
+      "kind": "Aircraft",
+      "hp": 85.0,
+      "max_speed_kts": 460.0,
+      "cruise_speed_kts": 422.0,
+      "turn_rate_deg_s": 4.0,
+      "accel_kts_per_s": 1.5,
+      "rcs": "Large",
+      "vp_value": 34.0,
+      "sensors": [
+        "radar_air_xlong",
+        "radar_surf_med",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [],
+      "chaff": 20,
+      "decoys": 12,
+      "endurance_s": 39156.0,
+      "max_depth_m": 0.0,
+      "dipping_sonar": false
+    },
+    "uk_seaking_asac7": {
+      "id": "uk_seaking_asac7",
+      "name": "Sea King ASaC.7 AEW (ceiling 3,050 m)",
+      "kind": "Aircraft",
+      "hp": 17.0,
+      "max_speed_kts": 110.0,
+      "cruise_speed_kts": 90.0,
+      "turn_rate_deg_s": 18.0,
+      "accel_kts_per_s": 1.5,
+      "rcs": "Small",
+      "vp_value": 7.0,
+      "sensors": [
+        "radar_air_long",
+        "radar_surf_med",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [],
+      "chaff": 8,
+      "decoys": 4,
+      "endurance_s": 15600.0,
+      "max_depth_m": 0.0,
+      "dipping_sonar": false
+    },
+    "uk_apache": {
+      "id": "uk_apache",
+      "name": "Apache AH.1 Attack (ceiling 6,400 m)",
+      "kind": "Aircraft",
+      "hp": 20.0,
+      "max_speed_kts": 150.0,
+      "cruise_speed_kts": 140.0,
+      "turn_rate_deg_s": 16.0,
+      "accel_kts_per_s": 1.5,
+      "rcs": "Small",
+      "vp_value": 9.0,
+      "sensors": [
+        "radar_surf_sm",
+        "cw_flir",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "rocket_57",
+          "mounts": 2,
+          "ammo": 1
+        },
+        {
+          "weapon": "gun_30mm",
+          "mounts": 1,
+          "ammo": 100
+        }
+      ],
+      "chaff": 8,
+      "decoys": 8,
+      "endurance_s": 5271.0,
+      "max_depth_m": 0.0,
+      "dipping_sonar": false
+    },
+    "uk_tornado_gr4": {
+      "id": "uk_tornado_gr4",
+      "name": "Tornado GR.4/GR.4A Attack (ceiling 15,240 m)",
+      "kind": "Aircraft",
+      "hp": 30.0,
+      "max_speed_kts": 800.0,
+      "cruise_speed_kts": 400.0,
+      "turn_rate_deg_s": 9.0,
+      "accel_kts_per_s": 4.0,
+      "rcs": "Medium",
+      "vp_value": 14.0,
+      "sensors": [
+        "radar_surf_med",
+        "cw_flir",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "bomb_mk82",
+          "mounts": 1,
+          "ammo": 8
+        },
+        {
+          "weapon": "aam_ir",
+          "mounts": 1,
+          "ammo": 2
+        },
+        {
+          "weapon": "gun_30mm",
+          "mounts": 1,
+          "ammo": 150
+        }
+      ],
+      "chaff": 16,
+      "decoys": 10,
+      "endurance_s": 6930.0,
+      "max_depth_m": 0.0,
+      "dipping_sonar": false
+    },
+    "uk_lynx_hma8": {
+      "id": "uk_lynx_hma8",
+      "name": "Lynx HMA.8 Attack (ceiling 3,663 m)",
+      "kind": "Aircraft",
+      "hp": 15.0,
+      "max_speed_kts": 144.0,
+      "cruise_speed_kts": 120.0,
+      "turn_rate_deg_s": 20.0,
+      "accel_kts_per_s": 1.5,
+      "rcs": "Small",
+      "vp_value": 5.0,
+      "sensors": [
+        "cw_radar_helo",
+        "cw_flir",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cw_stingray",
+          "mounts": 1,
+          "ammo": 2
+        },
+        {
+          "weapon": "cw_air_sea_skua",
+          "mounts": 1,
+          "ammo": 4
+        }
+      ],
+      "chaff": 8,
+      "decoys": 4,
+      "endurance_s": 6750.0,
+      "max_depth_m": 0.0,
+      "dipping_sonar": false
+    },
+    "au_f35a": {
+      "id": "au_f35a",
+      "name": "F-35A Lightning II Fighter (ceiling 15,240 m)",
+      "kind": "Aircraft",
+      "hp": 24.0,
+      "max_speed_kts": 920.0,
+      "cruise_speed_kts": 460.0,
+      "turn_rate_deg_s": 12.0,
+      "accel_kts_per_s": 6.0,
+      "rcs": "VerySmall",
+      "vp_value": 11.0,
+      "sensors": [
+        "radar_air_long",
+        "cw_flir",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cw_air_amraam",
+          "mounts": 1,
+          "ammo": 4
+        },
+        {
+          "weapon": "aam_ir",
+          "mounts": 1,
+          "ammo": 2
+        },
+        {
+          "weapon": "bomb_mk82",
+          "mounts": 1,
+          "ammo": 2
+        }
+      ],
+      "chaff": 12,
+      "decoys": 8,
+      "endurance_s": 7591.0,
+      "max_depth_m": 0.0,
+      "dipping_sonar": false
+    },
+    "au_f18f": {
+      "id": "au_f18f",
+      "name": "F/A-18F Super Hornet Fighter/Attack (ceiling 15,240 m)",
+      "kind": "Aircraft",
+      "hp": 29.0,
+      "max_speed_kts": 920.0,
+      "cruise_speed_kts": 460.0,
+      "turn_rate_deg_s": 13.0,
+      "accel_kts_per_s": 6.0,
+      "rcs": "Small",
+      "vp_value": 13.0,
+      "sensors": [
+        "radar_air_long",
+        "cw_flir",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cw_air_amraam",
+          "mounts": 1,
+          "ammo": 4
+        },
+        {
+          "weapon": "aam_ir",
+          "mounts": 1,
+          "ammo": 2
+        },
+        {
+          "weapon": "cw_harpoon",
+          "mounts": 1,
+          "ammo": 4
+        },
+        {
+          "weapon": "bomb_mk82",
+          "mounts": 1,
+          "ammo": 6
+        },
+        {
+          "weapon": "cw_gun_20mm",
+          "mounts": 1,
+          "ammo": 400
+        }
+      ],
+      "chaff": 16,
+      "decoys": 10,
+      "endurance_s": 6026.0,
+      "max_depth_m": 0.0,
+      "dipping_sonar": false
+    },
+    "au_f18a": {
+      "id": "au_f18a",
+      "name": "F/A-18A Hornet Fighter/Attack (ceiling 15,240 m)",
+      "kind": "Aircraft",
+      "hp": 27.0,
+      "max_speed_kts": 1035.0,
+      "cruise_speed_kts": 490.0,
+      "turn_rate_deg_s": 13.0,
+      "accel_kts_per_s": 6.0,
+      "rcs": "Small",
+      "vp_value": 12.0,
+      "sensors": [
+        "radar_air_med",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cw_air_amraam",
+          "mounts": 1,
+          "ammo": 4
+        },
+        {
+          "weapon": "aam_ir",
+          "mounts": 1,
+          "ammo": 2
+        },
+        {
+          "weapon": "cw_harpoon",
+          "mounts": 1,
+          "ammo": 2
+        },
+        {
+          "weapon": "bomb_mk82",
+          "mounts": 1,
+          "ammo": 4
+        },
+        {
+          "weapon": "cw_gun_20mm",
+          "mounts": 1,
+          "ammo": 400
+        }
+      ],
+      "chaff": 12,
+      "decoys": 8,
+      "endurance_s": 5620.0,
+      "max_depth_m": 0.0,
+      "dipping_sonar": false
+    },
+    "au_p8a": {
+      "id": "au_p8a",
+      "name": "P-8A Poseidon Maritime Patrol (ceiling 12,500 m)",
+      "kind": "Aircraft",
+      "hp": 56.0,
+      "max_speed_kts": 490.0,
+      "cruise_speed_kts": 440.0,
+      "turn_rate_deg_s": 4.0,
+      "accel_kts_per_s": 1.5,
+      "rcs": "Large",
+      "vp_value": 22.0,
+      "sensors": [
+        "cw_radar_mpa",
+        "cw_air_sonobuoy",
+        "cw_air_mad",
+        "cw_flir",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cw_mk54",
+          "mounts": 1,
+          "ammo": 5
+        },
+        {
+          "weapon": "cw_harpoon_er",
+          "mounts": 1,
+          "ammo": 4
+        }
+      ],
+      "chaff": 30,
+      "decoys": 20,
+      "endurance_s": 37677.0,
+      "max_depth_m": 0.0,
+      "dipping_sonar": false
+    },
+    "au_e7a": {
+      "id": "au_e7a",
+      "name": "E-7A Wedgetail AEW (ceiling 12,464 m)",
+      "kind": "Aircraft",
+      "hp": 51.0,
+      "max_speed_kts": 460.0,
+      "cruise_speed_kts": 380.0,
+      "turn_rate_deg_s": 4.0,
+      "accel_kts_per_s": 1.5,
+      "rcs": "Large",
+      "vp_value": 20.0,
+      "sensors": [
+        "radar_air_xlong",
+        "radar_surf_med",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [],
+      "chaff": 20,
+      "decoys": 12,
+      "endurance_s": 30600.0,
+      "max_depth_m": 0.0,
+      "dipping_sonar": false
+    },
+    "au_mh60r": {
+      "id": "au_mh60r",
+      "name": "MH-60R Seahawk ASW (ceiling 4,525 m)",
+      "kind": "Aircraft",
+      "hp": 18.0,
+      "max_speed_kts": 145.0,
+      "cruise_speed_kts": 100.0,
+      "turn_rate_deg_s": 20.0,
+      "accel_kts_per_s": 1.5,
+      "rcs": "Small",
+      "vp_value": 6.0,
+      "sensors": [
+        "cw_radar_helo",
+        "sonar_dipping",
+        "cw_air_sonobuoy",
+        "cw_flir",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cw_mk54",
+          "mounts": 1,
+          "ammo": 2
+        }
+      ],
+      "chaff": 8,
+      "decoys": 4,
+      "endurance_s": 9540.0,
+      "max_depth_m": 0.0,
+      "dipping_sonar": true
+    },
+    "au_ea18g": {
+      "id": "au_ea18g",
+      "name": "EA-18G Growler EW Jammer (ceiling 15,240 m)",
+      "kind": "Aircraft",
+      "hp": 30.0,
+      "max_speed_kts": 920.0,
+      "cruise_speed_kts": 460.0,
+      "turn_rate_deg_s": 12.0,
+      "accel_kts_per_s": 6.0,
+      "rcs": "VerySmall",
+      "vp_value": 14.0,
+      "sensors": [
+        "radar_air_long",
+        "esm_std",
+        "cw_flir",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cw_air_amraam",
+          "mounts": 1,
+          "ammo": 2
+        },
+        {
+          "weapon": "aam_ir",
+          "mounts": 1,
+          "ammo": 2
+        }
+      ],
+      "chaff": 16,
+      "decoys": 10,
+      "endurance_s": 5987.0,
+      "max_depth_m": 0.0,
+      "dipping_sonar": false
+    },
+    "au_f111c": {
+      "id": "au_f111c",
+      "name": "F-111C/G Attack (ceiling 15,240 m)",
+      "kind": "Aircraft",
+      "hp": 34.0,
+      "max_speed_kts": 1260.0,
+      "cruise_speed_kts": 500.0,
+      "turn_rate_deg_s": 8.0,
+      "accel_kts_per_s": 4.0,
+      "rcs": "Medium",
+      "vp_value": 15.0,
+      "sensors": [
+        "radar_surf_med",
+        "cw_flir",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cw_harpoon",
+          "mounts": 1,
+          "ammo": 4
+        },
+        {
+          "weapon": "bomb_mk82",
+          "mounts": 1,
+          "ammo": 12
+        },
+        {
+          "weapon": "aam_ir",
+          "mounts": 1,
+          "ammo": 2
+        },
+        {
+          "weapon": "cw_gun_20mm",
+          "mounts": 1,
+          "ammo": 500
+        }
+      ],
+      "chaff": 16,
+      "decoys": 10,
+      "endurance_s": 13644.0,
+      "max_depth_m": 0.0,
+      "dipping_sonar": false
+    },
+    "au_tiger": {
+      "id": "au_tiger",
+      "name": "Tiger Attack/Recon (ceiling 3,500 m)",
+      "kind": "Aircraft",
+      "hp": 14.0,
+      "max_speed_kts": 155.0,
+      "cruise_speed_kts": 125.0,
+      "turn_rate_deg_s": 17.0,
+      "accel_kts_per_s": 1.5,
+      "rcs": "VerySmall",
+      "vp_value": 6.0,
+      "sensors": [
+        "cw_flir",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "rocket_57",
+          "mounts": 2,
+          "ammo": 1
+        },
+        {
+          "weapon": "gun_30mm",
+          "mounts": 1,
+          "ammo": 100
+        }
+      ],
+      "chaff": 8,
+      "decoys": 6,
+      "endurance_s": 8640.0,
+      "max_depth_m": 0.0,
+      "dipping_sonar": false
+    },
+    "au_mrh90": {
+      "id": "au_mrh90",
+      "name": "MRH90 Taipan Transport (ceiling 3,300 m)",
+      "kind": "Aircraft",
+      "hp": 18.0,
+      "max_speed_kts": 157.0,
+      "cruise_speed_kts": 140.0,
+      "turn_rate_deg_s": 12.0,
+      "accel_kts_per_s": 1.5,
+      "rcs": "VerySmall",
+      "vp_value": 4.0,
+      "sensors": [
+        "cw_radar_helo",
+        "cw_flir",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [],
+      "chaff": 0,
+      "decoys": 0,
+      "endurance_s": 9514.0,
+      "max_depth_m": 0.0,
+      "dipping_sonar": false
+    },
+    "au_s70b2": {
+      "id": "au_s70b2",
+      "name": "S-70B-2 Seahawk ASW (ceiling 5,790 m)",
+      "kind": "Aircraft",
+      "hp": 18.0,
+      "max_speed_kts": 145.0,
+      "cruise_speed_kts": 125.0,
+      "turn_rate_deg_s": 20.0,
+      "accel_kts_per_s": 1.5,
+      "rcs": "Small",
+      "vp_value": 6.0,
+      "sensors": [
+        "cw_radar_helo",
+        "cw_air_mad",
+        "cw_air_sonobuoy",
+        "cw_flir",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cw_mk46",
+          "mounts": 1,
+          "ammo": 2
+        }
+      ],
+      "chaff": 8,
+      "decoys": 4,
+      "endurance_s": 8640.0,
+      "max_depth_m": 0.0,
+      "dipping_sonar": false
+    },
+    "au_mq4c": {
+      "id": "au_mq4c",
+      "name": "MQ-4C Maritime Patrol UAV (ceiling 18,288 m)",
+      "kind": "Aircraft",
+      "hp": 18.0,
+      "max_speed_kts": 345.0,
+      "cruise_speed_kts": 310.0,
+      "turn_rate_deg_s": 6.0,
+      "accel_kts_per_s": 1.0,
+      "rcs": "Large",
+      "vp_value": 5.0,
+      "sensors": [
+        "cw_radar_mpa",
+        "cw_flir",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [],
+      "chaff": 0,
+      "decoys": 0,
+      "endurance_s": 113226.0,
+      "max_depth_m": 0.0,
+      "dipping_sonar": false
+    },
+    "ca_cp140": {
+      "id": "ca_cp140",
+      "name": "CP-140 Aurora Maritime Patrol (ceiling 8,600 m)",
+      "kind": "Aircraft",
+      "hp": 61.0,
+      "max_speed_kts": 385.0,
+      "cruise_speed_kts": 330.0,
+      "turn_rate_deg_s": 4.0,
+      "accel_kts_per_s": 1.5,
+      "rcs": "Large",
+      "vp_value": 24.0,
+      "sensors": [
+        "cw_radar_mpa",
+        "cw_air_sonobuoy",
+        "cw_air_mad",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cw_mk46",
+          "mounts": 1,
+          "ammo": 8
+        }
+      ],
+      "chaff": 30,
+      "decoys": 20,
+      "endurance_s": 44782.0,
+      "max_depth_m": 0.0,
+      "dipping_sonar": false
+    },
+    "ca_ch148": {
+      "id": "ca_ch148",
+      "name": "CH-148 Cyclone ASW (ceiling 4,572 m)",
+      "kind": "Aircraft",
+      "hp": 19.0,
+      "max_speed_kts": 155.0,
+      "cruise_speed_kts": 135.0,
+      "turn_rate_deg_s": 18.0,
+      "accel_kts_per_s": 1.5,
+      "rcs": "Medium",
+      "vp_value": 7.0,
+      "sensors": [
+        "cw_radar_helo",
+        "sonar_dipping",
+        "cw_air_sonobuoy",
+        "cw_flir",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cw_mk54",
+          "mounts": 1,
+          "ammo": 2
+        }
+      ],
+      "chaff": 8,
+      "decoys": 4,
+      "endurance_s": 12667.0,
+      "max_depth_m": 0.0,
+      "dipping_sonar": true
+    },
+    "ca_cf188": {
+      "id": "ca_cf188",
+      "name": "CF-188 Hornet Fighter/Attack (ceiling 15,510 m)",
+      "kind": "Aircraft",
+      "hp": 27.0,
+      "max_speed_kts": 1035.0,
+      "cruise_speed_kts": 490.0,
+      "turn_rate_deg_s": 13.0,
+      "accel_kts_per_s": 6.0,
+      "rcs": "Small",
+      "vp_value": 12.0,
+      "sensors": [
+        "radar_air_med",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cw_air_amraam",
+          "mounts": 1,
+          "ammo": 4
+        },
+        {
+          "weapon": "aam_ir",
+          "mounts": 1,
+          "ammo": 2
+        },
+        {
+          "weapon": "bomb_mk82",
+          "mounts": 1,
+          "ammo": 4
+        },
+        {
+          "weapon": "cw_gun_20mm",
+          "mounts": 1,
+          "ammo": 400
+        }
+      ],
+      "chaff": 12,
+      "decoys": 8,
+      "endurance_s": 5620.0,
+      "max_depth_m": 0.0,
+      "dipping_sonar": false
+    },
+    "ca_cc177": {
+      "id": "ca_cc177",
+      "name": "CC-177 Globemaster III Transport (ceiling 13,715 m)",
+      "kind": "Aircraft",
+      "hp": 100.0,
+      "max_speed_kts": 500.0,
+      "cruise_speed_kts": 350.0,
+      "turn_rate_deg_s": 3.0,
+      "accel_kts_per_s": 1.5,
+      "rcs": "Large",
+      "vp_value": 15.0,
+      "sensors": [
+        "radar_nav",
+        "visual"
+      ],
+      "weapons": [],
+      "chaff": 0,
+      "decoys": 0,
+      "endurance_s": 41091.0,
+      "max_depth_m": 0.0,
+      "dipping_sonar": false
+    },
+    "ca_ch147f": {
+      "id": "ca_ch147f",
+      "name": "CH-147F Chinook Transport (ceiling 6,100 m)",
+      "kind": "Aircraft",
+      "hp": 23.0,
+      "max_speed_kts": 160.0,
+      "cruise_speed_kts": 130.0,
+      "turn_rate_deg_s": 10.0,
+      "accel_kts_per_s": 1.5,
+      "rcs": "Medium",
+      "vp_value": 6.0,
+      "sensors": [
+        "cw_flir",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [],
+      "chaff": 0,
+      "decoys": 0,
+      "endurance_s": 9000.0,
+      "max_depth_m": 0.0,
+      "dipping_sonar": false
+    },
+    "ca_ch124": {
+      "id": "ca_ch124",
+      "name": "CH-124 Sea King ASW (ceiling 3,688 m)",
+      "kind": "Aircraft",
+      "hp": 17.0,
+      "max_speed_kts": 133.0,
+      "cruise_speed_kts": 100.0,
+      "turn_rate_deg_s": 18.0,
+      "accel_kts_per_s": 1.5,
+      "rcs": "Small",
+      "vp_value": 6.0,
+      "sensors": [
+        "cw_radar_helo",
+        "sonar_dipping",
+        "cw_air_sonobuoy",
+        "cw_air_mad",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cw_mk46",
+          "mounts": 1,
+          "ammo": 4
+        }
+      ],
+      "chaff": 8,
+      "decoys": 4,
+      "endurance_s": 14040.0,
+      "max_depth_m": 0.0,
+      "dipping_sonar": true
+    },
+    "ca_cp121": {
+      "id": "ca_cp121",
+      "name": "CP-121 Tracker ASW Patrol (ceiling 6,950 m)",
+      "kind": "Aircraft",
+      "hp": 20.0,
+      "max_speed_kts": 236.0,
+      "cruise_speed_kts": 130.0,
+      "turn_rate_deg_s": 4.0,
+      "accel_kts_per_s": 2.0,
+      "rcs": "Medium",
+      "vp_value": 8.0,
+      "sensors": [
+        "radar_surf_med",
+        "cw_air_mad",
+        "cw_air_sonobuoy",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cw_mk46",
+          "mounts": 1,
+          "ammo": 1
+        }
+      ],
+      "chaff": 12,
+      "decoys": 8,
+      "endurance_s": 18000.0,
+      "max_depth_m": 0.0,
+      "dipping_sonar": false
+    },
+    "cw_p8a_nz": {
+      "id": "cw_p8a_nz",
+      "name": "P-8A Poseidon Maritime Patrol (NZ, ceiling 12,500 m)",
+      "kind": "Aircraft",
+      "hp": 56.0,
+      "max_speed_kts": 490.0,
+      "cruise_speed_kts": 440.0,
+      "turn_rate_deg_s": 4.0,
+      "accel_kts_per_s": 1.5,
+      "rcs": "Large",
+      "vp_value": 22.0,
+      "sensors": [
+        "cw_radar_mpa",
+        "cw_air_sonobuoy",
+        "cw_air_mad",
+        "cw_flir",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cw_mk54",
+          "mounts": 1,
+          "ammo": 5
+        }
+      ],
+      "chaff": 30,
+      "decoys": 20,
+      "endurance_s": 37677.0,
+      "max_depth_m": 0.0,
+      "dipping_sonar": false
+    },
+    "cw_nh90_tth": {
+      "id": "cw_nh90_tth",
+      "name": "NH-90 TTH Transport (NZ, ceiling 3,300 m)",
+      "kind": "Aircraft",
+      "hp": 18.0,
+      "max_speed_kts": 157.0,
+      "cruise_speed_kts": 140.0,
+      "turn_rate_deg_s": 12.0,
+      "accel_kts_per_s": 1.5,
+      "rcs": "VerySmall",
+      "vp_value": 4.0,
+      "sensors": [
+        "cw_radar_helo",
+        "cw_flir",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [],
+      "chaff": 0,
+      "decoys": 0,
+      "endurance_s": 9514.0,
+      "max_depth_m": 0.0,
+      "dipping_sonar": false
+    },
+    "cw_sh2g_nz": {
+      "id": "cw_sh2g_nz",
+      "name": "SH-2G(I) Super Seasprite Attack (NZ, ceiling 6,401 m)",
+      "kind": "Aircraft",
+      "hp": 15.0,
+      "max_speed_kts": 150.0,
+      "cruise_speed_kts": 130.0,
+      "turn_rate_deg_s": 20.0,
+      "accel_kts_per_s": 1.5,
+      "rcs": "Small",
+      "vp_value": 5.0,
+      "sensors": [
+        "cw_radar_helo",
+        "cw_flir",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cw_mk46",
+          "mounts": 1,
+          "ammo": 2
+        }
+      ],
+      "chaff": 8,
+      "decoys": 4,
+      "endurance_s": 5400.0,
+      "max_depth_m": 0.0,
+      "dipping_sonar": false
+    },
+    "cw_c130j_nz": {
+      "id": "cw_c130j_nz",
+      "name": "C-130J-30 Hercules Transport (NZ, ceiling 10,945 m)",
+      "kind": "Aircraft",
+      "hp": 65.0,
+      "max_speed_kts": 356.0,
+      "cruise_speed_kts": 284.0,
+      "turn_rate_deg_s": 3.0,
+      "accel_kts_per_s": 1.5,
+      "rcs": "Large",
+      "vp_value": 10.0,
+      "sensors": [
+        "radar_nav",
+        "cw_flir",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [],
+      "chaff": 0,
+      "decoys": 0,
+      "endurance_s": 31690.0,
+      "max_depth_m": 0.0,
+      "dipping_sonar": false
+    }
+  },
+  "weapons": {
+    "cw_asraam": {
+      "id": "cw_asraam",
+      "name": "AIM-132 ASRAAM",
+      "kind": "Aam",
+      "targets": {
+        "air": true
+      },
+      "range_nm": 40,
+      "min_range_nm": 0.3,
+      "speed_kts": 2008,
+      "pk": 0.65,
+      "salvo": 1,
+      "reload_s": 3,
+      "damage": 20,
+      "guidance": "HomingAir",
+      "ir": true
+    },
+    "cw_meteor": {
+      "id": "cw_meteor",
+      "name": "Meteor BVRAAM",
+      "kind": "Aam",
+      "targets": {
+        "air": true
+      },
+      "range_nm": 40,
+      "min_range_nm": 0.5,
+      "speed_kts": 2582,
+      "pk": 0.65,
+      "salvo": 1,
+      "reload_s": 3,
+      "damage": 20,
+      "guidance": "HomingAir"
+    },
+    "cw_air_amraam": {
+      "id": "cw_air_amraam",
+      "name": "AIM-120 AMRAAM",
+      "kind": "Aam",
+      "targets": {
+        "air": true
+      },
+      "range_nm": 35,
+      "min_range_nm": 0.5,
+      "speed_kts": 2295,
+      "pk": 0.6,
+      "salvo": 1,
+      "reload_s": 3,
+      "damage": 20,
+      "guidance": "HomingAir"
+    },
+    "cw_harpoon_a": {
+      "id": "cw_harpoon_a",
+      "name": "AGM-84A Harpoon IA",
+      "kind": "Ascm",
+      "targets": {
+        "surface": true
+      },
+      "range_nm": 60,
+      "min_range_nm": 3,
+      "speed_kts": 561,
+      "pk": 0.55,
+      "salvo": 2,
+      "reload_s": 45,
+      "damage": 40,
+      "guidance": "SeaSkimmer"
+    },
+    "cw_harpoon_er": {
+      "id": "cw_harpoon_er",
+      "name": "AGM-84G Harpoon IG",
+      "kind": "Ascm",
+      "targets": {
+        "surface": true
+      },
+      "range_nm": 130,
+      "min_range_nm": 3,
+      "speed_kts": 561,
+      "pk": 0.55,
+      "salvo": 2,
+      "reload_s": 45,
+      "damage": 40,
+      "guidance": "SeaSkimmer"
+    },
+    "cw_harpoon": {
+      "id": "cw_harpoon",
+      "name": "AGM-84D Harpoon IC",
+      "kind": "Ascm",
+      "targets": {
+        "surface": true
+      },
+      "range_nm": 80,
+      "min_range_nm": 3,
+      "speed_kts": 561,
+      "pk": 0.55,
+      "salvo": 2,
+      "reload_s": 45,
+      "damage": 40,
+      "guidance": "SeaSkimmer"
+    },
+    "cw_stingray": {
+      "id": "cw_stingray",
+      "name": "Sting Ray Mod 1 Torpedo",
+      "kind": "Lwt",
+      "targets": {
+        "sub": true
+      },
+      "range_nm": 4.3,
+      "speed_kts": 45,
+      "enable_range_nm": 0.5,
+      "pk": 0.55,
+      "salvo": 1,
+      "reload_s": 20,
+      "damage": 68,
+      "guidance": "TorpedoActive"
+    },
+    "cw_mk46": {
+      "id": "cw_mk46",
+      "name": "Mk 46 Mod 5 Torpedo",
+      "kind": "Lwt",
+      "targets": {
+        "sub": true
+      },
+      "range_nm": 6.0,
+      "speed_kts": 45,
+      "enable_range_nm": 0.5,
+      "pk": 0.55,
+      "salvo": 1,
+      "reload_s": 20,
+      "damage": 52,
+      "guidance": "TorpedoActive"
+    },
+    "cw_mk54": {
+      "id": "cw_mk54",
+      "name": "Mk 54 Torpedo",
+      "kind": "Lwt",
+      "targets": {
+        "sub": true
+      },
+      "range_nm": 6.0,
+      "speed_kts": 45,
+      "enable_range_nm": 0.5,
+      "pk": 0.6,
+      "salvo": 1,
+      "reload_s": 20,
+      "damage": 52,
+      "guidance": "TorpedoActive"
+    },
+    "cw_sea_venom": {
+      "id": "cw_sea_venom",
+      "name": "Sea Venom Lightweight ASM",
+      "kind": "Ascm",
+      "targets": {
+        "surface": true
+      },
+      "range_nm": 10.8,
+      "min_range_nm": 0.5,
+      "speed_kts": 530,
+      "pk": 0.6,
+      "salvo": 1,
+      "reload_s": 30,
+      "damage": 21,
+      "guidance": "SeaSkimmer"
+    },
+    "cw_air_sea_eagle": {
+      "id": "cw_air_sea_eagle",
+      "name": "Sea Eagle ASM",
+      "kind": "Ascm",
+      "targets": {
+        "surface": true
+      },
+      "range_nm": 60,
+      "min_range_nm": 2,
+      "speed_kts": 594,
+      "pk": 0.55,
+      "salvo": 1,
+      "reload_s": 45,
+      "damage": 41,
+      "guidance": "SeaSkimmer"
+    },
+    "cw_air_sea_skua": {
+      "id": "cw_air_sea_skua",
+      "name": "Sea Skua ASM",
+      "kind": "Ascm",
+      "targets": {
+        "surface": true
+      },
+      "range_nm": 8.2,
+      "min_range_nm": 0.5,
+      "speed_kts": 560,
+      "pk": 0.55,
+      "salvo": 1,
+      "reload_s": 30,
+      "damage": 19,
+      "guidance": "SeaSkimmer"
+    },
+    "cw_gun_20mm": {
+      "id": "cw_gun_20mm",
+      "name": "20mm Aircraft Cannon",
+      "kind": "Gun",
+      "targets": {
+        "air": true,
+        "surface": true,
+        "land": true
+      },
+      "range_nm": 2.0,
+      "speed_kts": 0,
+      "pk": 0.15,
+      "salvo": 3,
+      "reload_s": 4,
+      "damage": 6,
+      "guidance": "BallisticGun"
+    }
+  },
+  "sensors": {
+    "cw_radar_mpa": {
+      "id": "cw_radar_mpa",
+      "name": "Maritime Patrol Search Radar",
+      "kind": "Radar",
+      "air_range_nm": 90,
+      "surface_range_nm": 120,
+      "missile_range_nm": 60,
+      "alt_m": 5000,
+      "radar_class": "SS"
+    },
+    "cw_radar_helo": {
+      "id": "cw_radar_helo",
+      "name": "Helicopter Surface Search Radar",
+      "kind": "Radar",
+      "air_range_nm": 30,
+      "surface_range_nm": 45,
+      "missile_range_nm": 20,
+      "alt_m": 500,
+      "radar_class": "SS"
+    },
+    "cw_flir": {
+      "id": "cw_flir",
+      "name": "FLIR/EO Turret",
+      "kind": "Ir",
+      "air_range_nm": 20,
+      "surface_range_nm": 15,
+      "missile_range_nm": 10,
+      "alt_m": 3000
+    },
+    "cw_air_sonobuoy": {
+      "id": "cw_air_sonobuoy",
+      "name": "Sonobuoy Field",
+      "kind": "SonarPassive",
+      "sub_range_nm": 4,
+      "alt_m": 0
+    },
+    "cw_air_mad": {
+      "id": "cw_air_mad",
+      "name": "Magnetic Anomaly Detector",
+      "kind": "Magnetic",
+      "sub_range_nm": 1.5,
+      "alt_m": 0
+    }
+  }
+}

@@ -1,0 +1,2060 @@
+{
+  "platforms": {
+    "us_ford": {
+      "id": "us_ford",
+      "name": "Gerald R. Ford CVN",
+      "kind": "Ship",
+      "hp": 1667,
+      "max_speed_kts": 32,
+      "cruise_speed_kts": 20,
+      "turn_rate_deg_s": 1.3,
+      "rcs": "Large",
+      "noise_db": 66,
+      "vp_value": 80,
+      "sensors": [
+        "radar_air_long",
+        "radar_surf_med",
+        "radar_nav",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "us_essm",
+          "mounts": 2,
+          "ammo": 8
+        },
+        {
+          "weapon": "us_ram",
+          "mounts": 2,
+          "ammo": 21
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 3,
+          "ammo": 30
+        },
+        {
+          "weapon": "gun_30mm",
+          "mounts": 4,
+          "ammo": 40
+        }
+      ],
+      "chaff": 60,
+      "decoys": 20,
+      "deck": {
+        "capacity": 60,
+        "cycle_s": 120,
+        "wing": [
+          {
+            "class": "fighter",
+            "count": 22
+          },
+          {
+            "class": "striker",
+            "count": 12
+          },
+          {
+            "class": "aew",
+            "count": 4
+          },
+          {
+            "class": "helo_asw",
+            "count": 6
+          }
+        ]
+      }
+    },
+    "us_nimitz": {
+      "id": "us_nimitz",
+      "name": "Nimitz CVN",
+      "kind": "Ship",
+      "hp": 1605,
+      "max_speed_kts": 32,
+      "cruise_speed_kts": 20,
+      "turn_rate_deg_s": 1.2,
+      "rcs": "Large",
+      "noise_db": 66,
+      "vp_value": 75,
+      "sensors": [
+        "radar_air_long",
+        "radar_surf_med",
+        "radar_nav",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "us_essm",
+          "mounts": 2,
+          "ammo": 8
+        },
+        {
+          "weapon": "us_ram",
+          "mounts": 2,
+          "ammo": 21
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 2,
+          "ammo": 30
+        },
+        {
+          "weapon": "gun_30mm",
+          "mounts": 2,
+          "ammo": 20
+        }
+      ],
+      "chaff": 60,
+      "decoys": 20,
+      "deck": {
+        "capacity": 50,
+        "cycle_s": 120,
+        "wing": [
+          {
+            "class": "fighter",
+            "count": 18
+          },
+          {
+            "class": "striker",
+            "count": 14
+          },
+          {
+            "class": "aew",
+            "count": 4
+          },
+          {
+            "class": "helo_asw",
+            "count": 4
+          }
+        ]
+      }
+    },
+    "us_ticonderoga": {
+      "id": "us_ticonderoga",
+      "name": "Ticonderoga (VLS) CG",
+      "kind": "Ship",
+      "hp": 295,
+      "max_speed_kts": 30,
+      "cruise_speed_kts": 20,
+      "turn_rate_deg_s": 1.9,
+      "rcs": "Medium",
+      "noise_db": 45,
+      "vp_value": 38,
+      "sensors": [
+        "radar_air_long",
+        "radar_surf_med",
+        "radar_nav",
+        "esm_std",
+        "sonar_p_hull",
+        "sonar_p_tow",
+        "sonar_a_hull",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "us_sm2mr",
+          "mounts": 1,
+          "ammo": 96
+        },
+        {
+          "weapon": "us_tomahawk",
+          "mounts": 1,
+          "ammo": 26
+        },
+        {
+          "weapon": "us_harpoon",
+          "mounts": 2,
+          "ammo": 4
+        },
+        {
+          "weapon": "gun_5in",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 2,
+          "ammo": 30
+        },
+        {
+          "weapon": "us_mk54",
+          "mounts": 2,
+          "ammo": 3
+        }
+      ],
+      "chaff": 60,
+      "decoys": 16
+    },
+    "us_ticonderoga_cmp": {
+      "id": "us_ticonderoga_cmp",
+      "name": "Ticonderoga (CMP) CG",
+      "kind": "Ship",
+      "hp": 295,
+      "max_speed_kts": 30,
+      "cruise_speed_kts": 20,
+      "turn_rate_deg_s": 1.9,
+      "rcs": "Medium",
+      "noise_db": 45,
+      "vp_value": 40,
+      "sensors": [
+        "radar_air_long",
+        "radar_surf_med",
+        "radar_nav",
+        "esm_std",
+        "sonar_p_hull",
+        "sonar_p_tow",
+        "sonar_a_hull",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "us_sm2mr",
+          "mounts": 1,
+          "ammo": 80
+        },
+        {
+          "weapon": "us_essm",
+          "mounts": 1,
+          "ammo": 24
+        },
+        {
+          "weapon": "us_sm3",
+          "mounts": 1,
+          "ammo": 10
+        },
+        {
+          "weapon": "us_tomahawk",
+          "mounts": 1,
+          "ammo": 24
+        },
+        {
+          "weapon": "us_vlasroc",
+          "mounts": 1,
+          "ammo": 8
+        },
+        {
+          "weapon": "us_harpoon",
+          "mounts": 2,
+          "ammo": 4
+        },
+        {
+          "weapon": "gun_5in",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 2,
+          "ammo": 30
+        },
+        {
+          "weapon": "us_mk54",
+          "mounts": 2,
+          "ammo": 3
+        }
+      ],
+      "chaff": 60,
+      "decoys": 16
+    },
+    "us_burke_1": {
+      "id": "us_burke_1",
+      "name": "Arleigh Burke Flight I/II DDG",
+      "kind": "Ship",
+      "hp": 330,
+      "max_speed_kts": 31,
+      "cruise_speed_kts": 20,
+      "turn_rate_deg_s": 2.0,
+      "rcs": "Small",
+      "noise_db": 44,
+      "vp_value": 34,
+      "sensors": [
+        "radar_air_long",
+        "radar_surf_med",
+        "radar_nav",
+        "esm_std",
+        "sonar_p_hull",
+        "sonar_p_tow",
+        "sonar_a_hull",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "us_sm2mr",
+          "mounts": 1,
+          "ammo": 72
+        },
+        {
+          "weapon": "us_tomahawk",
+          "mounts": 1,
+          "ammo": 18
+        },
+        {
+          "weapon": "us_vlasroc",
+          "mounts": 1,
+          "ammo": 4
+        },
+        {
+          "weapon": "us_harpoon",
+          "mounts": 2,
+          "ammo": 4
+        },
+        {
+          "weapon": "gun_5in",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 2,
+          "ammo": 30
+        },
+        {
+          "weapon": "us_mk54",
+          "mounts": 2,
+          "ammo": 3
+        }
+      ],
+      "chaff": 50,
+      "decoys": 12
+    },
+    "us_burke_2a": {
+      "id": "us_burke_2a",
+      "name": "Arleigh Burke Flight IIA DDG",
+      "kind": "Ship",
+      "hp": 341,
+      "max_speed_kts": 32,
+      "cruise_speed_kts": 20,
+      "turn_rate_deg_s": 2.0,
+      "rcs": "Small",
+      "noise_db": 44,
+      "vp_value": 35,
+      "sensors": [
+        "radar_air_long",
+        "radar_surf_med",
+        "radar_nav",
+        "esm_std",
+        "sonar_p_hull",
+        "sonar_p_tow",
+        "sonar_a_hull",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "us_sm2mr",
+          "mounts": 1,
+          "ammo": 72
+        },
+        {
+          "weapon": "us_vlasroc",
+          "mounts": 1,
+          "ammo": 4
+        },
+        {
+          "weapon": "us_tomahawk",
+          "mounts": 1,
+          "ammo": 20
+        },
+        {
+          "weapon": "gun_5in",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 2,
+          "ammo": 30
+        },
+        {
+          "weapon": "us_mk54",
+          "mounts": 2,
+          "ammo": 3
+        }
+      ],
+      "chaff": 50,
+      "decoys": 12
+    },
+    "us_burke_2a_restart": {
+      "id": "us_burke_2a_restart",
+      "name": "Arleigh Burke Flight IIA Restart DDG",
+      "kind": "Ship",
+      "hp": 344,
+      "max_speed_kts": 32,
+      "cruise_speed_kts": 20,
+      "turn_rate_deg_s": 2.0,
+      "rcs": "Small",
+      "noise_db": 44,
+      "vp_value": 36,
+      "sensors": [
+        "radar_air_long",
+        "radar_surf_med",
+        "radar_nav",
+        "esm_std",
+        "sonar_p_hull",
+        "sonar_p_tow",
+        "sonar_a_hull",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "us_sm2mr",
+          "mounts": 1,
+          "ammo": 38
+        },
+        {
+          "weapon": "us_sm3",
+          "mounts": 1,
+          "ammo": 6
+        },
+        {
+          "weapon": "us_sm6",
+          "mounts": 1,
+          "ammo": 16
+        },
+        {
+          "weapon": "us_essm",
+          "mounts": 1,
+          "ammo": 32
+        },
+        {
+          "weapon": "us_vlasroc",
+          "mounts": 1,
+          "ammo": 4
+        },
+        {
+          "weapon": "us_tomahawk",
+          "mounts": 1,
+          "ammo": 24
+        },
+        {
+          "weapon": "gun_5in",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 1,
+          "ammo": 30
+        },
+        {
+          "weapon": "us_mk54",
+          "mounts": 2,
+          "ammo": 3
+        }
+      ],
+      "chaff": 50,
+      "decoys": 12
+    },
+    "us_burke_2a_ti": {
+      "id": "us_burke_2a_ti",
+      "name": "Arleigh Burke Flight IIA TI DDG",
+      "kind": "Ship",
+      "hp": 350,
+      "max_speed_kts": 32,
+      "cruise_speed_kts": 20,
+      "turn_rate_deg_s": 2.0,
+      "rcs": "Small",
+      "noise_db": 44,
+      "vp_value": 37,
+      "sensors": [
+        "radar_air_long",
+        "radar_surf_med",
+        "radar_nav",
+        "esm_std",
+        "sonar_p_hull",
+        "sonar_p_tow",
+        "sonar_a_hull",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "us_sm2mr",
+          "mounts": 1,
+          "ammo": 38
+        },
+        {
+          "weapon": "us_sm3",
+          "mounts": 1,
+          "ammo": 6
+        },
+        {
+          "weapon": "us_sm6",
+          "mounts": 1,
+          "ammo": 16
+        },
+        {
+          "weapon": "us_essm",
+          "mounts": 1,
+          "ammo": 32
+        },
+        {
+          "weapon": "us_vlasroc",
+          "mounts": 1,
+          "ammo": 4
+        },
+        {
+          "weapon": "us_tomahawk",
+          "mounts": 1,
+          "ammo": 24
+        },
+        {
+          "weapon": "gun_5in",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 1,
+          "ammo": 30
+        },
+        {
+          "weapon": "us_mk54",
+          "mounts": 2,
+          "ammo": 3
+        }
+      ],
+      "chaff": 50,
+      "decoys": 12
+    },
+    "us_burke_3": {
+      "id": "us_burke_3",
+      "name": "Arleigh Burke Flight III DDG",
+      "kind": "Ship",
+      "hp": 371,
+      "max_speed_kts": 32,
+      "cruise_speed_kts": 20,
+      "turn_rate_deg_s": 2.0,
+      "rcs": "Small",
+      "noise_db": 44,
+      "vp_value": 40,
+      "sensors": [
+        "radar_air_xlong",
+        "radar_surf_med",
+        "radar_nav",
+        "esm_std",
+        "sonar_p_hull",
+        "sonar_p_tow",
+        "sonar_a_hull",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "us_sm2mr",
+          "mounts": 1,
+          "ammo": 38
+        },
+        {
+          "weapon": "us_sm3",
+          "mounts": 1,
+          "ammo": 6
+        },
+        {
+          "weapon": "us_sm6",
+          "mounts": 1,
+          "ammo": 16
+        },
+        {
+          "weapon": "us_essm",
+          "mounts": 1,
+          "ammo": 32
+        },
+        {
+          "weapon": "us_vlasroc",
+          "mounts": 1,
+          "ammo": 4
+        },
+        {
+          "weapon": "us_tomahawk",
+          "mounts": 1,
+          "ammo": 24
+        },
+        {
+          "weapon": "gun_5in",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "gun_30mm",
+          "mounts": 2,
+          "ammo": 40
+        },
+        {
+          "weapon": "us_mk54",
+          "mounts": 2,
+          "ammo": 3
+        }
+      ],
+      "chaff": 50,
+      "decoys": 12
+    },
+    "us_zumwalt": {
+      "id": "us_zumwalt",
+      "name": "Zumwalt DDG",
+      "kind": "Ship",
+      "hp": 432,
+      "max_speed_kts": 30,
+      "cruise_speed_kts": 20,
+      "turn_rate_deg_s": 1.8,
+      "rcs": "VerySmall",
+      "noise_db": 26,
+      "vp_value": 45,
+      "sensors": [
+        "radar_air_long",
+        "radar_surf_med",
+        "radar_nav",
+        "esm_std",
+        "sonar_p_hull",
+        "sonar_p_tow",
+        "sonar_a_hull",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "us_tomahawk",
+          "mounts": 1,
+          "ammo": 38
+        },
+        {
+          "weapon": "us_essm",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "us_sm2mr",
+          "mounts": 1,
+          "ammo": 20
+        },
+        {
+          "weapon": "us_sm6",
+          "mounts": 1,
+          "ammo": 6
+        },
+        {
+          "weapon": "us_vlasroc",
+          "mounts": 1,
+          "ammo": 6
+        },
+        {
+          "weapon": "gun_30mm",
+          "mounts": 2,
+          "ammo": 40
+        }
+      ],
+      "chaff": 40,
+      "decoys": 12
+    },
+    "us_constellation": {
+      "id": "us_constellation",
+      "name": "Constellation FFG",
+      "kind": "Ship",
+      "hp": 309,
+      "max_speed_kts": 28,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 2.5,
+      "rcs": "Small",
+      "noise_db": 44,
+      "vp_value": 26,
+      "sensors": [
+        "radar_air_xlong",
+        "radar_surf_med",
+        "radar_nav",
+        "esm_std",
+        "sonar_p_tow",
+        "sonar_a_hull",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "us_sm2mr",
+          "mounts": 1,
+          "ammo": 24
+        },
+        {
+          "weapon": "us_essm",
+          "mounts": 1,
+          "ammo": 32
+        },
+        {
+          "weapon": "us_nsm",
+          "mounts": 4,
+          "ammo": 4
+        },
+        {
+          "weapon": "us_ram",
+          "mounts": 1,
+          "ammo": 21
+        },
+        {
+          "weapon": "us_mk110",
+          "mounts": 1,
+          "ammo": 40
+        }
+      ],
+      "chaff": 40,
+      "decoys": 12,
+      "deck": {
+        "capacity": 2,
+        "cycle_s": 120,
+        "wing": [
+          {
+            "class": "helo_asw",
+            "count": 2
+          }
+        ]
+      }
+    },
+    "us_freedom": {
+      "id": "us_freedom",
+      "name": "Freedom LCS",
+      "kind": "Ship",
+      "hp": 145,
+      "max_speed_kts": 40,
+      "cruise_speed_kts": 25,
+      "turn_rate_deg_s": 3.5,
+      "rcs": "Small",
+      "noise_db": 54,
+      "vp_value": 16,
+      "sensors": [
+        "radar_air_med",
+        "radar_surf_sm",
+        "radar_nav",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "us_nsm",
+          "mounts": 2,
+          "ammo": 4
+        },
+        {
+          "weapon": "us_ram",
+          "mounts": 1,
+          "ammo": 21
+        },
+        {
+          "weapon": "us_mk110",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "gun_30mm",
+          "mounts": 2,
+          "ammo": 40
+        }
+      ],
+      "chaff": 20,
+      "decoys": 8,
+      "deck": {
+        "capacity": 1,
+        "cycle_s": 120,
+        "wing": [
+          {
+            "class": "helo_asw",
+            "count": 1
+          }
+        ]
+      }
+    },
+    "us_independence": {
+      "id": "us_independence",
+      "name": "Independence LCS",
+      "kind": "Ship",
+      "hp": 78,
+      "max_speed_kts": 40,
+      "cruise_speed_kts": 25,
+      "turn_rate_deg_s": 3.5,
+      "rcs": "Small",
+      "noise_db": 54,
+      "vp_value": 15,
+      "sensors": [
+        "radar_air_med",
+        "radar_surf_sm",
+        "radar_nav",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "us_nsm",
+          "mounts": 2,
+          "ammo": 4
+        },
+        {
+          "weapon": "us_ram",
+          "mounts": 1,
+          "ammo": 11
+        },
+        {
+          "weapon": "us_mk110",
+          "mounts": 1,
+          "ammo": 40
+        }
+      ],
+      "chaff": 20,
+      "decoys": 8,
+      "deck": {
+        "capacity": 1,
+        "cycle_s": 120,
+        "wing": [
+          {
+            "class": "helo_asw",
+            "count": 1
+          }
+        ]
+      }
+    },
+    "us_avenger": {
+      "id": "us_avenger",
+      "name": "Avenger MHS",
+      "kind": "Ship",
+      "hp": 88,
+      "max_speed_kts": 14,
+      "cruise_speed_kts": 8,
+      "turn_rate_deg_s": 3.0,
+      "rcs": "Small",
+      "noise_db": 44,
+      "vp_value": 8,
+      "sensors": [
+        "radar_surf_sm",
+        "radar_nav",
+        "esm_std",
+        "sonar_a_hull",
+        "visual"
+      ],
+      "weapons": [],
+      "chaff": 10,
+      "decoys": 4
+    },
+    "us_america_lha": {
+      "id": "us_america_lha",
+      "name": "America (ii) LHA",
+      "kind": "Ship",
+      "hp": 580,
+      "max_speed_kts": 23,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 1.5,
+      "rcs": "Large",
+      "noise_db": 60,
+      "vp_value": 55,
+      "sensors": [
+        "radar_air_long",
+        "radar_surf_med",
+        "radar_nav",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "us_essm",
+          "mounts": 2,
+          "ammo": 8
+        },
+        {
+          "weapon": "us_ram",
+          "mounts": 2,
+          "ammo": 21
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 2,
+          "ammo": 30
+        },
+        {
+          "weapon": "gun_30mm",
+          "mounts": 3,
+          "ammo": 40
+        }
+      ],
+      "chaff": 40,
+      "decoys": 12,
+      "deck": {
+        "capacity": 30,
+        "cycle_s": 150,
+        "wing": [
+          {
+            "class": "fighter",
+            "count": 6
+          },
+          {
+            "class": "helo_asw",
+            "count": 12
+          }
+        ]
+      }
+    },
+    "us_wasp_lhd": {
+      "id": "us_wasp_lhd",
+      "name": "Wasp LHD",
+      "kind": "Ship",
+      "hp": 538,
+      "max_speed_kts": 22,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 1.5,
+      "rcs": "Large",
+      "noise_db": 60,
+      "vp_value": 50,
+      "sensors": [
+        "radar_air_long",
+        "radar_surf_med",
+        "radar_nav",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "us_essm",
+          "mounts": 2,
+          "ammo": 8
+        },
+        {
+          "weapon": "us_ram",
+          "mounts": 2,
+          "ammo": 21
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 2,
+          "ammo": 30
+        },
+        {
+          "weapon": "gun_30mm",
+          "mounts": 3,
+          "ammo": 40
+        }
+      ],
+      "chaff": 40,
+      "decoys": 12,
+      "deck": {
+        "capacity": 30,
+        "cycle_s": 150,
+        "wing": [
+          {
+            "class": "fighter",
+            "count": 6
+          },
+          {
+            "class": "helo_asw",
+            "count": 12
+          }
+        ]
+      }
+    },
+    "us_sanantonio_lpd": {
+      "id": "us_sanantonio_lpd",
+      "name": "San Antonio LPD",
+      "kind": "Ship",
+      "hp": 489,
+      "max_speed_kts": 22,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 1.8,
+      "rcs": "Medium",
+      "noise_db": 45,
+      "vp_value": 40,
+      "sensors": [
+        "radar_air_long",
+        "radar_surf_med",
+        "radar_nav",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "us_ram",
+          "mounts": 2,
+          "ammo": 21
+        },
+        {
+          "weapon": "gun_30mm",
+          "mounts": 2,
+          "ammo": 40
+        }
+      ],
+      "chaff": 30,
+      "decoys": 10,
+      "deck": {
+        "capacity": 4,
+        "cycle_s": 150,
+        "wing": [
+          {
+            "class": "helo_asw",
+            "count": 2
+          }
+        ]
+      }
+    },
+    "us_harrisburg_lpd": {
+      "id": "us_harrisburg_lpd",
+      "name": "Harrisburg LPD",
+      "kind": "Ship",
+      "hp": 510,
+      "max_speed_kts": 22,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 1.8,
+      "rcs": "Large",
+      "noise_db": 44,
+      "vp_value": 42,
+      "sensors": [
+        "radar_air_long",
+        "radar_surf_med",
+        "radar_nav",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "us_ram",
+          "mounts": 2,
+          "ammo": 21
+        },
+        {
+          "weapon": "gun_30mm",
+          "mounts": 2,
+          "ammo": 40
+        }
+      ],
+      "chaff": 30,
+      "decoys": 10,
+      "deck": {
+        "capacity": 2,
+        "cycle_s": 150,
+        "wing": [
+          {
+            "class": "helo_asw",
+            "count": 2
+          }
+        ]
+      }
+    },
+    "us_harpersferry_lsd": {
+      "id": "us_harpersferry_lsd",
+      "name": "Harpers Ferry LSD",
+      "kind": "Ship",
+      "hp": 362,
+      "max_speed_kts": 22,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 1.9,
+      "rcs": "Medium",
+      "noise_db": 58,
+      "vp_value": 30,
+      "sensors": [
+        "radar_air_med",
+        "radar_surf_med",
+        "radar_nav",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 2,
+          "ammo": 30
+        },
+        {
+          "weapon": "gun_30mm",
+          "mounts": 2,
+          "ammo": 40
+        }
+      ],
+      "chaff": 30,
+      "decoys": 10,
+      "deck": {
+        "capacity": 2,
+        "cycle_s": 150,
+        "wing": [
+          {
+            "class": "helo_asw",
+            "count": 2
+          }
+        ]
+      }
+    },
+    "us_whidbeyisland_lsd": {
+      "id": "us_whidbeyisland_lsd",
+      "name": "Whidbey Island LSD",
+      "kind": "Ship",
+      "hp": 332,
+      "max_speed_kts": 22,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 1.9,
+      "rcs": "Medium",
+      "noise_db": 58,
+      "vp_value": 28,
+      "sensors": [
+        "radar_air_med",
+        "radar_surf_med",
+        "radar_nav",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 2,
+          "ammo": 30
+        },
+        {
+          "weapon": "gun_30mm",
+          "mounts": 2,
+          "ammo": 40
+        }
+      ],
+      "chaff": 30,
+      "decoys": 10,
+      "deck": {
+        "capacity": 2,
+        "cycle_s": 150,
+        "wing": [
+          {
+            "class": "helo_asw",
+            "count": 2
+          }
+        ]
+      }
+    },
+    "us_blueridge_lcc": {
+      "id": "us_blueridge_lcc",
+      "name": "Blue Ridge LCC",
+      "kind": "Ship",
+      "hp": 559,
+      "max_speed_kts": 22,
+      "cruise_speed_kts": 16,
+      "turn_rate_deg_s": 2.0,
+      "rcs": "Medium",
+      "noise_db": 58,
+      "vp_value": 35,
+      "sensors": [
+        "radar_air_long",
+        "radar_surf_med",
+        "radar_nav",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 2,
+          "ammo": 30
+        },
+        {
+          "weapon": "gun_30mm",
+          "mounts": 2,
+          "ammo": 40
+        }
+      ],
+      "chaff": 30,
+      "decoys": 10,
+      "deck": {
+        "capacity": 2,
+        "cycle_s": 150,
+        "wing": [
+          {
+            "class": "helo_asw",
+            "count": 1
+          }
+        ]
+      }
+    },
+    "us_virginia": {
+      "id": "us_virginia",
+      "name": "Virginia (ii) SSN",
+      "kind": "Sub",
+      "hp": 168,
+      "max_speed_kts": 34,
+      "cruise_speed_kts": 10,
+      "turn_rate_deg_s": 2.2,
+      "rcs": "Small",
+      "noise_db": 22,
+      "visual_factor": 0.12,
+      "vp_value": 38,
+      "max_depth_m": 450,
+      "sensors": [
+        "sonar_p_hull",
+        "sonar_p_tow",
+        "sonar_a_hull",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "us_mk48",
+          "mounts": 2,
+          "ammo": 14
+        },
+        {
+          "weapon": "us_tomahawk",
+          "mounts": 1,
+          "ammo": 24
+        }
+      ],
+      "decoys": 16
+    },
+    "us_virginia_blk5": {
+      "id": "us_virginia_blk5",
+      "name": "Virginia (ii) Block V SSN",
+      "kind": "Sub",
+      "hp": 201,
+      "max_speed_kts": 32,
+      "cruise_speed_kts": 10,
+      "turn_rate_deg_s": 2.2,
+      "rcs": "Small",
+      "noise_db": 22,
+      "visual_factor": 0.12,
+      "vp_value": 42,
+      "max_depth_m": 450,
+      "sensors": [
+        "sonar_p_hull",
+        "sonar_p_tow",
+        "sonar_a_hull",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "us_mk48",
+          "mounts": 2,
+          "ammo": 14
+        },
+        {
+          "weapon": "us_tomahawk",
+          "mounts": 1,
+          "ammo": 40
+        }
+      ],
+      "decoys": 16
+    },
+    "us_losangeles": {
+      "id": "us_losangeles",
+      "name": "Improved Los Angeles SSN",
+      "kind": "Sub",
+      "hp": 159,
+      "max_speed_kts": 32,
+      "cruise_speed_kts": 8,
+      "turn_rate_deg_s": 2.2,
+      "rcs": "Small",
+      "noise_db": 28,
+      "visual_factor": 0.15,
+      "vp_value": 30,
+      "max_depth_m": 450,
+      "sensors": [
+        "sonar_p_hull",
+        "sonar_p_tow",
+        "sonar_a_hull",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "us_mk48",
+          "mounts": 2,
+          "ammo": 18
+        },
+        {
+          "weapon": "us_tomahawk",
+          "mounts": 1,
+          "ammo": 20
+        }
+      ],
+      "decoys": 16
+    },
+    "us_seawolf": {
+      "id": "us_seawolf",
+      "name": "Seawolf (ii) SSN",
+      "kind": "Sub",
+      "hp": 186,
+      "max_speed_kts": 38,
+      "cruise_speed_kts": 10,
+      "turn_rate_deg_s": 2.2,
+      "rcs": "Small",
+      "noise_db": 22,
+      "visual_factor": 0.12,
+      "vp_value": 45,
+      "max_depth_m": 600,
+      "sensors": [
+        "sonar_p_hull",
+        "sonar_p_tow",
+        "sonar_a_hull",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "us_mk48",
+          "mounts": 2,
+          "ammo": 38
+        },
+        {
+          "weapon": "us_tomahawk",
+          "mounts": 1,
+          "ammo": 12
+        }
+      ],
+      "decoys": 16
+    },
+    "us_ohio_ssgn": {
+      "id": "us_ohio_ssgn",
+      "name": "Ohio SSGN",
+      "kind": "Sub",
+      "hp": 301,
+      "max_speed_kts": 25,
+      "cruise_speed_kts": 6,
+      "turn_rate_deg_s": 2.0,
+      "rcs": "Medium",
+      "noise_db": 24,
+      "visual_factor": 0.15,
+      "vp_value": 55,
+      "max_depth_m": 300,
+      "sensors": [
+        "sonar_p_hull",
+        "sonar_p_tow",
+        "sonar_a_hull",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "us_mk48",
+          "mounts": 2,
+          "ammo": 11
+        },
+        {
+          "weapon": "us_tomahawk",
+          "mounts": 20,
+          "ammo": 7
+        }
+      ],
+      "decoys": 14
+    },
+    "us_ohio_ssbn": {
+      "id": "us_ohio_ssbn",
+      "name": "Ohio SSBN",
+      "kind": "Sub",
+      "hp": 301,
+      "max_speed_kts": 25,
+      "cruise_speed_kts": 6,
+      "turn_rate_deg_s": 2.0,
+      "rcs": "Medium",
+      "noise_db": 24,
+      "visual_factor": 0.15,
+      "vp_value": 60,
+      "max_depth_m": 300,
+      "sensors": [
+        "sonar_p_hull",
+        "sonar_p_tow",
+        "sonar_a_hull",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "us_mk48",
+          "mounts": 2,
+          "ammo": 9
+        }
+      ],
+      "decoys": 14
+    },
+    "us_supply_aoe": {
+      "id": "us_supply_aoe",
+      "name": "Supply AOE",
+      "kind": "Ship",
+      "hp": 506,
+      "max_speed_kts": 26,
+      "cruise_speed_kts": 17,
+      "turn_rate_deg_s": 1.8,
+      "rcs": "Large",
+      "noise_db": 60,
+      "vp_value": 20,
+      "sensors": [
+        "radar_surf_med",
+        "radar_nav",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [],
+      "chaff": 20,
+      "decoys": 4,
+      "deck": {
+        "capacity": 3,
+        "cycle_s": 180,
+        "wing": [
+          {
+            "class": "helo_asw",
+            "count": 3
+          }
+        ]
+      }
+    },
+    "us_kaiser_ao": {
+      "id": "us_kaiser_ao",
+      "name": "Henry J. Kaiser AO",
+      "kind": "Ship",
+      "hp": 207,
+      "max_speed_kts": 20,
+      "cruise_speed_kts": 15,
+      "turn_rate_deg_s": 1.8,
+      "rcs": "Medium",
+      "noise_db": 58,
+      "vp_value": 12,
+      "sensors": [
+        "radar_nav",
+        "visual"
+      ],
+      "weapons": [],
+      "chaff": 10,
+      "decoys": 2,
+      "deck": {
+        "capacity": 1,
+        "cycle_s": 180,
+        "wing": [
+          {
+            "class": "helo_asw",
+            "count": 1
+          }
+        ]
+      }
+    },
+    "us_johnlewis_tao": {
+      "id": "us_johnlewis_tao",
+      "name": "John Lewis T-AO",
+      "kind": "Ship",
+      "hp": 622,
+      "max_speed_kts": 20,
+      "cruise_speed_kts": 15,
+      "turn_rate_deg_s": 1.8,
+      "rcs": "Large",
+      "noise_db": 60,
+      "vp_value": 15,
+      "sensors": [
+        "radar_nav",
+        "visual"
+      ],
+      "weapons": [],
+      "chaff": 10,
+      "decoys": 2,
+      "deck": {
+        "capacity": 1,
+        "cycle_s": 180,
+        "wing": [
+          {
+            "class": "helo_asw",
+            "count": 1
+          }
+        ]
+      }
+    },
+    "us_lewisclark_take": {
+      "id": "us_lewisclark_take",
+      "name": "Lewis and Clark T-AKE",
+      "kind": "Ship",
+      "hp": 551,
+      "max_speed_kts": 20,
+      "cruise_speed_kts": 15,
+      "turn_rate_deg_s": 1.8,
+      "rcs": "Large",
+      "noise_db": 60,
+      "vp_value": 15,
+      "sensors": [
+        "radar_nav",
+        "visual"
+      ],
+      "weapons": [],
+      "chaff": 10,
+      "decoys": 2,
+      "deck": {
+        "capacity": 2,
+        "cycle_s": 180,
+        "wing": [
+          {
+            "class": "helo_asw",
+            "count": 2
+          }
+        ]
+      }
+    },
+    "us_bobhope_ak": {
+      "id": "us_bobhope_ak",
+      "name": "Bob Hope AK",
+      "kind": "Ship",
+      "hp": 489,
+      "max_speed_kts": 24,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 1.7,
+      "rcs": "Large",
+      "noise_db": 60,
+      "vp_value": 16,
+      "sensors": [
+        "radar_nav",
+        "visual"
+      ],
+      "weapons": [],
+      "chaff": 10,
+      "decoys": 2,
+      "deck": {
+        "capacity": 1,
+        "cycle_s": 180,
+        "wing": [
+          {
+            "class": "helo_asw",
+            "count": 1
+          }
+        ]
+      }
+    },
+    "us_watson_akr": {
+      "id": "us_watson_akr",
+      "name": "Watson AKR",
+      "kind": "Ship",
+      "hp": 466,
+      "max_speed_kts": 24,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 1.7,
+      "rcs": "Large",
+      "noise_db": 60,
+      "vp_value": 16,
+      "sensors": [
+        "radar_nav",
+        "visual"
+      ],
+      "weapons": [],
+      "chaff": 10,
+      "decoys": 2
+    },
+    "us_spearhead_epf": {
+      "id": "us_spearhead_epf",
+      "name": "Spearhead (ii) EPF",
+      "kind": "Ship",
+      "hp": 61,
+      "max_speed_kts": 43,
+      "cruise_speed_kts": 35,
+      "turn_rate_deg_s": 3.5,
+      "rcs": "Small",
+      "noise_db": 44,
+      "vp_value": 10,
+      "sensors": [
+        "radar_nav",
+        "visual"
+      ],
+      "weapons": [],
+      "chaff": 10,
+      "decoys": 2,
+      "deck": {
+        "capacity": 1,
+        "cycle_s": 180,
+        "wing": [
+          {
+            "class": "helo_asw",
+            "count": 1
+          }
+        ]
+      }
+    },
+    "us_montfordpoint_esb": {
+      "id": "us_montfordpoint_esb",
+      "name": "Montford Point ESB",
+      "kind": "Ship",
+      "hp": 678,
+      "max_speed_kts": 15,
+      "cruise_speed_kts": 10,
+      "turn_rate_deg_s": 1.5,
+      "rcs": "Large",
+      "noise_db": 60,
+      "vp_value": 40,
+      "sensors": [
+        "radar_surf_sm",
+        "radar_nav",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [],
+      "chaff": 20,
+      "decoys": 4,
+      "deck": {
+        "capacity": 4,
+        "cycle_s": 180,
+        "wing": [
+          {
+            "class": "helo_asw",
+            "count": 4
+          }
+        ]
+      }
+    },
+    "us_victorious_agos": {
+      "id": "us_victorious_agos",
+      "name": "Victorious AGOS",
+      "kind": "Ship",
+      "hp": 98,
+      "max_speed_kts": 16,
+      "cruise_speed_kts": 10,
+      "turn_rate_deg_s": 2.5,
+      "rcs": "Small",
+      "noise_db": 44,
+      "vp_value": 18,
+      "sensors": [
+        "radar_nav",
+        "sonar_p_tow",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [],
+      "chaff": 10,
+      "decoys": 2
+    },
+    "us_impeccable_agos": {
+      "id": "us_impeccable_agos",
+      "name": "Impeccable AGOS",
+      "kind": "Ship",
+      "hp": 92,
+      "max_speed_kts": 15,
+      "cruise_speed_kts": 10,
+      "turn_rate_deg_s": 2.5,
+      "rcs": "Small",
+      "noise_db": 44,
+      "vp_value": 18,
+      "sensors": [
+        "radar_nav",
+        "sonar_p_tow",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [],
+      "chaff": 10,
+      "decoys": 2
+    },
+    "us_lorenzen_agm": {
+      "id": "us_lorenzen_agm",
+      "name": "Howard O. Lorenzen T-AGM",
+      "kind": "Ship",
+      "hp": 208,
+      "max_speed_kts": 20,
+      "cruise_speed_kts": 12,
+      "turn_rate_deg_s": 2.2,
+      "rcs": "Medium",
+      "noise_db": 58,
+      "vp_value": 20,
+      "sensors": [
+        "radar_air_xlong",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [],
+      "chaff": 10,
+      "decoys": 2
+    },
+    "us_legend_wmsl": {
+      "id": "us_legend_wmsl",
+      "name": "Legend WMSL",
+      "kind": "Ship",
+      "hp": 212,
+      "max_speed_kts": 28,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 2.5,
+      "rcs": "Small",
+      "noise_db": 54,
+      "vp_value": 20,
+      "sensors": [
+        "radar_air_med",
+        "radar_surf_med",
+        "radar_nav",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "us_mk110",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "ciws_30mm",
+          "mounts": 1,
+          "ammo": 30
+        }
+      ],
+      "chaff": 20,
+      "decoys": 4,
+      "deck": {
+        "capacity": 1,
+        "cycle_s": 150,
+        "wing": [
+          {
+            "class": "helo_asw",
+            "count": 1
+          }
+        ]
+      }
+    },
+    "us_famous_wmec": {
+      "id": "us_famous_wmec",
+      "name": "Famous WMEC",
+      "kind": "Ship",
+      "hp": 104,
+      "max_speed_kts": 19,
+      "cruise_speed_kts": 12,
+      "turn_rate_deg_s": 3.0,
+      "rcs": "Small",
+      "noise_db": 54,
+      "vp_value": 12,
+      "sensors": [
+        "radar_surf_sm",
+        "radar_nav",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "us_mk75",
+          "mounts": 1,
+          "ammo": 40
+        }
+      ],
+      "chaff": 10,
+      "decoys": 2,
+      "deck": {
+        "capacity": 1,
+        "cycle_s": 150,
+        "wing": [
+          {
+            "class": "helo_asw",
+            "count": 1
+          }
+        ]
+      }
+    },
+    "us_heritage_wpc": {
+      "id": "us_heritage_wpc",
+      "name": "Heritage WPC",
+      "kind": "Ship",
+      "hp": 184,
+      "max_speed_kts": 22,
+      "cruise_speed_kts": 14,
+      "turn_rate_deg_s": 2.8,
+      "rcs": "Small",
+      "noise_db": 54,
+      "vp_value": 15,
+      "sensors": [
+        "radar_air_med",
+        "radar_surf_med",
+        "radar_nav",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "us_mk110",
+          "mounts": 1,
+          "ammo": 40
+        },
+        {
+          "weapon": "gun_30mm",
+          "mounts": 1,
+          "ammo": 40
+        }
+      ],
+      "chaff": 10,
+      "decoys": 2,
+      "deck": {
+        "capacity": 1,
+        "cycle_s": 150,
+        "wing": [
+          {
+            "class": "helo_asw",
+            "count": 1
+          }
+        ]
+      }
+    },
+    "us_sentinel_wpc": {
+      "id": "us_sentinel_wpc",
+      "name": "Sentinel WPC",
+      "kind": "Ship",
+      "hp": 36,
+      "max_speed_kts": 28,
+      "cruise_speed_kts": 18,
+      "turn_rate_deg_s": 4.5,
+      "rcs": "Small",
+      "noise_db": 54,
+      "vp_value": 6,
+      "sensors": [
+        "radar_nav",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "gun_30mm",
+          "mounts": 1,
+          "ammo": 40
+        }
+      ],
+      "chaff": 6,
+      "decoys": 2
+    },
+    "us_navajo_ats": {
+      "id": "us_navajo_ats",
+      "name": "Navajo ATS",
+      "kind": "Ship",
+      "hp": 229,
+      "max_speed_kts": 15,
+      "cruise_speed_kts": 10,
+      "turn_rate_deg_s": 2.5,
+      "rcs": "Small",
+      "noise_db": 54,
+      "vp_value": 10,
+      "sensors": [
+        "radar_nav",
+        "visual"
+      ],
+      "weapons": [],
+      "chaff": 6,
+      "decoys": 2
+    }
+  },
+  "weapons": {
+    "us_sm2mr": {
+      "id": "us_sm2mr",
+      "name": "SM-2MR Blk IIIB",
+      "kind": "Sam",
+      "targets": {
+        "air": true,
+        "surface": true,
+        "missile": true
+      },
+      "range_nm": 90,
+      "min_range_nm": 3,
+      "speed_kts": 2006,
+      "pk": 0.6,
+      "salvo": 2,
+      "reload_s": 8,
+      "damage": 27,
+      "guidance": "HomingAir",
+      "directors": 4
+    },
+    "us_sm2er": {
+      "id": "us_sm2er",
+      "name": "SM-2ER Blk IV",
+      "kind": "Sam",
+      "targets": {
+        "air": true,
+        "surface": true,
+        "missile": true
+      },
+      "range_nm": 130,
+      "min_range_nm": 6,
+      "speed_kts": 2006,
+      "pk": 0.6,
+      "salvo": 2,
+      "reload_s": 10,
+      "damage": 27,
+      "guidance": "HomingAir",
+      "directors": 4
+    },
+    "us_sm6": {
+      "id": "us_sm6",
+      "name": "SM-6 ERAM Blk IA",
+      "kind": "Sam",
+      "targets": {
+        "air": true,
+        "surface": true,
+        "missile": true
+      },
+      "range_nm": 200,
+      "min_range_nm": 6,
+      "speed_kts": 2006,
+      "pk": 0.65,
+      "salvo": 2,
+      "reload_s": 10,
+      "damage": 34,
+      "guidance": "HomingAir",
+      "directors": 4
+    },
+    "us_sm3": {
+      "id": "us_sm3",
+      "name": "SM-3 Blk IB",
+      "kind": "Sam",
+      "targets": {
+        "air": true,
+        "missile": true
+      },
+      "range_nm": 432,
+      "min_range_nm": 0,
+      "speed_kts": 6805,
+      "pk": 0.55,
+      "salvo": 1,
+      "reload_s": 12,
+      "damage": 30,
+      "guidance": "HomingAir",
+      "directors": 4
+    },
+    "us_essm": {
+      "id": "us_essm",
+      "name": "ESSM Blk II",
+      "kind": "Sam",
+      "targets": {
+        "air": true,
+        "missile": true,
+        "surface": true
+      },
+      "range_nm": 27,
+      "min_range_nm": 0,
+      "speed_kts": 2250,
+      "pk": 0.55,
+      "salvo": 2,
+      "reload_s": 4,
+      "damage": 25,
+      "guidance": "HomingAir",
+      "directors": 4
+    },
+    "us_ram": {
+      "id": "us_ram",
+      "name": "RIM-116 RAM Blk 2",
+      "kind": "Sam",
+      "ir": true,
+      "targets": {
+        "air": true,
+        "missile": true
+      },
+      "range_nm": 5,
+      "min_range_nm": 0.3,
+      "speed_kts": 1320,
+      "pk": 0.45,
+      "salvo": 2,
+      "reload_s": 2,
+      "damage": 19,
+      "guidance": "HomingAir",
+      "directors": 2
+    },
+    "us_harpoon": {
+      "id": "us_harpoon",
+      "name": "Harpoon IC",
+      "kind": "Ascm",
+      "targets": {
+        "surface": true,
+        "land": false
+      },
+      "range_nm": 80,
+      "min_range_nm": 3,
+      "speed_kts": 561,
+      "pk": 0.55,
+      "salvo": 2,
+      "reload_s": 45,
+      "damage": 40,
+      "guidance": "SeaSkimmer"
+    },
+    "us_nsm": {
+      "id": "us_nsm",
+      "name": "Naval Strike Missile",
+      "kind": "Ascm",
+      "targets": {
+        "surface": true,
+        "land": false
+      },
+      "range_nm": 108,
+      "min_range_nm": 1.6,
+      "speed_kts": 627,
+      "pk": 0.6,
+      "salvo": 1,
+      "reload_s": 45,
+      "damage": 34,
+      "guidance": "SeaSkimmer"
+    },
+    "us_tomahawk": {
+      "id": "us_tomahawk",
+      "name": "Tactical Tomahawk Blk IV",
+      "kind": "Slcm",
+      "targets": {
+        "land": true
+      },
+      "range_nm": 900,
+      "min_range_nm": 25,
+      "speed_kts": 475,
+      "pk": 0.75,
+      "salvo": 1,
+      "reload_s": 60,
+      "damage": 51,
+      "guidance": "SeaSkimmer"
+    },
+    "us_vlasroc": {
+      "id": "us_vlasroc",
+      "name": "RUM-139C VL ASROC",
+      "kind": "AswRocket",
+      "targets": {
+        "sub": true
+      },
+      "range_nm": 12,
+      "min_range_nm": 2.5,
+      "speed_kts": 660,
+      "pk": 0.35,
+      "salvo": 1,
+      "reload_s": 12,
+      "damage": 52,
+      "guidance": "AswBallistic"
+    },
+    "us_mk48": {
+      "id": "us_mk48",
+      "name": "Mk48 Mod 7 CBASS",
+      "kind": "Torpedo",
+      "targets": {
+        "surface": true,
+        "sub": true
+      },
+      "range_nm": 15,
+      "speed_kts": 65,
+      "enable_range_nm": 2.5,
+      "pk": 0.7,
+      "salvo": 1,
+      "reload_s": 30,
+      "damage": 175,
+      "guidance": "TorpedoActive"
+    },
+    "us_mk54": {
+      "id": "us_mk54",
+      "name": "Mk54 Lightweight Torpedo",
+      "kind": "Lwt",
+      "targets": {
+        "sub": true
+      },
+      "range_nm": 8,
+      "speed_kts": 45,
+      "enable_range_nm": 0.5,
+      "pk": 0.55,
+      "salvo": 1,
+      "reload_s": 20,
+      "damage": 52,
+      "guidance": "TorpedoActive"
+    },
+    "us_mk110": {
+      "id": "us_mk110",
+      "name": "Mk110 57mm/70",
+      "kind": "Gun",
+      "targets": {
+        "surface": true,
+        "air": true
+      },
+      "range_nm": 7.5,
+      "speed_kts": 0,
+      "pk": 0.25,
+      "salvo": 3,
+      "reload_s": 2,
+      "damage": 18,
+      "guidance": "BallisticGun"
+    },
+    "us_mk75": {
+      "id": "us_mk75",
+      "name": "Mk75 76mm/62",
+      "kind": "Gun",
+      "targets": {
+        "surface": true,
+        "air": true
+      },
+      "range_nm": 10,
+      "speed_kts": 0,
+      "pk": 0.22,
+      "salvo": 2,
+      "reload_s": 3,
+      "damage": 18,
+      "guidance": "BallisticGun"
+    }
+  },
+  "sensors": {}
+}
