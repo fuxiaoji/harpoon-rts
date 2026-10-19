@@ -305,6 +305,11 @@
     battleResultReason: $('battle-result-reason'),
     battleResultScore: $('battle-result-score'),
     battleResultClose: $('battle-result-close'),
+    directorBanner: $('director-banner'),
+    directorPhase: $('director-phase'),
+    directorTrigger: $('director-trigger'),
+    directorSpeeds: $('director-speeds'),
+    directorNext: $('director-next'),
 
     logSideBadge: $('log-side-badge'),
     logMeta: $('log-meta'),
@@ -350,6 +355,7 @@
     battlePrimed: false,
     battleSeq: 0,
     resultDialogKey: null,
+    director: null,
   };
 
   const map = {
@@ -3795,6 +3801,61 @@
     }
   }
 
+  function renderDirectorBanner() {
+    if (!dom.directorBanner) return;
+    const d = state.director;
+    const active = !!(d && d.active);
+    const phase = d && d.phase ? String(d.phase) : 'idle';
+    if (!d || (!active && phase !== 'over' && phase !== 'error')) {
+      dom.directorBanner.hidden = true;
+      dom.speedGroup.querySelectorAll('button[data-speed]').forEach((b) => { b.disabled = false; });
+      return;
+    }
+    dom.directorBanner.hidden = false;
+    dom.directorBanner.dataset.phase = phase;
+    const phaseLabel = phase === 'planning'
+      ? battleText('战术暂停 · 双方规划', 'TACTICAL PAUSE')
+      : phase === 'running'
+        ? battleText('导演推进', 'DIRECTOR RUNNING')
+        : phase === 'error'
+          ? battleText('导演错误', 'DIRECTOR ERROR')
+          : battleText('导演对局结束', 'DIRECTOR COMPLETE');
+    dom.directorPhase.textContent = phaseLabel;
+    const triggers = Array.isArray(d.trigger) ? d.trigger : [];
+    dom.directorTrigger.textContent = triggers.length
+      ? triggers.map((t) => `${t.side || ''} ${t.rule || ''}: ${t.detail || ''}`).join(' · ')
+      : (phase === 'planning' ? battleText('初始规划', 'INITIAL PLANNING') : battleText('等待唤醒条件', 'WAITING FOR WAKE'));
+    dom.directorSpeeds.textContent = `BLUE ${Number(d.blue_speed || 15).toFixed(0)}× / RED ${Number(d.red_speed || 15).toFixed(0)}× → ${Number(d.global_speed || 15).toFixed(0)}×`;
+    if (phase === 'over') {
+      const result = d.result || {};
+      const winner = result.winner ? String(result.winner) : battleText('平局', 'DRAW');
+      dom.directorNext.textContent = `${winner} · B ${d.blue_kills ?? '—'} / R ${d.red_kills ?? '—'}`;
+    } else if (phase === 'error') {
+      dom.directorNext.textContent = d.error || battleText('参谋调用失败', 'staff failure');
+    } else if (phase === 'planning') {
+      const elapsed = d.planning_started_unix ? Math.max(0, Math.round(Date.now() / 1000 - d.planning_started_unix)) : 0;
+      dom.directorNext.textContent = `${battleText('双方参谋思考中', 'BOTH STAFFS PLANNING')} · ${elapsed}s`;
+    } else {
+      dom.directorNext.textContent = `T+${fmtClock(Number(d.tick) || 0)}`;
+    }
+    dom.speedGroup.querySelectorAll('button[data-speed]').forEach((b) => { b.disabled = active; });
+    if (active) {
+      state.speed = phase === 'running' ? Number(d.global_speed) || 0 : 0;
+      renderSpeedControls();
+    }
+  }
+
+  async function refreshDirectorStatus() {
+    try {
+      const status = await requestJson('/api/director');
+      state.director = status;
+      renderDirectorBanner();
+      renderAgentPanel();
+    } catch {
+      /* director status is optional outside director mode */
+    }
+  }
+
   function showBattleResultDialog(obs) {
     if (!dom.battleResultDialog) return;
     const result = isObject(obs.result) ? obs.result : {};
@@ -3894,6 +3955,7 @@
     const side = agentSideState();
     const configured = !!(status && status.configured);
     const busy = !!(side && side.busy);
+    const directed = !!(state.director && state.director.active);
     let chip = 'OFFLINE';
     let chipState = 'off';
     if (status && !configured) { chip = 'NO KEY'; chipState = 'error'; }
@@ -3920,20 +3982,20 @@
     }
     dom.agentToggle.textContent = side && side.enabled ? agentText('停用', 'DISABLE') : agentText('启用', 'ENABLE');
     dom.agentToggle.classList.toggle('is-on', !!(side && side.enabled));
-    dom.agentToggle.disabled = !configured || !!state.agent.reportBusy;
+    dom.agentToggle.disabled = !configured || directed || !!state.agent.reportBusy;
     dom.agentAutonomy.checked = !!(side && side.autonomy === 'execute');
-    dom.agentAutonomy.disabled = !side || !side.enabled || busy;
+    dom.agentAutonomy.disabled = !side || !side.enabled || busy || directed;
     if (dom.agentAuto) {
       dom.agentAuto.checked = !!(side && side.auto_run);
-      dom.agentAuto.disabled = !side || !side.enabled || busy || !configured;
+      dom.agentAuto.disabled = !side || !side.enabled || busy || !configured || directed;
     }
     if (dom.agentSpeed) {
       const autoSpeed = Math.round(Number(side?.auto_speed) || 15);
       dom.agentSpeed.value = ['1', '15', '30', '60'].includes(String(autoSpeed)) ? String(autoSpeed) : '15';
-      dom.agentSpeed.disabled = !side || !side.enabled || busy || !configured;
+      dom.agentSpeed.disabled = !side || !side.enabled || busy || !configured || directed;
     }
-    dom.agentReport.disabled = !configured || busy || state.agent.reportBusy;
-    dom.agentExecute.hidden = !(side && side.autonomy !== 'execute' && Array.isArray(side.last_proposals) && side.last_proposals.length > 0);
+    dom.agentReport.disabled = !configured || busy || directed || state.agent.reportBusy;
+    dom.agentExecute.hidden = directed || !(side && side.autonomy !== 'execute' && Array.isArray(side.last_proposals) && side.last_proposals.length > 0);
     const memoryText = (side && side.memory && side.memory.trim()) || agentText('尚无记忆。', 'No memory yet.');
     if (dom.agentMemory.textContent !== memoryText) dom.agentMemory.textContent = memoryText;
     const reports = side && Array.isArray(side.reports) ? side.reports : [];
@@ -3951,9 +4013,11 @@
       dom.agentChat.innerHTML = agentChatHtml();
       dom.agentChat.scrollTop = dom.agentChat.scrollHeight;
     }
-    dom.agentSend.disabled = state.agent.chatBusy || !configured;
-    dom.agentInput.disabled = state.agent.chatBusy || !configured;
-    dom.agentInput.placeholder = agentText('向参谋提问…', 'Message the AI staff');
+    dom.agentSend.disabled = state.agent.chatBusy || !configured || directed;
+    dom.agentInput.disabled = state.agent.chatBusy || !configured || directed;
+    dom.agentInput.placeholder = directed
+      ? agentText('导演对局进行中', 'Director match in progress')
+      : agentText('向参谋提问…', 'Message the AI staff');
   }
 
   async function refreshAgentStatus() {
@@ -3964,6 +4028,7 @@
         state.agent.chat = { Blue: [], Red: [] };
       }
       state.agent.status = status;
+      void refreshDirectorStatus();
       const side = status?.sides?.[state.side];
       if (side?.auto_run && state.observation && !state.observation.over && state.speed === 0) {
         void fetchTime();
@@ -4136,6 +4201,12 @@
     },
     async refresh() { await refreshState(); await syncTime(); },
     setSpeed,
+    setMapView(cx, cy, scale) {
+      const x = Number(cx), y = Number(cy), s = Number(scale);
+      if (!Number.isFinite(x) || !Number.isFinite(y) || !Number.isFinite(s) || s <= 0) return;
+      map.view.cx = x; map.view.cy = y; map.view.scale = s;
+      map.viewInitialized = true; map.userAdjusted = true; map.fitPending = false; map.lastScaleKey = '';
+    },
   };
   function localizePresentation() {
     for (const option of dom.scenarioSelect.options) {
