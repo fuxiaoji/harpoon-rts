@@ -606,11 +606,14 @@ impl CommandStaff for TacticalStaff {
                                 .iter()
                                 .find(|(c, n)| *n > 0 && is_aew_class(c))
                             {
+                                // Orbit astern: an AEW must never sit on the
+                                // threat axis where enemy CAP hunts it.
+                                let astern = u
+                                    .pos
+                                    .advanced(self.threat_axis_deg + 180.0, 30.0);
                                 cmds.push(Command::LaunchAircraft {
                                     unit: u.id, class: class.clone(), count: 1,
-                                    mission: AirMission::Recon {
-                                        point: self.standoff_point(&u.pos, 30.0),
-                                    },
+                                    mission: AirMission::Recon { point: astern },
                                 });
                                 self.last_asw_wave.insert(u.id, obs.tick);
                             }
@@ -722,19 +725,38 @@ impl CommandStaff for TacticalStaff {
                 }
 
                 Role::Aew => {
-                    // 预警机按想定 air_missions 前出；若想定未给任务则参谋补一个。
-                    if u.mission.is_none() {
-                        if let Some(a) = anchor_pos {
-                            let standoff = self.standoff_point(&a, p.aew_standoff_nm);
-                            cmds.push(Command::SetCourse {
-                                unit: u.id,
-                                course_deg: u.pos.bearing_to(standoff),
-                            });
-                            cmds.push(Command::SetSpeed {
-                                unit: u.id,
-                                speed_kts: unit_obs_ext::cruise(u),
-                            });
-                        }
+                    // P2/P8: 预警机存活优先。敌战斗机/未知空中目标逼近 60 海里
+                    // 内时，立即把巡逻点撤到舰队后方（威胁反方向 40 海里），
+                    // 低速脱离；威胁消失后再回到标准阵位。
+                    let threat = obs
+                        .contacts
+                        .iter()
+                        .filter(|c| {
+                            !c.stale && c.quality > 0.25
+                                && c.category == PlatformKind::Aircraft
+                        })
+                        .map(|c| u.pos.range_to(c.estimate))
+                        .min_by(|a, b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal));
+                    let threatened = threat.map(|d| d < 60.0).unwrap_or(false);
+                    let home = anchor_pos.unwrap_or(u.pos);
+                    let astern = home.advanced(self.threat_axis_deg + 180.0, 40.0);
+                    if threatened {
+                        cmds.push(Command::ClearStation { unit: u.id });
+                        cmds.push(Command::SetCourse {
+                            unit: u.id,
+                            course_deg: u.pos.bearing_to(astern),
+                        });
+                        cmds.push(Command::SetSpeed { unit: u.id, speed_kts: unit_obs_ext::cruise(u) });
+                    } else if u.mission.is_none() {
+                        let standoff = self.standoff_point(&home, p.aew_standoff_nm);
+                        cmds.push(Command::SetCourse {
+                            unit: u.id,
+                            course_deg: u.pos.bearing_to(standoff),
+                        });
+                        cmds.push(Command::SetSpeed {
+                            unit: u.id,
+                            speed_kts: unit_obs_ext::cruise(u),
+                        });
                     }
                 }
 
