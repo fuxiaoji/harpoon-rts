@@ -1069,6 +1069,8 @@ mod tests {
         let mut missions: BTreeMap<String, usize> = Default::default();
         let mut weapons: BTreeMap<String, usize> = Default::default();
         let mut chaff = 0usize;
+        let mut chaff_by_air = 0usize;
+        let mut air_kills = 0usize;
         let mut torpedoes = 0usize;
         for e in &world.events {
             match &e.kind {
@@ -1085,7 +1087,13 @@ mod tests {
                         *weapons.entry(weapon.clone()).or_default() += 1;
                     }
                 }
-                harpoon_core::events::EventKind::ChaffDeployed { .. } => chaff += 1,
+                harpoon_core::events::EventKind::ChaffDeployed { unit, .. } => {
+                    chaff += 1;
+                    if world.entities.get(unit).map(|u| u.kind) == Some(PlatformKind::Aircraft) {
+                        chaff_by_air += 1;
+                    }
+                }
+                harpoon_core::events::EventKind::AirShotDown { .. } => air_kills += 1,
                 _ => {}
             }
         }
