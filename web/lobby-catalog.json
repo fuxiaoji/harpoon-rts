@@ -146,7 +146,7 @@
     },
     "carrier_duel_3h": {
       "file": "carrier_duel_3h.json",
-      "source_sha256": "d51390cff6acd355864b7361e98f00eef7bad41f22d1e98acc85f0726077425b",
+      "source_sha256": "8ceec3afc13a57a9f1c8a683eb394a4bcf2a0b115f2ff7db03fa53dd2ae52e00",
       "duration_s": 10800,
       "seed": 20261019,
       "initial_units": 20,

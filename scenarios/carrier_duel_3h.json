@@ -1,7 +1,7 @@
 {
   "id": "carrier_duel_3h",
   "name": "Twin Shields: Three-hour Carrier Decisive Duel",
-  "description": "Three-hour carrier duel at 140 nm separation, no surface escorts: two carriers, two attack submarines and their air groups per side. Submarines start 35 nm from the enemy carrier but 105 nm from home, so air search and ASW matter before the surface engagement. Kill values: surface ship 10, submarine 5, aircraft 1, base 10; higher weighted score wins at 03:00:00.",
+  "description": "Three-hour carrier duel at 160 nm separation, no surface escorts: two carriers, two attack submarines and their air groups per side. CAP screens sit 20 nm ahead of each group and AEW 10 nm astern, so the first merge happens after both sides close. Submarines start 40 nm from the enemy carrier. Kill values: surface ship 10, submarine 5, aircraft 1, base 10.",
   "context": {
     "theater": {
       "west": 118,
@@ -100,7 +100,7 @@
       "LIAONING AEW": {
         "mission": "cap",
         "station": [
-          315,
+          310,
           365
         ],
         "radius_nm": 8
@@ -108,7 +108,7 @@
       "LIAONING CAP-1": {
         "mission": "cap",
         "station": [
-          385,
+          340,
           365
         ],
         "radius_nm": 15,
@@ -117,7 +117,7 @@
       "LIAONING CAP-2": {
         "mission": "cap",
         "station": [
-          385,
+          340,
           368
         ],
         "radius_nm": 15,
@@ -126,7 +126,7 @@
       "SHANDONG AEW": {
         "mission": "cap",
         "station": [
-          315,
+          310,
           315
         ],
         "radius_nm": 8
@@ -134,7 +134,7 @@
       "SHANDONG CAP-1": {
         "mission": "cap",
         "station": [
-          385,
+          340,
           315
         ],
         "radius_nm": 15,
@@ -143,7 +143,7 @@
       "SHANDONG CAP-2": {
         "mission": "cap",
         "station": [
-          385,
+          340,
           312
         ],
         "radius_nm": 15,
@@ -152,7 +152,7 @@
       "FORD AEW": {
         "mission": "cap",
         "station": [
-          525,
+          490,
           365
         ],
         "radius_nm": 8
@@ -160,7 +160,7 @@
       "FORD CAP-1": {
         "mission": "cap",
         "station": [
-          455,
+          460,
           365
         ],
         "radius_nm": 15,
@@ -169,7 +169,7 @@
       "FORD CAP-2": {
         "mission": "cap",
         "station": [
-          455,
+          460,
           368
         ],
         "radius_nm": 15,
@@ -178,7 +178,7 @@
       "NIMITZ AEW": {
         "mission": "cap",
         "station": [
-          525,
+          490,
           315
         ],
         "radius_nm": 8
@@ -186,7 +186,7 @@
       "NIMITZ CAP-1": {
         "mission": "cap",
         "station": [
-          455,
+          460,
           315
         ],
         "radius_nm": 15,
@@ -195,7 +195,7 @@
       "NIMITZ CAP-2": {
         "mission": "cap",
         "station": [
-          455,
+          460,
           312
         ],
         "radius_nm": 15,
@@ -232,7 +232,7 @@
       "class": "cn_001",
       "name": "CV-16 LIAONING",
       "pos": [
-        350,
+        320,
         350
       ],
       "course_deg": 90,
@@ -244,7 +244,7 @@
       "class": "cn_093a",
       "name": "LIAONING SSN",
       "pos": [
-        455,
+        400,
         365
       ],
       "course_deg": 90,
@@ -267,7 +267,7 @@
       "class": "cn_z18j",
       "name": "LIAONING AEW",
       "pos": [
-        315,
+        310,
         365
       ],
       "course_deg": 90,
@@ -280,7 +280,7 @@
       "class": "cn_j15",
       "name": "LIAONING CAP-1",
       "pos": [
-        385,
+        340,
         365
       ],
       "course_deg": 90,
@@ -293,7 +293,7 @@
       "class": "cn_j15",
       "name": "LIAONING CAP-2",
       "pos": [
-        383,
+        338,
         368
       ],
       "course_deg": 90,
@@ -306,7 +306,7 @@
       "class": "cn_002",
       "name": "CV-17 SHANDONG",
       "pos": [
-        350,
+        320,
         300
       ],
       "course_deg": 90,
@@ -318,7 +318,7 @@
       "class": "cn_093a",
       "name": "SHANDONG SSN",
       "pos": [
-        455,
+        400,
         315
       ],
       "course_deg": 90,
@@ -341,7 +341,7 @@
       "class": "cn_z18j",
       "name": "SHANDONG AEW",
       "pos": [
-        315,
+        310,
         315
       ],
       "course_deg": 90,
@@ -354,7 +354,7 @@
       "class": "cn_j15",
       "name": "SHANDONG CAP-1",
       "pos": [
-        385,
+        340,
         315
       ],
       "course_deg": 90,
@@ -367,7 +367,7 @@
       "class": "cn_j15",
       "name": "SHANDONG CAP-2",
       "pos": [
-        383,
+        338,
         312
       ],
       "course_deg": 90,
@@ -380,7 +380,7 @@
       "class": "us_ford",
       "name": "CVN-78 FORD",
       "pos": [
-        490,
+        480,
         350
       ],
       "course_deg": 270,
@@ -392,7 +392,7 @@
       "class": "us_virginia",
       "name": "FORD SSN",
       "pos": [
-        385,
+        340,
         365
       ],
       "course_deg": 270,
@@ -415,7 +415,7 @@
       "class": "us_e2d",
       "name": "FORD AEW",
       "pos": [
-        525,
+        490,
         365
       ],
       "course_deg": 270,
@@ -428,7 +428,7 @@
       "class": "us_f18e",
       "name": "FORD CAP-1",
       "pos": [
-        455,
+        460,
         365
       ],
       "course_deg": 270,
@@ -441,7 +441,7 @@
       "class": "us_f18e",
       "name": "FORD CAP-2",
       "pos": [
-        457,
+        462,
         368
       ],
       "course_deg": 270,
@@ -454,7 +454,7 @@
       "class": "us_nimitz",
       "name": "CVN-68 NIMITZ",
       "pos": [
-        490,
+        480,
         300
       ],
       "course_deg": 270,
@@ -466,7 +466,7 @@
       "class": "us_virginia",
       "name": "NIMITZ SSN",
       "pos": [
-        385,
+        340,
         315
       ],
       "course_deg": 270,
@@ -489,7 +489,7 @@
       "class": "us_e2d",
       "name": "NIMITZ AEW",
       "pos": [
-        525,
+        490,
         315
       ],
       "course_deg": 270,
@@ -502,7 +502,7 @@
       "class": "us_f18e",
       "name": "NIMITZ CAP-1",
       "pos": [
-        455,
+        460,
         315
       ],
       "course_deg": 270,
@@ -515,7 +515,7 @@
       "class": "us_f18e",
       "name": "NIMITZ CAP-2",
       "pos": [
-        457,
+        462,
         312
       ],
       "course_deg": 270,

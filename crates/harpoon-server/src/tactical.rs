@@ -90,6 +90,12 @@ struct UnitMind {
     last_salvo_tick: i64,
 }
 
+fn is_aew_class(class: &str) -> bool {
+    let c = class.to_ascii_lowercase();
+    c.contains("aew") || c.contains("e2") || c.contains("e-2") || c.contains("kj600")
+        || c.contains("kj200") || c.contains("z18j") || c.contains("e3")
+}
+
 fn is_aew(u: &UnitObs) -> bool {
     let n = u.name.to_ascii_uppercase();
     let c = u.class.to_ascii_lowercase();
@@ -584,6 +590,33 @@ impl CommandStaff for TacticalStaff {
                     }
                     let Some(deck) = &u.deck else { continue };
 
+                    // AEW 补充：预警机燃油耗尽返航后必须重新放飞，否则
+                    // 全队失去空中探测（此前它落地后就再也没上天）。
+                    let aew_airborne = obs
+                        .units
+                        .iter()
+                        .filter(|a| a.kind == PlatformKind::Aircraft)
+                        .filter(|a| self.minds.get(&a.id).map(|m| m.role) == Some(Role::Aew))
+                        .count();
+                    if aew_airborne < 1 {
+                        let last = self.last_asw_wave.get(&u.id).copied().unwrap_or(-100_000);
+                        if obs.tick - last >= 60 {
+                            if let Some((class, _)) = deck
+                                .ready
+                                .iter()
+                                .find(|(c, n)| *n > 0 && is_aew_class(c))
+                            {
+                                cmds.push(Command::LaunchAircraft {
+                                    unit: u.id, class: class.clone(), count: 1,
+                                    mission: AirMission::Recon {
+                                        point: self.standoff_point(&u.pos, 30.0),
+                                    },
+                                });
+                                self.last_asw_wave.insert(u.id, obs.tick);
+                            }
+                        }
+                    }
+
                     // 反潜：保持至少 2 架反潜直升机在空。有潜艇接触就扑向
                     // 接触区；没有接触则在威胁轴前方 40 海里建立声呐屏障，
                     // 主动搜索而不是等潜艇先开火。
@@ -641,8 +674,12 @@ impl CommandStaff for TacticalStaff {
                         .contacts
                         .iter()
                         .filter(|c| {
-                            !c.stale
-                                && c.quality >= p.strike_min_q
+                            // Last-known-position strikes: a contact that went
+                            // stale within the last 5 minutes is still a valid
+                            // aim point, otherwise the staff stalls forever
+                            // once every track ages out.
+                            (c.last_seen_s <= 300.0)
+                                && c.quality >= p.strike_min_q * 0.6
                                 && anchor_here.range_to(c.estimate) <= 260.0
                                 && matches!(c.category, PlatformKind::Ship | PlatformKind::Base)
                         })
@@ -1100,6 +1137,10 @@ mod tests {
         assert!(missions.keys().any(|m| m == "strike"), "carrier strike waves must launch");
         assert!(!weapons.is_empty(), "surface/air anti-ship launches must occur");
         assert!(chaff > 0, "automatic chaff must fire at least once");
+        assert!(
+            missions.keys().any(|m| m == "asw"),
+            "standing ASW barrier must launch helos even without sub contacts"
+        );
     }
 
 }
