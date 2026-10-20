@@ -1,10 +1,20 @@
 {
   "id": "csg_grand_battle",
   "name": "Grand CSG Battle: Dual Carrier Strike Groups",
-  "description": "Large-scale three-hour carrier strike group battle. Each side fields two carriers, five-to-six surface combatants and three attack submarines (160 nm separation, screens deployed, submarines 30-40 nm forward). Kill values: surface ship 10, submarine 5, aircraft 1, base 10; higher weighted score at 03:00:00 wins, tie is a draw.",
+  "description": "Large-scale three-hour carrier strike group battle in the open Philippine Sea, each side with two carriers, five-to-six surface combatants and three attack submarines (160 nm separation, screens deployed, submarines 30-40 nm forward). Kill values: surface ship 10, submarine 5, aircraft 1, base 10; higher weighted score at 03:00:00 wins, tie is a draw.",
   "duration_s": 10800,
   "context": {
-    "theater": null,
+    "theater": {
+      "west": 126.0,
+      "east": 138.0,
+      "south": 16.0,
+      "north": 24.0,
+      "reference_lat": 20.0,
+      "image": "maps/west-pacific-blue-marble.jpg",
+      "attribution": "NASA GIBS / MODIS / NASA Earth Observatory",
+      "source_url": "https://gibs.earthdata.nasa.gov/layer-metadata/v1.0/BlueMarble_NextGeneration.json",
+      "imagery_date": "2004-08"
+    },
     "air_wings": {
       "CV-16 LIAONING": [
         {
@@ -91,16 +101,16 @@
       "BLUE AEW-1": {
         "mission": "cap",
         "station": [
-          305,
-          325
+          168.4,
+          252.0
         ],
         "radius_nm": 8
       },
       "BLUE CAP-1": {
         "mission": "cap",
         "station": [
-          352,
-          340
+          202.4,
+          266.0
         ],
         "radius_nm": 15,
         "follow": true
@@ -108,8 +118,8 @@
       "BLUE CAP-2": {
         "mission": "cap",
         "station": [
-          352,
-          310
+          202.4,
+          238.0
         ],
         "radius_nm": 15,
         "follow": true
@@ -117,16 +127,16 @@
       "RED AEW-1": {
         "mission": "cap",
         "station": [
-          495,
-          325
+          344.7,
+          228.0
         ],
         "radius_nm": 8
       },
       "RED CAP-1": {
         "mission": "cap",
         "station": [
-          448,
-          340
+          310.7,
+          242.0
         ],
         "radius_nm": 15,
         "follow": true
@@ -134,8 +144,8 @@
       "RED CAP-2": {
         "mission": "cap",
         "station": [
-          448,
-          310
+          310.7,
+          214.0
         ],
         "radius_nm": 15,
         "follow": true
@@ -168,8 +178,8 @@
       "class": "cn_001",
       "name": "CV-16 LIAONING",
       "pos": [
-        320,
-        350
+        180.4,
+        277.0
       ],
       "course_deg": 90
     },
@@ -178,8 +188,8 @@
       "class": "cn_002",
       "name": "CV-17 SHANDONG",
       "pos": [
-        320,
-        300
+        180.4,
+        227.0
       ],
       "course_deg": 90
     },
@@ -188,8 +198,8 @@
       "class": "cn_055",
       "name": "TYPE-055 A",
       "pos": [
-        348,
-        362
+        208.4,
+        290.0
       ],
       "course_deg": 90,
       "speed_kts": 18
@@ -199,8 +209,8 @@
       "class": "cn_055",
       "name": "TYPE-055 B",
       "pos": [
-        348,
-        288
+        208.4,
+        214.0
       ],
       "course_deg": 90,
       "speed_kts": 18
@@ -210,8 +220,8 @@
       "class": "cn_052d",
       "name": "TYPE-052D A",
       "pos": [
-        362,
-        342
+        222.4,
+        264.0
       ],
       "course_deg": 90,
       "speed_kts": 18
@@ -221,8 +231,8 @@
       "class": "cn_052d",
       "name": "TYPE-052D B",
       "pos": [
-        368,
-        325
+        228.4,
+        252.0
       ],
       "course_deg": 90,
       "speed_kts": 18
@@ -232,8 +242,8 @@
       "class": "cn_052d",
       "name": "TYPE-052D C",
       "pos": [
-        362,
-        308
+        222.4,
+        240.0
       ],
       "course_deg": 90,
       "speed_kts": 18
@@ -243,8 +253,8 @@
       "class": "cn_054a",
       "name": "TYPE-054A A",
       "pos": [
-        336,
-        378
+        174.4,
+        307.0
       ],
       "course_deg": 90,
       "speed_kts": 18
@@ -254,8 +264,8 @@
       "class": "cn_054a",
       "name": "TYPE-054A B",
       "pos": [
-        336,
-        272
+        174.4,
+        197.0
       ],
       "course_deg": 90,
       "speed_kts": 18
@@ -265,8 +275,8 @@
       "class": "cn_093a",
       "name": "BLUE SSN-1",
       "pos": [
-        445,
-        355
+        308.4,
+        264.0
       ],
       "course_deg": 90
     },
@@ -275,8 +285,8 @@
       "class": "cn_093a",
       "name": "BLUE SSN-2",
       "pos": [
-        450,
-        325
+        312.4,
+        252.0
       ],
       "course_deg": 90
     },
@@ -285,8 +295,8 @@
       "class": "cn_093a",
       "name": "BLUE SSN-3",
       "pos": [
-        440,
-        290
+        308.4,
+        240.0
       ],
       "course_deg": 90
     },
@@ -295,8 +305,8 @@
       "class": "cn_z18j",
       "name": "BLUE AEW-1",
       "pos": [
-        312,
-        325
+        168.4,
+        252.0
       ]
     },
     {
@@ -304,8 +314,8 @@
       "class": "cn_j15",
       "name": "BLUE CAP-1",
       "pos": [
-        352,
-        340
+        202.4,
+        266.0
       ]
     },
     {
@@ -313,8 +323,8 @@
       "class": "cn_j15",
       "name": "BLUE CAP-2",
       "pos": [
-        352,
-        310
+        202.4,
+        238.0
       ]
     },
     {
@@ -322,8 +332,8 @@
       "class": "us_ford",
       "name": "CVN-78 FORD",
       "pos": [
-        480,
-        350
+        332.7,
+        253.0
       ],
       "course_deg": 270
     },
@@ -332,8 +342,8 @@
       "class": "us_nimitz",
       "name": "CVN-68 NIMITZ",
       "pos": [
-        480,
-        300
+        332.7,
+        203.0
       ],
       "course_deg": 270
     },
@@ -342,8 +352,8 @@
       "class": "us_ticonderoga",
       "name": "CG-67 SHILOH",
       "pos": [
-        452,
-        362
+        304.7,
+        266.0
       ],
       "course_deg": 270,
       "speed_kts": 18
@@ -353,8 +363,8 @@
       "class": "us_ticonderoga",
       "name": "CG-71 CAPE ST GEORGE",
       "pos": [
-        452,
-        288
+        304.7,
+        190.0
       ],
       "course_deg": 270,
       "speed_kts": 18
@@ -364,8 +374,8 @@
       "class": "us_burke_2a",
       "name": "DDG-54 CURTIS WILBUR",
       "pos": [
-        438,
-        342
+        290.7,
+        240.0
       ],
       "course_deg": 270,
       "speed_kts": 18
@@ -375,8 +385,8 @@
       "class": "us_burke_3",
       "name": "DDG-1000 KIDD",
       "pos": [
-        432,
-        325
+        284.7,
+        228.0
       ],
       "course_deg": 270,
       "speed_kts": 18
@@ -386,8 +396,8 @@
       "class": "us_burke_2a",
       "name": "DDG-56 JOHN S MCCAIN",
       "pos": [
-        438,
-        308
+        290.7,
+        216.0
       ],
       "course_deg": 270,
       "speed_kts": 18
@@ -397,8 +407,8 @@
       "class": "us_virginia",
       "name": "RED SSN-1",
       "pos": [
-        355,
-        355
+        204.7,
+        240.0
       ],
       "course_deg": 270
     },
@@ -407,8 +417,8 @@
       "class": "us_virginia",
       "name": "RED SSN-2",
       "pos": [
-        350,
-        325
+        200.7,
+        228.0
       ],
       "course_deg": 270
     },
@@ -417,8 +427,8 @@
       "class": "us_virginia",
       "name": "RED SSN-3",
       "pos": [
-        360,
-        290
+        204.7,
+        216.0
       ],
       "course_deg": 270
     },
@@ -427,8 +437,8 @@
       "class": "us_e2d",
       "name": "RED AEW-1",
       "pos": [
-        488,
-        325
+        344.7,
+        228.0
       ]
     },
     {
@@ -436,8 +446,8 @@
       "class": "us_f18e",
       "name": "RED CAP-1",
       "pos": [
-        448,
-        340
+        310.7,
+        242.0
       ]
     },
     {
@@ -445,8 +455,8 @@
       "class": "us_f18e",
       "name": "RED CAP-2",
       "pos": [
-        448,
-        310
+        310.7,
+        214.0
       ]
     }
   ]

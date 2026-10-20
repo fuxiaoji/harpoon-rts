@@ -211,7 +211,7 @@
     },
     "csg_grand_battle": {
       "file": "csg_grand_battle.json",
-      "source_sha256": "02bceabb97d83b4082cbc4107fe29724821888891c65559e17da6ecb06f516fd",
+      "source_sha256": "6ba7a553a5c66249844900250af341b55b7ca39ad34f7835d246d0b466909d22",
       "duration_s": 10800,
       "seed": 20261020,
       "initial_units": 28,
@@ -220,7 +220,7 @@
         "Red": 13
       },
       "automated_side": null,
-      "satellite": false
+      "satellite": true
     },
     "dual_carrier_denial": {
       "file": "dual_carrier_denial.json",
