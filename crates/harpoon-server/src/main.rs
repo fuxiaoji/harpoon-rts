@@ -99,13 +99,13 @@ struct TacticalSlot {
 }
 
 impl TacticalSlot {
-    fn new(side: Side) -> Self {
+    fn new(side: Side, db: harpoon_core::Database) -> Self {
         Self {
             enabled: false,
             cadence_s: 30,
             last_tick: 0,
             last_orders: 0,
-            staff: Box::new(tactical::TacticalStaff::new(side)),
+            staff: Box::new(tactical::TacticalStaff::with_db(side, db)),
         }
     }
 }
@@ -129,12 +129,12 @@ struct Game {
 }
 
 impl Game {
-    fn new() -> Self {
+    fn new(db: harpoon_core::Database) -> Self {
         Self { world: None, speed: 0.0, accumulator: 0.0, inbox: Vec::new(),
             training: None, training_completed: tutorial::load_progress(), progress_saved: true,
             director_active: false, director_id: 0,
             agent_hold: false, resume_speed: 0.0, planning_outstanding: 0,
-            tactical: [TacticalSlot::new(Side::Blue), TacticalSlot::new(Side::Red)] }
+            tactical: [TacticalSlot::new(Side::Blue, db.clone()), TacticalSlot::new(Side::Red, db)] }
     }
     fn tactical_slot_mut(&mut self, side: Side) -> &mut TacticalSlot {
         &mut self.tactical[side.index()]
@@ -383,7 +383,7 @@ async fn new_game(
         training: None, training_completed: completed, progress_saved: true,
         director_active: false, director_id: 0,
         agent_hold: false, resume_speed: 0.0, planning_outstanding: 0,
-        tactical: [TacticalSlot::new(Side::Blue), TacticalSlot::new(Side::Red)] };
+        tactical: [TacticalSlot::new(Side::Blue, (*state.db).clone()), TacticalSlot::new(Side::Red, (*state.db).clone())] };
     drop(g);
     state.agents.start_game(&scenario_id, seed, tick);
     Ok(Json(json!({"started": true, "scenario": name, "seeded_at_tick": tick})))
@@ -829,7 +829,7 @@ async fn director_start(
             agent_hold: false,
             resume_speed: 0.0,
             planning_outstanding: 0,
-            tactical: [TacticalSlot::new(Side::Blue), TacticalSlot::new(Side::Red)],
+            tactical: [TacticalSlot::new(Side::Blue, (*state.db).clone()), TacticalSlot::new(Side::Red, (*state.db).clone())],
         };
     }
     state.agents.start_game(&scenario_id, seed, tick);
@@ -1250,7 +1250,7 @@ async fn ai_step(
         (observe(world, side, 0, 100), g.inbox.len())
     };
     let staff_result = tokio::task::spawn_blocking(move || {
-        let mut staff = ai::make_staff(side);
+        let mut staff = ai::make_staff(side, &state.db);
         let cmds = staff.decide(&obs);
         (staff.name(), cmds)
     })
@@ -1360,8 +1360,8 @@ impl SelfplayCtx {
     }
     fn run(&self, sc: &Scenario, max_ticks: i64) -> serde_json::Value {
         let mut world = load_scenario(sc.clone(), self.db.clone()).expect("load");
-    let mut blue = ai::make_staff(Side::Blue);
-    let mut red = ai::make_staff(Side::Red);
+    let mut blue = ai::make_staff(Side::Blue, &self.db);
+    let mut red = ai::make_staff(Side::Red, &self.db);
     let digest = AtomicU64::new(0xcbf2_9ce4_8422_2325);
     let mut event_counts: HashMap<String, u64> = HashMap::new();
     let mut last_events_seq = 0u64;
@@ -1508,7 +1508,7 @@ async fn main() {
     let volumes_dir = std::path::PathBuf::from("database/volumes");
     let merged_db = load_volume_database(&volumes_dir);
     let state = AppState {
-        game: Arc::new(Mutex::new(Game::new())),
+        game: Arc::new(Mutex::new(Game::new(merged_db.clone()))),
         scenario_dir: scenario_dir.clone(),
         update_tx: Arc::new(update_tx),
         db: Arc::new(merged_db),

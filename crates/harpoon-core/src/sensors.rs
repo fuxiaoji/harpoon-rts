@@ -189,19 +189,22 @@ pub fn update_sensors(world: &mut World) {
             .map(|e| e.id)
             .collect();
 
-        // Phase A: strongest detection per enemy entity.
+        // Phase A: strongest detection per enemy entity. The target list is
+        // built once per side: rebuilding it inside `consider` cloned every
+        // enemy entity for every sensor of every observer (O(N^2) clones) and
+        // saturated the CPU once a few dozen aircraft were airborne.
         let mut dets: BTreeMap<EntityId, DetObs> = BTreeMap::new();
+        let targets: Vec<Entity> = world
+            .entities
+            .values()
+            .filter(|t| t.alive && t.side != side)
+            .cloned()
+            .collect();
+        let jam = world.weather.jam[side.index()];
         let consider = |world: &World,
                             o: &Entity,
                             def: &SensorDef,
                             dets: &mut BTreeMap<EntityId, DetObs>| {
-            let jam = world.weather.jam[side.index()];
-            let targets: Vec<Entity> = world
-                .entities
-                .values()
-                .filter(|t| t.alive && t.side != side)
-                .cloned()
-                .collect();
             for t in &targets {
                 let dist = o.pos.range_to(t.pos);
                 let Some(eff) =

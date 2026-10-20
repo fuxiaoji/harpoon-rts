@@ -348,12 +348,14 @@ pub fn parse_llm_commands(content: &str, obs: &Observation) -> Vec<Command> {
     out
 }
 
-/// Build the staff stack for a side: LLM if configured, heuristic fallback.
-pub fn make_staff(side: Side) -> Box<dyn CommandStaff> {
+/// Build the staff stack for a side: LLM if configured, tactical FSM fallback.
+/// The database is required so the fallback can identify real weapon kinds
+/// (Yu-10, Mk48, YJ-18...) instead of guessing from mount ids.
+pub fn make_staff(side: Side, db: &harpoon_core::Database) -> Box<dyn CommandStaff> {
     match OpenAiCompatStaff::from_env(side) {
         Some(s) => Box::new(s),
         // 默认参谋：状态机战术 AI（docs/design/naval-doctrine.md）。
-        None => Box::new(crate::tactical::TacticalStaff::new(side)),
+        None => Box::new(crate::tactical::TacticalStaff::with_db(side, db.clone())),
     }
 }
 

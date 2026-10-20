@@ -909,6 +909,27 @@ fn advance_homing_air(world: &mut World, id: EntityId, def: WeaponDef, mut data:
         e.projectile = Some(data.clone());
     }
     let dist = world.entity(id).map(|e| e.pos.range_to(target.pos)).unwrap_or(f64::MAX);
+    // Aircrews self-protect: a radar-guided AAM/SAM closing inside six miles
+    // triggers the automatic chaff dispenser, exactly as ships do against
+    // sea-skimmers. Without this the aircraft `chaff` field was dead weight
+    // and every fighter died without countermeasures.
+    if target.kind == PlatformKind::Aircraft
+        && !def.ir
+        && target.chaff > 0
+        && target.auto_chaff
+        && target.chaff_active_s <= 0.0
+        && dist < 6.0
+    {
+        let tside = target.side;
+        if let Some(t) = world.entity_mut(target_id) {
+            t.chaff = t.chaff.saturating_sub(1);
+            t.chaff_active_s = 30.0;
+        }
+        world.emit(
+            EventKind::ChaffDeployed { side: tside, unit: target_id },
+            Visibility::Side(tside),
+        );
+    }
     if dist < 0.35 {
         // Terminal roll; heavy salvo saturation (3+ in flight) lowers
         // per-missile Pk — two missiles stacking is the standard shot pair.
@@ -929,8 +950,13 @@ fn advance_homing_air(world: &mut World, id: EntityId, def: WeaponDef, mut data:
         if inbound >= 3 {
             pk *= 0.7;
         }
-        // Chaff only seduces radar seekers, never IR.
-        if !def.ir && target.chaff_active_s > 0.0 {
+        // Chaff only seduces radar seekers, never IR. Re-read the live value:
+        // the auto-dispenser may have fired earlier in this same tick.
+        let chaff_on = world
+            .entity(target_id)
+            .map(|t| t.chaff_active_s > 0.0)
+            .unwrap_or(false);
+        if !def.ir && chaff_on {
             pk *= 0.85;
         }
         let mut rng = world.scope_rng(id, "aam_terminal");
@@ -1273,12 +1299,20 @@ mod tests {
     }
 
     fn terminal_world() -> (World, EntityId, EntityId) {
-        let w = world(vec![
+        let mut w = world(vec![
             unit(Side::Blue, "ddg_aegis", "DEFENDER", 0.0, 0.0, 0.0, None, false),
             unit(Side::Red, "fighter", "ATTACKER", 10.0, 0.0, 0.0, Some(5000.0), false),
         ]);
         let blue = id_of(&w, "DEFENDER");
         let red = id_of(&w, "ATTACKER");
+        // Terminal-roll tests pin the raw Pk; disarm the new automatic aircraft
+        // chaff so it does not perturb the deterministic roll (the dedicated
+        // auto-chaff test arms it explicitly).
+        {
+            let attacker = w.entity_mut(red).unwrap();
+            attacker.chaff = 0;
+            attacker.auto_chaff = false;
+        }
         (w, blue, red)
     }
 
@@ -1327,7 +1361,7 @@ mod tests {
     #[test]
     fn terminal_air_miss_leaves_target_alive() {
         let (mut w, blue, red) = terminal_world();
-        let mut def = w.db.weapons["sam_long"].clone();
+        let mut def = w.db.weapons["aam_radar"].clone();
         def.pk = 0.0;
         def.speed_kts = 360.0;
         let missile = launch(&mut w, blue, &def, Some(red), None).unwrap();
@@ -1637,4 +1671,25 @@ mod tests {
         assert_eq!(run(vec!["radar_surf_med"]), 0, "base Pk run must miss");
         assert_eq!(run(vec!["visual"]), 1, "visual solution must hit");
     }
+    #[test]
+    fn aircraft_auto_chaff_fires_when_a_radar_missile_closes() {
+        let (mut w, blue, red) = terminal_world();
+        {
+            let t = w.entity_mut(red).unwrap();
+            t.chaff = 2;
+            t.auto_chaff = true;
+        }
+        let mut def = w.db.weapons["aam_radar"].clone();
+        def.pk = 0.0;
+        def.speed_kts = 360.0;
+        let missile = launch(&mut w, blue, &def, Some(red), None).unwrap();
+        w.entity_mut(missile).unwrap().pos = Vec2::new(5.0, 0.0);
+        let data = w.entity(missile).unwrap().projectile.clone().unwrap();
+        advance_homing_air(&mut w, missile, def, data);
+        assert_eq!(w.entity(red).unwrap().chaff, 1, "one dispenser round used");
+        assert!(w.events.iter().any(|e| matches!(
+            e.kind, EventKind::ChaffDeployed { unit, .. } if unit == red)));
+        assert!(w.entity(red).unwrap().alive, "PK 0 must not kill the aircraft");
+    }
+
 }

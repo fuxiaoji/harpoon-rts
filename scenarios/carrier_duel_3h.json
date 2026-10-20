@@ -1,7 +1,7 @@
 {
   "id": "carrier_duel_3h",
   "name": "Twin Shields: Three-hour Carrier Decisive Duel",
-  "description": "Three-hour carrier duel with surface escorts removed for a decisive carrier engagement. Carriers, submarines, air wings and close positions only; destroy the enemy carriers before the deadline. Kill values: surface ship 10, submarine 5, aircraft 1, base 10; higher weighted score wins at 03:00:00, a tie is a draw.",
+  "description": "Three-hour carrier duel at 140 nm separation, no surface escorts: two carriers, two attack submarines and their air groups per side. Submarines start 35 nm from the enemy carrier but 105 nm from home, so air search and ASW matter before the surface engagement. Kill values: surface ship 10, submarine 5, aircraft 1, base 10; higher weighted score wins at 03:00:00.",
   "context": {
     "theater": {
       "west": 118,
@@ -100,98 +100,106 @@
       "LIAONING AEW": {
         "mission": "cap",
         "station": [
-          360,
-          355
+          315,
+          365
         ],
         "radius_nm": 8
       },
       "LIAONING CAP-1": {
         "mission": "cap",
         "station": [
-          360,
-          355
+          385,
+          365
         ],
-        "radius_nm": 15
+        "radius_nm": 15,
+        "follow": true
       },
       "LIAONING CAP-2": {
         "mission": "cap",
         "station": [
-          360,
-          357
+          385,
+          368
         ],
-        "radius_nm": 15
+        "radius_nm": 15,
+        "follow": true
       },
       "SHANDONG AEW": {
         "mission": "cap",
         "station": [
-          365,
-          275
+          315,
+          315
         ],
         "radius_nm": 8
       },
       "SHANDONG CAP-1": {
         "mission": "cap",
         "station": [
-          360,
-          275
+          385,
+          315
         ],
-        "radius_nm": 15
+        "radius_nm": 15,
+        "follow": true
       },
       "SHANDONG CAP-2": {
         "mission": "cap",
         "station": [
-          360,
-          277
+          385,
+          312
         ],
-        "radius_nm": 15
+        "radius_nm": 15,
+        "follow": true
       },
       "FORD AEW": {
         "mission": "cap",
         "station": [
-          365,
-          350
+          525,
+          365
         ],
         "radius_nm": 8
       },
       "FORD CAP-1": {
         "mission": "cap",
         "station": [
-          430,
-          355
+          455,
+          365
         ],
-        "radius_nm": 15
+        "radius_nm": 15,
+        "follow": true
       },
       "FORD CAP-2": {
         "mission": "cap",
         "station": [
-          428,
-          357
+          455,
+          368
         ],
-        "radius_nm": 15
+        "radius_nm": 15,
+        "follow": true
       },
       "NIMITZ AEW": {
         "mission": "cap",
         "station": [
-          380,
-          275
+          525,
+          315
         ],
         "radius_nm": 8
       },
       "NIMITZ CAP-1": {
         "mission": "cap",
         "station": [
-          445,
-          280
+          455,
+          315
         ],
-        "radius_nm": 15
+        "radius_nm": 15,
+        "follow": true
       },
       "NIMITZ CAP-2": {
         "mission": "cap",
         "station": [
-          443,
-          282
+          455,
+          312
         ],
-        "radius_nm": 15
+        "radius_nm": 15,
+        "follow": true
       }
     },
     "automated_side": null
@@ -224,8 +232,8 @@
       "class": "cn_001",
       "name": "CV-16 LIAONING",
       "pos": [
-        380,
-        340
+        350,
+        350
       ],
       "course_deg": 90,
       "speed_kts": 0,
@@ -236,8 +244,8 @@
       "class": "cn_093a",
       "name": "LIAONING SSN",
       "pos": [
-        438,
-        350
+        455,
+        365
       ],
       "course_deg": 90,
       "speed_kts": 6,
@@ -259,8 +267,8 @@
       "class": "cn_z18j",
       "name": "LIAONING AEW",
       "pos": [
-        368,
-        352
+        315,
+        365
       ],
       "course_deg": 90,
       "speed_kts": 130,
@@ -272,8 +280,8 @@
       "class": "cn_j15",
       "name": "LIAONING CAP-1",
       "pos": [
-        340,
-        355
+        385,
+        365
       ],
       "course_deg": 90,
       "speed_kts": 485,
@@ -285,8 +293,8 @@
       "class": "cn_j15",
       "name": "LIAONING CAP-2",
       "pos": [
-        342,
-        357
+        383,
+        368
       ],
       "course_deg": 90,
       "speed_kts": 485,
@@ -298,8 +306,8 @@
       "class": "cn_002",
       "name": "CV-17 SHANDONG",
       "pos": [
-        395,
-        280
+        350,
+        300
       ],
       "course_deg": 90,
       "speed_kts": 0,
@@ -310,8 +318,8 @@
       "class": "cn_093a",
       "name": "SHANDONG SSN",
       "pos": [
-        453,
-        290
+        455,
+        315
       ],
       "course_deg": 90,
       "speed_kts": 6,
@@ -333,8 +341,8 @@
       "class": "cn_z18j",
       "name": "SHANDONG AEW",
       "pos": [
-        382,
-        292
+        315,
+        315
       ],
       "course_deg": 90,
       "speed_kts": 130,
@@ -346,8 +354,8 @@
       "class": "cn_j15",
       "name": "SHANDONG CAP-1",
       "pos": [
-        355,
-        275
+        385,
+        315
       ],
       "course_deg": 90,
       "speed_kts": 485,
@@ -359,8 +367,8 @@
       "class": "cn_j15",
       "name": "SHANDONG CAP-2",
       "pos": [
-        357,
-        277
+        383,
+        312
       ],
       "course_deg": 90,
       "speed_kts": 485,
@@ -372,8 +380,8 @@
       "class": "us_ford",
       "name": "CVN-78 FORD",
       "pos": [
-        445,
-        340
+        490,
+        350
       ],
       "course_deg": 270,
       "speed_kts": 0,
@@ -384,8 +392,8 @@
       "class": "us_virginia",
       "name": "FORD SSN",
       "pos": [
-        387,
-        350
+        385,
+        365
       ],
       "course_deg": 270,
       "speed_kts": 7,
@@ -407,8 +415,8 @@
       "class": "us_e2d",
       "name": "FORD AEW",
       "pos": [
-        458,
-        352
+        525,
+        365
       ],
       "course_deg": 270,
       "speed_kts": 255,
@@ -420,8 +428,8 @@
       "class": "us_f18e",
       "name": "FORD CAP-1",
       "pos": [
-        430,
-        355
+        455,
+        365
       ],
       "course_deg": 270,
       "speed_kts": 480,
@@ -433,8 +441,8 @@
       "class": "us_f18e",
       "name": "FORD CAP-2",
       "pos": [
-        428,
-        357
+        457,
+        368
       ],
       "course_deg": 270,
       "speed_kts": 480,
@@ -446,8 +454,8 @@
       "class": "us_nimitz",
       "name": "CVN-68 NIMITZ",
       "pos": [
-        460,
-        280
+        490,
+        300
       ],
       "course_deg": 270,
       "speed_kts": 0,
@@ -458,8 +466,8 @@
       "class": "us_virginia",
       "name": "NIMITZ SSN",
       "pos": [
-        402,
-        290
+        385,
+        315
       ],
       "course_deg": 270,
       "speed_kts": 7,
@@ -481,8 +489,8 @@
       "class": "us_e2d",
       "name": "NIMITZ AEW",
       "pos": [
-        472,
-        292
+        525,
+        315
       ],
       "course_deg": 270,
       "speed_kts": 255,
@@ -494,8 +502,8 @@
       "class": "us_f18e",
       "name": "NIMITZ CAP-1",
       "pos": [
-        445,
-        280
+        455,
+        315
       ],
       "course_deg": 270,
       "speed_kts": 480,
@@ -507,8 +515,8 @@
       "class": "us_f18e",
       "name": "NIMITZ CAP-2",
       "pos": [
-        443,
-        282
+        457,
+        312
       ],
       "course_deg": 270,
       "speed_kts": 480,
