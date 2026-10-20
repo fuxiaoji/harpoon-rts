@@ -36,6 +36,11 @@ test('opponent mode: seat-aware sides, tactical PvE config and legacy checkbox m
   assert.deepEqual(M.tacticalAutopilotConfig({opponent:'tactical',seat:'Blue'}),{side:'Red',enabled:true});
   assert.deepEqual(M.tacticalAutopilotConfig({opponent:'tactical',seat:'Red'}),{side:'Blue',enabled:true});
   assert.equal(M.tacticalAutopilotConfig({opponent:'human',seat:'Blue'}),null);
+  // 本席托管与 LLM 助手相互独立，接管的是玩家自己的席位。
+  assert.deepEqual(M.tacticalTakeoverConfig({tacticalTakeover:true,seat:'Blue'}),{side:'Blue',enabled:true});
+  assert.deepEqual(M.tacticalTakeoverConfig({tacticalTakeover:true,seat:'Red'}),{side:'Red',enabled:true});
+  assert.equal(M.tacticalTakeoverConfig({seat:'Blue'}),null);
+  assert.equal(M.tacticalTakeoverConfig({tacticalTakeover:false,seat:'Blue'}),null);
   // 状态机 PvE 不依赖 LLM，新局保持暂停、由玩家掌握时间。
   assert.equal(M.agentMatchStartsAtSpeed({opponent:'tactical',seat:'Blue'}),false);
   assert.deepEqual(M.agentMatchConfigs({opponent:'tactical',assistantMode:'off'}),[]);

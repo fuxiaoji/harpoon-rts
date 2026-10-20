@@ -2250,21 +2250,12 @@ select option {
   cursor: pointer;
 }
 .agent-check input { accent-color: #f2b660; }
-.tactical-box {
-  margin: 2px 0 8px;
-  padding: 7px 8px 8px;
-  border: 1px solid var(--line);
-  border-radius: 4px;
-  background: rgba(75, 202, 255, 0.04);
+#tactical-panel .tactical-note {
+  margin: 0 0 8px;
+  color: var(--muted);
+  font-size: 9px;
+  line-height: 1.5;
 }
-.tactical-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  margin-bottom: 6px;
-}
-.tactical-head .field-label { margin: 0; }
 .tactical-row {
   display: flex;
   flex-wrap: wrap;
@@ -2273,7 +2264,7 @@ select option {
 }
 .tactical-row .btn { min-height: 24px; padding: 4px 7px; font-size: 7px; }
 .tactical-meta {
-  margin-top: 6px;
+  margin-top: 7px;
   color: var(--faint);
   font-family: var(--mono);
   font-size: 8px;

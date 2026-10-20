@@ -43,6 +43,11 @@
     if(opponent(options)!=='tactical')return null;
     return {side:opponentSide(options.seat),enabled:true};
   }
-  const api={seedValue,gameRequest,safeRecording,duration,agentMatchConfigs,agentMatchStartsAtSpeed,opponent,opponentValue,opponentSide,tacticalAutopilotConfig};
+  // 本席托管与 LLM 助手相互独立：状态机参谋接管玩家自己的席位。
+  function tacticalTakeoverConfig(options={}){
+    if(!options.tacticalTakeover)return null;
+    return {side:options.seat==='Red'?'Red':'Blue',enabled:true};
+  }
+  const api={seedValue,gameRequest,safeRecording,duration,agentMatchConfigs,agentMatchStartsAtSpeed,opponent,opponentValue,opponentSide,tacticalAutopilotConfig,tacticalTakeoverConfig};
   if(typeof module!=='undefined')module.exports=api;root.HarpoonLobbyModel=api;
 })(typeof window!=='undefined'?window:globalThis);
