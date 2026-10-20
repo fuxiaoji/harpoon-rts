@@ -21,14 +21,28 @@
     const raw=Number(options.matchSpeed),speed=Number.isFinite(raw)?Math.min(60,Math.max(5,Math.round(raw))):15;
     const mode=options.assistantMode==='full'?'full':options.assistantMode==='semi'?'semi':'off';
     const out=[];
-    if(options.agentOpponent)out.push({side:'Red',enabled:true,autonomy:'execute',auto_run:mode==='full',auto_speed:speed});
+    if(opponent(options)==='llm')out.push({side:opponentSide(options.seat),enabled:true,autonomy:'execute',auto_run:mode==='full',auto_speed:speed});
     if(mode==='semi')out.push({side:'Blue',enabled:true,autonomy:'advise',auto_run:false,auto_speed:speed});
     if(mode==='full')out.push({side:'Blue',enabled:true,autonomy:'execute',auto_run:true,auto_speed:speed});
     return out;
   }
   function agentMatchStartsAtSpeed(options={}){
-    return options.assistantMode==='full' || !!options.agentOpponent;
+    return options.assistantMode==='full' || opponent(options)==='llm';
   }
-  const api={seedValue,gameRequest,safeRecording,duration,agentMatchConfigs,agentMatchStartsAtSpeed};
+  const OPPONENTS=['human','tactical','llm'];
+  function opponent(options={}){
+    if(OPPONENTS.includes(options.opponent))return options.opponent;
+    return options.agentOpponent?'llm':'human';
+  }
+  function opponentValue(value,fallback='human'){
+    if(OPPONENTS.includes(value))return value;
+    return OPPONENTS.includes(fallback)?fallback:'human';
+  }
+  function opponentSide(seat){return seat==='Red'?'Blue':'Red';}
+  function tacticalAutopilotConfig(options={}){
+    if(opponent(options)!=='tactical')return null;
+    return {side:opponentSide(options.seat),enabled:true};
+  }
+  const api={seedValue,gameRequest,safeRecording,duration,agentMatchConfigs,agentMatchStartsAtSpeed,opponent,opponentValue,opponentSide,tacticalAutopilotConfig};
   if(typeof module!=='undefined')module.exports=api;root.HarpoonLobbyModel=api;
 })(typeof window!=='undefined'?window:globalThis);

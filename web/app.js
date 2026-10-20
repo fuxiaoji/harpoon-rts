@@ -308,6 +308,11 @@
     agentSend: $('agent-send'),
     agentAuto: $('agent-auto'),
     agentSpeed: $('agent-speed'),
+    tacticalState: $('tactical-state'),
+    tacticalToggle: $('tactical-toggle'),
+    tacticalCadence: $('tactical-cadence'),
+    tacticalStep: $('tactical-step'),
+    tacticalMeta: $('tactical-meta'),
     scoreStrip: $('score-strip'),
     scoreKills: $('score-kills'),
     scoreLosses: $('score-losses'),
@@ -364,6 +369,10 @@
       chatBusy: false,
       reportBusy: false,
       timer: null,
+    },
+    tactical: {
+      status: null,
+      busy: false,
     },
     battlePrimed: false,
     battleSeq: 0,
@@ -1165,6 +1174,7 @@
     updateMapBrief(null);
     if (announce) showToast(`COMMANDING ${side.toUpperCase()} FORCES`, 'warn');
     renderAgentPanel();
+    renderTacticalPanel();
     void refreshAgentStatus();
     restartTransport();
   }
@@ -4149,6 +4159,7 @@
       }
       state.agent.status = status;
       void refreshDirectorStatus();
+      void refreshTacticalStatus();
       const side = status?.sides?.[state.side];
       if (side?.auto_run && state.observation && !state.observation.over && state.speed === 0) {
         void fetchTime();
@@ -4156,6 +4167,71 @@
       renderAgentPanel();
     } catch {
       /* status is optional; the tactical feed is primary */
+    }
+  }
+
+  // ------------------------------------------------------------------
+  // Tactical autopilot (built-in state-machine staff takeover)
+  // ------------------------------------------------------------------
+
+  function tacticalSideState() {
+    const status = state.tactical.status;
+    return status && status.sides ? status.sides[state.side] : null;
+  }
+
+  function renderTacticalPanel() {
+    if (!dom.tacticalToggle) return;
+    const slot = tacticalSideState();
+    const over = !!(state.observation && state.observation.over);
+    const busy = state.tactical.busy;
+    const on = !!(slot && slot.enabled);
+    dom.tacticalToggle.checked = on;
+    dom.tacticalToggle.disabled = over || busy;
+    if (dom.tacticalCadence) {
+      const cadence = Math.round(Number(slot?.cadence_s) || 30);
+      dom.tacticalCadence.value = ['15', '30', '60', '300'].includes(String(cadence)) ? String(cadence) : '30';
+      dom.tacticalCadence.disabled = over || busy;
+    }
+    if (dom.tacticalStep) dom.tacticalStep.disabled = over || busy;
+    if (dom.tacticalState) {
+      dom.tacticalState.textContent = on ? agentText('托管中', 'AUTOPILOT') : agentText('关闭', 'OFF');
+      dom.tacticalState.dataset.state = on ? 'on' : 'off';
+    }
+    if (dom.tacticalMeta) {
+      const meta = !slot
+        ? agentText('战局未同步。', 'Battle not synced.')
+        : agentText(`内建状态机参谋 · 每 ${slot.cadence_s} 模拟秒决策`, `Built-in tactical staff · decides every ${slot.cadence_s}s`)
+          + (on
+            ? agentText(` · 上次 ${slot.last_orders} 条命令（T+${slot.last_tick}）`, ` · last ${slot.last_orders} orders (T+${slot.last_tick})`)
+            : agentText(' · 开关后随时间推进自动生效', ' · takes effect once time advances'));
+      if (dom.tacticalMeta.textContent !== meta) dom.tacticalMeta.textContent = meta;
+    }
+  }
+
+  async function refreshTacticalStatus() {
+    try {
+      state.tactical.status = await requestJson('/api/tactical/status');
+    } catch {
+      state.tactical.status = null;
+    }
+    renderTacticalPanel();
+  }
+
+  async function configureTactical(patch) {
+    state.tactical.busy = true;
+    renderTacticalPanel();
+    try {
+      const slot = await postJson('/api/tactical/config', { side: state.side, ...patch });
+      if (state.tactical.status?.sides) state.tactical.status.sides[state.side] = slot;
+      else state.tactical.status = { sides: { [state.side]: slot } };
+      if (patch.enabled === true) showToast(agentText('AI 托管开启：状态机参谋接管本席，随时间推进自动下令', 'Tactical autopilot ON: the state-machine staff runs this seat'), 'ok', 4000);
+      if (patch.enabled === false) showToast(agentText('AI 托管关闭：指挥权交还', 'Tactical autopilot OFF: command returned to you'), 'warn', 4000);
+    } catch (err) {
+      showToast(`TACTICAL: ${errorText(err)}`, 'error', 5000);
+      void refreshTacticalStatus();
+    } finally {
+      state.tactical.busy = false;
+      renderTacticalPanel();
     }
   }
 
@@ -4267,6 +4343,15 @@
       await configureAgent({ auto_speed: speed });
       if (agentSideState()?.auto_run) await setSpeed(speed);
     });
+    dom.tacticalToggle?.addEventListener('change', () => {
+      void configureTactical({ enabled: dom.tacticalToggle.checked });
+    });
+    dom.tacticalCadence?.addEventListener('change', () => {
+      void configureTactical({ cadence_s: Number(dom.tacticalCadence.value) || 30 });
+    });
+    dom.tacticalStep?.addEventListener('click', () => {
+      void configureTactical({ step_now: true });
+    });
     const submitChat = () => {
       const message = dom.agentInput.value;
       dom.agentInput.value = '';
@@ -4350,6 +4435,7 @@
   window.addEventListener('harpoon:language', localizePresentation);
   window.addEventListener('harpoon:language', () => {
     renderAgentPanel();
+    renderTacticalPanel();
     const language = window.HarpoonI18n?.language === 'en' ? 'en' : 'zh-CN';
     void postJson('/api/agent/config', { language })
       .then((status) => { state.agent.status = status; renderAgentPanel(); })

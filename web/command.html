@@ -6,7 +6,7 @@
   <meta name="color-scheme" content="dark">
   <meta name="theme-color" content="#050d16">
   <title>HARPOON // Fleet Command</title>
-  <link rel="stylesheet" href="style.css?v=rts-20261019-2">
+  <link rel="stylesheet" href="style.css?v=tactical-20261020-1">
   <link rel="stylesheet" href="theater.css?v=rts-20261019-2">
   <link rel="stylesheet" href="training.css?v=combat-20261018-1">
 </head>
@@ -180,6 +180,20 @@
               </select>
               <button type="button" id="agent-report" class="btn btn--ghost">REPORT NOW</button>
               <button type="button" id="agent-execute" class="btn btn--ghost" hidden>EXECUTE PROPOSALS</button>
+            </div>
+            <div class="tactical-box" id="tactical-box">
+              <div class="tactical-head">
+                <span class="field-label">状态机托管 / TACTICAL AUTOPILOT</span>
+                <span class="panel-tag" id="tactical-state" data-state="off">OFF</span>
+              </div>
+              <div class="tactical-row">
+                <label class="agent-check"><input type="checkbox" id="tactical-toggle"> <span title="Hand this seat to the built-in state-machine staff">AI 接管本席</span></label>
+                <select id="tactical-cadence" class="agent-speed" aria-label="Autopilot decision cadence">
+                  <option value="15">15s</option><option value="30" selected>30s</option><option value="60">60s</option><option value="300">300s</option>
+                </select>
+                <button type="button" id="tactical-step" class="btn btn--ghost">立即决策</button>
+              </div>
+              <div class="tactical-meta" id="tactical-meta"></div>
             </div>
             <div class="agent-reports" id="agent-reports" data-i18n-native></div>
             <details class="agent-memory-box"><summary>MEMORY</summary><div id="agent-memory" data-i18n-native></div></details>
@@ -433,7 +447,7 @@
   <script src="aircraft-roles.js?v=theater-20261019-1" defer></script>
   <script src="combat-help.js?v=combat-20261018-1" defer></script>
   <script src="contact-track.js?v=missiles-20261019-1" defer></script>
-  <script src="app.js?v=missiles-20261019-1" defer></script>
+  <script src="app.js?v=tactical-20261020-1" defer></script>
   <script src="training-guide.js?v=rts-20261019-2" defer></script>
   <script src="tutorial.js?v=guided-20261018-3" defer></script>
 </body>

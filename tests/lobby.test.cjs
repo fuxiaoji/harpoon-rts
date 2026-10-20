@@ -18,11 +18,29 @@ test('AI opponent and assistant modes produce strict-double-blind match configs'
     {side:'Red',enabled:true,autonomy:'execute',auto_run:true,auto_speed:60},
     {side:'Blue',enabled:true,autonomy:'execute',auto_run:true,auto_speed:60}
   ]);
-  assert.deepEqual(M.agentMatchConfigs({agentOpponent:false,assistantMode:'off',matchSpeed:15}),[]);
+  assert.deepEqual(M.agentMatchConfigs({assistantMode:'off',matchSpeed:15}),[]);
   assert.equal(M.agentMatchConfigs({assistantMode:'full',matchSpeed:1})[0].auto_speed,5);
   assert.equal(M.agentMatchStartsAtSpeed({agentOpponent:true,assistantMode:'semi'}),true);
   assert.equal(M.agentMatchStartsAtSpeed({agentOpponent:false,assistantMode:'semi'}),false);
   assert.equal(M.agentMatchStartsAtSpeed({agentOpponent:false,assistantMode:'full'}),true);
+});
+test('opponent mode: seat-aware sides, tactical PvE config and legacy checkbox mapping',()=>{
+  assert.equal(M.opponent({opponent:'tactical'}),'tactical');
+  assert.equal(M.opponent({agentOpponent:true}),'llm');
+  assert.equal(M.opponent({}),'human');
+  assert.equal(M.opponentValue('tactical'),'tactical');
+  assert.equal(M.opponentValue('bogus','llm'),'llm');
+  assert.equal(M.opponentValue('bogus'),'human');
+  assert.equal(M.opponentSide('Blue'),'Red');
+  assert.equal(M.opponentSide('Red'),'Blue');
+  assert.deepEqual(M.tacticalAutopilotConfig({opponent:'tactical',seat:'Blue'}),{side:'Red',enabled:true});
+  assert.deepEqual(M.tacticalAutopilotConfig({opponent:'tactical',seat:'Red'}),{side:'Blue',enabled:true});
+  assert.equal(M.tacticalAutopilotConfig({opponent:'human',seat:'Blue'}),null);
+  // 状态机 PvE 不依赖 LLM，新局保持暂停、由玩家掌握时间。
+  assert.equal(M.agentMatchStartsAtSpeed({opponent:'tactical',seat:'Blue'}),false);
+  assert.deepEqual(M.agentMatchConfigs({opponent:'tactical',assistantMode:'off'}),[]);
+  assert.equal(M.agentMatchStartsAtSpeed({opponent:'llm',seat:'Red'}),true);
+  assert.deepEqual(M.agentMatchConfigs({opponent:'llm',seat:'Red',assistantMode:'off',matchSpeed:15})[0].side,'Blue');
 });
 test('optional seeds preserve exact integers and reject truncation or precision loss',()=>{
   assert.equal(M.seedValue(''),undefined);assert.equal(M.seedValue(' 42 '),42);

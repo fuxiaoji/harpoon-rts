@@ -368,14 +368,14 @@ impl CommandStaff for TacticalStaff {
                                     || w.weapon.starts_with("asm")) && w.ammo > 0);
                             if let Some(w) = ascm {
                                 if dist <= 55.0 {
-                                    // 集火：优先打 HP 最低的已接触目标
+                                    // 集火：优先打 BDA 显示损伤最重的已接触目标
                                     let focus = obs.contacts.iter()
                                         .filter(|fc| fc.id == c.id
                                             || (fc.category == PlatformKind::Ship && !fc.stale && fc.quality > 0.25
-                                                && u.pos.range_to(fc.estimate) <= 55.0
-                                                && world.entity(fc.about).map(|e| e.hp).unwrap_or(f64::MAX) < world.entity(c.about).map(|e| e.hp).unwrap_or(f64::MAX)))
+                                                && u.pos.range_to(fc.estimate) <= 55.0))
+                                        .min_by(|a, b| a.bda_hp_fraction.unwrap_or(1.0)
+                                            .total_cmp(&b.bda_hp_fraction.unwrap_or(1.0)))
                                         .map(|fc| fc.id)
-                                        .next()
                                         .unwrap_or(c.id);
                                     cmds.push(Command::AssignTarget { unit: u.id, contact: focus });
                                     cmds.push(Command::Fire {

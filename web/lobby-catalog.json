@@ -250,7 +250,7 @@
     },
     "dual_carrier_kills": {
       "file": "dual_carrier_kills.json",
-      "source_sha256": "13d3359d93faf4c098b5c8d7c9d4a913738a37af2aca0d4ba662b23a3a029b8c",
+      "source_sha256": "5238ab31696596a495978318009d0bb186000b5658fc7d9b0f00c84f00896407",
       "duration_s": 21600,
       "seed": 20261019,
       "initial_units": 34,

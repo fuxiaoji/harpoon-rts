@@ -2212,6 +2212,8 @@ select option {
 .agent-status[data-state="working"] { color: #f2b660; }
 .agent-status[data-state="error"] { color: #ff7162; }
 .agent-status[data-state="off"] { color: var(--faint); }
+#tactical-state[data-state="on"] { color: #62dca6; }
+#tactical-state[data-state="off"] { color: var(--faint); }
 .agent-meta {
   display: flex;
   align-items: baseline;
@@ -2248,6 +2250,35 @@ select option {
   cursor: pointer;
 }
 .agent-check input { accent-color: #f2b660; }
+.tactical-box {
+  margin: 2px 0 8px;
+  padding: 7px 8px 8px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: rgba(75, 202, 255, 0.04);
+}
+.tactical-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.tactical-head .field-label { margin: 0; }
+.tactical-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+.tactical-row .btn { min-height: 24px; padding: 4px 7px; font-size: 7px; }
+.tactical-meta {
+  margin-top: 6px;
+  color: var(--faint);
+  font-family: var(--mono);
+  font-size: 8px;
+  letter-spacing: 0.03em;
+}
 .agent-reports {
   display: flex;
   max-height: 280px;
