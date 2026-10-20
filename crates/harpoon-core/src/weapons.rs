@@ -1692,4 +1692,60 @@ mod tests {
         assert!(w.entity(red).unwrap().alive, "PK 0 must not kill the aircraft");
     }
 
+    #[test]
+    fn radar_aam_terminal_hit_rate_tracks_pk_with_varying_ticks() {
+        // Same shape as the 0/150 artifact but with distinct world ticks: the
+        // terminal RNG is derived from (tick, missile id, purpose), so each
+        // engagement must see an independent roll.
+        let mut kills = 0usize;
+        let n = 150;
+        for i in 0..n {
+            let (mut w, blue, red) = terminal_world();
+            {
+                let t = w.entity_mut(red).unwrap();
+                t.chaff = 0;
+                t.auto_chaff = false;
+            }
+            let mut def = w.db.weapons["aam_radar"].clone();
+            def.pk = 0.5;
+            def.speed_kts = 360.0;
+            let missile = launch(&mut w, blue, &def, Some(red), None).unwrap();
+            w.entity_mut(missile).unwrap().pos = Vec2::new(0.2, 0.0);
+            w.entity_mut(red).unwrap().pos = Vec2::new(0.0, 0.0);
+            w.tick = i as i64;
+            let data = w.entity(missile).unwrap().projectile.clone().unwrap();
+            let mut probe = w.scope_rng(missile, "aam_terminal");
+            let proll = probe.next_f64();
+            advance_homing_air(&mut w, missile, def, data);
+            let ev = w.events.iter().rev().next().map(|e| e.kind.name());
+            eprintln!("i={i} probe_roll={proll:.4} last_event={:?}", ev);
+            if !w.entity(red).unwrap().alive {
+                kills += 1;
+            }
+        }
+        let rate = kills as f64 / n as f64;
+        assert!(
+            (rate - 0.5).abs() < 0.09,
+            "pk=0.5 with varying ticks must give ~50% kills, saw {kills}/{n} = {:.2}%", rate = rate as f64 * 100.0
+        );
+    }
+
+    #[test]
+    fn scope_rng_terminal_rolls_are_uniform_across_missile_ids() {
+        let (w, _blue, _red) = terminal_world();
+        let mut below = 0usize;
+        let total = 4000usize;
+        for id in 1..=total as u32 {
+            let mut rng = w.scope_rng(crate::types::EntityId(id), "aam_terminal");
+            if rng.next_f64() < 0.354 {
+                below += 1;
+            }
+        }
+        let rate = below as f64 / total as f64;
+        assert!(
+            (rate - 0.354).abs() < 0.03,
+            "terminal rolls must be uniform: {below}/{total} = {:.2}% vs 35.4%", rate = rate as f64 * 100.0
+        );
+    }
+
 }
