@@ -279,6 +279,22 @@ struct NewGame {
     seed: Option<u64>,
     #[serde(default = "default_speed")]
     speed: f64,
+    /// PVE override: "Red" (or "Blue") arms the scripted doctrine opponent;
+    /// "None" or absent keeps the scenario default.
+    #[serde(default)]
+    automated_side: Option<String>,
+}
+
+/// Parse the PVE override: Some(Side) arms the doctrine staff for that side,
+/// None clears it. Anything else is a bad request.
+fn parse_automated_side(v: &Option<String>) -> Result<Option<Side>, String> {
+    match v.as_deref().map(str::trim) {
+        None => Ok(None),
+        Some("") | Some("None") | Some("null") => Ok(None),
+        Some(s) => Side::parse(s)
+            .map(Some)
+            .ok_or_else(|| "automated_side must be Blue, Red or None".into()),
+    }
 }
 
 fn default_speed() -> f64 {
@@ -303,6 +319,10 @@ async fn new_game(
         scenario_from_json(&txt).map_err(|e| (StatusCode::BAD_REQUEST, e.to_string()))?;
     if let Some(seed) = req.seed {
         sc.seed = seed;
+    }
+    if req.automated_side.is_some() {
+        sc.context.automated_side = parse_automated_side(&req.automated_side)
+            .map_err(|e| (StatusCode::BAD_REQUEST, e))?;
     }
     let world = load_scenario(sc, (*state.db).clone())
         .map_err(|e| (StatusCode::BAD_REQUEST, e))?;
@@ -1437,7 +1457,7 @@ async fn main() {
 
     // Optional eager start.
     if let Some(sc) = start_scenario {
-        let req = NewGame { scenario: sc, seed: None, speed: start_speed };
+        let req = NewGame { scenario: sc, seed: None, speed: start_speed, automated_side: None };
         let _ = new_game(State(state), Json(req)).await;
     }
 

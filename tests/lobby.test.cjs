@@ -9,6 +9,18 @@ test('launch always starts paused and resolves public id to actual scenario file
   assert.deepEqual(M.gameRequest({id:'tattletail_1991',file:'tattletail.json'}),{scenario:'tattletail',speed:0});
   assert.deepEqual(M.gameRequest({file:'dual_carrier_hotseat.json'},'0'),{scenario:'dual_carrier_hotseat',speed:0,seed:0});
 });
+test('PVE opponent arms the scripted Red doctrine and no LLM agent',()=>{
+  assert.deepEqual(M.gameRequest({file:'carrier_duel_3h.json'},'',{opponent:'pve'}),
+    {scenario:'carrier_duel_3h',speed:0,automated_side:'Red'});
+  assert.deepEqual(M.gameRequest({file:'carrier_duel_3h.json'},''),{scenario:'carrier_duel_3h',speed:0});
+  assert.deepEqual(M.agentMatchConfigs({opponent:'pve',agentOpponent:false,assistantMode:'off',matchSpeed:15}),[]);
+  assert.deepEqual(M.agentMatchConfigs({opponent:'pve',agentOpponent:true,assistantMode:'full',matchSpeed:30}),[
+    {side:'Blue',enabled:true,autonomy:'execute',auto_run:true,auto_speed:30}
+  ],'PVE replaces the Red LLM agent but a full-auto assistant stays');
+  assert.equal(M.agentMatchStartsAtSpeed({opponent:'pve',assistantMode:'off'}),true);
+  assert.equal(M.agentMatchStartsAtSpeed({opponent:'human',assistantMode:'off'}),false);
+});
+
 test('AI opponent and assistant modes produce strict-double-blind match configs',()=>{
   assert.deepEqual(M.agentMatchConfigs({agentOpponent:true,assistantMode:'semi',matchSpeed:30}),[
     {side:'Red',enabled:true,autonomy:'execute',auto_run:false,auto_speed:30},
