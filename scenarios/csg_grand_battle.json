@@ -1,0 +1,453 @@
+{
+  "id": "csg_grand_battle",
+  "name": "Grand CSG Battle: Dual Carrier Strike Groups",
+  "description": "Large-scale three-hour carrier strike group battle. Each side fields two carriers, five-to-six surface combatants and three attack submarines (160 nm separation, screens deployed, submarines 30-40 nm forward). Kill values: surface ship 10, submarine 5, aircraft 1, base 10; higher weighted score at 03:00:00 wins, tie is a draw.",
+  "duration_s": 10800,
+  "context": {
+    "theater": null,
+    "air_wings": {
+      "CV-16 LIAONING": [
+        {
+          "class": "cn_j15",
+          "count": 22
+        },
+        {
+          "class": "cn_z18f",
+          "count": 4
+        },
+        {
+          "class": "cn_z18j",
+          "count": 3
+        },
+        {
+          "class": "cn_z9c",
+          "count": 2
+        }
+      ],
+      "CV-17 SHANDONG": [
+        {
+          "class": "cn_j15",
+          "count": 22
+        },
+        {
+          "class": "cn_j15d",
+          "count": 2
+        },
+        {
+          "class": "cn_z18f",
+          "count": 4
+        },
+        {
+          "class": "cn_z18j",
+          "count": 3
+        },
+        {
+          "class": "cn_z9c",
+          "count": 2
+        }
+      ],
+      "CVN-78 FORD": [
+        {
+          "class": "us_f18e",
+          "count": 24
+        },
+        {
+          "class": "us_f18e_asm",
+          "count": 8
+        },
+        {
+          "class": "us_f35c",
+          "count": 10
+        },
+        {
+          "class": "us_e2d",
+          "count": 3
+        },
+        {
+          "class": "us_mh60r",
+          "count": 5
+        }
+      ],
+      "CVN-68 NIMITZ": [
+        {
+          "class": "us_f18e",
+          "count": 24
+        },
+        {
+          "class": "us_f18e_asm",
+          "count": 8
+        },
+        {
+          "class": "us_e2d",
+          "count": 3
+        },
+        {
+          "class": "us_mh60r",
+          "count": 5
+        }
+      ]
+    },
+    "air_missions": {
+      "BLUE AEW-1": {
+        "mission": "cap",
+        "station": [
+          305,
+          325
+        ],
+        "radius_nm": 8
+      },
+      "BLUE CAP-1": {
+        "mission": "cap",
+        "station": [
+          352,
+          340
+        ],
+        "radius_nm": 15,
+        "follow": true
+      },
+      "BLUE CAP-2": {
+        "mission": "cap",
+        "station": [
+          352,
+          310
+        ],
+        "radius_nm": 15,
+        "follow": true
+      },
+      "RED AEW-1": {
+        "mission": "cap",
+        "station": [
+          495,
+          325
+        ],
+        "radius_nm": 8
+      },
+      "RED CAP-1": {
+        "mission": "cap",
+        "station": [
+          448,
+          340
+        ],
+        "radius_nm": 15,
+        "follow": true
+      },
+      "RED CAP-2": {
+        "mission": "cap",
+        "station": [
+          448,
+          310
+        ],
+        "radius_nm": 15,
+        "follow": true
+      }
+    },
+    "automated_side": null
+  },
+  "weather": {
+    "visibility_nm": 60,
+    "jam": [
+      0,
+      0
+    ]
+  },
+  "day_night": "Day",
+  "seed": 20261020,
+  "victory": {
+    "target_vp": 0,
+    "kill_count_at_end": true,
+    "kill_weights": {
+      "ship": 10,
+      "sub": 5,
+      "aircraft": 1,
+      "base": 10
+    }
+  },
+  "units": [
+    {
+      "side": "Blue",
+      "class": "cn_001",
+      "name": "CV-16 LIAONING",
+      "pos": [
+        320,
+        350
+      ],
+      "course_deg": 90
+    },
+    {
+      "side": "Blue",
+      "class": "cn_002",
+      "name": "CV-17 SHANDONG",
+      "pos": [
+        320,
+        300
+      ],
+      "course_deg": 90
+    },
+    {
+      "side": "Blue",
+      "class": "cn_055",
+      "name": "TYPE-055 A",
+      "pos": [
+        348,
+        362
+      ],
+      "course_deg": 90,
+      "speed_kts": 18
+    },
+    {
+      "side": "Blue",
+      "class": "cn_055",
+      "name": "TYPE-055 B",
+      "pos": [
+        348,
+        288
+      ],
+      "course_deg": 90,
+      "speed_kts": 18
+    },
+    {
+      "side": "Blue",
+      "class": "cn_052d",
+      "name": "TYPE-052D A",
+      "pos": [
+        362,
+        342
+      ],
+      "course_deg": 90,
+      "speed_kts": 18
+    },
+    {
+      "side": "Blue",
+      "class": "cn_052d",
+      "name": "TYPE-052D B",
+      "pos": [
+        368,
+        325
+      ],
+      "course_deg": 90,
+      "speed_kts": 18
+    },
+    {
+      "side": "Blue",
+      "class": "cn_052d",
+      "name": "TYPE-052D C",
+      "pos": [
+        362,
+        308
+      ],
+      "course_deg": 90,
+      "speed_kts": 18
+    },
+    {
+      "side": "Blue",
+      "class": "cn_054a",
+      "name": "TYPE-054A A",
+      "pos": [
+        336,
+        378
+      ],
+      "course_deg": 90,
+      "speed_kts": 18
+    },
+    {
+      "side": "Blue",
+      "class": "cn_054a",
+      "name": "TYPE-054A B",
+      "pos": [
+        336,
+        272
+      ],
+      "course_deg": 90,
+      "speed_kts": 18
+    },
+    {
+      "side": "Blue",
+      "class": "cn_093a",
+      "name": "BLUE SSN-1",
+      "pos": [
+        445,
+        355
+      ],
+      "course_deg": 90
+    },
+    {
+      "side": "Blue",
+      "class": "cn_093a",
+      "name": "BLUE SSN-2",
+      "pos": [
+        450,
+        325
+      ],
+      "course_deg": 90
+    },
+    {
+      "side": "Blue",
+      "class": "cn_093a",
+      "name": "BLUE SSN-3",
+      "pos": [
+        440,
+        290
+      ],
+      "course_deg": 90
+    },
+    {
+      "side": "Blue",
+      "class": "cn_z18j",
+      "name": "BLUE AEW-1",
+      "pos": [
+        312,
+        325
+      ]
+    },
+    {
+      "side": "Blue",
+      "class": "cn_j15",
+      "name": "BLUE CAP-1",
+      "pos": [
+        352,
+        340
+      ]
+    },
+    {
+      "side": "Blue",
+      "class": "cn_j15",
+      "name": "BLUE CAP-2",
+      "pos": [
+        352,
+        310
+      ]
+    },
+    {
+      "side": "Red",
+      "class": "us_ford",
+      "name": "CVN-78 FORD",
+      "pos": [
+        480,
+        350
+      ],
+      "course_deg": 270
+    },
+    {
+      "side": "Red",
+      "class": "us_nimitz",
+      "name": "CVN-68 NIMITZ",
+      "pos": [
+        480,
+        300
+      ],
+      "course_deg": 270
+    },
+    {
+      "side": "Red",
+      "class": "us_ticonderoga",
+      "name": "CG-67 SHILOH",
+      "pos": [
+        452,
+        362
+      ],
+      "course_deg": 270,
+      "speed_kts": 18
+    },
+    {
+      "side": "Red",
+      "class": "us_ticonderoga",
+      "name": "CG-71 CAPE ST GEORGE",
+      "pos": [
+        452,
+        288
+      ],
+      "course_deg": 270,
+      "speed_kts": 18
+    },
+    {
+      "side": "Red",
+      "class": "us_burke_2a",
+      "name": "DDG-54 CURTIS WILBUR",
+      "pos": [
+        438,
+        342
+      ],
+      "course_deg": 270,
+      "speed_kts": 18
+    },
+    {
+      "side": "Red",
+      "class": "us_burke_3",
+      "name": "DDG-1000 KIDD",
+      "pos": [
+        432,
+        325
+      ],
+      "course_deg": 270,
+      "speed_kts": 18
+    },
+    {
+      "side": "Red",
+      "class": "us_burke_2a",
+      "name": "DDG-56 JOHN S MCCAIN",
+      "pos": [
+        438,
+        308
+      ],
+      "course_deg": 270,
+      "speed_kts": 18
+    },
+    {
+      "side": "Red",
+      "class": "us_virginia",
+      "name": "RED SSN-1",
+      "pos": [
+        355,
+        355
+      ],
+      "course_deg": 270
+    },
+    {
+      "side": "Red",
+      "class": "us_virginia",
+      "name": "RED SSN-2",
+      "pos": [
+        350,
+        325
+      ],
+      "course_deg": 270
+    },
+    {
+      "side": "Red",
+      "class": "us_virginia",
+      "name": "RED SSN-3",
+      "pos": [
+        360,
+        290
+      ],
+      "course_deg": 270
+    },
+    {
+      "side": "Red",
+      "class": "us_e2d",
+      "name": "RED AEW-1",
+      "pos": [
+        488,
+        325
+      ]
+    },
+    {
+      "side": "Red",
+      "class": "us_f18e",
+      "name": "RED CAP-1",
+      "pos": [
+        448,
+        340
+      ]
+    },
+    {
+      "side": "Red",
+      "class": "us_f18e",
+      "name": "RED CAP-2",
+      "pos": [
+        448,
+        310
+      ]
+    }
+  ]
+}

@@ -209,6 +209,19 @@
       "automated_side": null,
       "satellite": false
     },
+    "csg_grand_battle": {
+      "file": "csg_grand_battle.json",
+      "source_sha256": "02bceabb97d83b4082cbc4107fe29724821888891c65559e17da6ecb06f516fd",
+      "duration_s": 10800,
+      "seed": 20261020,
+      "initial_units": 28,
+      "sides": {
+        "Blue": 15,
+        "Red": 13
+      },
+      "automated_side": null,
+      "satellite": false
+    },
     "dual_carrier_denial": {
       "file": "dual_carrier_denial.json",
       "source_sha256": "e0950d86e39f1c69cc3be13243fba4e772fddf0003a61628296e4a90f25ada08",
