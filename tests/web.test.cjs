@@ -9,6 +9,19 @@ test('language adapter translates dynamic presentation without changing numeric 
   assert.equal(translateText('12 KT · 5 NM', 'zh-CN'), '12 节 · 5 海里');
   assert.equal(translateText('Long-Range Air Radar', 'zh-CN'), '远程对空雷达');
 });
+test('mission panel, launch feedback and follow-CAP are wired', () => {
+  const app = fs.readFileSync(path.join(__dirname, '../web/app.js'), 'utf8');
+  assert.match(app, /renderMissionsPanel/);
+  assert.match(app, /missions-list/);
+  assert.match(app, /mission-feedback/);
+  assert.match(app, /LAUNCH REFUSED/);
+  assert.match(app, /event\.reason/);
+  assert.match(app, /radius_nm: 25, follow: true/);
+  const html = fs.readFileSync(path.join(__dirname, '../web/command.html'), 'utf8');
+  assert.match(html, /missions-panel/);
+  assert.match(html, /任务队列 \/ TASKS/);
+});
+
 test('kill breakdown, weighted score and WS stall watchdog are wired', () => {
   const app = fs.readFileSync(path.join(__dirname, '../web/app.js'), 'utf8');
   assert.match(app, /own_kills_by_kind/);

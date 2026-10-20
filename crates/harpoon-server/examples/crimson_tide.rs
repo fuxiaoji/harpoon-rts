@@ -174,7 +174,7 @@ fn beat(world: &mut World, d: &mut Driver) -> Vec<(Side, Command)> {
             if let Some(cvn) = cvn {
                 cmds.push((Side::Blue, Command::LaunchAircraft {
                     unit: cvn, class: "fighter".into(), count: 2,
-                    mission: AirMission::Cap { station: p(44.0, 44.0), radius_nm: 18.0 },
+                    mission: AirMission::Cap { station: p(44.0, 44.0), radius_nm: 18.0, follow: false },
                 }));
                 d.blue_cap = true;
             }
@@ -236,7 +236,7 @@ fn beat(world: &mut World, d: &mut Driver) -> Vec<(Side, Command)> {
             if let Some(cvn) = cvn {
                 cmds.push((Side::Blue, Command::LaunchAircraft {
                     unit: cvn, class: "fighter".into(), count: 2,
-                    mission: AirMission::Cap { station: p(44.0, 44.0), radius_nm: 18.0 },
+                    mission: AirMission::Cap { station: p(44.0, 44.0), radius_nm: 18.0, follow: false },
                 }));
                 d.blue_cap_refresh = true;
             }
@@ -256,7 +256,7 @@ fn beat(world: &mut World, d: &mut Driver) -> Vec<(Side, Command)> {
             if let Some(airfield) = airfield {
                 cmds.push((Side::Red, Command::LaunchAircraft {
                     unit: airfield, class: "fighter".into(), count: 2,
-                    mission: AirMission::Cap { station: p(48.0, 48.0), radius_nm: 15.0 },
+                    mission: AirMission::Cap { station: p(48.0, 48.0), radius_nm: 15.0, follow: false },
                 }));
                 d.red_cap = true;
             }

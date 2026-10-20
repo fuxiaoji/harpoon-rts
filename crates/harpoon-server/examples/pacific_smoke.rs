@@ -301,7 +301,7 @@ fn beat(world: &mut World, d: &mut Driver) -> Vec<(Side, Command)> {
         if let (Some(cvn), true) = (cvn, ready(world, cvn, "fighter") >= 4) {
             cmds.push((Side::Blue, Command::LaunchAircraft {
                 unit: cvn, class: "fighter".into(), count: 4,
-                mission: AirMission::Cap { station: p(50.0, 44.0), radius_nm: 5.0 },
+                mission: AirMission::Cap { station: p(50.0, 44.0), radius_nm: 5.0, follow: false },
             }));
             d.blue_cap_1 = true;
         }
@@ -319,7 +319,7 @@ fn beat(world: &mut World, d: &mut Driver) -> Vec<(Side, Command)> {
         if let (Some(cvn), true) = (cvn, ready(world, cvn, "fighter") >= 4) {
             cmds.push((Side::Blue, Command::LaunchAircraft {
                 unit: cvn, class: "fighter".into(), count: 4,
-                mission: AirMission::Cap { station: p(50.0, 44.0), radius_nm: 5.0 },
+                mission: AirMission::Cap { station: p(50.0, 44.0), radius_nm: 5.0, follow: false },
             }));
             d.blue_cap_2 = true;
         }
@@ -328,7 +328,7 @@ fn beat(world: &mut World, d: &mut Driver) -> Vec<(Side, Command)> {
         if let (Some(cvn), true) = (cvn, ready(world, cvn, "fighter") >= 4) {
             cmds.push((Side::Blue, Command::LaunchAircraft {
                 unit: cvn, class: "fighter".into(), count: 4,
-                mission: AirMission::Cap { station: p(50.0, 44.0), radius_nm: 5.0 },
+                mission: AirMission::Cap { station: p(50.0, 44.0), radius_nm: 5.0, follow: false },
             }));
             d.blue_cap_3 = true;
         }
@@ -337,7 +337,7 @@ fn beat(world: &mut World, d: &mut Driver) -> Vec<(Side, Command)> {
         if let (Some(cvn), true) = (cvn, ready(world, cvn, "fighter") >= 4) {
             cmds.push((Side::Blue, Command::LaunchAircraft {
                 unit: cvn, class: "fighter".into(), count: 4,
-                mission: AirMission::Cap { station: p(50.0, 44.0), radius_nm: 5.0 },
+                mission: AirMission::Cap { station: p(50.0, 44.0), radius_nm: 5.0, follow: false },
             }));
             d.blue_cap_4 = true;
         }
@@ -348,7 +348,7 @@ fn beat(world: &mut World, d: &mut Driver) -> Vec<(Side, Command)> {
         if let (Some(af), true) = (airfield, ready(world, airfield, "fighter") >= 4) {
             cmds.push((Side::Red, Command::LaunchAircraft {
                 unit: af, class: "fighter".into(), count: 4,
-                mission: AirMission::Cap { station: p(54.0, 47.0), radius_nm: 5.0 },
+                mission: AirMission::Cap { station: p(54.0, 47.0), radius_nm: 5.0, follow: false },
             }));
             d.red_cap_1 = true;
         }
@@ -357,7 +357,7 @@ fn beat(world: &mut World, d: &mut Driver) -> Vec<(Side, Command)> {
         if let (Some(af), true) = (airfield, ready(world, airfield, "fighter") >= 4) {
             cmds.push((Side::Red, Command::LaunchAircraft {
                 unit: af, class: "fighter".into(), count: 4,
-                mission: AirMission::Cap { station: p(54.0, 47.0), radius_nm: 5.0 },
+                mission: AirMission::Cap { station: p(54.0, 47.0), radius_nm: 5.0, follow: false },
             }));
             d.red_cap_2 = true;
         }

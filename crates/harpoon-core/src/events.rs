@@ -158,6 +158,10 @@ pub enum EventKind {
     DeckBusy {
         side: Side,
         carrier: EntityId,
+        /// Why the launch was refused ("only 3 us_f18e ready", ...). Empty for
+        /// the legacy generic case; surfaced to the ordering side.
+        #[serde(default)]
+        reason: String,
     },
 
     // --- strike / bases ---

@@ -11,7 +11,11 @@ pub fn orders(obs: &Observation) -> Vec<(Side, Command)> {
         let ready = |class: &str| deck.ready.iter().find(|(c, _)| c == class).map(|(_, n)| *n).unwrap_or(0);
         let command = if next_tick == 30 && ready("us_f18e") >= 2 {
             Some(Command::LaunchAircraft { unit: unit.id, class: "us_f18e".into(), count: 2,
-                mission: AirMission::Cap { station: unit.pos, radius_nm: 25.0 } })
+                mission: AirMission::Cap { station: unit.pos, radius_nm: 25.0, follow: true } })
+        } else if next_tick >= 1800 && (next_tick - 1800) % 1800 == 0 && ready("us_f18e") >= 2 {
+            // Rotate the combat air patrol so it keeps escorting the group.
+            Some(Command::LaunchAircraft { unit: unit.id, class: "us_f18e".into(), count: 2,
+                mission: AirMission::Cap { station: unit.pos, radius_nm: 25.0, follow: true } })
         } else if next_tick == 60 && ready("us_mh60r") >= 2 {
             Some(Command::LaunchAircraft { unit: unit.id, class: "us_mh60r".into(), count: 2,
                 mission: AirMission::Asw { area: unit.pos, radius_nm: 15.0 } })
@@ -19,7 +23,7 @@ pub fn orders(obs: &Observation) -> Vec<(Side, Command)> {
             // Scout a publicly briefed exercise area; never an unseen enemy coordinate.
             Some(Command::LaunchAircraft { unit: unit.id, class: "us_f18e_asm".into(), count: 2,
                 mission: AirMission::Recon { point: obs.mission.as_ref().unwrap().config.center } })
-        } else if next_tick >= 120 && next_tick <= 3600 && (next_tick - 120) % 900 == 0 && ready("us_f18e_asm") >= 2 {
+        } else if next_tick >= 120 && (next_tick - 120) % 900 == 0 && ready("us_f18e_asm") >= 2 {
             let target = obs.contacts.iter().filter(|c| !c.stale && !c.bearing_only && c.quality > 0.4 && c.category == PlatformKind::Ship)
                 .min_by(|a,b| unit.pos.range_to(a.estimate).total_cmp(&unit.pos.range_to(b.estimate)));
             target.map(|c| Command::LaunchAircraft { unit: unit.id, class: "us_f18e_asm".into(), count: 2,

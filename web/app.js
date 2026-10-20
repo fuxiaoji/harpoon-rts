@@ -1227,6 +1227,53 @@
     } }));
   }
 
+  function renderMissionsPanel(obs) {
+    const list = document.getElementById('missions-list');
+    const feedback = document.getElementById('mission-feedback');
+    if (!list || !feedback) return;
+    const lang = window.HarpoonI18n?.language === 'en' ? 'en' : 'zh';
+    const missionLabel = (m) => ({
+      cap: lang === 'en' ? 'CAP' : '战斗巡逻',
+      strike: lang === 'en' ? 'STRIKE' : '突击',
+      asw: lang === 'en' ? 'ASW' : '反潜',
+      recon: lang === 'en' ? 'RECON' : '侦察',
+      rtb: lang === 'en' ? 'RTB' : '返航',
+    }[m] || (m || '—'));
+    const groups = new Map();
+    for (const u of (obs?.units || [])) {
+      if (u.kind !== 'Aircraft') continue;
+      const key = `${u.mission || '—'}|${u.class}`;
+      const g = groups.get(key) || { mission: u.mission, cls: u.class, count: 0, names: [] };
+      g.count += 1;
+      if (g.names.length < 3) g.names.push(u.name);
+      groups.set(key, g);
+    }
+    const rows = [...groups.values()].sort((a, b) => (a.mission || '').localeCompare(b.mission || ''));
+    const key = JSON.stringify([lang, rows.map(r => [r.mission, r.cls, r.count, r.names])]);
+    if (list.dataset.renderKey !== key) {
+      list.innerHTML = rows.length
+        ? rows.map(r => `<div class="deck-line" style="display:flex;justify-content:space-between"><span>${escapeHtml(missionLabel(r.mission))}</span><b>${escapeHtml(aircraftName(r.cls))} ×${r.count}</b></div>`).join('')
+        : `<div class="text-muted" style="padding:6px 2px">${lang === 'en' ? 'No airborne aircraft.' : '当前没有在空飞机。'}</div>`;
+      list.dataset.renderKey = key;
+    }
+    const count = document.getElementById('missions-count');
+    if (count) count.textContent = String(rows.reduce((n, r) => n + r.count, 0));
+    const evs = (obs?.events || []).filter(e => ['air_launch', 'deck_busy', 'air_recovered'].includes(e.event)).slice(-6).reverse();
+    const fkey = JSON.stringify([lang, evs.map(e => [e.seq, e.event, e.reason])]);
+    if (feedback.dataset.renderKey !== fkey) {
+      feedback.innerHTML = evs.length ? evs.map(e => {
+        if (e.event === 'air_launch') {
+          return `<div class="deck-line"><span>${lang === 'en' ? 'ORDERED' : '已下令'} ${escapeHtml(String(e.mission || '').toUpperCase())}</span><b>${escapeHtml(e.class || '')} ×${numberOr(e.count, 1)} · ${fmtEventTick(e.tick)}</b></div>`;
+        }
+        if (e.event === 'deck_busy') {
+          return `<div class="deck-line" style="color:var(--red,#ff7162)"><span>${lang === 'en' ? 'REFUSED' : '已拒绝'}</span><b>${escapeHtml(e.reason || (lang === 'en' ? 'deck busy' : '甲板占用'))} · ${fmtEventTick(e.tick)}</b></div>`;
+        }
+        return `<div class="deck-line"><span>${lang === 'en' ? 'RECOVERED' : '已回收'}</span><b>${escapeHtml(e.class || '')} ×${numberOr(e.count, 1)} · ${fmtEventTick(e.tick)}</b></div>`;
+      }).join('') : `<div class="text-muted" style="padding:6px 2px">${lang === 'en' ? 'No launch orders yet.' : '还没有下达航空任务。'}</div>`;
+      feedback.dataset.renderKey = fkey;
+    }
+  }
+
   function renderNavigation(unit, obs) {
     const friendlyHtml = (obs?.units || []).filter(u => !['Missile', 'Torpedo'].includes(u.kind)).map(u =>
       `<button type="button" data-select-unit="${Number(u.id)}" aria-pressed="${Number(u.id) === state.selectedUnitId}">${escapeHtml(u.name || `#${u.id}`)}</button>`).join('');
@@ -1237,6 +1284,7 @@
     if ($('friendly-list').dataset.renderKey !== friendlyKey) { $('friendly-list').innerHTML = friendlyHtml; $('friendly-list').dataset.renderKey = friendlyKey; }
     if ($('contact-list').dataset.renderKey !== contactKey) { $('contact-list').innerHTML = contactHtml; $('contact-list').dataset.renderKey = contactKey; }
     $('nav-inputs').hidden = !unit;
+    renderMissionsPanel(obs);
     if (!unit) return;
     const platform = platformForUnit(unit);
     $('nav-speed').max = platform?.max_speed_kts || 1000;
@@ -2121,7 +2169,7 @@
           tone: 'status',
         };
       case 'deck_busy':
-        return { headline: `DECK BUSY · ${unitRef(event.carrier)}`, detail: 'Flight operations already in progress.', tone: 'intel' };
+        return { headline: `LAUNCH REFUSED · ${unitRef(event.carrier)}`, detail: event.reason || 'Flight operations already in progress.', tone: 'danger' };
       case 'base_damaged':
         return {
           headline: `BASE DAMAGED · ${event.base_name || unitRef(event.base)}`,
@@ -3775,7 +3823,7 @@
       } else if (mission === 'recon') {
         missionBody = {mission:'recon',point:{x:Number(unit.pos.x.toFixed(2)),y:Number(unit.pos.y.toFixed(2))}};
       } else {
-        missionBody = { mission: 'cap', station: { x: Number(unit.pos.x.toFixed(2)), y: Number(unit.pos.y.toFixed(2)) }, radius_nm: 25 };
+        missionBody = { mission: 'cap', station: { x: Number(unit.pos.x.toFixed(2)), y: Number(unit.pos.y.toFixed(2)) }, radius_nm: 25, follow: true };
       }
       void postCommand({
         cmd: 'launch_aircraft',

@@ -116,7 +116,7 @@ impl CommandStaff for HeuristicStaff {
                     unit: u.id,
                     class: "fighter".into(),
                     count: 2,
-                    mission: AirMission::Cap { station: u.pos, radius_nm: 25.0 },
+                    mission: AirMission::Cap { station: u.pos, radius_nm: 25.0, follow: true },
                 });
             }
             if helo_ready {

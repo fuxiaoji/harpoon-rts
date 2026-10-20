@@ -347,7 +347,7 @@ fn validate_context(sc: &Scenario, db: &Database) -> Result<(), String> {
         }
         use crate::commands::AirMission;
         let valid = match mission {
-            AirMission::Cap { station, radius_nm } => station.x.is_finite() && station.y.is_finite() && radius_nm.is_finite() && *radius_nm > 0.0,
+            AirMission::Cap { station, radius_nm, .. } => station.x.is_finite() && station.y.is_finite() && radius_nm.is_finite() && *radius_nm > 0.0,
             AirMission::Recon { point } => point.x.is_finite() && point.y.is_finite(),
             AirMission::Asw { area, radius_nm } => area.x.is_finite() && area.y.is_finite() && radius_nm.is_finite() && *radius_nm > 0.0,
             _ => false,

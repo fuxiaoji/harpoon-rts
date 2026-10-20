@@ -180,10 +180,9 @@ fn apply_command(world: &mut World, side: Side, cmd: &Command) {
             own!(*unit);
             if let Err(reason) = air::launch_aircraft(world, *unit, class, *count, mission) {
                 world.emit(
-                    EventKind::DeckBusy { side, carrier: *unit },
+                    EventKind::DeckBusy { side, carrier: *unit, reason },
                     Visibility::Side(side),
                 );
-                let _ = reason;
             }
         }
         Command::RecoverAircraft { unit } => {

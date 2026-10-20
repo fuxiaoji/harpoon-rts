@@ -138,7 +138,17 @@ pub fn launch_aircraft(
             flooding_s: 0.0,
             ext: Default::default(),
             deck: None,
-            mission: Some(MissionState::from_air_mission(mission)),
+            mission: {
+                let mut ms = MissionState::from_air_mission(mission);
+                if let (MissionState::Cap { follow_carrier, .. }, AirMission::Cap { follow, .. }) =
+                    (&mut ms, mission)
+                {
+                    if *follow {
+                        *follow_carrier = Some(carrier_id);
+                    }
+                }
+                Some(ms)
+            },
             station: None,
             last_emit_tick: world.tick,
             projectile: None,
@@ -217,8 +227,14 @@ fn fly_missions(world: &mut World) {
 
         let mission = world.entities.get(&id).and_then(|e| e.mission.clone());
         match mission {
-            Some(MissionState::Cap { station, radius_nm }) => {
-                cap_station(world, id, station, radius_nm);
+            Some(MissionState::Cap { station, radius_nm, follow_carrier }) => {
+                // A follow CAP orbits its carrier's current position; a dead
+                // or missing unit falls back to the launch-time station.
+                let tracked = follow_carrier
+                    .and_then(|cid| world.entity(cid))
+                    .filter(|c| c.alive)
+                    .map(|c| c.pos);
+                cap_station(world, id, tracked.unwrap_or(station), radius_nm);
             }
             Some(MissionState::Recon { point }) => {
                 cap_station(world, id, point, 5.0);
@@ -295,6 +311,27 @@ fn strike_run(world: &mut World, id: EntityId, contact: ContactId, released: boo
     };
     if released {
         try_recover(world, id);
+        return;
+    }
+    if world
+        .entity(id)
+        .map(|a| {
+            a.weapons.iter().any(|m| {
+                world
+                    .db
+                    .weapons
+                    .get(&m.weapon)
+                    .map(|d| matches!(d.kind, WeaponKind::Ascm) && m.ammo > 0)
+                    .unwrap_or(false)
+            })
+        })
+        .unwrap_or(false)
+        == false
+    {
+        // No anti-ship ordnance: a strike that cannot release must not orbit
+        // the target forever — head home.
+        let Some(e) = world.entity_mut(id) else { return };
+        e.mission = Some(MissionState::Rtb);
         return;
     }
     let (apos, tpos, best_range, cruise) = {

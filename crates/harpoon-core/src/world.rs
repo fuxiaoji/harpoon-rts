@@ -84,7 +84,7 @@ pub struct DeckState {
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub enum MissionState {
-    Cap { station: Vec2, radius_nm: f64 },
+    Cap { station: Vec2, radius_nm: f64, follow_carrier: Option<EntityId> },
     Strike { contact: ContactId, released: bool },
     Asw { area: Vec2, radius_nm: f64 },
     Recon { point: Vec2 },
@@ -104,7 +104,9 @@ impl MissionState {
 
     pub fn from_air_mission(m: &AirMission) -> Self {
         match m.clone() {
-            AirMission::Cap { station, radius_nm } => MissionState::Cap { station, radius_nm },
+            AirMission::Cap { station, radius_nm, .. } => {
+                MissionState::Cap { station, radius_nm, follow_carrier: None }
+            }
             AirMission::Strike { contact } => MissionState::Strike { contact, released: false },
             AirMission::Asw { area, radius_nm } => MissionState::Asw { area, radius_nm },
             AirMission::Recon { point } => MissionState::Recon { point },

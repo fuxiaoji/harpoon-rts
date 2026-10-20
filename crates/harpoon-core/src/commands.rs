@@ -47,8 +47,9 @@ pub enum Command {
 #[derive(Clone, Debug, Serialize, Deserialize)]
 #[serde(tag = "mission", rename_all = "snake_case")]
 pub enum AirMission {
-    /// Combat air patrol around a station.
-    Cap { station: Vec2, radius_nm: f64 },
+    /// Combat air patrol around a station. With `follow`, the station tracks
+    /// the launching carrier so the patrol escorts it as it moves.
+    Cap { station: Vec2, radius_nm: f64, #[serde(default)] follow: bool },
     /// Strike a contact (engine resolves to truth; aircraft fly to contact
     /// estimate and release standoff weapons).
     Strike { contact: ContactId },

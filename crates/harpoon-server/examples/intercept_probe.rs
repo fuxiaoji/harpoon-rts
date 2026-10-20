@@ -110,7 +110,7 @@ fn trial_aam(seed: u64) -> (u32, u32) {
                     unit: uid,
                     class: "fighter".into(),
                     count: 4,
-                    mission: AirMission::Cap { station: pos.advanced(toward, 25.0), radius_nm: 6.0 },
+                    mission: AirMission::Cap { station: pos.advanced(toward, 25.0), radius_nm: 6.0, follow: false },
                 }));
             }
             c

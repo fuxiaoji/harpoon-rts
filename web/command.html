@@ -161,6 +161,7 @@
             <button type="button" data-jump="nav-controls">编队列表</button>
             <button type="button" data-jump="orders-panel">交战命令</button>
             <button type="button" data-jump="deck-panel" id="jump-deck" hidden>飞行甲板</button>
+            <button type="button" data-jump="missions-panel">任务队列 / TASKS</button>
           </div>
           <section class="panel agent-panel" id="agent-panel" aria-label="AI staff officer">
             <div class="panel-head">
@@ -188,6 +189,12 @@
               <input id="agent-input" type="text" maxlength="4000" placeholder="Message the AI staff" autocomplete="off" aria-label="Message the AI staff">
               <button type="submit" id="agent-send">SEND</button>
             </form>
+          </section>
+          <section class="panel" id="missions-panel" aria-label="AIR MISSIONS">
+            <div class="panel-head"><span class="field-label">AIR MISSIONS</span><span class="panel-tag" id="missions-count" data-i18n-native>0</span></div>
+            <div id="missions-list" class="selection-list" aria-label="Own airborne missions"></div>
+            <div class="panel-head" style="margin-top:8px"><span class="field-label">MISSION FEEDBACK</span></div>
+            <div id="mission-feedback" class="selection-list" aria-label="Launch order feedback"></div>
           </section>
           <section class="panel nav-panel" id="nav-controls" aria-label="MANOEUVRE">
             <div class="panel-head"><span class="field-label">MANOEUVRE</span></div>

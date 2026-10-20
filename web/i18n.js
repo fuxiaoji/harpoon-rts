@@ -245,6 +245,8 @@ Operation Pacific Storm|太平洋风暴行动
 Gunnery Dual (server smoke)|舰炮对决
 Training Academy|舰队训练中心
 MANOEUVRE|机动与传感器
+AIR MISSIONS|任务队列
+MISSION FEEDBACK|任务反馈
 Apply|下达命令
 Active sonar|主动声纳
 On|开启

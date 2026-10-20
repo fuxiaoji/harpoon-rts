@@ -20,7 +20,7 @@ fn run() -> harpoon_core::World {
     for u in observe(&world,Side::Blue,0,0).units {
         if u.kind==harpoon_core::types::PlatformKind::Ship {initial.push((Side::Blue,Command::SetWeaponsFree{unit:u.id,free:true}));}
         if u.name.starts_with("CV-") {
-            initial.push((Side::Blue,Command::LaunchAircraft{unit:u.id,class:"cn_j15".into(),count:2,mission:AirMission::Cap{station:u.pos,radius_nm:25.0}}));
+            initial.push((Side::Blue,Command::LaunchAircraft{unit:u.id,class:"cn_j15".into(),count:2,mission:AirMission::Cap{station:u.pos,radius_nm:25.0,follow:false}}));
             initial.push((Side::Blue,Command::LaunchAircraft{unit:u.id,class:"cn_z18f".into(),count:2,mission:AirMission::Asw{area:u.pos,radius_nm:12.0}}));
         }
     }

@@ -1428,7 +1428,7 @@ fn validate_command(obs: &Observation, side: Side, command: &Command) -> Result<
                 return Err(format!("甲板上没有可用机型 {class}"));
             }
             match mission {
-                AirMission::Cap { station, radius_nm } => {
+                AirMission::Cap { station, radius_nm, .. } => {
                     finite(station.x, "station.x")?;
                     finite(station.y, "station.y")?;
                     finite(*radius_nm, "radius_nm")?;
@@ -2545,7 +2545,7 @@ mod tests {
             "mission":{"mission":"cap","point":{"x":3,"y":4}}
         }));
         match cap {
-            Command::LaunchAircraft { mission: AirMission::Cap { station, radius_nm }, .. } => {
+            Command::LaunchAircraft { mission: AirMission::Cap { station, radius_nm, .. }, .. } => {
                 assert_eq!((station.x, station.y, radius_nm), (3.0, 4.0, 25.0));
             }
             other => panic!("unexpected command: {other:?}"),
