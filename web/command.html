@@ -6,8 +6,8 @@
   <meta name="color-scheme" content="dark">
   <meta name="theme-color" content="#050d16">
   <title>HARPOON // Fleet Command</title>
-  <link rel="stylesheet" href="style.css?v=rts-20261019-2">
-  <link rel="stylesheet" href="theater.css?v=rts-20261019-2">
+  <link rel="stylesheet" href="style.css?v=tactical-20261020-2">
+  <link rel="stylesheet" href="theater.css?v=tactical-20261020-2">
   <link rel="stylesheet" href="training.css?v=combat-20261018-1">
 </head>
 <body data-side="Blue">
@@ -157,15 +157,31 @@
       <aside class="sidebar" aria-label="Selected unit and target details">
         <div class="sidebar-scroll">
           <div class="sidebar-quick" data-i18n-native>
+            <button type="button" data-jump="tactical-panel">状态机托管</button>
             <button type="button" data-jump="agent-panel">AI参谋 / AGENT</button>
             <button type="button" data-jump="nav-controls">编队列表</button>
             <button type="button" data-jump="orders-panel">交战命令</button>
             <button type="button" data-jump="deck-panel" id="jump-deck" hidden>飞行甲板</button>
             <button type="button" data-jump="missions-panel">任务队列 / TASKS</button>
           </div>
+          <section class="panel" id="tactical-panel" aria-label="Tactical autopilot">
+            <div class="panel-head">
+              <span class="kicker">状态机托管 / TACTICAL AUTOPILOT</span>
+              <span class="panel-tag" id="tactical-state" data-state="off">OFF</span>
+            </div>
+            <p class="tactical-note">内建状态机参谋接管本席位，只读本方观察，无需模型密钥；随时可收回指挥权。</p>
+            <div class="tactical-row">
+              <label class="agent-check"><input type="checkbox" id="tactical-toggle"> <span>AI 接管本席</span></label>
+              <select id="tactical-cadence" class="agent-speed" aria-label="托管决策间隔">
+                <option value="15">15s</option><option value="30" selected>30s</option><option value="60">60s</option><option value="300">300s</option>
+              </select>
+              <button type="button" id="tactical-step" class="btn btn--ghost">立即决策</button>
+            </div>
+            <div class="tactical-meta" id="tactical-meta"></div>
+          </section>
           <section class="panel agent-panel" id="agent-panel" aria-label="AI staff officer">
             <div class="panel-head">
-              <span class="kicker">AI 参谋 / AGENT</span>
+              <span class="kicker">AI 参谋 / AGENT（LLM）</span>
               <span class="panel-tag agent-status" id="agent-status" data-state="off" data-i18n-native>STANDBY</span>
             </div>
             <div class="agent-meta">
@@ -440,7 +456,7 @@
   <script src="aircraft-roles.js?v=theater-20261019-1" defer></script>
   <script src="combat-help.js?v=combat-20261018-1" defer></script>
   <script src="contact-track.js?v=missiles-20261019-1" defer></script>
-  <script src="app.js?v=missiles-20261019-1" defer></script>
+  <script src="app.js?v=tactical-20261020-2" defer></script>
   <script src="training-guide.js?v=rts-20261019-2" defer></script>
   <script src="tutorial.js?v=guided-20261018-3" defer></script>
 </body>

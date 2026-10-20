@@ -1,0 +1,68 @@
+{
+  "id": "carrier_duel_philippine_sea",
+  "name": "Carrier Duel — Philippine Sea",
+  "description": "Two carrier strike groups meet in open water east of Luzon. Blue: US strike group (Ford + Nimitz flight I + escorts). Red: Chinese strike group (Fujian + Shandong + escorts). Both sides start 240 nm apart at opposite corners, all units in cruise formation with standing CAP and AEW pickets. Pure carrier-versus-carrier duel: find the enemy first, strike first, and keep your own deck alive. Fixed seed for reproducible study.",
+  "context": {
+    "theater": {
+      "west": 118,
+      "east": 142,
+      "south": 12,
+      "north": 26,
+      "reference_lat": 19,
+      "image": "maps/west-pacific-blue-marble.jpg",
+      "attribution": "NASA GIBS / MODIS / NASA Earth Observatory",
+      "source_url": "https://gibs.earthdata.nasa.gov/layer-metadata/v1.0/BlueMarble_NextGeneration.json",
+      "imagery_date": "2004-08"
+    },
+    "automated_side": null,
+    "air_wings": {
+      "CVN-78 FORD": [{"class": "us_f18e", "count": 20}, {"class": "us_f35c", "count": 8}, {"class": "us_e2d", "count": 4}, {"class": "us_mh60r", "count": 6}],
+      "CVN-68 NIMITZ": [{"class": "us_f18e", "count": 20}, {"class": "us_f18c", "count": 8}, {"class": "us_e2d", "count": 3}, {"class": "us_mh60r", "count": 6}],
+      "CV-18 FUJIAN": [{"class": "cn_j15", "count": 20}, {"class": "cn_j15d", "count": 4}, {"class": "cn_kj600", "count": 3}, {"class": "cn_z18f", "count": 6}],
+      "CV-17 SHANDONG": [{"class": "cn_j15", "count": 18}, {"class": "cn_z18f", "count": 4}, {"class": "cn_z18j", "count": 3}, {"class": "cn_z9c", "count": 2}]
+    },
+    "air_missions": {
+      "FORD AEW-1": {"mission": "recon", "point": [96, 118]},
+      "NIMITZ AEW-1": {"mission": "recon", "point": [88, 104]},
+      "FUJIAN AEW-1": {"mission": "recon", "point": [158, 122]},
+      "SHANDONG AEW-1": {"mission": "recon", "point": [150, 108]}
+    }
+  },
+  "duration_s": 21600,
+  "weather": {"visibility_nm": 12, "jam": [0, 0], "overcast": 0.2, "rain": 0},
+  "day_night": "Day",
+  "seed": 19440619,
+  "victory": {"target_vp": 120},
+  "units": [
+    {"side": "Blue", "class": "us_ford", "name": "CVN-78 FORD", "pos": [28, 108], "course_deg": 90, "speed_kts": 20, "fire_on": true},
+    {"side": "Blue", "class": "us_ticonderoga", "name": "FORD CG", "pos": [44, 108], "course_deg": 90, "speed_kts": 20, "fire_on": true, "follow": {"leader_name": "CVN-78 FORD", "bearing_rel_deg": 0, "distance_nm": 16}},
+    {"side": "Blue", "class": "us_burke_3", "name": "FORD DDG-A", "pos": [38, 122], "course_deg": 90, "speed_kts": 20, "fire_on": true, "follow": {"leader_name": "CVN-78 FORD", "bearing_rel_deg": 315, "distance_nm": 14}},
+    {"side": "Blue", "class": "us_burke_2a", "name": "FORD DDG-B", "pos": [38, 94], "course_deg": 90, "speed_kts": 20, "fire_on": true, "follow": {"leader_name": "CVN-78 FORD", "bearing_rel_deg": 45, "distance_nm": 14}},
+    {"side": "Blue", "class": "us_virginia", "name": "FORD SSN", "pos": [70, 112], "course_deg": 90, "speed_kts": 16, "depth_m": 120, "fire_on": true},
+    {"side": "Blue", "class": "us_f18e", "name": "FORD CAP-1", "pos": [66, 108], "course_deg": 90, "speed_kts": 450, "altitude_m": 8000, "fire_on": true, "follow": {"leader_name": "CVN-78 FORD", "bearing_rel_deg": 90, "distance_nm": 38}},
+    {"side": "Blue", "class": "us_f18e", "name": "FORD CAP-2", "pos": [62, 96], "course_deg": 90, "speed_kts": 450, "altitude_m": 8000, "fire_on": true, "follow": {"leader_name": "CVN-78 FORD", "bearing_rel_deg": 60, "distance_nm": 40}},
+    {"side": "Blue", "class": "us_e2d", "name": "FORD AEW-1", "pos": [56, 104], "course_deg": 90, "speed_kts": 340, "altitude_m": 8500, "fire_on": false},
+
+    {"side": "Blue", "class": "us_nimitz", "name": "CVN-68 NIMITZ", "pos": [28, 82], "course_deg": 90, "speed_kts": 20, "fire_on": true},
+    {"side": "Blue", "class": "us_ticonderoga", "name": "NIMITZ CG", "pos": [44, 82], "course_deg": 90, "speed_kts": 20, "fire_on": true, "follow": {"leader_name": "CVN-68 NIMITZ", "bearing_rel_deg": 0, "distance_nm": 16}},
+    {"side": "Blue", "class": "us_burke_2a", "name": "NIMITZ DDG-A", "pos": [38, 94], "course_deg": 90, "speed_kts": 20, "fire_on": true, "follow": {"leader_name": "CVN-68 NIMITZ", "bearing_rel_deg": 315, "distance_nm": 14}},
+    {"side": "Blue", "class": "us_burke_3", "name": "NIMITZ DDG-B", "pos": [38, 70], "course_deg": 90, "speed_kts": 20, "fire_on": true, "follow": {"leader_name": "CVN-68 NIMITZ", "bearing_rel_deg": 45, "distance_nm": 14}},
+    {"side": "Blue", "class": "us_virginia", "name": "NIMITZ SSN", "pos": [70, 86], "course_deg": 90, "speed_kts": 16, "depth_m": 120, "fire_on": true},
+    {"side": "Blue", "class": "us_e2d", "name": "NIMITZ AEW-1", "pos": [56, 82], "course_deg": 90, "speed_kts": 340, "altitude_m": 8500, "fire_on": false},
+
+    {"side": "Red", "class": "cn_003", "name": "CV-18 FUJIAN", "pos": [168, 118], "course_deg": 270, "speed_kts": 18, "fire_on": true},
+    {"side": "Red", "class": "cn_055", "name": "FUJIAN CG", "pos": [152, 118], "course_deg": 270, "speed_kts": 18, "fire_on": true, "follow": {"leader_name": "CV-18 FUJIAN", "bearing_rel_deg": 0, "distance_nm": 16}},
+    {"side": "Red", "class": "cn_052d", "name": "FUJIAN DDG-A", "pos": [158, 132], "course_deg": 270, "speed_kts": 18, "fire_on": true, "follow": {"leader_name": "CV-18 FUJIAN", "bearing_rel_deg": 45, "distance_nm": 14}},
+    {"side": "Red", "class": "cn_054a", "name": "FUJIAN FFG", "pos": [158, 104], "course_deg": 270, "speed_kts": 18, "fire_on": true, "follow": {"leader_name": "CV-18 FUJIAN", "bearing_rel_deg": 315, "distance_nm": 14}},
+    {"side": "Red", "class": "cn_093a", "name": "FUJIAN SSN", "pos": [124, 114], "course_deg": 270, "speed_kts": 16, "depth_m": 120, "fire_on": true},
+    {"side": "Red", "class": "cn_j15", "name": "FUJIAN CAP-1", "pos": [128, 118], "course_deg": 270, "speed_kts": 450, "altitude_m": 8000, "fire_on": true, "follow": {"leader_name": "CV-18 FUJIAN", "bearing_rel_deg": 270, "distance_nm": 40}},
+    {"side": "Red", "class": "cn_kj600", "name": "FUJIAN AEW-1", "pos": [138, 118], "course_deg": 270, "speed_kts": 340, "altitude_m": 8500, "fire_on": false},
+
+    {"side": "Red", "class": "cn_002", "name": "CV-17 SHANDONG", "pos": [168, 82], "course_deg": 270, "speed_kts": 18, "fire_on": true},
+    {"side": "Red", "class": "cn_055", "name": "SHANDONG CG", "pos": [152, 82], "course_deg": 270, "speed_kts": 18, "fire_on": true, "follow": {"leader_name": "CV-17 SHANDONG", "bearing_rel_deg": 0, "distance_nm": 16}},
+    {"side": "Red", "class": "cn_052d", "name": "SHANDONG DDG-A", "pos": [158, 96], "course_deg": 270, "speed_kts": 18, "fire_on": true, "follow": {"leader_name": "CV-17 SHANDONG", "bearing_rel_deg": 45, "distance_nm": 14}},
+    {"side": "Red", "class": "cn_054a", "name": "SHANDONG FFG", "pos": [158, 68], "course_deg": 270, "speed_kts": 18, "fire_on": true, "follow": {"leader_name": "CV-17 SHANDONG", "bearing_rel_deg": 315, "distance_nm": 14}},
+    {"side": "Red", "class": "cn_093a", "name": "SHANDONG SSN", "pos": [124, 78], "course_deg": 270, "speed_kts": 16, "depth_m": 120, "fire_on": true},
+    {"side": "Red", "class": "cn_kj600", "name": "SHANDONG AEW-1", "pos": [138, 82], "course_deg": 270, "speed_kts": 340, "altitude_m": 8500, "fire_on": false}
+  ]
+}

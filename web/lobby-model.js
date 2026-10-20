@@ -6,11 +6,10 @@
     const seed=Number(text);if(!Number.isSafeInteger(seed)||seed<0)throw Error('INVALID_SEED');
     return seed;
   }
-  function gameRequest(scenario,text='',options={}){
+  function gameRequest(scenario,text=''){
     if(!scenario||typeof scenario.file!=='string'||!/^[a-zA-Z0-9_-]+\.json$/.test(scenario.file))throw Error('INVALID_SCENARIO');
     const payload={scenario:scenario.file.slice(0,-5),speed:0},seed=seedValue(text);
     if(seed!==undefined)payload.seed=seed;
-    if(options.opponent==='pve')payload.automated_side='Red';
     return payload;
   }
   function safeRecording(entry){return entry&&/^[a-zA-Z0-9_.-]+$/.test(entry.file)&&/^[a-zA-Z0-9_-]+$/.test(entry.id);}
@@ -21,16 +20,34 @@
   function agentMatchConfigs(options={}){
     const raw=Number(options.matchSpeed),speed=Number.isFinite(raw)?Math.min(60,Math.max(5,Math.round(raw))):15;
     const mode=options.assistantMode==='full'?'full':options.assistantMode==='semi'?'semi':'off';
-    const pve=options.opponent==='pve';
     const out=[];
-    if(options.agentOpponent && !pve)out.push({side:'Red',enabled:true,autonomy:'execute',auto_run:mode==='full',auto_speed:speed});
+    if(opponent(options)==='llm')out.push({side:opponentSide(options.seat),enabled:true,autonomy:'execute',auto_run:mode==='full',auto_speed:speed});
     if(mode==='semi')out.push({side:'Blue',enabled:true,autonomy:'advise',auto_run:false,auto_speed:speed});
     if(mode==='full')out.push({side:'Blue',enabled:true,autonomy:'execute',auto_run:true,auto_speed:speed});
     return out;
   }
   function agentMatchStartsAtSpeed(options={}){
-    return options.assistantMode==='full' || !!options.agentOpponent || options.opponent==='pve';
+    return options.assistantMode==='full' || opponent(options)==='llm';
   }
-  const api={seedValue,gameRequest,safeRecording,duration,agentMatchConfigs,agentMatchStartsAtSpeed};
+  const OPPONENTS=['human','tactical','llm'];
+  function opponent(options={}){
+    if(OPPONENTS.includes(options.opponent))return options.opponent;
+    return options.agentOpponent?'llm':'human';
+  }
+  function opponentValue(value,fallback='human'){
+    if(OPPONENTS.includes(value))return value;
+    return OPPONENTS.includes(fallback)?fallback:'human';
+  }
+  function opponentSide(seat){return seat==='Red'?'Blue':'Red';}
+  function tacticalAutopilotConfig(options={}){
+    if(opponent(options)!=='tactical')return null;
+    return {side:opponentSide(options.seat),enabled:true};
+  }
+  // 本席托管与 LLM 助手相互独立：状态机参谋接管玩家自己的席位。
+  function tacticalTakeoverConfig(options={}){
+    if(!options.tacticalTakeover)return null;
+    return {side:options.seat==='Red'?'Red':'Blue',enabled:true};
+  }
+  const api={seedValue,gameRequest,safeRecording,duration,agentMatchConfigs,agentMatchStartsAtSpeed,opponent,opponentValue,opponentSide,tacticalAutopilotConfig,tacticalTakeoverConfig};
   if(typeof module!=='undefined')module.exports=api;root.HarpoonLobbyModel=api;
 })(typeof window!=='undefined'?window:globalThis);

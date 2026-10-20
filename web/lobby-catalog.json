@@ -157,6 +157,45 @@
       "automated_side": null,
       "satellite": true
     },
+    "carrier_duel_dawn_strike": {
+      "file": "carrier_duel_dawn_strike.json",
+      "source_sha256": "73b0c50b7cdb6369d7b4dfef881d519ba2272ae9d652cbbdacb8062687b74ae0",
+      "duration_s": 18000,
+      "seed": 19820614,
+      "initial_units": 10,
+      "sides": {
+        "Blue": 4,
+        "Red": 6
+      },
+      "automated_side": null,
+      "satellite": true
+    },
+    "carrier_duel_philippine_sea": {
+      "file": "carrier_duel_philippine_sea.json",
+      "source_sha256": "6cf5a4dbd5714cb6b29b8f7535166882dc66c40bd4bb2d40fd29704085aafb9f",
+      "duration_s": 21600,
+      "seed": 19440619,
+      "initial_units": 27,
+      "sides": {
+        "Blue": 14,
+        "Red": 13
+      },
+      "automated_side": null,
+      "satellite": true
+    },
+    "carrier_duel_ryukyu_night": {
+      "file": "carrier_duel_ryukyu_night.json",
+      "source_sha256": "2a33754fbf006bda8ea19ad6eec716cb50c9a02f00455beae626851f5d9159f2",
+      "duration_s": 14400,
+      "seed": 19961207,
+      "initial_units": 9,
+      "sides": {
+        "Blue": 5,
+        "Red": 4
+      },
+      "automated_side": null,
+      "satellite": true
+    },
     "crimson_tide": {
       "file": "crimson_tide.json",
       "source_sha256": "8112567f0dd5040466fd5d0c0b1f08d5a9064f58262e5d99c24da4e4d6f912ab",
@@ -211,7 +250,7 @@
     },
     "dual_carrier_kills": {
       "file": "dual_carrier_kills.json",
-      "source_sha256": "eace8662138c4a7ed62ed53dfdac16778cc235f13cc8010ae3877eade59c02cf",
+      "source_sha256": "c6fb76b3570a4286457879c1ce9eb7638b7f73dc753731e00f13ba18ff47fe1e",
       "duration_s": 21600,
       "seed": 20261019,
       "initial_units": 34,

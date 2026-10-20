@@ -6,7 +6,8 @@
 //!   REST/WS surface and only ever receives double-blind observations.
 //! - POST /api/selfplay runs a fully deterministic headless rollout.
 
-mod ai;
+pub mod ai;
+pub mod tactical;
 mod agent;
 mod director;
 mod tutorial;
@@ -86,6 +87,29 @@ fn load_volume_database(volumes_dir: &std::path::Path) -> Database {
     db
 }
 
+/// Deterministic TacticalStaff takeover for one side. The staff instance is
+/// kept across ticks on purpose: roles and the threat axis are assigned once
+/// and must not churn between decisions.
+struct TacticalSlot {
+    enabled: bool,
+    cadence_s: i64,
+    last_tick: i64,
+    last_orders: usize,
+    staff: Box<dyn ai::CommandStaff>,
+}
+
+impl TacticalSlot {
+    fn new(side: Side) -> Self {
+        Self {
+            enabled: false,
+            cadence_s: 30,
+            last_tick: 0,
+            last_orders: 0,
+            staff: Box::new(tactical::TacticalStaff::new(side)),
+        }
+    }
+}
+
 struct Game {
     world: Option<World>,
     speed: f64,
@@ -101,6 +125,7 @@ struct Game {
     agent_hold: bool,
     resume_speed: f64,
     planning_outstanding: u32,
+    tactical: [TacticalSlot; 2],
 }
 
 impl Game {
@@ -108,7 +133,19 @@ impl Game {
         Self { world: None, speed: 0.0, accumulator: 0.0, inbox: Vec::new(),
             training: None, training_completed: tutorial::load_progress(), progress_saved: true,
             director_active: false, director_id: 0,
-            agent_hold: false, resume_speed: 0.0, planning_outstanding: 0 }
+            agent_hold: false, resume_speed: 0.0, planning_outstanding: 0,
+            tactical: [TacticalSlot::new(Side::Blue), TacticalSlot::new(Side::Red)] }
+    }
+    fn tactical_slot_mut(&mut self, side: Side) -> &mut TacticalSlot {
+        &mut self.tactical[side.index()]
+    }
+    fn tactical_status_value(&self, side: Side) -> serde_json::Value {
+        let slot = &self.tactical[side.index()];
+        json!({
+            "side": side, "enabled": slot.enabled, "cadence_s": slot.cadence_s,
+            "last_tick": slot.last_tick, "last_orders": slot.last_orders,
+            "staff": slot.staff.name(),
+        })
     }
     fn training_view(&self) -> serde_json::Value {
         json!({"session": self.training.as_ref().zip(self.world.as_ref()).map(|(s,w)| s.view(w)),
@@ -159,7 +196,7 @@ fn run_loop(state: AppState) {
             if let Some((n, cmds)) = work {
                 let mut g = state.game.lock().unwrap();
                 let mut pause_training = false;
-                let Game { world, training, .. } = &mut *g;
+                let Game { world, training, tactical, .. } = &mut *g;
                 if let Some(world) = world.as_mut() {
                     // Commands apply once on the first tick (orders persist
                     // as entity state afterwards).
@@ -171,6 +208,16 @@ fn run_loop(state: AppState) {
                             if let Some(side) = world.context.automated_side {
                                 let obs = observe(world, side, world.event_seq, 0);
                                 c.extend(doctrine::orders(&obs));
+                            }
+                            for (idx, slot) in tactical.iter_mut().enumerate() {
+                                let side = if idx == 0 { Side::Blue } else { Side::Red };
+                                if slot.enabled && world.tick - slot.last_tick >= slot.cadence_s {
+                                    let obs = observe(world, side, world.event_seq, 0);
+                                    let orders = slot.staff.decide(&obs);
+                                    slot.last_orders = orders.len();
+                                    slot.last_tick = world.tick;
+                                    c.extend(orders.into_iter().map(|cmd| (side, cmd)));
+                                }
                             }
                         }
                         harpoon_core::sim::tick(world, &c);
@@ -335,7 +382,8 @@ async fn new_game(
     *g = Game { world: Some(world), speed: req.speed, accumulator: 0.0, inbox: Vec::new(),
         training: None, training_completed: completed, progress_saved: true,
         director_active: false, director_id: 0,
-        agent_hold: false, resume_speed: 0.0, planning_outstanding: 0 };
+        agent_hold: false, resume_speed: 0.0, planning_outstanding: 0,
+        tactical: [TacticalSlot::new(Side::Blue), TacticalSlot::new(Side::Red)] };
     drop(g);
     state.agents.start_game(&scenario_id, seed, tick);
     Ok(Json(json!({"started": true, "scenario": name, "seeded_at_tick": tick})))
@@ -781,6 +829,7 @@ async fn director_start(
             agent_hold: false,
             resume_speed: 0.0,
             planning_outstanding: 0,
+            tactical: [TacticalSlot::new(Side::Blue), TacticalSlot::new(Side::Red)],
         };
     }
     state.agents.start_game(&scenario_id, seed, tick);
@@ -1077,6 +1126,7 @@ async fn run_director(
         pending.extend(commands_red.into_iter().map(|c| (Side::Red, c)));
         let mut accumulator = 0.0f64;
         let mut hits: Vec<director::WakeHit> = Vec::new();
+        #[allow(unused_assignments)]
         let mut over_now = None;
         'advance: loop {
             if !director_is_active(&state, id) {
@@ -1215,6 +1265,53 @@ async fn ai_step(
 }
 
 #[derive(Deserialize)]
+struct TacticalConfigReq {
+    side: String,
+    enabled: Option<bool>,
+    cadence_s: Option<i64>,
+    /// Force one staff decision on the next processed tick, ignoring cadence.
+    step_now: Option<bool>,
+}
+
+/// Toggle/trim the deterministic TacticalStaff takeover for one side. The
+/// state machine is always available (no LLM configuration required) and runs
+/// inside the ordinary run loop; orders need simulated time to execute.
+async fn tactical_config(
+    State(state): State<AppState>,
+    Json(req): Json<TacticalConfigReq>,
+) -> Result<Json<serde_json::Value>, (StatusCode, String)> {
+    let side = Side::parse(&req.side).ok_or((StatusCode::BAD_REQUEST, "side must be Blue|Red".into()))?;
+    let mut g = state.game.lock().unwrap();
+    if g.world.is_none() {
+        return Err((StatusCode::CONFLICT, "no game running".into()));
+    }
+    if g.training.is_some() {
+        return Err((StatusCode::CONFLICT, "training session is active".into()));
+    }
+    let slot = g.tactical_slot_mut(side);
+    if let Some(cadence) = req.cadence_s {
+        slot.cadence_s = cadence.clamp(10, 3600);
+    }
+    if let Some(enabled) = req.enabled {
+        slot.enabled = enabled;
+    }
+    if req.step_now.unwrap_or(false) {
+        slot.last_tick = -(slot.cadence_s + 1);
+    }
+    Ok(Json(g.tactical_status_value(side)))
+}
+
+async fn tactical_status(State(state): State<AppState>) -> Json<serde_json::Value> {
+    let g = state.game.lock().unwrap();
+    Json(json!({
+        "sides": {
+            "Blue": g.tactical_status_value(Side::Blue),
+            "Red": g.tactical_status_value(Side::Red),
+        }
+    }))
+}
+
+#[derive(Deserialize)]
 struct SelfplayReq {
     scenario: String,
     seed: Option<u64>,
@@ -1263,8 +1360,8 @@ impl SelfplayCtx {
     }
     fn run(&self, sc: &Scenario, max_ticks: i64) -> serde_json::Value {
         let mut world = load_scenario(sc.clone(), self.db.clone()).expect("load");
-    let mut blue = ai::HeuristicStaff::new(Side::Blue);
-    let mut red = ai::HeuristicStaff::new(Side::Red);
+    let mut blue = ai::make_staff(Side::Blue);
+    let mut red = ai::make_staff(Side::Red);
     let digest = AtomicU64::new(0xcbf2_9ce4_8422_2325);
     let mut event_counts: HashMap<String, u64> = HashMap::new();
     let mut last_events_seq = 0u64;
@@ -1438,6 +1535,8 @@ async fn main() {
         .route("/api/tutorial/action", post(training_action))
         .route("/api/db", get(db_handler))
         .route("/api/ai/step/:side", post(ai_step))
+        .route("/api/tactical/config", post(tactical_config))
+        .route("/api/tactical/status", get(tactical_status))
         .route("/api/agent/status", get(agent_status))
         .route("/api/agent/config", post(agent_config))
         .route("/api/agent/reset", post(agent_reset))

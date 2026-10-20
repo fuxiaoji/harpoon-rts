@@ -1,0 +1,196 @@
+{
+  "id": "carrier_duel_ryukyu_night",
+  "name": "Carrier Duel — Ryukyu Night Ambush",
+  "description": "Night action south of the Ryukyus. A Chinese strike group (Fujian + escorts) Sorties from the East China Sea through the Miyako Strait against a US Aegis picket led by CVN-73 and two Burkes, reinforced by a Japan Maritime Self-Defense Force escort. Night halves visual detection; both sides rely on radar, ESM and sonar. The raider must break through the picket and strike the carrier; the defender must find the raiders in the dark. Fixed seed.",
+  "context": {
+    "theater": {
+      "west": 120,
+      "east": 136,
+      "south": 20,
+      "north": 28,
+      "reference_lat": 24,
+      "image": "maps/west-pacific-blue-marble.jpg",
+      "attribution": "NASA GIBS / MODIS / NASA Earth Observatory",
+      "source_url": "https://gibs.earthdata.nasa.gov/layer-metadata/v1.0/BlueMarble_NextGeneration.json",
+      "imagery_date": "2004-08"
+    },
+    "automated_side": null,
+    "air_wings": {
+      "CVN-73 WASHINGTON": [
+        {
+          "class": "us_f18e",
+          "count": 16
+        },
+        {
+          "class": "us_e2d",
+          "count": 3
+        },
+        {
+          "class": "us_mh60r",
+          "count": 5
+        }
+      ]
+    },
+    "air_missions": {
+      "WASHINGTON AEW-1": {
+        "mission": "recon",
+        "point": [
+          136,
+          152
+        ]
+      }
+    }
+  },
+  "duration_s": 14400,
+  "weather": {
+    "visibility_nm": 6,
+    "jam": [
+      0.2,
+      0
+    ],
+    "overcast": 0.6,
+    "rain": 0.3
+  },
+  "day_night": "Night",
+  "seed": 19961207,
+  "victory": {
+    "target_vp": 90
+  },
+  "units": [
+    {
+      "side": "Blue",
+      "class": "us_nimitz",
+      "name": "CVN-73 WASHINGTON",
+      "pos": [
+        128,
+        150
+      ],
+      "course_deg": 45,
+      "speed_kts": 18,
+      "fire_on": true
+    },
+    {
+      "side": "Blue",
+      "class": "us_burke_3",
+      "name": "DDG PICKET",
+      "pos": [
+        141,
+        137
+      ],
+      "course_deg": 45,
+      "speed_kts": 18,
+      "fire_on": true,
+      "follow": {
+        "leader_name": "CVN-73 WASHINGTON",
+        "bearing_rel_deg": 315,
+        "distance_nm": 18
+      }
+    },
+    {
+      "side": "Blue",
+      "class": "us_burke_2a",
+      "name": "DDG SCREEN",
+      "pos": [
+        133,
+        158
+      ],
+      "course_deg": 45,
+      "speed_kts": 18,
+      "fire_on": true,
+      "follow": {
+        "leader_name": "CVN-73 WASHINGTON",
+        "bearing_rel_deg": 135,
+        "distance_nm": 12
+      }
+    },
+    {
+      "side": "Blue",
+      "class": "us_burke_2a",
+      "name": "JMSDF escort",
+      "pos": [
+        136,
+        146
+      ],
+      "course_deg": 45,
+      "speed_kts": 18,
+      "fire_on": true,
+      "follow": {
+        "leader_name": "CVN-73 WASHINGTON",
+        "bearing_rel_deg": 90,
+        "distance_nm": 14
+      }
+    },
+    {
+      "side": "Blue",
+      "class": "us_e2d",
+      "name": "WASHINGTON AEW-1",
+      "pos": [
+        136,
+        152
+      ],
+      "course_deg": 315,
+      "speed_kts": 340,
+      "altitude_m": 8500,
+      "fire_on": false
+    },
+    {
+      "side": "Red",
+      "class": "cn_003",
+      "name": "CV-18 FUJIAN",
+      "pos": [
+        124,
+        26
+      ],
+      "course_deg": 160,
+      "speed_kts": 16,
+      "fire_on": true
+    },
+    {
+      "side": "Red",
+      "class": "cn_055",
+      "name": "FUJIAN CG",
+      "pos": [
+        122,
+        30
+      ],
+      "course_deg": 160,
+      "speed_kts": 16,
+      "fire_on": true,
+      "follow": {
+        "leader_name": "CV-18 FUJIAN",
+        "bearing_rel_deg": 0,
+        "distance_nm": 12
+      }
+    },
+    {
+      "side": "Red",
+      "class": "cn_052d",
+      "name": "FUJIAN DDG",
+      "pos": [
+        126,
+        28
+      ],
+      "course_deg": 160,
+      "speed_kts": 16,
+      "fire_on": true,
+      "follow": {
+        "leader_name": "CV-18 FUJIAN",
+        "bearing_rel_deg": 45,
+        "distance_nm": 10
+      }
+    },
+    {
+      "side": "Red",
+      "class": "cn_039a",
+      "name": "SSK vanguard",
+      "pos": [
+        140,
+        140
+      ],
+      "course_deg": 315,
+      "speed_kts": 6,
+      "depth_m": 80,
+      "fire_on": true
+    }
+  ]
+}

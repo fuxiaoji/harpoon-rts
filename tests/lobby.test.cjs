@@ -9,16 +9,15 @@ test('launch always starts paused and resolves public id to actual scenario file
   assert.deepEqual(M.gameRequest({id:'tattletail_1991',file:'tattletail.json'}),{scenario:'tattletail',speed:0});
   assert.deepEqual(M.gameRequest({file:'dual_carrier_hotseat.json'},'0'),{scenario:'dual_carrier_hotseat',speed:0,seed:0});
 });
-test('PVE opponent arms the scripted Red doctrine and no LLM agent',()=>{
-  assert.deepEqual(M.gameRequest({file:'carrier_duel_3h.json'},'',{opponent:'pve'}),
-    {scenario:'carrier_duel_3h',speed:0,automated_side:'Red'});
-  assert.deepEqual(M.gameRequest({file:'carrier_duel_3h.json'},''),{scenario:'carrier_duel_3h',speed:0});
-  assert.deepEqual(M.agentMatchConfigs({opponent:'pve',agentOpponent:false,assistantMode:'off',matchSpeed:15}),[]);
-  assert.deepEqual(M.agentMatchConfigs({opponent:'pve',agentOpponent:true,assistantMode:'full',matchSpeed:30}),[
+test('PVE opponent is seat-aware tactical autopilot and composes with the assistant',()=>{
+  assert.deepEqual(M.gameRequest({file:'carrier_duel_3h.json'},'',{opponent:'tactical'}),
+    {scenario:'carrier_duel_3h',speed:0},'tactical PvE launches paused via /api/tactical/config');
+  assert.deepEqual(M.agentMatchConfigs({opponent:'tactical',assistantMode:'off',matchSpeed:15}),[]);
+  assert.deepEqual(M.agentMatchConfigs({opponent:'tactical',assistantMode:'full',matchSpeed:30}),[
     {side:'Blue',enabled:true,autonomy:'execute',auto_run:true,auto_speed:30}
-  ],'PVE replaces the Red LLM agent but a full-auto assistant stays');
-  assert.equal(M.agentMatchStartsAtSpeed({opponent:'pve',assistantMode:'off'}),true);
-  assert.equal(M.agentMatchStartsAtSpeed({opponent:'human',assistantMode:'off'}),false);
+  ],'tactical PvE replaces the Red LLM agent but a full-auto assistant stays');
+  assert.equal(M.agentMatchStartsAtSpeed({opponent:'tactical',assistantMode:'off'}),false,
+    'tactical PvE launches paused; the autopilot decides once started');
 });
 
 test('AI opponent and assistant modes produce strict-double-blind match configs',()=>{
@@ -30,11 +29,34 @@ test('AI opponent and assistant modes produce strict-double-blind match configs'
     {side:'Red',enabled:true,autonomy:'execute',auto_run:true,auto_speed:60},
     {side:'Blue',enabled:true,autonomy:'execute',auto_run:true,auto_speed:60}
   ]);
-  assert.deepEqual(M.agentMatchConfigs({agentOpponent:false,assistantMode:'off',matchSpeed:15}),[]);
+  assert.deepEqual(M.agentMatchConfigs({assistantMode:'off',matchSpeed:15}),[]);
   assert.equal(M.agentMatchConfigs({assistantMode:'full',matchSpeed:1})[0].auto_speed,5);
   assert.equal(M.agentMatchStartsAtSpeed({agentOpponent:true,assistantMode:'semi'}),true);
   assert.equal(M.agentMatchStartsAtSpeed({agentOpponent:false,assistantMode:'semi'}),false);
   assert.equal(M.agentMatchStartsAtSpeed({agentOpponent:false,assistantMode:'full'}),true);
+});
+test('opponent mode: seat-aware sides, tactical PvE config and legacy checkbox mapping',()=>{
+  assert.equal(M.opponent({opponent:'tactical'}),'tactical');
+  assert.equal(M.opponent({agentOpponent:true}),'llm');
+  assert.equal(M.opponent({}),'human');
+  assert.equal(M.opponentValue('tactical'),'tactical');
+  assert.equal(M.opponentValue('bogus','llm'),'llm');
+  assert.equal(M.opponentValue('bogus'),'human');
+  assert.equal(M.opponentSide('Blue'),'Red');
+  assert.equal(M.opponentSide('Red'),'Blue');
+  assert.deepEqual(M.tacticalAutopilotConfig({opponent:'tactical',seat:'Blue'}),{side:'Red',enabled:true});
+  assert.deepEqual(M.tacticalAutopilotConfig({opponent:'tactical',seat:'Red'}),{side:'Blue',enabled:true});
+  assert.equal(M.tacticalAutopilotConfig({opponent:'human',seat:'Blue'}),null);
+  // 本席托管与 LLM 助手相互独立，接管的是玩家自己的席位。
+  assert.deepEqual(M.tacticalTakeoverConfig({tacticalTakeover:true,seat:'Blue'}),{side:'Blue',enabled:true});
+  assert.deepEqual(M.tacticalTakeoverConfig({tacticalTakeover:true,seat:'Red'}),{side:'Red',enabled:true});
+  assert.equal(M.tacticalTakeoverConfig({seat:'Blue'}),null);
+  assert.equal(M.tacticalTakeoverConfig({tacticalTakeover:false,seat:'Blue'}),null);
+  // 状态机 PvE 不依赖 LLM，新局保持暂停、由玩家掌握时间。
+  assert.equal(M.agentMatchStartsAtSpeed({opponent:'tactical',seat:'Blue'}),false);
+  assert.deepEqual(M.agentMatchConfigs({opponent:'tactical',assistantMode:'off'}),[]);
+  assert.equal(M.agentMatchStartsAtSpeed({opponent:'llm',seat:'Red'}),true);
+  assert.deepEqual(M.agentMatchConfigs({opponent:'llm',seat:'Red',assistantMode:'off',matchSpeed:15})[0].side,'Blue');
 });
 test('optional seeds preserve exact integers and reject truncation or precision loss',()=>{
   assert.equal(M.seedValue(''),undefined);assert.equal(M.seedValue(' 42 '),42);

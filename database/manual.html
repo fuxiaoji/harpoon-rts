@@ -1,0 +1,1295 @@
+<!DOCTYPE html>
+<html lang="zh"><head><meta charset="utf-8">
+<style>
+@page { size: A4; margin: 18mm 15mm; }
+body { font-family: "PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+       color: #1a2a3a; line-height: 1.7; font-size: 13px; max-width: 800px; margin: 0 auto; padding: 20px; }
+h1 { font-size: 22px; border-bottom: 2px solid #1a6fa8; padding-bottom: 6px; color: #0d4a7a; }
+h2 { font-size: 18px; color: #1a6fa8; margin-top: 24px; }
+h3 { font-size: 15px; color: #2a5a8a; }
+table { border-collapse: collapse; width: 100%; margin: 12px 0; font-size: 12px; }
+th, td { border: 1px solid #b8c8d8; padding: 5px 8px; text-align: left; }
+th { background: #e8f0f8; font-weight: 600; }
+img { max-width: 100%; height: auto; margin: 8px 0; border: 1px solid #ccc; }
+code { background: #f0f4f8; padding: 2px 5px; font-family: Menlo, monospace; font-size: 11px; }
+pre { background: #f0f4f8; padding: 10px; border-radius: 4px; overflow-x: auto; }
+pre code { padding: 0; }
+blockquote { border-left: 3px solid #1a6fa8; padding: 8px 12px; margin: 12px 0;
+             background: #f5f9fc; color: #3a5a7a; }
+.part-title { font-size: 28px; text-align: center; padding: 40px 0 20px;
+              color: #0d4a7a; border: none; }
+.page-break { page-break-before: always; }
+hr { border: none; border-top: 1px solid #ccc; margin: 16px 0; }
+a { color: #1a6fa8; text-decoration: none; }
+.cover { text-align: center; padding: 80px 0 60px; }
+.cover h1 { font-size: 32px; border: none; color: #0d3a6a; }
+.cover .sub { font-size: 16px; color: #5a7a9a; margin: 16px 0; }
+.cover .date { font-size: 12px; color: #8aa; margin-top: 40px; }
+.toc { background: #f5f9fc; padding: 16px 20px; border-radius: 6px; margin: 20px 0; }
+</style></head><body>
+<div class="cover">
+<h1>鱼叉 RTS · 图文教学手册</h1>
+<div class="sub">规则教学 · 探测与编队 · 实战教程 · 双航母击杀赛战报</div>
+<div class="sub">Harpoon V RTS 改编开发版 · 基于真实对局数据与实测截图</div>
+<div class="date">2026-10-20 · harpoon-rts</div>
+</div>
+<hr>
+<div class="chapter"><h1 class="part-title">第一篇 · 规则教学</h1><h1>鱼叉 RTS 图文教学手册</h1>
+<blockquote>
+<p>本手册基于真实游戏截图与真实对局数据写成。所有数字（命中率、事件时间线）
+都来自引擎实测（<code>examples/intercept_probe.rs</code>、<code>examples/crimson_tide.rs</code>），
+不是宣传语。读完这一篇，你就能独立指挥一场舰队战役。</p>
+</blockquote>
+<hr />
+<h2>目录</h2>
+<ol>
+<li><a href="#1-这是什么游戏60-秒版">这是什么游戏（60 秒版）</a></li>
+<li><a href="#2-开局三步">开局三步</a></li>
+<li><a href="#3-界面导览">界面导览</a></li>
+<li><a href="#4-五个核心概念">五个核心概念</a></li>
+<li><a href="#5-手把手第一局炮术对决十二步">手把手第一局：炮术对决（十二步）</a></li>
+<li><a href="#6-案例战报赤潮行动时间线">案例战报：赤潮行动时间线</a></li>
+<li><a href="#7-武器与防御体系速查">武器与防御体系速查</a></li>
+<li><a href="#8-rts-改编对照表">RTS 改编对照表：桌面规则怎么变成了电子规则</a></li>
+<li><a href="#9-常见疑问">常见疑问（为什么看不到敌人 / 打不中 / 接触消失）</a>
+9b. <a href="探测与编队篇.md">续篇：探测与编队篇（零基础声纳科普 / 预警机 / 航母编队指挥）</a>
+9c. <a href="实战教程.md">实战教程：反潜 / 三域打击 / 舰队防御（配真实截图）</a>
+9d. <a href="aar/双航母击杀赛战报.md">双航母击杀赛详细战报（六小时全量战报 + 实况截图 + 状态机架构说明）</a></li>
+<li><a href="#10-进阶">进阶：数据卷 / AI 参谋 / API</a></li>
+<li><a href="#11-附录速查">附录：指令与事件速查</a></li>
+</ol>
+<hr />
+<h2>1. 这是什么游戏（60 秒版）</h2>
+<p>经典桌面兵棋《Harpoon》（鱼叉）的<strong>实时战略（RTS）电子化版本</strong>。</p>
+<p>桌面原版： hex 格子、3 分钟一回合、掷 D100 查表、需要一个真人裁判替双方
+秘密记录敌情（"双盲裁判"）。</p>
+<p>本作把这三样全部电子化：</p>
+<table>
+<thead>
+<tr>
+<th>桌面版</th>
+<th>本作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>回合制（3 分钟/回合）</td>
+<td><strong>连续时间轴</strong>：1 秒一个模拟步，随时暂停/加速（最高 300×）</td>
+</tr>
+<tr>
+<td>D100 查表裁决</td>
+<td><strong>确定性引擎掷点</strong>：同一存档重放结果完全一致</td>
+</tr>
+<tr>
+<td>人工双盲裁判</td>
+<td><strong>服务器即裁判</strong>：你看不到敌人真身，只有"接触"（估计位置）</td>
+</tr>
+</tbody>
+</table>
+<p>你扮演一方舰队指挥官。核心循环只有五步：</p>
+<pre><code>机动（下令航向） → 探测（传感器找目标） → 指派（把接触交给火控）
+→ 开火（武器自动/手动射击） → 防御（箔条/防空拦截来袭导弹）
+</code></pre>
+<p>内置想定：
+- <strong>Tutorial 01</strong>（新手教学，界面左上 TUTORIAL 按钮可进入引导模式）
+- <strong>Gunnery Dual</strong>（1 艘宙斯盾舰 vs 2 导弹艇，10 分钟教学局）
+- <strong>Crimson Tide</strong>（航母战斗群全要素战役，18+ 机制）
+- <strong>Pacific Storm</strong>（大型联合战役）
+- <strong>Tattletail</strong>（官方经典想定复刻，北约反潜警戒群 vs 苏联潜艇）</p>
+<hr />
+<h2>2. 开局三步</h2>
+<ol>
+<li>启动：<code>cargo run --release -p harpoon-server</code>，浏览器开 <code>http://localhost:8787</code></li>
+<li>顶栏 <strong>SCENARIO</strong> 下拉选想定 → 点右侧 <strong>⟳</strong> 开局（下图 3 号位）</li>
+<li>点 <strong>TIME CONTROL</strong> 里的 <strong>60×</strong> —— 时间开始流动，事件流开始报点</li>
+</ol>
+<p><img alt="界面全景" src="file:///Users/Zhuanz1/Desktop/鱼叉/docs/manual/img/01-ui-overview.png" /></p>
+<p>上图编号：①指挥侧别 ②TUTORIAL 教程入口 ③想定选择+开局 ④时间控制
+⑤模拟时钟 ⑥实时数据链状态 ⑦想定简报/气象 ⑧符号图例 ⑨缩放/适配
+⑩事件流。<strong>下方大海图就是战场</strong>：蓝色符号是你的兵力，橙色三角是敌机
+接触，绿色方块是敌岸上基地，虚线符号是失效的旧接触。</p>
+<hr />
+<h2>3. 界面导览</h2>
+<h3>3.1 选中自己的船</h3>
+<p><strong>左键点击海图上的蓝色符号</strong>。右侧展开三块面板：</p>
+<p><img alt="选中战舰" src="file:///Users/Zhuanz1/Desktop/鱼叉/docs/manual/img/02-unit-selected.png" /></p>
+<ul>
+<li><strong>OWN UNIT</strong>：船体 HP 条、航速/航向/深度</li>
+<li><strong>COMMAND</strong>：</li>
+<li><code>WEAPONS FREE</code>（武器自由）——总闸。开着时，火控系统会<strong>自动</strong>向
+    有火控解的目标开火；新手建议保持开启</li>
+<li><code>DEPLOY CHAFF</code>（箔条）——来袭导弹的诱饵，每次施放持续 30 秒</li>
+<li><code>ALL STOP</code> 全停 / <code>RECOVER AIR</code> 召回舰载机</li>
+<li><strong>WEAPONS 表</strong>：每座武器的 <code>AMMO</code>（弹药）与 <code>CD</code>（冷却，RDY=可用）</li>
+<li>航母/机场会多一块 <strong>FLIGHT DECK</strong>（飞行甲板）面板：联队就绪数 +
+  每个机种的 <code>CAP / STRIKE / ASW</code> 弹射按钮</li>
+</ul>
+<h3>3.2 下令机动</h3>
+<p>保持选中状态，<strong>左键点击海图开阔海域</strong> = 追加一个航路点（Waypoint），
+战舰会以限定转向率转向过去。可以连续点多个点排成航线。</p>
+<p><img alt="航路点" src="file:///Users/Zhuanz1/Desktop/鱼叉/docs/manual/img/03-waypoint.png" /></p>
+<p>顶部提示 <code>WAYPOINT 1 QUEUED · X 48.0 / Y 40.1 NM</code> 说明指令已被服务器接受。
+指令在<strong>下一个模拟秒</strong>生效——如果游戏是暂停的，恢复时间后才会动。</p>
+<h3>3.3 指派目标与开火</h3>
+<p><strong>左键点击橙/红色的接触符号</strong>，右侧 TARGET DESIGNATION 面板展开：</p>
+<p><img alt="目标指派" src="file:///Users/Zhuanz1/Desktop/鱼叉/docs/manual/img/04-contact-designation.png" /></p>
+<ul>
+<li><strong>Q 值（质量）</strong>：火控解 0–100。规则：手操开火需要 Q≥30；Q 越高命中
+  越稳。质量随跟踪时间上升、目标丢失视界后衰减</li>
+<li><strong>ASSIGN TARGET</strong>：把目标交给火控，武器会自动按包线开火</li>
+<li><strong>武器下拉 + FIRE</strong>：手动指定某一座武器打一轮</li>
+</ul>
+<hr />
+<h2>4. 五个核心概念</h2>
+<h3>4.1 双盲与"接触"——你永远看不到敌人的真身</h3>
+<p>引擎内部知道每艘船的真位置，但<strong>只给你看"接触"（Contact）</strong>：一个带
+误差的估计位置。每个接触有：</p>
+<ul>
+<li><strong>类别</strong>：AIR / SURFACE / SUBSURFACE / MISSILE / TORPEDO（探测方式决定，
+  见 4.4）</li>
+<li><strong>质量 Q</strong>（0–1 显示为 Q00–Q100）：跟踪越久越高；丢失视界后每 4 秒
+  衰减 10%，归零即 <strong>STALE（失效）</strong>——符号变虚线，位置按最后航向航速
+  航位推算，<strong>不能用来开火</strong>（除非走 BOL 定方位发射，Pk×0.25）</li>
+<li><strong>识别</strong>：跟踪质量到 0.7 或距离足够近时，<code>CONTACT IDENTIFIED</code> 事件会
+  告诉你它是"Missile Boat"还是"Coastal Airfield"</li>
+</ul>
+<p>实战含义：<strong>丢失 AEW 预警机 = 丢掉半张地图</strong>。上图里 C5/C3 两个失效的
+导弹艇接触就是预警机被击落后留下的旧位置。</p>
+<h3>4.2 探测：五种传感器各有地盘</h3>
+<table>
+<thead>
+<tr>
+<th>传感器</th>
+<th>能看什么</th>
+<th>关键限制</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>雷达（对空/对海/导航）</td>
+<td>空/海/导弹</td>
+<td><strong>雷达地平</strong>封顶（30m 桅杆对海≈12nm）；对掠海弹只有 ~18nm 反应时间</td>
+</tr>
+<tr>
+<td>ESM 侦收</td>
+<td>敌人的雷达辐射</td>
+<td>只有方位没有距离（误差 22nm），但极远</td>
+</tr>
+<tr>
+<td>目视</td>
+<td>水面/岸</td>
+<td>受气象/昼夜限制（夜晚 ×0.5）</td>
+</tr>
+<tr>
+<td>被动声纳</td>
+<td>潜艇/水面噪声</td>
+<td>航速越快越响；潜艇深潜跨跃变层 ×0.5</td>
+</tr>
+<tr>
+<td>主动声纳</td>
+<td>潜艇</td>
+<td>精确但<strong>开机即暴露</strong>——1.6 倍距离内敌方被动声纳全都听得见你</td>
+</tr>
+</tbody>
+</table>
+<p>另外：<strong>发射即暴露</strong>。你发射反舰导弹的瞬间，附近敌人会得到一个"发射
+闪光"接触——齐射有代价。</p>
+<h3>4.3 时间倍速与指令</h3>
+<p>服务器按 1 秒一步推进模拟，你调的是<strong>回放速度</strong>：0×（暂停）到 300×。
+指令（航向/开火/弹射）提交后<strong>下一个模拟秒生效一次</strong>，此后作为状态保持
+（航线会一直飞）。<strong>暂停时提交的指令要等恢复时间才生效</strong>——新手最常见
+的困惑就是"点了没反应"，先看是不是暂停着。</p>
+<h3>4.4 拦截链：反舰导弹攻防的完整流程</h3>
+<p>这是本作最核心的对抗。以一次导弹艇齐射打宙斯盾舰为例（实测数据）：</p>
+<pre><code>MGB 齐射 4×YJ-83（射程 60nm，掠海 8m，末段 560kt）
+   ↓ 发射瞬间：DDG 得到&quot;发射闪光&quot;接触（立刻知道大概谁打的）
+导弹飞行 8nm 进入 DDG 雷达地平 → INCOMING 事件（含预计到达时间）
+   ↓ DDG 火控自动接战：sam_long 齐射 2 发（指挥仪同时最多引导 4×2 发）
+SAM 命中判定 Pk 0.55（命中即击落来袭弹）
+   ↓ 没拦住？导弹继续飞。8nm 时守方自动撒箔条（雷达被诱骗 45%）
+   ↓ 1.8nm 时 CIWS 近防炮最后一道（Pk 0.30/波）
+   ↓ 末段判定：Pk 0.55（箔条窗口内 ×0.45）
+命中 → 伤害 42±15% + 关键命中掷点（动力/雷达/进水/火灾/弹药库殉爆…）
+</code></pre>
+<p>实测（10 个种子各 90 分钟）：<strong>321 发 SAM → 59% 拦截成功率</strong>，漏网弹
+最终只有极少数命中。防空是可信的，但别拿巡洋舰硬抗齐射——先撒箔条、
+再转向把船艏对准来袭方向（缩小受弹面）。</p>
+<h3>4.5 空空作战</h3>
+<p>战斗机 CAP（战斗空中巡逻）会自动接敌：雷达锁定（对空探测距离
+110nm，不再被目标尺寸缩水）→ 30nm 发雷达制导中距弹（Pk 0.55）→
+15nm 内红外弹收尾（Pk 0.50，末段可被剧烈机动甩掉 25%）→ 6nm 内进入
+<strong>狗斗</strong>（每 15 秒一轮航炮互殴）。对方的激烈机动会显著降低你的命中。</p>
+<hr />
+<h2>5. 手把手第一局：炮术对决（十二步）</h2>
+<p>用 <strong>Gunnery Dual</strong>（宙斯盾舰 vs 两艘导弹艇）走完整流程：</p>
+<table>
+<thead>
+<tr>
+<th>步</th>
+<th>操作</th>
+<th>你会看到</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>选 BLUE，开局，60×</td>
+<td>事件流：SCENARIO STARTED</td>
+</tr>
+<tr>
+<td>2</td>
+<td>点你的 DDG 符号</td>
+<td>右侧面板展开，确认 WEAPONS FREE 是 ACTIVE</td>
+</tr>
+<tr>
+<td>3</td>
+<td>点舰艏前方海图（敌在东南方）</td>
+<td>WAYPOINT QUEUED，船开始转向</td>
+</tr>
+<tr>
+<td>4</td>
+<td>等 ~40 分钟游戏时间（2400s）</td>
+<td>事件流 DETECTION · C1 SURFACE</td>
+</tr>
+<tr>
+<td>5</td>
+<td>等到 CONTACT IDENTIFIED · Missile Boat</td>
+<td>识别完成</td>
+</tr>
+<tr>
+<td>6</td>
+<td>左键点接触符号</td>
+<td>目标面板出现，Q 值随时间上涨</td>
+</tr>
+<tr>
+<td>7</td>
+<td>点 ASSIGN TARGET</td>
+<td>NO TARGET ASSIGNED 变成目标名</td>
+</tr>
+<tr>
+<td>8</td>
+<td>拉近到 11nm 内（舰炮射程）</td>
+<td>火控自动开炮：GUN ACTION 事件</td>
+</tr>
+<tr>
+<td>9</td>
+<td>敌艇进 60nm 后会还射导弹</td>
+<td>INCOMING 事件 + 自动 SAM 拦截</td>
+</tr>
+<tr>
+<td>10</td>
+<td>看到多个 INCOMING 时点 DEPLOY CHAFF</td>
+<td>CHAFF DEPLOYED 事件</td>
+</tr>
+<tr>
+<td>11</td>
+<td>持续交战至敌沉</td>
+<td>CONTACT SANK / IMPACT / SUNK</td>
+</tr>
+<tr>
+<td>12</td>
+<td>时间耗尽或全歼</td>
+<td>SCENARIO ENDED 覆盖层 + VP 判定</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>新手最常翻车点</strong>：
+1. 指令没反应 → 游戏在暂停
+2. 看不到敌人 → 雷达地平外，需要 AEW/前出兵力
+3. 打不出炮 → 没有火控解（Q 太低）或超出射程；先 ASSIGN 再等
+4. 被导弹打爆 → 没保持 WEAPONS FREE 或忘撒箔条</p>
+</blockquote>
+<hr />
+<h2>6. 案例战报：赤潮行动时间线</h2>
+<p>下面是 <strong>Crimson Tide</strong> 一局的真实事件序列（驱动器实录，非编造），
+教你读战报：</p>
+<table>
+<thead>
+<tr>
+<th>游戏时间</th>
+<th>事件</th>
+<th>解读</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>T+00:04</td>
+<td>DETECTION · C1 AIR（长程对空雷达）</td>
+<td>双方预警机先看见彼此——空战 always 先行</td>
+</tr>
+<tr>
+<td>T+04:51</td>
+<td>WEAPONS RELEASE · DDG-101，Land-Attack ×1</td>
+<td>宙斯盾向已识别的岸上目标自动齐射对地巡航弹</td>
+</tr>
+<tr>
+<td>T+09:13</td>
+<td>WEAPONS RELEASE · DDG-101 ×1</td>
+<td>第二发 SLCM；<strong>注意</strong>：发射闪光让红方反定位（COUNTER-DETECTED）</td>
+</tr>
+<tr>
+<td>T+18:12</td>
+<td>IMPACT · BLUE EWN-1（Point-Defense SAM，28.5 伤害）</td>
+<td>蓝方预警机被红方点防空击伤——<strong>深入敌防空圈有代价</strong></td>
+</tr>
+<tr>
+<td>T+18:33</td>
+<td>AIRCRAFT DOWN · BLUE EWN-1</td>
+<td>预警机坠毁。之后对海/对岸接触陆续失效（CONTACT LOST 一串）</td>
+</tr>
+<tr>
+<td>T+55:53</td>
+<td>WEAPONS RELEASE · RED MGB-1，ASCM ×2</td>
+<td>导弹艇狼群借 ESM 找到航母编队，60nm 外齐射</td>
+</tr>
+<tr>
+<td>T+55:56</td>
+<td>INCOMING · C6</td>
+<td>来袭预警：预计 1 秒后到达判定点</td>
+</tr>
+<tr>
+<td>T+59:18</td>
+<td>INTERCEPT SUCCESS（Long-Range SAM）</td>
+<td>区域防空拦下第一波</td>
+</tr>
+<tr>
+<td>T+76:16</td>
+<td>IMPACT · DDG-101，-46 HP</td>
+<td>有漏网弹命中宙斯盾舰</td>
+</tr>
+<tr>
+<td>T+12:48</td>
+<td>DETECTION · C9 SUBSURFACE（拖曳阵）</td>
+<td>潜艇高速机动后暴露在拖曳声纳下</td>
+</tr>
+<tr>
+<td>T+22:08</td>
+<td>TORPEDO DETECTED / DECOY FOOLED</td>
+<td>SSK 齐射重型鱼雷，航母箔条成功诱偏</td>
+</tr>
+<tr>
+<td>T+4:33:10</td>
+<td>GUN ACTION · FFG-58，1 hit</td>
+<td>近距炮战，导弹艇被 5in 舰炮击沉</td>
+</tr>
+<tr>
+<td>T+4:33:58</td>
+<td>CONTACT SANK · C68</td>
+<td>首个击沉判定</td>
+</tr>
+<tr>
+<td>…</td>
+<td>STRIKE / SLCM 对岸、跑道降级</td>
+<td>对岸打击降低敌机场出动率</td>
+</tr>
+<tr>
+<td>结束</td>
+<td>SCENARIO ENDED · 胜负 + VP</td>
+<td>按击沉/毁伤累计胜利点</td>
+</tr>
+</tbody>
+</table>
+<p><strong>读战报的诀窍</strong>：每条事件都有归属（BLUE/RED/ALL）。你只会看到自己
+一侧+公共事件——看到一串 CONTACT LOST 时，先想想是哪个传感器平台
+没了，而不是"游戏卡了"。</p>
+<hr />
+<h2>7. 武器与防御体系速查</h2>
+<h3>7.1 武器类型（kind → 行为）</h3>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>打击对象</th>
+<th>行为</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Gun（舰炮）</td>
+<td>水面/岸/低空飞机</td>
+<td>即时裁决；<strong>射界带</strong>：舷侧 100% / 斜向 73% / 艏艉 33%，近距离带基准 75%→15%</td>
+</tr>
+<tr>
+<td>Ciws（近防炮）</td>
+<td>来袭导弹/飞机</td>
+<td>只在导弹防御链里自动开火（1.8nm）</td>
+</tr>
+<tr>
+<td>Sam / Aam</td>
+<td>飞机/来袭导弹</td>
+<td>发射制导弹；指挥仪通道限制同时接战数</td>
+</tr>
+<tr>
+<td>Ascm（反舰巡航弹）</td>
+<td>舰/岸</td>
+<td>掠海 8m 飞行，可被箔条/CIWS 拦</td>
+</tr>
+<tr>
+<td>Slcm（对地巡航弹）</td>
+<td><strong>仅岸上目标</strong></td>
+<td>同上，长射程</td>
+</tr>
+<tr>
+<td>Torpedo（鱼雷）</td>
+<td>舰/潜</td>
+<td>直航到归黄点→±60°锥角搜索→追踪；可被诱饵骗（55%→三代弹仅 25%）</td>
+</tr>
+<tr>
+<td>Lwt（轻型鱼雷）</td>
+<td>潜艇</td>
+<td>直升机/反潜专用的短程版</td>
+</tr>
+<tr>
+<td>AswRocket（反潜火箭）</td>
+<td>潜艇</td>
+<td>抛射到预定点裁决</td>
+</tr>
+<tr>
+<td>Bomb / Rocket（炸弹/火箭）</td>
+<td>舰/岸</td>
+<td>非制导，需 &lt;900m 低空进入（§9.6）</td>
+</tr>
+</tbody>
+</table>
+<h3>7.2 通用数值口径</h3>
+<ul>
+<li><strong>Pk</strong>：单发命中概率（末段判定）。全库 407 平台/264 武器都能在
+  <code>GET /api/db</code> 里查</li>
+<li><strong>伤害</strong>：命中后扣 HP；HP 是官方伤害点数（DP）量级（航母 1300+，
+  导弹艇 45）</li>
+<li><strong>关键命中</strong>：血量越低越容易触发——动力/雷达/声纳/火控/炮位/进水/
+  火灾/弹药库殉爆；水下列以<strong>进水</strong>为主（每秒持续掉血）</li>
+<li><strong>损管</strong>：火灾 60 秒/进水 120 秒可扑灭，系统受损 300 秒后逐步修复；
+  再次中弹打断抢修</li>
+</ul>
+<hr />
+<h2>8. RTS 改编对照表</h2>
+<p>桌面 Harpoon 的规则在电子化时做了系统性改编，全部逐条登记在
+<a href="../design/adaptations.md"><code>docs/design/adaptations.md</code></a>。最重要的十几条：</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>桌面规则</th>
+<th>引擎做法</th>
+<th>为什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>3 分钟回合 + 30 秒增量</td>
+<td>1 秒 tick 连续时间，0–300× 倍速</td>
+<td>RTS 核心</td>
+</tr>
+<tr>
+<td>2</td>
+<td>D100 查表裁决</td>
+<td>标量 Pk + 确定性掷点（xoshiro256**）</td>
+<td>可复现、可回放、可做 AI 训练</td>
+</tr>
+<tr>
+<td>3</td>
+<td>雷达视距查表</td>
+<td>闭式公式 <code>1.23×(√h₁+√h₂)</code> 海里</td>
+<td>对官方表逐格回归验证，误差 &lt;0.3nm</td>
+</tr>
+<tr>
+<td>4</td>
+<td>双盲靠人工登记</td>
+<td>服务器接触簿 + 持久误差向量</td>
+<td>裁判即服务</td>
+</tr>
+<tr>
+<td>5</td>
+<td>探测按"签名×雷达代次"查表</td>
+<td>传感器距离 × RCS 档位 × 天气/干扰</td>
+<td>数据驱动；对空距离不再乘舰体 RCS（实测修正）</td>
+</tr>
+<tr>
+<td>6</td>
+<td>导弹攻防查"三秒规则"表</td>
+<td>SAM 包线→箔条→CIWS→末段 Pk 链 + 拦截碎片空爆</td>
+<td>层次一致，时间连续化；实测 59% 拦截率</td>
+</tr>
+<tr>
+<td>7</td>
+<td>舰炮 D100 射界带 75/55/25/15%</td>
+<td>距离带基准 × 方位乘数（舷侧/斜向/艏艉）</td>
+<td>同一分布的乘法近似</td>
+</tr>
+<tr>
+<td>8</td>
+<td>鱼雷归黄 + 每回合搜索</td>
+<td>归黄点→±60°锥角→追踪→诱饵 55%/25%</td>
+<td>搜索几何简化</td>
+</tr>
+<tr>
+<td>9</td>
+<td>关键命中表</td>
+<td>双列（水面/水下）子系统表：进水/火灾/桥楼/舵机/CIC…</td>
+<td>结构对齐扩展损伤手册</td>
+</tr>
+<tr>
+<td>10</td>
+<td>航空调度表</td>
+<td>甲板周期 + CAP/打击/反潜/侦察任务</td>
+<td>无中队聚合（单机实体）</td>
+</tr>
+<tr>
+<td>11</td>
+<td>指令阶段锁定</td>
+<td>任意时刻下令，下一秒生效，指令日志即复盘</td>
+<td>RTS 实时性</td>
+</tr>
+</tbody>
+</table>
+<p><strong>设计立场</strong>：凡是改编都有登记；凡是没改的（雷达地平、射界带比例、
+声纳航速-噪声关系、导引头代次……）都按规则书实现并带页码出处。
+四轮独立规则审计报告在 <code>docs/compliance/</code>。</p>
+<hr />
+<h2>9. 常见疑问</h2>
+<p><strong>Q：我下达了航向但船不动？</strong>
+A：游戏在暂停。恢复时间（点任意速度按钮）。暂停期间指令已排队。</p>
+<p><strong>Q：明明附近有敌人，为什么我看不到？</strong>
+A：双盲。你只能看到传感器够得着的敌人。对海雷达被<strong>雷达地平</strong>限死
+（桅杆高度决定），掠海的导弹艇可能 10nm 内才现身——这就是为什么需要
+预警机前出（雷达高度=视距）。</p>
+<p><strong>Q：接触符号变虚线了？</strong>
+A：跟踪丢失（质量衰减到 0），符号按最后航向航速漂移。重新照亮它的
+办法：派飞机/军舰过去，或者等它自己开雷达。</p>
+<p><strong>Q：空空导弹/防空导弹打不中？</strong>
+A：修复后实测：防空拦截 59%，空空末段命中 ~47%。如果你看到的比这低
+很多：(1) 目标有没有箔条/剧烈机动（各自 ×0.85 / ×0.75）；(2) 是不是
+多枚导弹打同一目标（3 发以上在途每发 ×0.7 饱和惩罚）；(3) 火控解质量
+够不够。都正常还打不中，那就是运气——规则书的分布就是这样，继续射，
+或者换更大齐射。</p>
+<p><strong>Q：潜艇为什么神出鬼没？</strong>
+A：被动声纳靠噪声：潜艇以 4 节潜航时几乎聋子面前的幽灵（噪声档 24，
+航速因子 0.3）。它一开高速（18 节）噪音暴增 7 倍立刻暴露——<strong>潜艇的
+博弈就是"什么时候快"</strong>。跃变层之下再打五折。</p>
+<p><strong>Q：事件流一直滚 CONTACT LOST？</strong>
+A：正常。接触质量衰减就报丢失，导弹被拦截后它的接触也会失效。关注
+DETECTION / IDENTIFIED / INCOMING / SUNK 这几类关键事件即可。</p>
+<p><strong>Q：怎么用 407 艘真军舰？</strong>
+A：想定 JSON 里 <code>"class": "cn_052d"</code>、<code>"us_burke_3"</code>、<code>"ru_kirov"</code>、
+<code>"uk_type45"</code>……全部 407 类在 <code>GET /api/db</code> 可查，
+<code>database/volumes/*.provenance.md</code> 有每类的卷页出处。</p>
+<hr />
+<h2>10. 进阶</h2>
+<ul>
+<li><strong>AI 参谋</strong>：设 <code>HARPOON_LLM_BASE_URL</code>/<code>HARPOON_LLM_API_KEY</code>/
+  <code>HARPOON_LLM_MODEL</code> 后，<code>POST /api/ai/step/Blue</code> 让大模型替你指挥；
+  未配置时内置启发式参谋（自动接敌教义）</li>
+<li><strong>API 速查</strong>：<code>GET /api/state?side=Blue</code>（双盲态势）、
+  <code>POST /api/command</code>（下指令）、<code>POST /api/time</code>（倍速）、
+  <code>POST /api/selfplay</code>（AI 自对弈）</li>
+<li><strong>MCP</strong>：<code>cargo run -p harpoon-mcp</code> 即把引擎接给支持 MCP 的大模型客户端</li>
+<li><strong>RL 训练</strong>：<code>crates/harpoon-py</code> 提供 Gym 环境；
+  <code>crates/harpoon-server --example pacific_smoke</code> 是确定性回归样板</li>
+<li><strong>想定创作</strong>：仿写 <code>scenarios/crimson_tide.json</code>——纯 JSON，407 类
+  军舰任意组合</li>
+</ul>
+<hr />
+<h2>11. 附录速查</h2>
+<h3>指令 JSON（POST /api/command，<code>{"side":"Blue","command":{...}}</code>）</h3>
+<pre><code class="language-jsonc">{&quot;cmd&quot;:&quot;set_speed&quot;,&quot;unit&quot;:1,&quot;speed_kts&quot;:25}
+{&quot;cmd&quot;:&quot;goto&quot;,&quot;unit&quot;:1,&quot;waypoints&quot;:[[100,50]]}
+{&quot;cmd&quot;:&quot;assign_target&quot;,&quot;unit&quot;:1,&quot;contact&quot;:3}
+{&quot;cmd&quot;:&quot;fire&quot;,&quot;unit&quot;:1,&quot;contact&quot;:3,&quot;weapon&quot;:&quot;gun_5in&quot;,&quot;rounds&quot;:1}
+{&quot;cmd&quot;:&quot;deploy_chaff&quot;,&quot;unit&quot;:1}
+{&quot;cmd&quot;:&quot;launch_aircraft&quot;,&quot;unit&quot;:1,&quot;class&quot;:&quot;fighter&quot;,&quot;count&quot;:2,
+ &quot;mission&quot;:{&quot;mission&quot;:&quot;cap&quot;,&quot;station&quot;:[44,44],&quot;radius_nm&quot;:18}}
+{&quot;cmd&quot;:&quot;set_weapons_free&quot;,&quot;unit&quot;:1,&quot;free&quot;:true}
+</code></pre>
+<h3>关键事件（事件流里最值得盯的）</h3>
+<p><code>DETECTION</code>（新接触）· <code>INCOMING</code>（来袭！含 ETA）· <code>INTERCEPT</code>（拦截
+成败）· <code>IMPACT</code>（中弹+掉血）· <code>CRITICAL HIT</code>（关键命中：哪个子系统坏
+了）· <code>SUNK</code>（击沉）· <code>AIR LAUNCH</code>（舰载机出动）· <code>SCENARIO ENDED</code>（终局）</p>
+<hr />
+<p><em>手册完 · 截图与数据均取自真实对局 · 规则出处见
+<code>docs/design/adaptations.md</code> 与 <code>docs/compliance/rules-coverage-matrix.md</code></em></p></div>
+<hr class="page-break">
+<div class="chapter"><h1 class="part-title">第二篇 · 探测与编队</h1><h1>探测与编队篇 —— 写给完全没接触过海战的你</h1>
+<blockquote>
+<p>这是《<a href="规则教学.md">规则教学</a>》的续篇。这一篇只回答四个问题：
+<strong>怎么发现敌人？飞机怎么用？预警机有什么用？航母战斗群到底怎么指挥？</strong>
+全部用生活里的东西打比方，不需要任何军事知识。</p>
+</blockquote>
+<hr />
+<h2>一、探测的本质：黑屋子里找人</h2>
+<p>想象你在一个漆黑的大房间里找人。你有哪些办法？</p>
+<ol>
+<li><strong>打开手电筒照</strong> —— 你能看见他，但他也立刻看见了你。</li>
+<li><strong>听他的脚步声</strong> —— 你不知道他精确位置，但能猜个大概方向和远近；
+   走得越重越快，听得越清楚。</li>
+<li><strong>他打电话时偷听</strong> —— 只有方位，没有距离。</li>
+</ol>
+<p>海战里的"探测"就是这三招，一个不多一个不少：</p>
+<table>
+<thead>
+<tr>
+<th>生活办法</th>
+<th>海战名字</th>
+<th>游戏里的图标</th>
+<th>特点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>打手电筒照</td>
+<td><strong>雷达</strong>、<strong>目视</strong>、<strong>主动声纳</strong></td>
+<td>青色实线圈</td>
+<td>能精确定位，<strong>但会暴露自己</strong></td>
+</tr>
+<tr>
+<td>听脚步声</td>
+<td><strong>被动声纳</strong></td>
+<td>绿色虚线圈</td>
+<td>隐蔽，只有大概方向</td>
+</tr>
+<tr>
+<td>偷听电话</td>
+<td><strong>ESM 电子侦听</strong></td>
+<td>橙色方位线</td>
+<td>只有方位线，误差很大</td>
+</tr>
+</tbody>
+</table>
+<p>游戏海图上的<strong>探测范围圈</strong>（点"探测"按钮或选中单位显示）就是这三招的
+"照明范围"：
+- <strong>青色虚线大圈</strong> = 对空探测（雷达能看多高的飞机飞多远）
+- <strong>青色实线圈</strong> = 对海探测（能看见多远的水面舰艇）
+- <strong>绿色虚线圈</strong> = 对水下探测（声纳能听多深的潜艇）</p>
+<p><img alt="探测范围圈" src="file:///Users/Zhuanz1/Desktop/鱼叉/docs/manual/img/08-detection-rings.png" /></p>
+<p><em>教学局中宙斯盾舰的探测圈：外面一圈是雷达能看见飞机的范围，里面一圈
+是能看见水面舰艇的范围（被海平线压得很小——地球是圆的，桅杆只有
+30 米高）。</em></p>
+<h3>为什么对海圈那么小、对空圈那么大？</h3>
+<p>不是雷达不行，是<strong>地球是圆的</strong>。雷达波走直线，会被海面挡住。桅杆 30 米
+高的雷达看水面目标，天生只有 12 海里左右；但看 8000 米高的飞机，能看
+200 海里——因为飞机"高出"了海平线。<strong>所以：想看得远，把雷达搬高。</strong>
+这就是预警机存在的全部理由（见第四节）。</p>
+<hr />
+<h2>二、声纳详解：水下的"听"与"喊"</h2>
+<p>雷达和目视在水下完全失效（光和电磁波进水就废了）。水下只有声波能用。</p>
+<h3>被动声纳 = 潜伏着听</h3>
+<p>你戴上一个超灵敏的听音器，什么都不做，就听。</p>
+<ul>
+<li>潜艇开得越快，螺旋桨和水流噪音越大，<strong>听得越远</strong>。4 节慢逛的潜艇
+  几乎是聋子面前的幽灵；18 节狂奔的潜艇等于在路上唱歌。</li>
+<li>它也受<strong>跃变层</strong>影响：海水某深度有个"温度跳变层"，声波跨层传播
+  会打折——目标在层下，你的探测距离减半。</li>
+</ul>
+<p><strong>规则</strong>：游戏里的被动声纳范围 = 基础距离 × 航速因子 × 噪声档。
+拖曳声纳（隔着船尾拖一根长线听音器）收放有状态：航速超过 25 节自动
+收起，低于 20 节 30 秒后自动展开。</p>
+<h3>主动声纳 = 喊一嗓子听回声</h3>
+<p>"主动声纳"就是朝水里<strong>大喊一声</strong>，听有没有回音。</p>
+<ul>
+<li>好处：能精确定位潜艇，<strong>潜艇在跃变层下也躲不住</strong>。</li>
+<li>代价：你这一嗓子，<strong>方圆 1.6 倍搜索距离内的每一只潜艇都听见了</strong>。
+  规则书 §5.4 写得很清楚：ping 一下，等于向所有潜伏者广播你的位置。</li>
+</ul>
+<p><img alt="主动声纳开关" src="file:///Users/Zhuanz1/Desktop/鱼叉/docs/manual/img/11-sonar-panel.png" /></p>
+<p><em>右侧指挥面板里的"主动声纳 开启/关闭"。选中护卫舰/驱逐舰后出现。
+什么时候开？确认附近有潜艇、需要精确定位来反潜时才开；平时巡航
+永远关着。</em></p>
+<p><strong>新手守则</strong>：反潜是"先听后喊"——先用被动声纳/拖曳阵大致定位，让
+反潜直升机飞过去悬停精查（吊放声纳），确认了再开主动声纳锁定、投
+轻型鱼雷。一上来就开主动声纳，等于在黑屋子里喊"我来抓你了"。</p>
+<hr />
+<h2>三、飞机怎么安排：四种活，四种飞法</h2>
+<p>舰载机（含直升机）是航母战斗群的手和眼。游戏里每一种飞机只干一种活，
+对应界面上的四个任务按钮：</p>
+<table>
+<thead>
+<tr>
+<th>任务按钮</th>
+<th>干什么</th>
+<th>用什么飞机</th>
+<th>怎么判定干完</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>CAP 巡逻</strong></td>
+<td>在指定空域转圈，敌机一来就打</td>
+<td>战斗机</td>
+<td>敌机被击落或自己燃料到 15% 自动返航</td>
+</tr>
+<tr>
+<td><strong>STRIKE 打击</strong></td>
+<td>飞到目标附近，发射反舰弹/炸弹后回家</td>
+<td>攻击机</td>
+<td>武器全丢光，自动返航</td>
+</tr>
+<tr>
+<td><strong>ASW 反潜</strong></td>
+<td>飞到指定海域悬停，吊放声纳听潜艇，听到了投鱼雷</td>
+<td>反潜直升机</td>
+<td>燃料或任务解除</td>
+</tr>
+<tr>
+<td><strong>RECON 侦察</strong></td>
+<td>飞过去看一眼</td>
+<td>任何飞机</td>
+<td>看到即产生接触</td>
+</tr>
+</tbody>
+</table>
+<h3>燃料是硬约束</h3>
+<p>每架飞机有留空时间（战斗机 1.5 小时、直升机 3 小时）。燃料剩 15% 时
+<strong>自动返航</strong>；落在甲板上要过一段时间（120–180 秒）才能再次出动。
+所以：<strong>别把所有飞机一次性全弹出去</strong>，留一半在甲板上轮换。</p>
+<h3>弹射的正确姿势</h3>
+<p>选中航母 → 飞行甲板面板 → 每个机种旁边有 <code>巡逻</code>/<code>打击</code> 按钮：
+- 点 <code>巡逻</code>：弹 2 架，在你点按钮时航母的位置附近建立巡逻圈
+- 想打某个接触：<strong>先左键选中那个接触</strong>，再点 <code>打击</code> —— 打击任务需要
+  一个目标接触</p>
+<hr />
+<h2>四、预警机有什么用：把雷达搬到天上</h2>
+<p>回看第一节：雷达看水面目标只有十几海里，因为桅杆矮。把雷达搬到
+8000 米高的飞机上呢？对海探测直接变成 45–60 海里，对空 200+ 海里。</p>
+<p><strong>预警机（AEW）就是一架会飞的雷达塔。</strong> 它自己没有武器，价值全在那
+个大圆盘/大鼻子里：</p>
+<ol>
+<li><strong>看得远</strong>：敌舰队、敌导弹艇在 50–60 海里外就被它标出来——你的
+   全舰队共享它的眼睛（数据链）。</li>
+<li><strong>看得久</strong>：留空 4 小时，比战斗机的 1.5 小时长得多。</li>
+<li><strong>代价</strong>：它又大又慢又没武装，被战斗机咬住基本必死。</li>
+</ol>
+<h3>真实案例（赤潮行动实测战报）</h3>
+<pre><code>T+00:04  预警机开机 → 立刻发现红方预警机（它也在找你）
+T+18:33  蓝方预警机被红方防空火力击落
+T+18:36  之后一小段时间内，对海/对岸接触全部失效
+         （CONTACT LOST 连刷十几条）——眼睛瞎了，地图就瞎了
+</code></pre>
+<p>这就是预警机的全部意义和风险：<strong>它是舰队的眼睛。眼睛没了，你的所有
+远距离接触都会慢慢过期消失，只能等别的东西靠近重新看见。</strong></p>
+<p><strong>使用守则</strong>：预警机放在舰队<strong>朝向敌人的一侧、离敌人 40–60 海里</strong>的
+位置——远到不在敌方战斗机容易偷袭的圈内，近到覆盖来袭方向。永远
+派出战斗机在预警机和敌人之间做 CAP（见下节阵位图）。</p>
+<hr />
+<h2>五、航母战斗群指挥：标准流程</h2>
+<p>现在把所有东西拼起来。以你面前这局 <strong>双盾行动：双航母区域拒止</strong>
+（辽宁编队 vs 福特/尼米兹编队）为例。一边一个航母战斗群，任务是
+守住自己一侧的海区。</p>
+<h3>5.1 开局第一分钟：摆阵</h3>
+<p>航母战斗群的标准阵位（以蓝方在西、敌人在东为例）：</p>
+<pre><code>                ☁ CAP 巡逻圈（航母东北 25nm，2×战斗机）
+                      ↑
+                      |  敌人预期的来袭方向
+
+  [FFG 反潜护卫] —— 5nm —— [CV 航母] —— 4nm —— [DDG 宙斯盾]
+       （左后方）                （中心）          （右前方）
+        |                                        |
+  拖曳声纳展开                             对空雷达全开
+        |
+  [SSK/SSN 潜艇] 前出 20–40nm，埋伏在敌来袭航线上
+
+  [AEW 预警机] —— 朝敌方向 40–60nm，8000 米
+</code></pre>
+<p>一句话解释每个位置：
+- <strong>宙斯盾舰（DDG）在威胁方向一侧</strong>：它的远程防空圈（70nm）是舰队的
+  保护伞，要放在导弹必经的路上
+- <strong>反潜护卫舰（FFG）在另一侧或尾部</strong>：拖着声纳听潜艇，别让潜艇从
+  屁股后面摸进来
+- <strong>航母在中间</strong>：它一沉游戏基本就输了
+- <strong>潜艇前出</strong>：埋伏在敌人航母编队回家的路上，等战机
+- <strong>预警机在朝敌方向</strong>：全舰队的眼睛（第三节）</p>
+<h3>5.2 开局第二分钟：把探测布置满</h3>
+<p>按"由近到远、由隐蔽到暴露"的顺序布置探测网：</p>
+<ol>
+<li><strong>被动听</strong>：护卫舰/驱逐舰的被动声纳和拖曳阵默认工作（不用管，
+   保持航速低于 20 节阵就是展开的）</li>
+<li><strong>前出看</strong>：预警机飞向敌情预想方向；战斗机 CAP 站在预警机和自己
+   之间（保护眼睛）</li>
+<li><strong>按需喊</strong>：只有确认潜艇就在附近、需要精确锁定时才开主动声纳</li>
+</ol>
+<p><strong>检查方法</strong>：点"探测"按钮显示全队探测圈。你要确认的是：敌人可能
+来的方向上，你的<strong>对空探测圈</strong>和<strong>对海探测圈</strong>有没有连成一片、盖住
+来袭走廊。有缺口，就往缺口派飞机或舰。</p>
+<h3>5.3 中盘：接触出现之后</h3>
+<p>探测到接触只是开始。按这个决策树处理每个新接触：</p>
+<pre><code>新接触出现（DETECTION 事件）
+  ├─ 类别 AIR（飞机）
+  │    ├─ 识别为战斗机/轰炸机 → 确认 CAP 有 fuel、武器自由开着
+  │    │                        → 让 CAP 去接（敌机进 30nm 自动开火）
+  │    └─ 识别为预警机 → 优先打掉！它瞎了你就安全一半
+  ├─ 类别 SURFACE（水面舰）
+  │    ├─ 距离 &gt; 反舰弹射程 → 全舰队保持航向接近，等进射程
+  │    └─ 距离 &lt; 射程 → 指派目标 + 武器自由，齐射（记住：发射即暴露）
+  ├─ 类别 SUBSURFACE（潜艇）
+  │    → 派反潜直升机去头顶悬停精查 → 确认后投鱼雷
+  │    → 潜艇高速逃窜时它会变响，抓住这个窗口
+  └─ 类别 MISSILE（导弹来袭！！）
+       → 自动：防空系统已经在拦截（看 INTERCEPT 事件）
+       → 手动：点 DEPLOY CHAFF 施放箔条，转向让舰艏对准来袭方向
+       → 每条 INCOMING 都有预计到达时间，沉住气
+</code></pre>
+<h3>5.4 残局：收拾与止损</h3>
+<ul>
+<li>击沉敌舰后<strong>别恋战</strong>：看 VP（胜利点）和时间限制，领先就拉开距离</li>
+<li>自己的船重伤（HP 黄/红）：立刻让它掉头回家，损失控制需要时间</li>
+<li>飞机低燃料会自动返航，甲板占用期间不能再次弹射——看甲板面板的
+  循环倒计时</li>
+</ul>
+<hr />
+<h2>六、双航母特别篇：你这局怎么打</h2>
+<p>你面前的双盾行动是双航母对双航母。两边各多了一艘航母，意味着：</p>
+<ol>
+<li><strong>飞机数量翻倍</strong>：CAP 可以两个方向轮流值班，打击可以波次进攻</li>
+<li><strong>甲板轮换</strong>：A 船的飞机去打，B 船的飞机在甲板待命；A 船回收时
+   B 船补位——攻击波次不断</li>
+<li><strong>两个编队分开走</strong>：两艘航母相距 30–50nm，各带一半护航舰，拉开
+   敌人的兵力；或者一个明一个暗，让敌人打错目标</li>
+<li><strong>对手也是双航母</strong>：敌人CAP 同样翻倍——你的打击波次会遭遇更强
+   拦截，先打掉它的预警机价值巨大</li>
+</ol>
+<p><strong>推荐节奏</strong>（2 小时局）：
+- 前 10 分钟：摆阵 + 弹 CAP + 预警机前出（时间暂停想清楚再开 60×）
+- 10–40 分钟：接触陆续出现，空战先打起来；潜艇开始摸位
+- 40–70 分钟：确认敌主力方向后，组织第一波打击（打击机 + 反舰弹齐射）
+- 70 分钟后：收割残敌，盯紧 VP 和时间</p>
+<hr />
+<h2>七、探测布置自查清单</h2>
+<p>出兵前对照这张表，每一条打勾再开时间：</p>
+<ul>
+<li>[ ] 预警机在朝敌方向 40–60nm，高度 8000m+</li>
+<li>[ ] CAP 至少 2 架，站在预警机和敌人之间</li>
+<li>[ ] 全队"探测"圈打开，来袭方向没有缺口</li>
+<li>[ ] 反潜护卫舰的拖曳阵状态是"已展开"（航速 &lt;20 节）</li>
+<li>[ ] 主动声纳全部关闭（除非正在反潜交战）</li>
+<li>[ ] 潜艇（如果有）已经前出到敌来袭航线</li>
+<li>[ ] 甲板上留有轮换飞机，没全部弹出去</li>
+<li>[ ] 武器自由确认开启（教程局除外）</li>
+<li>[ ] 时间倍速：交战时 15×–60×，行军赶路才用 300×</li>
+</ul>
+<hr />
+<p><em>本篇完。结合《<a href="规则教学.md">规则教学</a>》第五章的手把手流程，你已经
+具备指挥任意想定的基础知识。训练学院的 8 门课程（大厅 → 训练学院）
+按同样思路逐课练习即可。</em></p></div>
+<hr class="page-break">
+<div class="chapter"><h1 class="part-title">第三篇 · 实战教程</h1><h1>实战教程：反潜 / 三域打击 / 舰队防御</h1>
+<blockquote>
+<p>承接《<a href="探测与编队篇.md">探测与编队篇</a>》。这一篇用<strong>正在运行的想法定</strong>当教材，
+每章一个具体任务，从零做到完成结算。所有截图都来自真实对局。</p>
+</blockquote>
+<hr />
+<h2>第一章：完成一次反潜任务（赤潮行动 · 红方 SSK-7）</h2>
+<p><strong>任务背景</strong>：赤潮行动里红方有一艘柴电潜艇 SSK-7 埋伏在蓝方航母编队的
+航线上。它是你最大的威胁——一枚重型鱼雷 250–280 伤害，一发就能让
+护卫舰沉底。</p>
+<h3>第 1 步：先看懂你的反潜资产</h3>
+<p>选中 FFG-58（反潜护卫舰），右侧面板的<strong>传感器</strong>区列出全部传感器的
+<strong>探测距离</strong>：</p>
+<p><img alt="传感器面板" src="file:///Users/Zhuanz1/Desktop/鱼叉/docs/manual/img/12-asw-sensors.png" /></p>
+<p>逐条读：
+| 传感器 | 状态 | 探测距离 | 含义 |
+| --- | --- | --- | --- |
+| 中程对空雷达 | 在线 | 空 110 / 海 11.1 NM | 对空主雷达；对海被地平线压到 11nm |
+| 对海搜索雷达 | 在线 | 空 45 / 海 9.5 NM | 专看水面，掠海目标 |
+| 电子支援侦收 | 在线 | 空 120 / 海 10 NM | 只听雷达辐射，只有方位 |
+| <strong>被动拖曳阵列</strong> | <strong>监听</strong> | <strong>潜 10 NM</strong> | 反潜主力：拖在船尾的听音器 |
+| 主动声纳 | 待机 | — | 精确但暴露，默认关闭 |
+| 目视瞭望 | 在线 | 空 18 / 海 11 NM | 最后确认用 |</p>
+<p>面板底部还有一条黄色提示：<strong>“拖曳阵：收起了（航速&gt;25节自动收；
+&lt;20节30秒后展开）”</strong>——这就是手册里说的拖曳阵机制，游戏实时告诉你
+它现在的状态。</p>
+<p><strong>结论</strong>：你的反潜主力是那根拖曳阵（潜 10 NM）。它在你航速低于 20 节
+时自动展开；一旦你加速到 25 节以上它会自动收起（听音器拖在船尾，
+高速会把它扯断）。</p>
+<h3>第 2 步：让拖曳阵展开</h3>
+<ol>
+<li>选中 FFG-58</li>
+<li>在“航速”输入框填 <code>15</code>，点“下达命令”</li>
+<li>等 30 秒（60× 下约半秒）——面板提示会变成“已展开”</li>
+<li>之后<strong>不要再让它超过 20 节</strong></li>
+</ol>
+<h3>第 3 步：派反潜直升机前出精查</h3>
+<p>选中航母 CV-72 FREEDOM → 滚到<strong>飞行甲板</strong>面板：</p>
+<p><img alt="飞行甲板" src="file:///Users/Zhuanz1/Desktop/鱼叉/docs/manual/img/13-flight-deck.png" /></p>
+<p>你会看到三行：
+- 多用途战斗机 ×8 就绪 → <code>战斗空中巡逻</code>
+- 攻击战斗机 ×4 就绪 → <code>战斗空中巡逻</code>（对空/打击）
+- <strong>反潜直升机 ×4 就绪 → <code>反潜搜索</code></strong> ← 点这个</p>
+<p>点 <code>反潜搜索</code>：2 架直升机弹射，飞到航母位置悬停、吊放声纳听音。
+直升机搜索距离短（4 NM）但它有<strong>主动吊放声纳</strong>——能精确定位，
+而且直升机自己被潜艇发现也无所谓（潜艇的武器打不到它）。</p>
+<h3>第 4 步：读接触、判断是否锁定</h3>
+<p>潜艇进入你拖曳阵 10 NM 时，事件流出现：</p>
+<pre><code>T+1:12:00  发现接触 · C9 水下（被动拖曳阵列）
+T+1:14:20  接触识别 · C9（识别为潜艇）
+</code></pre>
+<p>左侧接触列表出现 <code>C9 · 水下</code>，点它 → 目标面板显示 Q 值（质量）。
+<strong>Q ≥ 60 时才值得打</strong>——Q 低说明只有方位没有距离，鱼雷射出去也不知道
+往哪飞。</p>
+<h3>第 5 步：反潜攻击（两条路径）</h3>
+<p><strong>路径 A：直升机自主攻击（推荐新手）</strong>
+反潜直升机悬停且持有 Q&gt;40 的潜艇接触时，<strong>自动</strong>在接触位置投声纳
+浮标、发现目标后投轻型鱼雷（LWT，伤害 45）。你只需要保持直升机
+在反潜搜索任务中，看事件流。</p>
+<p><strong>路径 B：舰艇主动攻击（更快、更暴露）</strong>
+1. 选中 FFG-58
+2. 点“主动声纳 → 开启”（此时你已被反潜区内所有潜艇听到，但能
+   精确锁定）
+3. 左键点潜艇接触 → <code>指派目标</code>
+4. 武器表里选 <code>反潜火箭</code> 或（若在射程内）<code>轻鱼雷</code> → <code>开火</code></p>
+<h3>第 6 步：确认战果</h3>
+<p>事件流出现 <code>命中 · SSK-7 · 反潜火箭 · 伤害 25</code> → 反复攻击直到
+<code>击沉 · SSK-7</code>。<strong>注意</strong>：潜艇 HP 60，反潜火箭单发 25 伤害，通常
+需要 2–3 轮命中。</p>
+<h3>反潜任务检查表</h3>
+<ul>
+<li>[ ] 拖曳阵已展开（航速 &lt;20 节）</li>
+<li>[ ] 反潜直升机在搜索区悬停</li>
+<li>[ ] 潜艇接触 Q ≥ 60 才下令攻击</li>
+<li>[ ] 主动声纳只在攻击窗口开，打完立刻关</li>
+<li>[ ] 确认击沉（<code>击沉</code> 事件），或接触持续丢失超过 15 分钟视为逃逸</li>
+</ul>
+<hr />
+<h2>第二章：三域打击——从空中、水面、水下同时出手</h2>
+<p>航母战斗群的进攻手段分三层。以打击一支敌方水面编队为例（赤潮行动
+的红方导弹艇狼群）：</p>
+<h3>2.1 空中打击（最快、最远、最容易被拦）</h3>
+<ol>
+<li>选中航母 → 飞行甲板 → <strong>战斗空中巡逻</strong> 弹 4 架战斗机（提供掩护）</li>
+<li>等接触识别为“导弹艇”且 Q ≥ 50</li>
+<li><strong>先左键点那个接触</strong>（重要：打击任务需要目标），再点攻击战斗机行的
+   <code>打击</code> 按钮</li>
+<li>攻击机飞向目标，在 85% 反舰弹射程（约 38 NM）自主齐射后返航</li>
+</ol>
+<p><strong>预期</strong>：4 架攻击机 × 每架 4 枚 ASM = 16 枚掠海弹。敌方防御链
+（SAM→箔条→CIWS）能拦掉大部分，但 16 枚的饱和攻击通常能漏进 2–4 枚，
+足够重创导弹艇。</p>
+<h3>2.2 水面打击（最稳、暴露最明显）</h3>
+<ol>
+<li>选中 DDG-101（宙斯盾，带反舰导弹）</li>
+<li>保持距离在敌舰 60 NM 内、我方舰队 40 NM 外</li>
+<li>左键点目标接触 → <code>指派目标</code></li>
+<li>武器表选 <code>反舰导弹</code> → <code>开火</code>（一次齐射 2 发）</li>
+<li><strong>立刻下令转向 90°</strong>——发射闪光已经暴露了你，下一波反击马上来</li>
+</ol>
+<h3>2.3 水下打击（最隐蔽、最致命）</h3>
+<ol>
+<li>选中红方潜艇（如果你指挥红方）或你的 SSK</li>
+<li>让潜艇以<strong>低速（4 节）</strong>潜航接近到目标 9 NM 内（高速会被声纳听到）</li>
+<li>左键点水面接触 → <code>指派目标</code></li>
+<li>选 <code>重型鱼雷</code> → <code>开火</code>（一次 2 发，250+ 伤害，通常一发沉一艘护卫舰）</li>
+<li>发射后<strong>立刻加速到 18 节转向脱离</strong>——鱼雷发射管的声音会暴露你</li>
+</ol>
+<h3>三域协同的节奏</h3>
+<pre><code>T+0   水面舰（DDG）先行齐射 → 吸引敌方防空火力、逼它撒箔条
+T+10s 空中攻击机群从另一个方向进入 → 敌方注意力被引开
+T+20s 潜艇补射最值钱的目标（航母/指挥舰）
+</code></pre>
+<p>三个方向同时来，敌方的防御链（一次只能引导 4 组 SAM）会被打穿。</p>
+<hr />
+<h2>第三章：舰队防御——挡住一波导弹齐射</h2>
+<p>导弹来袭是本作最紧张的 30 秒。看这张真实截图：</p>
+<p><img alt="导弹来袭" src="file:///Users/Zhuanz1/Desktop/鱼叉/docs/manual/img/05-missile-raid.png" /></p>
+<p>红色圆点就是来袭导弹（MISSILE 符号）——注意它们是从东面的红方舰队
+方向飞来的。事件流同时刷出：</p>
+<pre><code>来袭警报 · C7  预计 2 秒后到达
+</code></pre>
+<p>每一条 INCOMING 事件都带<strong>预计到达时间</strong>。</p>
+<h3>防御按这个顺序做（总共 4 步，20 秒内完成）</h3>
+<p><strong>第 1 步：确认防空自动交战（不用操作）</strong>
+事件流出现 <code>防空拦截 · Long-Range SAM</code> 说明你的宙斯盾已经在打了。
+防空导弹拦截率实测约 <strong>59%</strong>——第一道防线不需要你管。</p>
+<p><strong>第 2 步：施放箔条（手动，关键）</strong>
+选中被瞄准的船 → 指挥面板 → <code>施放箔条</code>。
+箔条是雷达诱饵，持续 30 秒。<strong>导弹进入 4 NM 内有 45% 概率被诱偏</strong>。
+每次遭遇波次都撒一次，别省。</p>
+<p><strong>第 3 步：转向迎敌（减小受弹面）</strong>
+导弹的末段命中判定受目标航向影响。命令舰艇把<strong>舰艏转向来袭方向</strong>
+（航向 = 导弹来向），让受弹面积最小，同时缩短雷达反射。</p>
+<p><strong>第 4 步：关掉主动声纳（如果开着）</strong>
+主动声纳会暴露你的精确位置，让敌方后续波次打得更准。</p>
+<h3>防御后的检查</h3>
+<ul>
+<li><code>拦截成功</code> 事件出现代表该导弹被击落</li>
+<li><code>命中 · DDG-101 · -46 HP</code> 代表漏网——立刻检查系统状态面板
+  （雷达/动力/火控是否损坏），损坏的船撤到后方</li>
+<li><code>关键命中</code> 事件代表子系统被打坏（如动力、雷达），比掉血更麻烦</li>
+</ul>
+<h3>防御检查表</h3>
+<ul>
+<li>[ ] 武器自由开启（防空系统自动交战）</li>
+<li>[ ] 箔条充足，每波次都手动撒</li>
+<li>[ ] 受瞄准的船转向来袭方向</li>
+<li>[ ] 主动声纳关闭</li>
+<li>[ ] 中弹后检查系统状态，重伤船后撤</li>
+</ul>
+<hr />
+<h2>附：完整指挥循环（背下这 8 步）</h2>
+<ol>
+<li><strong>看探测圈</strong>：点“探测”，确认来袭方向没有盲区</li>
+<li><strong>摆阵</strong>：宙斯盾朝敌、反潜舰守尾、航母居中</li>
+<li><strong>起飞</strong>：CAP 巡逻掩护 + 反潜直升机搜索 + 预警机前出</li>
+<li><strong>等接触</strong>：定期看事件流的 DETECTION 和 IDENTIFIED</li>
+<li><strong>判读</strong>：Q 值够了再打，类别决定手段</li>
+<li><strong>出手</strong>：三域协同，交替波次</li>
+<li><strong>防御</strong>：来袭警报 → 箔条 → 转向 → 关声纳</li>
+<li><strong>收尾</strong>：看 VP 和时间，领先就拉开，落后就赌一波</li>
+</ol>
+<hr />
+<p><em>三章实战教程完。配合《规则教学》的基础概念与《探测与编队篇》的
+原理讲解，你已经具备指挥任何想定的完整知识。</em></p></div>
+<hr class="page-break">
+<div class="chapter"><h1 class="part-title">第四篇 · 双航母击杀赛战报</h1><h1>双航母击杀赛 · 详细战报</h1>
+<blockquote>
+<p><strong>想定</strong>：dual_carrier_kills（6 小时 · 击沉计分制 · 固定种子 20261019）
+<strong>蓝方</strong>：中国双航母编队（辽宁+山东 + 055/052D/054A/093A + 歼-15/Z-18）
+<strong>红方</strong>：美国双航母编队（Ford + Nimitz + Burke/Tico/Virginia + F-18E/E-2D/MH-60R）
+<strong>AI</strong>：双方均使用 TacticalStaff 状态机参谋
+<strong>结果</strong>：蓝方胜利（击杀计分制）· 蓝方伤害 8007 HP / 红方伤害 6565 HP</p>
+</blockquote>
+<hr />
+<h2>战役全景</h2>
+<p><img alt="开局部署" src="file:///Users/Zhuanz1/Desktop/鱼叉/docs/manual/aar/aar/01-deployment.png" /></p>
+<p><em>开局部署：蓝方双航母编队在西，红方双航母编队在东。探测器范围圈已打开——青色虚线是对空探测范围，实线是对海探测范围。</em></p>
+<hr />
+<h2>Phase 1：空中前哨战（T+0 ~ T+72s）</h2>
+<p>开局仅 4 秒，双方预警机（E-2D / 空警-600）在 8500 米高度互相发现。
+<strong>谁先发现对方的预警机，谁就能先派战斗机去打掉它</strong>。</p>
+<pre><code>T+00:04  发现接触 · C1 空中（Long-Range Air Radar）
+T+00:08  接触识别 · C1（E-2D）
+T+00:19  蓝方 CAP-2 被击落（红方 F-18E 先敌开火）
+T+00:24  红方 CAP-2 被击落
+T+00:31  蓝方 CAP-1 被击落
+T+00:38  红方 FORD AEW 被击落 ← 红方失去空中眼睛
+T+00:41  红方 NIMITZ AEW 被击落 ← 红方彻底失去预警
+T+01:12  红方 NIMITZ CAP-1 被击落
+</code></pre>
+<p><img alt="前哨战" src="file:///Users/Zhuanz1/Desktop/鱼叉/docs/manual/aar/aar/02-first-contact.png" /></p>
+<p><em>前哨战阶段：双方 CAP 战斗机在编队前方交战，红方两架预警机被击落。</em>
+<em>此后红方在剩余战斗中只能依靠舰载雷达探测，探测距离大幅缩短。</em></p>
+<p><strong>战术要点</strong>：预警机是舰队的眼睛。这场战斗证明了预警机的存亡
+直接决定后续的信息优势——红方失去预警机后，只能依赖水面舰艇的
+雷达地平（~12nm）探测，而蓝方预警机存活到 T+1:07。</p>
+<hr />
+<h2>Phase 2：反舰导弹齐射（T+550s ~ T+1200s）</h2>
+<p>蓝方 055/052D 的 YJ-18 反舰导弹（射程 60nm，末段超音速 1980 节）
+率先齐射。红方宙斯盾系统开始拦截。</p>
+<pre><code>T+09:13  武器发射 · LIAONING DDG-A（YJ-18 × 2）
+T+09:16  来袭警报 · 红方编队（预计 2 秒后到达）
+T+15:01  防空拦截 · SAM（拦截成功）
+T+15:04  武器发射 · FORD DDG（Harpoon × 2）← 红方反击
+T+18:20  命中 · DDG-A（伤害 -46 HP）
+</code></pre>
+<p><img alt="导弹齐射" src="file:///Users/Zhuanz1/Desktop/鱼叉/docs/manual/aar/aar/03-missile-exchange.png" /></p>
+<p><em>导弹齐射阶段：海图上可见红色圆点（来袭导弹）和蓝色箭头（CAP 机动）。
+箔条施放后持续 30 秒。</em></p>
+<p><strong>拦截链数据</strong>：武器齐射 87 次 → 拦截成功 22 次（25%）→ 命中 36 次。
+这意味着每 100 枚反舰导弹中约 46 枚被拦截、~46 枚命中（含 AAM/防空
+弹影响）。防空拦截不是万能的——箔条和机动才是生存关键。</p>
+<hr />
+<h2>Phase 3：首批舰艇击沉（T+1494s ~ T=3312s）</h2>
+<p>伤害持续累积。血量最低的船先沉。</p>
+<pre><code>T+24:54  击沉 · SHANDONG CG（蓝方 055，HP 283→0）
+T+35:07  击沉 · CV-17 SHANDONG（蓝方航母！HP 1023→0）
+T+48:59  击沉 · LIAONING CG（蓝方 055）
+T+54:59  击沉 · SHANDONG DDG-B
+T+55:12  击沉 · LIAONING DDG-B
+T+104:09 击沉 · SHANDONG FFG
+</code></pre>
+<p><img alt="首批击沉" src="file:///Users/Zhuanz1/Desktop/鱼叉/docs/manual/aar/aar/04-first-sinks.png" /></p>
+<p><em>首批击沉阶段：蓝方山东编队 CG 和航母相继被击沉。右侧面板显示
+剩余舰艇 HP 状态——绿条代表未受损，短条代表已受损。</em></p>
+<p><strong>战术要点</strong>：蓝方山东编队失去 CG（055 是防空核心）后，编队防空
+圈大幅缩水，后续被红方宙斯盾的 SM-6 齐射逐个击破。这就是
+<strong>集火打击的价值</strong>：先打掉防空节点，后续导弹命中率飙升。</p>
+<hr />
+<h2>Phase 4：胶着与消耗（T+3600s ~ T=10800s）</h2>
+<p>战斗进入消耗阶段。双方剩余舰艇持续用舰炮和残余导弹交战。</p>
+<p><img alt="中盘消耗" src="file:///Users/Zhuanz1/Desktop/鱼叉/docs/manual/aar/aar/05-mid-battle.png" /></p>
+<p><em>中盘消耗阶段：蓝方剩余 7 艘舰艇 vs 红方剩余 10 艘。红方 NIMITZ CG
+已受损至 47%（黄色 HP 条）。</em></p>
+<p>此阶段的战斗数据：
+- 舰炮开火 132 次（近距炮战）
+- 关键命中 6 次（动力/雷达/火控/进水/火灾）
+- 蓝方累计伤害 8007 HP / 红方累计伤害 6565 HP</p>
+<hr />
+<h2>Phase 5：终局（T+10800 ~ T=21600）</h2>
+<p><img alt="终局" src="file:///Users/Zhuanz1/Desktop/鱼叉/docs/manual/aar/aar/06-endgame.png" /></p>
+<p><em>终局阶段：时间限制到达，按击杀计分制判定。蓝方胜利。</em></p>
+<hr />
+<h2>完整战斗统计</h2>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>蓝方（中国）</th>
+<th>红方（美国）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>总伤害</td>
+<td><strong>8,007 HP</strong></td>
+<td>6,565 HP</td>
+</tr>
+<tr>
+<td>武器发射</td>
+<td>—</td>
+<td>2,969 次</td>
+</tr>
+<tr>
+<td>防空拦截</td>
+<td>128 次</td>
+<td>—</td>
+</tr>
+<tr>
+<td>命中</td>
+<td>353 次</td>
+<td>—</td>
+</tr>
+<tr>
+<td>舰炮开火</td>
+<td>148 次</td>
+<td>—</td>
+</tr>
+<tr>
+<td>舰艇损失</td>
+<td>6 艘</td>
+<td>0 艘（仅损失飞机）</td>
+</tr>
+<tr>
+<td>飞机损失</td>
+<td>2 架 CAP</td>
+<td>8 架 CAP + 2 架 AEW</td>
+</tr>
+<tr>
+<td>胜负</td>
+<td><strong>胜</strong></td>
+<td>负</td>
+</tr>
+</tbody>
+</table>
+<p><em>注：红方水面舰艇在 6 小时内未被击沉——双方距离始终未能缩短到
+舰炮/鱼雷有效射程。主要战斗发生在反舰导弹和防空导弹层。</em></p>
+<hr />
+<h2>状态机 AI 架构说明</h2>
+<h3>实时性</h3>
+<p>引擎<strong>每模拟秒（1 tick）执行一次</strong>完整的物理/探测/武器/损伤运算。
+战术参谋每 <strong>10 个 tick</strong> 做一次决策（这足够细：海战中 10 秒内局势
+不会剧变）。引擎和 AI 都不感知真实时间——<strong>时间倍速只影响回放速度</strong>，
+不影响 AI 决策内容。</p>
+<h3>有限状态机</h3>
+<pre><code>每艘舰 → 分配角色 → OnStation → Engage → Withdraw → Retreat
+                                ↑                      ↓
+                                ←── 状态转换条件 ←─────┘
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>角色</th>
+<th>OnStation 行为</th>
+<th>Engage 触发条件</th>
+<th>Withdraw 触发条件</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>航母</td>
+<td>编队中心 18 节</td>
+<td>不主动 Engage</td>
+<td>HP &lt; 30%</td>
+</tr>
+<tr>
+<td>AEW</td>
+<td>前出点巡航</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>CAP</td>
+<td>30nm 巡逻圈 + 自动指派</td>
+<td>最近敌机 &lt; 110nm</td>
+<td>燃料 &lt; 600s</td>
+</tr>
+<tr>
+<td>GunScreen</td>
+<td>威胁轴 16nm + 武器自由</td>
+<td>有雷达火控解</td>
+<td>HP &lt; 30%</td>
+</tr>
+<tr>
+<td>AswScreen</td>
+<td>15 节拖曳阵</td>
+<td>发现潜艇</td>
+<td>HP &lt; 30%</td>
+</tr>
+<tr>
+<td>Striker</td>
+<td>甲板待命</td>
+<td>有水面接触 → 弹射打击</td>
+<td>弹药耗尽</td>
+</tr>
+<tr>
+<td>潜艇</td>
+<td>4 节静默渗透</td>
+<td>9nm 内有水面接触</td>
+<td>齐射后转向 120°</td>
+</tr>
+<tr>
+<td>Raider</td>
+<td>20 节接近</td>
+<td>55nm 内齐射</td>
+<td>齐射后转向 90° + 30 节</td>
+</tr>
+</tbody>
+</table>
+<h3>与游戏速度的关系</h3>
+<pre><code>真实时间 ─────────────────────────────────────→
+          │ 100ms │ 100ms │ 100ms │
+          ▼       ▼       ▼       ▼
+1×:      0.1s    0.2s    0.3s    （每步 0.1 模拟秒）
+60×:     6s      12s     18s     （每步 6 模拟秒）
+300×:    30s     60s     90s     （每步 30 模拟秒）
+</code></pre>
+<p>参谋每 10 个模拟秒做一次决策。在 300× 下，这相当于每 33 毫秒真实
+时间做一次决策——服务器完全能处理。<strong>时间倍速不影响 AI 决策内容</strong>：
+同样的游戏状态 → 同样的决策 → 同样的结果。这就是确定性引擎的价值。</p>
+<hr />
+<h2>新手常见失误与本局对照</h2>
+<table>
+<thead>
+<tr>
+<th>失误</th>
+<th>本局体现</th>
+<th>教训</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>没保持 CAP 轮换</td>
+<td>蓝方前 3 分钟损失 3 架 CAP</td>
+<td>预警机被打掉后 CAP 失去引导</td>
+</tr>
+<tr>
+<td>忽略预警机保护</td>
+<td>红方 2 架 AEW 在 T+38-41 被击落</td>
+<td>没有预警机=没有远距探测</td>
+</tr>
+<tr>
+<td>弹药管理不当</td>
+<td>蓝方 YJ-18 在 2 小时内耗尽</td>
+<td>齐射虽爽，弹药有限</td>
+</tr>
+<tr>
+<td>未及时后撤重伤舰</td>
+<td>山东编队多舰 HP&lt;60% 仍在前线</td>
+<td>HP&lt;30% 触发自动撤退</td>
+</tr>
+<tr>
+<td>没集中火力</td>
+<td>早期伤害分散在多个目标</td>
+<td>集火击沉 &gt; 分散伤害</td>
+</tr>
+</tbody>
+</table></div>
+</body></html>
