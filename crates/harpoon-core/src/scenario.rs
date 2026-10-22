@@ -176,7 +176,7 @@ pub fn load_scenario(sc: Scenario, mut db: Database) -> Result<World, String> {
         entities: Default::default(),
         next_entity: 0,
         sides: [SideState::default(), SideState::default()],
-        events: Vec::new(),
+        events: std::collections::VecDeque::new(),
         event_seq: 0,
         event_cap: 4096,
         weather: sc.weather.clone(),

@@ -129,7 +129,7 @@ fn run(sc: &Scenario) -> Outcome {
             *counts.entry(name.clone()).or_default() += 1;
             first_seen.entry(name).or_insert_with(|| format!("[t={}s]", ev.tick));
         }
-        if let Some(ev) = world.events.last() {
+        if let Some(ev) = world.events.back() {
             last_seq = ev.seq;
         }
         // State digest over kinematic truth.

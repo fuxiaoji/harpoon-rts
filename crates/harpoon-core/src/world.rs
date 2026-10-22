@@ -9,7 +9,7 @@ use crate::geom::Vec2;
 use crate::rng::Rng;
 use crate::types::{ContactId, DayNight, EntityId, PlatformKind, Side};
 use serde::{Deserialize, Serialize};
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, VecDeque};
 
 /// One simulated second per tick.
 pub const TICK_SECONDS: f64 = 1.0;
@@ -357,7 +357,10 @@ pub struct World {
     pub entities: BTreeMap<EntityId, Entity>,
     pub next_entity: u32,
     pub sides: [SideState; 2],
-    pub events: Vec<Event>,
+    /// Bounded event ring. VecDeque keeps push_back/drain-from-front O(1);
+    /// a plain Vec memmoves the whole ring on every emit once adjudication
+    /// storms fire hundreds of events per tick.
+    pub events: VecDeque<Event>,
     pub event_seq: u64,
     pub event_cap: usize,
     pub weather: Weather,
@@ -400,11 +403,16 @@ impl World {
     /// Emit an event to the log (ring buffer).
     pub fn emit(&mut self, kind: EventKind, vis: Visibility) {
         self.event_seq += 1;
-        self.events.push(Event { seq: self.event_seq, tick: self.tick, kind, vis });
+        self.events.push_back(Event { seq: self.event_seq, tick: self.tick, kind, vis });
         if self.events.len() > self.event_cap {
             let drop = self.events.len() - self.event_cap;
             self.events.drain(0..drop);
         }
+    }
+
+    /// Newest event in the ring, if any.
+    pub fn last_event(&self) -> Option<&Event> {
+        self.events.back()
     }
 
     pub fn events_for(&self, side: Side, since_seq: u64) -> Vec<&Event> {

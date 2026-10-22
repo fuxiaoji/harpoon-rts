@@ -224,7 +224,7 @@ fn run(sc: &Scenario, trace: bool) -> Outcome {
                 trace_event(&world, ev);
             }
         }
-        if let Some(ev) = world.events.last() {
+        if let Some(ev) = world.events.back() {
             last_seq = ev.seq;
         }
         // State digest over kinematic truth.

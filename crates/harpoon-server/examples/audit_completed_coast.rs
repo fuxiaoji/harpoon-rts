@@ -11,7 +11,7 @@ fn main(){
  let expected:World=serde_json::from_value(save["payload"]["world"].clone()).unwrap();assert!(expected.over);
  let mut w:World=serde_json::from_value(save["payload"]["recording"]["initial"].clone()).unwrap();
  let inputs:Vec<Input>=serde_json::from_value(save["payload"]["recording"]["inputs"].clone()).unwrap();
- let mut events=w.events.clone();let mut cursor=0;let mut checks=0_u64;let mut audit=flight_audit::Audit::default();let memory=[Value::Null,Value::Null];
+ let mut events:Vec<harpoon_core::events::Event>=w.events.iter().cloned().collect();let mut cursor=0;let mut checks=0_u64;let mut audit=flight_audit::Audit::default();let memory=[Value::Null,Value::Null];
  let mut releases=Vec::new();let mut terminal=Vec::new();let mut seen=BTreeSet::new();audit.sample(&w,&[],&memory);
  loop{
   if let Some(terrain)=&w.context.terrain{for u in w.entities.values().filter(|u|u.alive&&matches!(u.kind,PlatformKind::Ship|PlatformKind::Sub)&&u.class!=harpoon_core::rules::asw::SONOBUOY_CLASS){assert!(!terrain.contains(u.pos),"land entry {} at {}",u.name,w.tick);checks+=1;}}

@@ -58,7 +58,7 @@ fn trial_sam(seed: u64) -> (u32, u32, u32) {
                 _ => {}
             }
         }
-        if let Some(e) = w.events.last() {
+        if let Some(e) = w.events.back() {
             last_seq = e.seq;
         }
     }
@@ -143,7 +143,7 @@ fn trial_aam(seed: u64) -> (u32, u32) {
                 _ => {}
             }
         }
-        if let Some(e) = w.events.last() {
+        if let Some(e) = w.events.back() {
             last_seq = e.seq;
         }
     }

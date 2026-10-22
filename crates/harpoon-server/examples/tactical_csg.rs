@@ -130,6 +130,17 @@ fn main() {
                 start.elapsed().as_secs_f64()
             );
         }
+        if w.tick % 300 == 0 {
+            let missiles = w.entities.values().filter(|e| e.kind == harpoon_core::types::PlatformKind::Missile).count();
+            eprintln!(
+                "DIAG tick={} wall={:.0}s entities={} missiles={} pending={} resolved={} adj={} delayed={} cas={} seqs={}",
+                w.tick, start.elapsed().as_secs_f64(), w.entities.len(), missiles,
+                w.rules.pending.len(), w.rules.resolved_hits.len(),
+                w.rules.pending_adjudications.len(), w.rules.delayed_orders.len(),
+                w.rules.casualties.values().map(|v|v.len()).sum::<usize>(),
+                w.rules.event_sequences.len()
+            );
+        }
         if w.tick % 600 == 0 || w.over {
             snapshots.push(json!({"tick":w.tick,"sides":[observe(&w,Side::Blue,w.event_seq,0),observe(&w,Side::Red,w.event_seq,0)]}));
         }

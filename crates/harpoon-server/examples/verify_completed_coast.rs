@@ -7,7 +7,7 @@ fn main(){
  let a:Vec<_>=std::env::args().collect();let save:serde_json::Value=serde_json::from_slice(&std::fs::read(&a[1]).unwrap()).unwrap();
  let expected:World=serde_json::from_value(save["payload"]["world"].clone()).unwrap();assert!(expected.over);
  let mut w:World=serde_json::from_value(save["payload"]["recording"]["initial"].clone()).unwrap();
- let mut events=w.events.clone();
+ let mut events:Vec<harpoon_core::events::Event>=w.events.iter().cloned().collect();
  let inputs:Vec<Input>=serde_json::from_value(save["payload"]["recording"]["inputs"].clone()).unwrap();let mut cursor=0;let mut checks=0_u64;
  loop{
   let terrain=w.context.terrain.as_ref().expect("charted coastal game required");

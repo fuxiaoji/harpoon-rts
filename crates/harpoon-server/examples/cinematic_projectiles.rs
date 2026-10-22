@@ -32,7 +32,7 @@ fn main() {
     let r: Recording = serde_json::from_value(save["payload"]["recording"].clone()).unwrap();
     let mut w = r.initial;
     let mut cursor = 0;
-    let mut all_events = w.events.clone();
+    let mut all_events: Vec<harpoon_core::events::Event> = w.events.iter().cloned().collect();
     let mut projectiles: BTreeMap<u32, Value> = BTreeMap::new();
     loop {
         for e in w

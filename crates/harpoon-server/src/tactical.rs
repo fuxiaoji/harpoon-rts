@@ -41,6 +41,14 @@ pub struct Params {
     pub sub_attack_range_nm: f64,
     pub sub_patrol_speed_kts: f64,
     pub salvo_min_interval_s: i64,
+    /// Massed-raid doctrine: ASCM rounds per shooter per salvo, the minimum
+    /// spacing between that shooter's salvos, and the in-flight ceiling per
+    /// target contact above which shooters hold fire.
+    pub surface_salvo_rounds: u16,
+    pub surface_salvo_interval_s: i64,
+    pub surface_inflight_cap: u32,
+    /// Aircraft per anti-ship strike wave.
+    pub strike_wave_size: u32,
     pub strike_altitude_m: f64,
     pub strike_assembly_s: i64,
     pub strike_wave_interval_s: i64,
@@ -66,6 +74,10 @@ impl Default for Params {
             sub_attack_range_nm: 9.0,
             sub_patrol_speed_kts: 4.0,
             salvo_min_interval_s: 20,
+            surface_salvo_rounds: 6,
+            surface_salvo_interval_s: 180,
+            surface_inflight_cap: 12,
+            strike_wave_size: 6,
             strike_altitude_m: 50.0,
             strike_assembly_s: 330,
             strike_wave_interval_s: 600,
@@ -492,19 +504,21 @@ impl TacticalStaff {
                 continue;
             }
             let value = match c.class_name.as_deref() {
-                Some(n)
-                    if n.contains("CV")
-                        || n.contains("Carrier")
-                        || n.contains("FORD")
-                        || n.contains("NIMITZ") =>
-                {
-                    60.0
-                }
+                // Escort-first doctrine: peel the air-defence screen before
+                // shooting at the flight decks it protects.
                 Some(n)
                     if n.contains("Burke")
                         || n.contains("055")
                         || n.contains("052")
                         || n.contains("Ticonderoga") =>
+                {
+                    60.0
+                }
+                Some(n)
+                    if n.contains("CV")
+                        || n.contains("Carrier")
+                        || n.contains("FORD")
+                        || n.contains("NIMITZ") =>
                 {
                     30.0
                 }
@@ -847,14 +861,14 @@ impl CommandStaff for TacticalStaff {
                             .map(|c| c.own_in_flight)
                             .unwrap_or(0);
                         if obs.tick - mind.last_salvo_tick
-                            >= self.params.salvo_min_interval_s.max(60)
-                            && inflight < 8
+                            >= self.params.surface_salvo_interval_s.max(30)
+                            && inflight < self.params.surface_inflight_cap
                         {
                             cmds.push(Command::Fire {
                                 unit: u.id,
                                 contact,
                                 weapon,
-                                rounds: ammo.min(2) as u8,
+                                rounds: ammo.min(self.params.surface_salvo_rounds) as u8,
                             });
                             mind.last_salvo_tick = obs.tick;
                             self.note(

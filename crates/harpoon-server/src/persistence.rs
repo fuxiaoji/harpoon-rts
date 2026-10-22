@@ -46,7 +46,7 @@ impl Recording {
         let mut r = Self {
             initial: world.clone(),
             inputs: vec![],
-            events: world.events.clone(),
+            events: world.events.iter().cloned().collect(),
             frames: BTreeMap::new(),
             last_seq: world.event_seq,
             completed_saved: false,
@@ -113,7 +113,7 @@ impl Recording {
     }
     pub fn verify(&self, expected: &World) -> Result<Value, String> {
         let mut world = self.initial.clone();
-        let mut events = world.events.clone();
+        let mut events: Vec<Event> = world.events.iter().cloned().collect();
         let mut i = 0;
         while world.tick < expected.tick && !world.over {
             let last_seq = world.event_seq;

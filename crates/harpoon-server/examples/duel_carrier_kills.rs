@@ -223,7 +223,7 @@ fn main() {
                 _ => {}
             }
         }
-        if let Some(e) = w.events.last() { last_seq = e.seq; }
+        if let Some(e) = w.events.back() { last_seq = e.seq; }
     }
 
     // Report

@@ -1562,7 +1562,7 @@ impl SelfplayCtx {
         }
         // Events visible to Blue ∪ Red covers everything non-referee; the
         // heuristic staff never produces referee-only events.
-        if let Some(ev) = world.events.last() {
+        if let Some(ev) = world.events.back() {
             last_events_seq = ev.seq;
         }
         let h = digest.load(Ordering::Relaxed);

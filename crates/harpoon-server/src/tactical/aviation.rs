@@ -352,7 +352,7 @@ impl TacticalStaff {
                         .map(|(class, n)| {
                             (
                                 class.clone(),
-                                (*n).min(4),
+                                (*n).min(self.params.strike_wave_size.max(1) as u8),
                                 AirMission::Strike { contact: target.id },
                                 "strike_launch",
                                 "组织反舰突击波；先集结下降，再侧翼超低空突防",
@@ -405,6 +405,21 @@ impl TacticalStaff {
         self.refresh_strike_packages(obs);
         let ew_units:Vec<_>=obs.units.iter().filter(|u|self.role_for(u)==Role::Ew).collect();
         for ew in ew_units {
+            // Jamming is inert until the pod is switched on (§12.5). Standoff
+            // pods jam the whole horizon; spot pods need a current ES/RWR
+            // detection of the victim radar, so fall back to escort when no
+            // ESM-backed ship track is fresh enough.
+            if ew.mission.as_deref()!=Some("rtb") {
+                if let Some(jam)=harpoon_core::rules::electronic_warfare::capability(&ew.class) {
+                    let esm_ships:Vec<ContactId>=obs.contacts.iter().filter(|c|
+                        !c.stale && !c.bearing_only && c.quality>=0.4 && c.category==PlatformKind::Ship
+                        && c.sensors.iter().any(|s| s.contains("esm"))).map(|c|c.id).collect();
+                    let (mode,contacts)=if jam.spot_targets>0 && !esm_ships.is_empty() {
+                        ("spot", esm_ships.into_iter().take(jam.spot_targets).collect())
+                    } else if jam.standoff {("standoff", vec![])} else {("escort", vec![])};
+                    cmds.push(Command::SetJamming {unit:ew.id,mode:mode.into(),contacts});
+                }
+            }
             let package=self.packages.values().filter(|p|!p.members.is_empty()).min_by(|a,b| {
                 let distance=|p:&Package|p.members.iter().filter_map(|id|obs.units.iter().find(|u|u.id==*id)).map(|u|u.pos.range_to(ew.pos)).fold(f64::INFINITY,f64::min);
                 distance(a).total_cmp(&distance(b))

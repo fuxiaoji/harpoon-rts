@@ -1687,7 +1687,12 @@ fn fire(
     } else {
         (*clock).min(now + 3 * tt())
     };
-    if immediate {
+    // Immediate secondary explosions chain only from the initiating hit.
+    // A secondary that rolls another fire/flood still burns via the casualty
+    // clock, but must not spawn a further immediate secondary: saturation
+    // salvos otherwise branch (criticals × P(fire) ≥ 1) into exponential
+    // cascade depth that never finishes adjudicating on high-endurance hulls.
+    if immediate && !h.hit.secondary {
         queue_secondary(
             w,
             t,
@@ -2021,7 +2026,9 @@ fn effect(w: &mut World, t: &Entity, h: &Resolved, kind: &str, r: &mut Rng, iden
                     serde_json::json!({"hit":identity,"weapon":mount.weapon,"missing":"topside/belowdecks magazine location","automatic_explosion_dp_blocked":true}),
                 );
             }
-            if burst_dp > 0.0 {
+            // Mount-cook-off chains stop at one generation like fire/flood
+            // secondaries; see the queue_secondary guard in the severity path.
+            if burst_dp > 0.0 && !h.hit.secondary {
                 queue_secondary(w, t, burst_dp, false, format!("{identity}:mount_explosion"));
             }
             label = if explosion {

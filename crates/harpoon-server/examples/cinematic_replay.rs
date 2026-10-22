@@ -15,7 +15,7 @@ fn main(){
  let r:Recording=serde_json::from_value(save["payload"]["recording"].clone()).unwrap();let mut w=r.initial;
  let dest=std::path::Path::new(&args[2]);std::fs::create_dir(dest).expect("new evidence directory required");
  let mut frames=std::io::BufWriter::new(std::fs::File::create(dest.join("motion.jsonl")).unwrap());
- let mut catalog:BTreeMap<u32,Value>=BTreeMap::new();let mut all_events=w.events.clone();let mut cursor=0;let mut count=0;
+ let mut catalog:BTreeMap<u32,Value>=BTreeMap::new();let mut all_events:Vec<harpoon_core::events::Event>=w.events.iter().cloned().collect();let mut cursor=0;let mut count=0;
  loop {
   for e in w.entities.values().filter(|e|e.alive){catalog.entry(e.id.0).or_insert_with(||json!({"id":e.id,"side":e.side,"kind":e.kind,"name":e.name,"class":e.class,"hp_max":e.hp_max}));}
   let units:Vec<_>=w.entities.values().filter(|e|e.alive && e.class!=harpoon_core::rules::asw::SONOBUOY_CLASS)
