@@ -167,10 +167,14 @@ pub fn fire_control_scan(world: &mut World) {
                 def.pk *= 1.15;
             }
 
+            // Rounds actually launched by this engagement; the magazine
+            // deduction below must match it exactly.
+            let mut fired: u16 = 0;
             match def.kind {
                 WeaponKind::Gun => {
                     let salvo = def.salvo.max(mounts_n.min(2));
                     gun_salvo(world, shooter.id, contact_id, target_id, &def, salvo);
+                    fired = salvo as u16;
                 }
                 WeaponKind::Sam | WeaponKind::Aam => {
                     let mut salvo = def.salvo;
@@ -194,6 +198,10 @@ pub fn fire_control_scan(world: &mut World) {
                     for _ in 0..salvo {
                         launch(world, shooter.id, &def, Some(target_id), None);
                     }
+                    // Every launched interceptor draws from the same magazine;
+                    // deducting one per engagement let ships fire ~2× their
+                    // cells over a long battle.
+                    fired = salvo as u16;
 
                     // §8.1.8 (PDF p.8-10): a weapon fired in the increment a
                     // unit arrives at (or adjacent to) a friendly unit can hit
@@ -260,37 +268,38 @@ pub fn fire_control_scan(world: &mut World) {
                     for _ in 0..salvo {
                         launch(world, shooter.id, &def, Some(target_id), None);
                     }
+                    fired = salvo as u16;
                 }
                 WeaponKind::Torpedo | WeaponKind::Lwt => {
                     launch(world, shooter.id, &def, Some(target_id), None);
+                    fired = 1;
                 }
                 WeaponKind::AswRocket => {
                     let salvo = def.salvo;
                     for _ in 0..salvo {
                         launch(world, shooter.id, &def, Some(target_id), None);
                     }
+                    fired = salvo as u16;
                 }
                 WeaponKind::Bomb | WeaponKind::Rocket => {
                     let salvo = def.salvo.max(mounts_n.min(2));
                     gun_salvo(world, shooter.id, contact_id, target_id, &def, salvo);
+                    fired = salvo as u16;
                 }
                 WeaponKind::Ciws => unreachable!(),
             }
 
-            // Consume ammo + start reload.
+            // Consume ammo + start reload. SAM/AAM engagements launch up to
+            // `salvo` interceptors, so the deduction must match the launch
+            // count, not a fixed one-per-engagement.
             let Some(e) = world.entity_mut(shooter.id) else { continue };
             let m = &mut e.weapons[idx];
-            m.ammo = m.ammo.saturating_sub(salvo_or(&def, 1));
-            m.cooldown_s = def.reload_s;
+            m.ammo = m.ammo.saturating_sub(fired);
+            if fired > 0 {
+                m.cooldown_s = def.reload_s;
+            }
             break; // one engagement per shooter per scan
         }
-    }
-}
-
-fn salvo_or(def: &WeaponDef, fallback: u16) -> u16 {
-    match def.kind {
-        WeaponKind::Gun => def.salvo as u16,
-        _ => fallback,
     }
 }
 
