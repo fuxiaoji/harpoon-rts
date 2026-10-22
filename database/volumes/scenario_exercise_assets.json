@@ -1,0 +1,124 @@
+{
+  "platforms": {
+    "exercise_airbase": {
+      "id": "exercise_airbase",
+      "name": "Fictional Air Station (generic RTS airfield proxy)",
+      "kind": "Base",
+      "hp": 400.0,
+      "max_speed_kts": 0.0,
+      "cruise_speed_kts": 0.0,
+      "turn_rate_deg_s": 0.0,
+      "accel_kts_per_s": 0.4,
+      "rcs": "Large",
+      "noise_db": 50.0,
+      "visual_factor": 1.0,
+      "vp_value": 40.0,
+      "sensors": [
+        "radar_air_long",
+        "esm_std"
+      ],
+      "weapons": [
+        {
+          "weapon": "sam_point",
+          "mounts": 2,
+          "ammo": 24
+        },
+        {
+          "weapon": "gun_5in",
+          "mounts": 1,
+          "ammo": 40
+        }
+      ],
+      "chaff": 0,
+      "decoys": 0,
+      "endurance_s": 0.0,
+      "max_depth_m": 0.0,
+      "dipping_sonar": false,
+      "is_base": true,
+      "deck": {
+        "capacity": 24,
+        "cycle_s": 180.0,
+        "wing": [
+          {
+            "class": "fighter",
+            "count": 4
+          },
+          {
+            "class": "bomber",
+            "count": 4
+          }
+        ]
+      }
+    },
+    "exercise_port": {
+      "id": "exercise_port",
+      "name": "Fictional Port Complex (generic RTS installation proxy)",
+      "kind": "Base",
+      "hp": 500.0,
+      "max_speed_kts": 0.0,
+      "cruise_speed_kts": 0.0,
+      "turn_rate_deg_s": 0.0,
+      "accel_kts_per_s": 0.4,
+      "rcs": "Large",
+      "noise_db": 50.0,
+      "visual_factor": 1.0,
+      "vp_value": 30.0,
+      "sensors": [
+        "radar_surf_med",
+        "esm_std"
+      ],
+      "weapons": [
+        {
+          "weapon": "sam_point",
+          "mounts": 1,
+          "ammo": 16
+        },
+        {
+          "weapon": "gun_5in",
+          "mounts": 1,
+          "ammo": 40
+        }
+      ],
+      "chaff": 0,
+      "decoys": 0,
+      "endurance_s": 0.0,
+      "max_depth_m": 0.0,
+      "dipping_sonar": false,
+      "is_base": true,
+      "deck": null
+    },
+    "exercise_cruise_battery": {
+      "id": "exercise_cruise_battery",
+      "name": "Fictional Rocket Force Cruise Battery (exercise loadout)",
+      "kind": "Base",
+      "hp": 500.0,
+      "max_speed_kts": 0.0,
+      "cruise_speed_kts": 0.0,
+      "turn_rate_deg_s": 0.0,
+      "accel_kts_per_s": 0.4,
+      "rcs": "Large",
+      "noise_db": 50.0,
+      "visual_factor": 1.0,
+      "vp_value": 30.0,
+      "sensors": [
+        "esm_std"
+      ],
+      "weapons": [
+        {
+          "weapon": "cn_dh10",
+          "mounts": 1,
+          "ammo": 32
+        }
+      ],
+      "chaff": 0,
+      "decoys": 0,
+      "endurance_s": 0.0,
+      "max_depth_m": 0.0,
+      "dipping_sonar": false,
+      "is_base": true,
+      "deck": null
+    }
+  },
+  "weapons": {},
+  "sensors": {}
+}

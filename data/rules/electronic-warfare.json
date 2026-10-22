@@ -1,0 +1,18 @@
+{
+  "rule_id":"H5-2026-12.5",
+  "source":"Harpoon V 2026-01-01, PDF44 printed5-5 and PDF119-120 printed12-1/12-2; visually verified 2026-10-20",
+  "resistance":[0,2,5,8,12,15,18],
+  "sea_clutter_low_air":[0,0,3,5,7,9,12,15,18,21],
+  "precipitation_clutter":{"None":0,"Drizzle":0,"Light":2,"Moderate":5,"Heavy":8,"Torrential":11},
+  "main_arc_deg":[0,120,90,60,45,5,1],
+  "sidelobe_deg":[0,120,90,30,15,1,0],
+  "range_modifiers":[1,0.85,0.70,0.60,0.50,0.40,0.35,0.30,0.25,0.20,0.20,0.15,0.15,0.10,0.10,0.05,0.05,0.03,0.03,0.01,0.01],
+  "radar_generations":{"cn_j15":4,"us_f18e":6,"us_f18e_asm":6,"us_ea18g":6,"us_f35c":6,"us_e2d":6,"us_ford":6,"us_nimitz":5,"us_burke_1":5,"us_burke_2a":5,"us_burke_2a_restart":5,"us_burke_2a_ti":5,"us_burke_3":6,"us_ticonderoga":5,"us_ticonderoga_cmp":5,"us_zumwalt":6},
+  "radar_sensor_generations":{"cn_klj4":4,"cn_ljg346":6,"cn_ljg346a":6,"cn_ljg346b":6,"cn_aesa_xband":6,"cn_ljq382":5,"cn_ljq364":5},
+  "radar_sources":"China's Navy 2025 PDF51/B-11 KLJ-4 and PDF92/J-7 Gen4; named naval radars PDF86/J-1 visually verified. America's Aircraft 2025 PDF49/B-44 APG-79, PDF51/B-46 APG-81, PDF33/B-28 APY-9; radar generations PDF113/J3-1,114/J3-2,117/J3-5. America's Navy 2025 PDF7-8/A-4/A-5 and PDF33-34/A-30/A-31 ship fits; PDF88-89/J-2/J-3 visually verified: SPY-1B/D Gen5, SPY-3/4/6 Gen6, Nimitz 2025 primary AS profile SPS-49A(V)1 Gen5 (separate SPS-48E backup is not added to the existing generic fit). Legacy US generic radar ranges are retained; only primary search-profile generation is mapped. Unverified sensors retain existing sensing.",
+  "jammers":{
+    "cn_j15d":{"clutter":14,"spot_targets":0,"standoff":true,"source":"China's Navy 2025 PDF51/B-11 estimated J-15D 3 standoff pods; PDF84/H-6 Standoff Jammer Pod clutter14. Fit remains source-estimated."},
+    "us_ea18g":{"clutter":20,"spot_targets":6,"standoff":false,"source":"America's Aircraft 2025 PDF35/B-30 3 ALQ-99 pods; PDF108/H5-2 ALQ-99J/ICAPIII/EA-18G 2 targets per pod, clutter20. 2025 ALQ-99J mission fit selected explicitly."}
+  },
+  "limitations":"No invented radar generation for unverified ship fits. Spot requires side-observed ES/RWR contact; the RTS shares a side contact book. Jammers do not stack. Chaff corridors and air-launched decoys require separate verified loadouts and are not synthesized from self-defence chaff."
+}

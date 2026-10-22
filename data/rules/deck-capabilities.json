@@ -1,0 +1,7 @@
+{
+ "source":"Harpoon V 2026 §4.6.4.1 PDF36 printed4-4; China's Navy 2025 PDF10/A-3 explicitly lists arresting gear for Type001/002/003. America's Navy 2025 PDF7-8/A-4/A-5 Ford/Nimitz conventional carrier decks. Source-backed capability guard supplements configured wing and capacity checks.",
+ "arresting_gear":["cn_001","cn_002","cn_003","us_ford","us_nimitz","cv"],
+ "rotary_wing":["cn_z18f","cn_z18j","cn_z9c","cn_z9d","cn_z20f","cn_ka28","us_mh60r","us_mh60s","us_sh60b","us_sh60f","helo_asw","helo"],
+ "vtol":["us_f35b"],
+ "limitations":"cv/helo are generic RTS training types. An unknown ship is not granted arresting gear because it has a deck or a high HP value. Receiving wing fit and capacity are also required; land bases may recover their configured aircraft."
+}

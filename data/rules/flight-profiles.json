@@ -1,0 +1,12 @@
+{
+ "source":"Harpoon V 2026-01-01 §4.5.4 PDF34 and §4.7.3-4.7.4 PDF37; China's Navy 2025 PDF51/B-11; America's Aircraft 2025 PDF49/B-44 and PDF51/B-46. Aircraft speed rows visually verified 2026-10-20.",
+ "low_range_cost":2.0,"fmp_range_cost":3.0,"reheat_range_cost":10.0,"loiter_range_cost":0.8,"vlow_max_m":60.0,"vlow_absolute_cap_kts":650.0,
+ "jets":{
+   "cn_j15":{"low":[430,600,700],"medium":[485,680,860],"high":[485,760,1240]},
+   "cn_j15d":{"low":[430,600,700],"medium":[485,680,860],"high":[485,760,1240]},
+   "us_f18e":{"low":[460,585,710],"medium":[460,615,815],"high":[460,650,920]},
+   "us_f18e_asm":{"low":[460,585,710],"medium":[460,615,815],"high":[460,650,920]},
+   "us_f35c":{"low":[460,590,630],"medium":[520,640,830],"high":[580,690,920]}
+ },
+ "limitations":"Retains existing cruise-equivalent endurance as the fuel baseline. Fully-loaded mass fraction/drop tanks/air refuelling remain separate data requirements; do not infer them from weapon count. Unlisted aircraft retain existing fuel model. J-15D speed inherited from its parent table, source-estimated variant."
+}

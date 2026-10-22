@@ -1,0 +1,27 @@
+{
+  "version": "2026-10-21",
+  "assets": [
+    {
+      "id": "exercise_airbase",
+      "parent": "airfield",
+      "parent_source": "database/consolidated.json",
+      "assumption": "Generic existing RTS installation proxy; no real facility layout, DP or force strength asserted",
+      "changes": "Fictional 24-aircraft capacity; inherited RTS cycle, HP and defences"
+    },
+    {
+      "id": "exercise_port",
+      "parent": "navsta",
+      "parent_source": "database/consolidated.json",
+      "assumption": "Generic existing RTS installation proxy; no real facility layout, DP or force strength asserted",
+      "changes": "Identity only"
+    },
+    {
+      "id": "exercise_cruise_battery",
+      "parent": "navsta",
+      "parent_source": "database/consolidated.json",
+      "assumption": "Generic existing RTS installation proxy; no real facility layout, DP or force strength asserted",
+      "changes": "Fictional 32-round DH-10 exercise loadout; weapon performance inherited unchanged"
+    }
+  ],
+  "weapon_source": "Existing cn_dh10 in consolidated.json; no new ballistic-missile model or parameters"
+}

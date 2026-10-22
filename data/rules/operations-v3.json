@@ -1,0 +1,84 @@
+{
+  "profile": "hv2026-rts-v3",
+  "source": {"core":"14-2.HpnV_Rules_1_Jan_26.pdf","version":"2026-01-01","pdf_pages":[35,36,37,40,41,42,43,44,81,83,84,89],"visually_verified":"2026-10-22","evidence":"artifacts/rules-air-aaw-detection-20261022"},
+  "adaptations": {
+    "RTS-04-11":"Ready inventory is Alert+5. A dispatch takes at least300s from the order; the launch lane also runs its printed sequence. The first completion is max(Alert+5, lane sequence); subsequent aircraft use separate lanes, not an instant multi-plane spawn.",
+    "RTS-04-12":"Queues reserve inventory immediately. A disabled deck aborts its active sequence and restarts the full sequence when operational. Cancelling returns reserved aircraft, without counting a sortie. Physical parked/respot locations are not yet implemented.",
+    "RTS-04-13":"A valid Low-altitude quarter-FMP touchdown inside the existing1.5nm approach gate reserves the recovery lane for60s, or a vertical spot for180s. The first touchdown is immediate when eligible, and subsequent ones respect throughput. The1.5nm gate is an RTS approach abstraction, not a source sensor or runway range. Ship-heading alignment uses1degree procedural tolerance.",
+    "RTS-04-14":"On recovery, source fuel/arm work precedes alert work. Ship servicing has12 simultaneous places; individual jobs occupy a place for their complete fuel/arm stage. Aircraft are homogeneous class inventory; individual airframe damage and cumulative daily sortie identity remain unimplemented.",
+    "RTS-05-11":"One-second clocks replace30s increments without shortening source delays. Detection timers reset when a target leaves the eligible envelope. Negative reaction adjustments do not grant invented over-range contacts; that predictive branch remains unimplemented.",
+    "RTS-05-12":"Flight radar arcs use actual heading and altitude bands. Groups require explicit group metadata and are not inferred from accidental proximity. This first version does not implement the source group-signature uplift.",
+    "RTS-08-11":"Use the explicit instruction in8.1.5 to roll for each missile intercepted in the Point Defense band. Log actual time-to-go; do not replace the printed table with a distance interpolation. Gun caliber comes from the fitted platform binding, not its generic weapon alias."
+  },
+  "aviation": {
+    "catapult_s":120,"recovery_s":60,"flyoff_s":30,"pad_s":180,"alert5_s":300,"alert_max_s":3600,"service_slots":12,
+    "arm_minutes":{"air":[20,30,40,40],"unguided":[20,30,40,180],"guided":[30,50,60,240],"asw":[null,20,40,60],"none":[0,0,0,0]},
+    "fuel_minutes":[10,20,30,90],"alert_minutes":[20,40,40,120],
+    "ship_safe_sea_state":3,"stabilizer_min_kts":8,"ship_size_bonus":{"A":2,"B":1},"medium_aircraft_bonus":1,"crash_chance_per_excess_state":0.2,
+    "decks": {
+      "us_ford":{"catapults":4,"bow_catapults":2,"dual":true,"size":"A","source":"America Navy2025 PDF7/A-4; Ford2017/2025 fit, not JFK"},
+      "us_nimitz":{"catapults":4,"bow_catapults":2,"dual":true,"size":"A","source":"America Navy2025 PDF8/A-5"},
+      "us_burke_2a":{"catapults":0,"bow_catapults":0,"dual":false,"pads":1,"size":"A","recovery_system":true,"source":"America Navy2025 PDF34/A-31 Aft Pad(1)2, broad hull treated A-sized for flight ops, RAST"},
+      "us_burke_2a_restart":{"catapults":0,"bow_catapults":0,"dual":false,"pads":1,"size":"A","recovery_system":true,"source":"America Navy2025 PDF33/A-30 Aft Pad(1)2; broad hull A-sized; RAST"},
+      "us_burke_2a_ti":{"catapults":0,"bow_catapults":0,"dual":false,"pads":1,"size":"A","recovery_system":true,"source":"America Navy2025 PDF33/A-30 Aft Pad(1)2; broad hull A-sized; RAST"},
+      "us_zumwalt":{"catapults":0,"bow_catapults":0,"dual":false,"pads":2,"size":"A","stabilizers":2,"recovery_system":true,"source":"America Navy2025 PDF33/A-30 Pad(2)1, RAST; treat A-sized with dual stabilizers"},
+      "cn_001":{"catapults":0,"bow_catapults":0,"dual":false,"size":"A","source":"China Navy2025 PDF10/A-3 angled deck; ski jump"},
+      "cn_002":{"catapults":0,"bow_catapults":0,"dual":false,"size":"A","source":"China Navy2025 PDF10/A-3 angled deck; ski jump"},
+      "cn_003":{"catapults":3,"bow_catapults":2,"dual":false,"size":"A","source":"China Navy2025 PDF10/A-3; deck arrangement not declared dual"}
+    },
+    "aircraft": {
+      "cn_j15":{"size":2,"rotary":false,"catapult":false,"fmp_low_kts":600,"signature":1,"source":"China Navy2025 PDF51/B-11; basic J15, not J15T"},
+      "cn_j15d":{"size":2,"rotary":false,"catapult":false,"fmp_low_kts":600,"signature":1,"source":"China Navy2025 PDF51/B-11; source-estimated variant"},
+      "cn_z18f":{"size":2,"rotary":true,"catapult":false,"fmp_low_kts":180,"signature":1,"source":"China Navy2025 PDF66/B-26"},
+      "cn_z18j":{"size":2,"rotary":true,"catapult":false,"fmp_low_kts":180,"signature":1,"source":"China Navy2025 PDF66/B-26"},
+      "cn_z9c":{"size":1,"rotary":true,"catapult":false,"fmp_low_kts":160,"signature":2,"source":"China Navy2025 PDF65/B-25"},
+      "us_f18e":{"size":1,"rotary":false,"catapult":true,"fmp_low_kts":585,"signature":3,"front_signature":2,"front_half_deg":60,"external_ordnance":true,"service_load":"guided","source":"America Aircraft2025 PDF49/B-44; 300-060 Small, VSmall elsewhere; existing guided bomb fit external;5.2.2 floor Small"},
+      "us_f18e_asm":{"size":1,"rotary":false,"catapult":true,"fmp_low_kts":585,"signature":2,"source":"America Aircraft2025 PDF49/B-44; external store signature floor Small per5.2.2"},
+      "us_f35c":{"size":1,"rotary":false,"catapult":true,"fmp_low_kts":590,"signature":3,"front_signature":4,"front_half_deg":45,"external_ordnance":false,"source":"America Aircraft2025 PDF51/B-46; front315-045 Stealthy, VSmall elsewhere; internal fit only"},
+      "us_ea18g":{"size":1,"rotary":false,"catapult":true,"fmp_low_kts":585,"signature":3,"source":"America Aircraft2025 PDF35/B-30; VSmall signature, semi-recessed intake AAMs; no guessed pod RCS multiplier"},
+      "us_mh60r":{"size":1,"rotary":true,"catapult":false,"fmp_low_kts":140,"signature":2,"source":"America Aircraft2025 PDF69/B-64"},
+      "us_e2d":{"size":2,"rotary":false,"catapult":true,"fmp_low_kts":325,"signature":1,"source":"America Aircraft2025 PDF33/B-28"}
+    }
+  },
+  "radar": {
+    "physical_sizes":{"us_ford":"A","us_nimitz":"A","cn_001":"A","cn_002":"A","cn_003":"A","us_burke_2a":"B","us_burke_2a_restart":"B","us_burke_2a_ti":"B","us_zumwalt":"B"},
+    "ship_radar_heights_m":{"A":40,"B":30,"C":20,"D":20,"E":10,"F":10,"G":10},
+    "height_sources":"English2026 PDF42/5-3 representative radar heights and5.2.6 ground radar height30m. Physical class fromUS NavyPDF7-8/A-4-A-5,PDF33-34/A-30-A-31,China NavyPDF10/A-3. Flight-ops broad-hull equivalence does not enlarge radar height or signature.",
+    "ship_signatures":{"us_ford":0,"us_nimitz":0,"cn_001":0,"cn_002":0,"cn_003":0},
+    "signature_sources":"US Navy2025 PDF7-8/A-4-A-5 andChina Navy2025 PDF10/A-3 Signature Large. No signature is inferred from physical size.",
+    "missile_signatures":{"cn_yj12":3,"cn_yj12_air":3,"cn_yj12_surface_skim":3,"cn_yj12_air_skim":3,"cn_yj18":3,"cn_yj62":3,"cn_yj82":3,"cn_yj83":3,"cn_yj83k":3,"cn_yj91":3,"cn_yj9":3,"cn_dh10":3,"us_harpoon":3,"us_agm84":3,"us_nsm":4,"us_tomahawk":4},
+    "missile_signature_sources":"China Navy2025 PDF71/D-1 andPDF82/H-4;US Navy2025 PDF77/D-1;US Aircraft2025 PDF99/H2-1. Index0Large,1Medium,2Small,3VSmall,4Stealthy. Explicit variants; not inferred from DP or weapon diameter.",
+    "resistance":[0,2,5,8,12,15,18],
+    "sea_surface":[0,0,1,2,4,6,8,12,15,18],"sea_air":[0,0,3,5,7,9,12,15,18,21],
+    "land_surface":[3,6,9,12,14],"land_air":[6,9,12,15,17],
+    "precipitation":{"None":0,"Drizzle":0,"Light":2,"Moderate":5,"Heavy":8,"Torrential":11},
+    "range_modifiers":[1,0.85,0.70,0.60,0.50,0.40,0.35,0.30,0.25,0.20,0.20,0.15,0.15,0.10,0.10,0.05,0.05,0.03,0.03,0.01,0.01],
+    "reaction_2d6_columns":[[4,4,4,4,3,2,1,1,0,0,0],[4,4,4,3,2,1,1,0,0,0,0],[4,3,2,1,1,0,0,0,0,-1,-2],[3,2,1,1,0,0,0,0,-1,-2,-2],[2,1,1,0,0,0,0,-1,-2,-2,-2]],
+    "reaction_normal":[8,6,3,2,1,0,0],
+    "sensors": {
+      "cn_ljg346":{"generation":6,"role":"3D","air":[125,125,90,36,11],"surface":[30,30,20,11,6],"arc":360,"source":"China Navy2025 PDF86/J-1"},
+      "cn_ljg346a":{"generation":6,"role":"3D","air":[150,150,110,44,13],"surface":[35,35,20,11,6.3],"arc":360,"source":"China Navy2025 PDF86/J-1;4 panels collectively360"},
+      "cn_ljg346b":{"generation":6,"role":"3D","air":[250,247,177,71,21],"surface":[38,38,25,14,8],"arc":360,"source":"China Navy2025 PDF86/J-1"},
+      "cn_ljq382":{"generation":5,"role":"3D","air":[162,162,124,49,15],"surface":[27,27,22,13,7],"arc":360,"source":"China Navy2025 PDF86/J-1"},
+      "cn_ljq364":{"generation":5,"role":"LAS","air":[54,54,54,22,6.5],"surface":[35,35,25,14,7.9],"arc":360,"source":"China Navy2025 PDF86/J-1"},
+      "cn_klj4":{"generation":4,"role":"LD/SD","air":[180,130,93,38,11],"surface":[162,91,52,29,16],"arc":120,"source":"China Navy2025 PDF92/J-7"}
+    },
+    "bindings": {
+      "us_f18e:radar_air_med":{"generation":6,"role":"LD/SD","air":[160,148,106,42,13],"surface":[160,133,76,43,24],"arc":120,"source":"America Aircraft2025 PDF113/J3-1 APG79; selected fit2008+"},
+      "us_f18e_asm:radar_air_med":{"generation":6,"role":"LD/SD","air":[160,148,106,42,13],"surface":[160,133,76,43,24],"arc":120,"source":"America Aircraft2025 PDF113/J3-1 APG79"},
+      "us_ea18g:radar_air_med":{"generation":6,"role":"LD/SD","air":[160,148,106,42,13],"surface":[160,133,76,43,24],"arc":120,"source":"America Aircraft2025 PDF35/B-30; PDF113/J3-1 APG79"},
+      "us_f35c:radar_air_med":{"generation":6,"role":"LD/SD","air":[180,148,106,42,13],"surface":[316,177,101,57,32],"arc":120,"source":"America Aircraft2025 PDF114/J3-2 APG81 uncued"},
+      "us_ford:radar_air_long":{"generation":6,"role":"3D","air":[250,250,198,79,24],"surface":[0,0,0,0,0],"arc":360,"source":"America Navy2025 PDF7/A-4;PDF89/J-3 SPY4, Ford not JFK"},
+      "us_nimitz:radar_air_long":{"generation":5,"role":"AS","air":[260,237,169,68,20],"surface":[0,0,0,0,0],"arc":360,"source":"America Navy2025 PDF8/A-5;PDF88/J-2 SPS49A(V)1 chosen primary"}
+    }
+  },
+  "aaw": {
+    "point_defense_nm":4,"sam_pd_min_exclusion_nm":2.5,
+    "fragment_probabilities":[[0.1,0.5,0.9],[0,0.4,0.7],[0,0.1,0.2],[0,0.1,0.3]],
+    "gun_caliber_bindings":{"us_ford:ciws_30mm":20,"us_nimitz:ciws_30mm":20,"cn_001:ciws_30mm":30,"cn_002:ciws_30mm":30,"cn_003:ciws_30mm":30},
+    "gun_caliber_sources":"America Navy PDF7/A-4 andPDF8/A-5 Mk15 20mm;China Navy PDF10/A-3 PJ11 30mm. Alias ciws_30mm is not authoritative caliber.",
+    "combat_systems":{"us_ford":[6,1],"us_nimitz":[6,1],"cn_001":[6,1],"cn_002":[6,1],"cn_003":[6,1],"cn_z18j":[3,0],"us_e2d":[6,1]},
+    "combat_system_sources":"US NavyPDF7-8/A-4-A-5 refits;China NavyPDF10/A-3 Liaoning2018-19 refit,PDF66/B-26 Z18J estimate;US AircraftPDF33/B-28 E2D. Radar generation is not combat-system generation."
+  },
+  "limitations":["Full SAM intercept shot tables and ATA resolution remain separate unimplemented branches.","Unknown platform size, radar fit, sea/wind conditions, launch spots, or armor metadata must not be guessed.","Current source aircraft signatures lack full aspect and loadout overrides; strict radar therefore requires an explicit verified signature when such a branch matters.","Runway throughput, aircraft deck parking/respot, individual daily sorties, refuelling, and complete land/air sensor classes remain outstanding."]
+}

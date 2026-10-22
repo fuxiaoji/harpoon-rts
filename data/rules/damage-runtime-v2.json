@@ -1,0 +1,1147 @@
+{
+  "schema_version": 1,
+  "rule_profile": "hv2026-rts-v2",
+  "source": {
+    "core": "14-2.HpnV_Rules_1_Jan_26.pdf",
+    "version": "2026-01-01",
+    "pdf_pages": [
+      127,
+      128,
+      129,
+      130,
+      131,
+      132,
+      133,
+      134,
+      135,
+      136,
+      137
+    ],
+    "expanded": "3-2.（扩展损伤手册26版）Harpoon_V_Expanded_Critical_Hit_Tables_(Chinese_Language).pdf",
+    "expanded_pdf_pages": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13
+    ],
+    "visual_evidence": "E:/CodexBuilds/harpoon-damage-rules-20261021",
+    "critical_table_authority": "English2026 PDF128/14-2; D20 rows expanded into equivalent D100 bands. English takes precedence over2021 expanded-table star differences."
+  },
+  "adaptations": {
+    "RTS-02-01": "Continuous1s tick replaces plotting phases. Hits collected inside each tick, primary damage and ordinary critical ratio resolved together; attacks already eligible during that tick remain eligible.",
+    "RTS-14-01": "For heterogeneous hits in a tick, ordinary criticals are assigned to contributing hits weighted by primary DP; independent automatic and airframe criticals retain their own source.",
+    "RTS-14-02": "No unprinted +/-15% hull variance or blanket per-hit critical probability. Source annex profiles determine target-specific DP.",
+    "RTS-07-01": "PRH gen3 can retune to another active radar on the same target. Silent targets are approached at the last emitter position. Its shutdown hit modifier is not inferred from gen2: a terminal event requiring this unresolved value is saved as pending adjudication, without rolling a hit/miss. See R-027.",
+    "RTS-14-03": "Aggregate damage-control reduction is distributed proportionally across individual fire/flood records. Each retains its original first-damage deadline, so a later casualty cannot drain HP early or reset an older fire.",
+    "RTS-04-01": "A high/very-high missile profile starts at a representative altitude inside the printed band; airborne movement is continuous and terminal transition uses the annex distance/speed. Airframe altitude above the launching aircraft is missile flight, not aircraft ceiling.",
+    "RTS-14-04": "For point-platform torpedo collisions, a seeded D3 chooses fore/mid/aft void area independently on each side. A supplied impact_area overrides it. Each area protects once; total side absorption and per-hit R/3 caps remain as printed. This is an explicit spatial abstraction, not a table from the manual.",
+    "RTS-14-05": "TPS overflow flooding uses twice the remaining protection as the full-flood threshold, following the worked Enterprise 97DP/24DP example in English14-5/14-6; the surrounding wording is registered in R-025.",
+    "RTS-14-06": "Bridge casualty delays a new navigation order (including its route/station) once by two tactical turns. Continuous steering inside the accepted route is not re-delayed each second. Disabled rudder reduces the continuous angular rate to one-third, preserving the printed45-to15-degree ratio.",
+    "RTS-14-07": "Secondary fire/flood DP enters the same tick ledger and produces normal ratio criticals. Fire uses the target surface/aviation column; flooding uses the underwater column (submerged submarines use major). Causal immediate flooding is resolved after its initiating hit inside the same tick.",
+    "RTS-14-08": "The current instant-spawn deck model stores ready and cycling inventory in the hangar until launch. Hangar hits draw uniformly from this stored inventory, never airborne aircraft. There are no parked-flight-deck locations yet; armed/closely-parked aircraft optional chains are not enabled.",
+    "RTS-14-09": "A weapon fit containing multiple physical mounts loses only the selected mount. Remaining pooled ammunition is distributed evenly at the time of the hit; a hit on an already destroyed mount is ignored. Explosion outcome requires explicit topside/belowdecks metadata, otherwise the missing-location adjudication is logged as blocked.",
+    "RTS-02-02": "Within a tick, preserve each side command order, apply navigation/emission orders before manual Fire, and collect Blue then Red deterministically. Primary damage remains simultaneous. This removes cross-side input interleaving from projectile allocation and RNG.",
+    "RTS-14-10": "Small-craft twice-DP sinking threshold uses a rolling180-second tactical-duration window, including primary and secondary damage. Hull DP does not accumulate outside this window. This preserves the printed tactical duration without introducing arbitrary fixed-turn boundary exploits."
+  },
+  "critical_ratio": [
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      1
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      1,
+      2
+    ],
+    [
+      0,
+      0,
+      0,
+      1,
+      2,
+      3
+    ],
+    [
+      0,
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    [
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    [
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    [
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ]
+  ],
+  "critical_columns": {
+    "pre1955": [
+      {
+        "through": 30,
+        "effect": "weapon",
+        "armored": true
+      },
+      {
+        "through": 45,
+        "effect": "sensor",
+        "armored": false
+      },
+      {
+        "through": 50,
+        "effect": "cic",
+        "armored": false
+      },
+      {
+        "through": 60,
+        "effect": "engineering",
+        "armored": true
+      },
+      {
+        "through": 75,
+        "effect": "flooding",
+        "armored": true
+      },
+      {
+        "through": 90,
+        "effect": "fire",
+        "armored": false
+      },
+      {
+        "through": 95,
+        "effect": "bridge",
+        "armored": true
+      },
+      {
+        "through": 100,
+        "effect": "rudder",
+        "armored": true
+      }
+    ],
+    "surface": [
+      {
+        "through": 20,
+        "effect": "weapon",
+        "armored": false
+      },
+      {
+        "through": 35,
+        "effect": "sensor",
+        "armored": false
+      },
+      {
+        "through": 45,
+        "effect": "cic",
+        "armored": false
+      },
+      {
+        "through": 60,
+        "effect": "engineering",
+        "armored": true
+      },
+      {
+        "through": 75,
+        "effect": "flooding",
+        "armored": true
+      },
+      {
+        "through": 90,
+        "effect": "fire",
+        "armored": false
+      },
+      {
+        "through": 95,
+        "effect": "bridge",
+        "armored": false
+      },
+      {
+        "through": 100,
+        "effect": "rudder",
+        "armored": false
+      }
+    ],
+    "missile": [
+      {
+        "through": 10,
+        "effect": "weapon",
+        "armored": false
+      },
+      {
+        "through": 25,
+        "effect": "sensor",
+        "armored": false
+      },
+      {
+        "through": 40,
+        "effect": "cic",
+        "armored": false
+      },
+      {
+        "through": 65,
+        "effect": "engineering",
+        "armored": true
+      },
+      {
+        "through": 80,
+        "effect": "flooding",
+        "armored": true
+      },
+      {
+        "through": 95,
+        "effect": "fire",
+        "armored": false
+      },
+      {
+        "through": 100,
+        "effect": "bridge",
+        "armored": false
+      }
+    ],
+    "small_combatant": [
+      {
+        "through": 20,
+        "effect": "weapon",
+        "armored": false
+      },
+      {
+        "through": 30,
+        "effect": "sensor",
+        "armored": false
+      },
+      {
+        "through": 35,
+        "effect": "cic",
+        "armored": false
+      },
+      {
+        "through": 50,
+        "effect": "engineering",
+        "armored": true
+      },
+      {
+        "through": 60,
+        "effect": "personnel",
+        "armored": false
+      },
+      {
+        "through": 80,
+        "effect": "flotation",
+        "armored": false
+      },
+      {
+        "through": 95,
+        "effect": "fire",
+        "armored": false
+      },
+      {
+        "through": 100,
+        "effect": "bridge",
+        "armored": false
+      }
+    ],
+    "aviation": [
+      {
+        "through": 5,
+        "effect": "weapon",
+        "armored": false
+      },
+      {
+        "through": 25,
+        "effect": "flight_deck",
+        "armored": true
+      },
+      {
+        "through": 40,
+        "effect": "hangar",
+        "armored": true
+      },
+      {
+        "through": 45,
+        "effect": "ammo_fuel",
+        "armored": true
+      },
+      {
+        "through": 50,
+        "effect": "sensor",
+        "armored": false
+      },
+      {
+        "through": 55,
+        "effect": "cic",
+        "armored": false
+      },
+      {
+        "through": 65,
+        "effect": "engineering",
+        "armored": true
+      },
+      {
+        "through": 75,
+        "effect": "flooding",
+        "armored": true
+      },
+      {
+        "through": 90,
+        "effect": "fire",
+        "armored": false
+      },
+      {
+        "through": 95,
+        "effect": "bridge_airplot",
+        "armored": false
+      },
+      {
+        "through": 100,
+        "effect": "rudder",
+        "armored": false
+      }
+    ],
+    "underwater": [
+      {
+        "through": 15,
+        "effect": "weapon",
+        "armored": false
+      },
+      {
+        "through": 25,
+        "effect": "sensor",
+        "armored": false
+      },
+      {
+        "through": 30,
+        "effect": "cic",
+        "armored": false
+      },
+      {
+        "through": 50,
+        "effect": "engineering",
+        "armored": true
+      },
+      {
+        "through": 80,
+        "effect": "flooding",
+        "armored": true
+      },
+      {
+        "through": 90,
+        "effect": "fire",
+        "armored": false
+      },
+      {
+        "through": 95,
+        "effect": "bridge_airplot",
+        "armored": true
+      },
+      {
+        "through": 100,
+        "effect": "rudder",
+        "armored": false
+      }
+    ],
+    "airburst": [
+      {
+        "through": 20,
+        "effect": "weapon",
+        "armored": false
+      },
+      {
+        "through": 55,
+        "effect": "sensor",
+        "armored": false
+      },
+      {
+        "through": 60,
+        "effect": "engineering",
+        "armored": true
+      },
+      {
+        "through": 90,
+        "effect": "weapon_flightdeck",
+        "armored": true
+      },
+      {
+        "through": 95,
+        "effect": "flight_deck",
+        "armored": true
+      },
+      {
+        "through": 100,
+        "effect": "bridge_airplot",
+        "armored": false
+      }
+    ],
+    "merchant": [
+      {
+        "through": 10,
+        "effect": "weapon_cargo",
+        "armored": false
+      },
+      {
+        "through": 15,
+        "effect": "sensor",
+        "armored": false
+      },
+      {
+        "through": 25,
+        "effect": "engineering",
+        "armored": false
+      },
+      {
+        "through": 30,
+        "effect": "cic_cargo",
+        "armored": false
+      },
+      {
+        "through": 60,
+        "effect": "cargo",
+        "armored": false
+      },
+      {
+        "through": 75,
+        "effect": "flooding",
+        "armored": false
+      },
+      {
+        "through": 90,
+        "effect": "fire",
+        "armored": false
+      },
+      {
+        "through": 95,
+        "effect": "bridge",
+        "armored": false
+      },
+      {
+        "through": 100,
+        "effect": "rudder",
+        "armored": false
+      }
+    ],
+    "small_cargo": [
+      {
+        "through": 10,
+        "effect": "weapon_cargo",
+        "armored": false
+      },
+      {
+        "through": 15,
+        "effect": "sensor",
+        "armored": false
+      },
+      {
+        "through": 25,
+        "effect": "engineering",
+        "armored": false
+      },
+      {
+        "through": 35,
+        "effect": "personnel",
+        "armored": false
+      },
+      {
+        "through": 60,
+        "effect": "cargo",
+        "armored": false
+      },
+      {
+        "through": 80,
+        "effect": "flotation",
+        "armored": false
+      },
+      {
+        "through": 95,
+        "effect": "fire",
+        "armored": false
+      },
+      {
+        "through": 100,
+        "effect": "bridge",
+        "armored": false
+      }
+    ],
+    "sub_major": [
+      {
+        "through": 15,
+        "effect": "weapon",
+        "armored": false
+      },
+      {
+        "through": 20,
+        "effect": "sensor",
+        "armored": false
+      },
+      {
+        "through": 35,
+        "effect": "hull_penetration",
+        "armored": false
+      },
+      {
+        "through": 40,
+        "effect": "battery",
+        "armored": false
+      },
+      {
+        "through": 45,
+        "effect": "battery_engineering",
+        "armored": false
+      },
+      {
+        "through": 55,
+        "effect": "engineering",
+        "armored": false
+      },
+      {
+        "through": 70,
+        "effect": "flooding",
+        "armored": false
+      },
+      {
+        "through": 85,
+        "effect": "fire",
+        "armored": false
+      },
+      {
+        "through": 90,
+        "effect": "sensor",
+        "armored": false
+      },
+      {
+        "through": 95,
+        "effect": "control_major",
+        "armored": false
+      },
+      {
+        "through": 100,
+        "effect": "rudder",
+        "armored": false
+      }
+    ],
+    "sub_minor": [
+      {
+        "through": 15,
+        "effect": "weapon",
+        "armored": false
+      },
+      {
+        "through": 20,
+        "effect": "sensor",
+        "armored": false
+      },
+      {
+        "through": 35,
+        "effect": "hull_deformation",
+        "armored": false
+      },
+      {
+        "through": 40,
+        "effect": "battery",
+        "armored": false
+      },
+      {
+        "through": 45,
+        "effect": "battery_engineering",
+        "armored": false
+      },
+      {
+        "through": 55,
+        "effect": "engineering",
+        "armored": false
+      },
+      {
+        "through": 70,
+        "effect": "half_flooding",
+        "armored": false
+      },
+      {
+        "through": 85,
+        "effect": "half_fire",
+        "armored": false
+      },
+      {
+        "through": 90,
+        "effect": "sensor",
+        "armored": false
+      },
+      {
+        "through": 95,
+        "effect": "control_minor",
+        "armored": false
+      },
+      {
+        "through": 100,
+        "effect": "rudder",
+        "armored": false
+      }
+    ]
+  },
+  "platforms": {
+    "us_ford": {
+      "size": "A",
+      "role": "aviation",
+      "year": 2017,
+      "belt_cm": 0,
+      "deck_cm": 5,
+      "tps": 315,
+      "source": "America2025 PDF7/A4",
+      "dp_breaks": [
+        0,
+        417,
+        834,
+        1250,
+        1500,
+        1667
+      ],
+      "speed_steps": [
+        32,
+        24,
+        16,
+        8,
+        0,
+        0
+      ],
+      "nuclear": true,
+      "mount_locations": {
+        "us_essm": "topside",
+        "us_ram": "topside",
+        "ciws_30mm": "topside",
+        "gun_30mm": "topside"
+      }
+    },
+    "cn_001": {
+      "size": "A",
+      "role": "aviation",
+      "year": 2012,
+      "belt_cm": 0,
+      "deck_cm": 0,
+      "tps": 0,
+      "dp_breaks": [
+        0,
+        252,
+        505,
+        758,
+        909,
+        1010
+      ],
+      "speed_steps": [
+        29,
+        21,
+        15,
+        7,
+        0,
+        0
+      ],
+      "source": "China2025 PDF10/A3"
+    },
+    "cn_002": {
+      "size": "A",
+      "role": "aviation",
+      "year": 2019,
+      "belt_cm": 0,
+      "deck_cm": 0,
+      "tps": 0,
+      "dp_breaks": [
+        0,
+        256,
+        512,
+        767,
+        921,
+        1023
+      ],
+      "speed_steps": [
+        29,
+        22,
+        15,
+        7,
+        0,
+        0
+      ],
+      "source": "China2025 PDF10/A3"
+    },
+    "cn_003": {
+      "size": "A",
+      "role": "aviation",
+      "year": 2025,
+      "belt_cm": 0,
+      "deck_cm": 0,
+      "tps": 0,
+      "dp_breaks": [
+        0,
+        320,
+        639,
+        959,
+        1150,
+        1278
+      ],
+      "speed_steps": [
+        31,
+        23,
+        16,
+        8,
+        0,
+        0
+      ],
+      "source": "China2025 PDF10/A3"
+    },
+    "cn_075": {
+      "size": "A",
+      "role": "aviation",
+      "year": 2021,
+      "belt_cm": 0,
+      "deck_cm": 0,
+      "tps": 0,
+      "dp_breaks": [
+        0,
+        137,
+        274,
+        411,
+        493,
+        548
+      ],
+      "speed_steps": [
+        23,
+        17,
+        12,
+        6,
+        0,
+        0
+      ],
+      "source": "China2025 PDF29/A22"
+    },
+    "us_nimitz": {
+      "size": "A",
+      "role": "aviation",
+      "year": 1975,
+      "belt_cm": 0,
+      "deck_cm": 5,
+      "tps": 315,
+      "nuclear": true,
+      "source": "America2025 PDF8/A5; current generic fit DP kept separate pending dated variant"
+    },
+    "us_america_lha": {
+      "size": "A",
+      "role": "aviation",
+      "year": 2014,
+      "dp_breaks": [
+        0,
+        145,
+        290,
+        435,
+        522,
+        580
+      ],
+      "speed_steps": [
+        23,
+        17,
+        12,
+        6,
+        0,
+        0
+      ],
+      "critical_armor": {
+        "flight_deck": 2
+      },
+      "source": "AmericaNavy2025 PDF49/A46; hull/special damage modifiers require separate implementation"
+    },
+    "us_wasp_lhd": {
+      "size": "A",
+      "role": "aviation",
+      "year": 1989,
+      "dp_breaks": [
+        0,
+        135,
+        269,
+        404,
+        484,
+        538
+      ],
+      "speed_steps": [
+        22,
+        18,
+        11,
+        6,
+        0,
+        0
+      ],
+      "critical_armor": {
+        "flight_deck": 2
+      },
+      "source": "AmericaNavy2025 PDF50/A47 Wasp not LHD8; hull/special damage modifiers require separate implementation"
+    }
+  },
+  "weapons": {
+    "cn_yj12": {
+      "penetration_cm": 13,
+      "extra": "D6",
+      "profile": "high",
+      "source": "China2025 PDF71/D1",
+      "display_name": "YJ-12A/B high cruise",
+      "range_nm": 162,
+      "min_range_nm": 10.8,
+      "speed_kts": 1719,
+      "ship_dp": 48,
+      "terminal_profile": "skim"
+    },
+    "cn_yj12_air": {
+      "penetration_cm": 9,
+      "extra": "D6",
+      "profile": "vhi",
+      "source": "China2025 PDF82/H4, high cruise/remarkD",
+      "min_launch_altitude_m": 7501,
+      "terminal_nm": 27,
+      "terminal_speed_kts": 1585,
+      "display_name": "YJ-12 air-launched high cruise",
+      "range_nm": 216,
+      "min_range_nm": 21.6,
+      "speed_kts": 1719,
+      "ship_dp": 48,
+      "terminal_profile": "skim"
+    },
+    "cn_yj12_surface_skim": {
+      "penetration_cm": 13,
+      "extra": "D6",
+      "profile": "skim",
+      "source": "China2025 PDF71/D1, skim row",
+      "display_name": "YJ-12A/B sea-skimming cruise",
+      "range_nm": 54,
+      "min_range_nm": 10.8,
+      "speed_kts": 1320,
+      "ship_dp": 46,
+      "terminal_profile": "skim"
+    },
+    "cn_yj12_air_skim": {
+      "penetration_cm": 9,
+      "extra": "D6",
+      "profile": "skim",
+      "source": "China2025 PDF82/H4, skim row",
+      "min_launch_altitude_m": 7501,
+      "display_name": "YJ-12 air-launched sea-skimming cruise",
+      "range_nm": 110,
+      "min_range_nm": 21.6,
+      "speed_kts": 1320,
+      "ship_dp": 46,
+      "terminal_profile": "skim",
+      "terminal_nm": 27,
+      "terminal_speed_kts": 1585
+    },
+    "cn_yj18": {
+      "penetration_cm": 13,
+      "extra": "D6/2",
+      "profile": "skim",
+      "source": "China2025 PDF71/D1",
+      "terminal_nm": 10.8,
+      "terminal_speed_kts": 1980,
+      "range_nm": 165.5,
+      "speed_kts": 528
+    },
+    "cn_yj62": {
+      "penetration_cm": 15,
+      "extra": "D6",
+      "profile": "skim",
+      "source": "China2025 PDF71/D1",
+      "ship_dp": 44
+    },
+    "cn_yj82": {
+      "penetration_cm": 9,
+      "extra": "D6/2",
+      "profile": "skim",
+      "source": "China2025 PDF71/D1"
+    },
+    "cn_yj83": {
+      "penetration_cm": 9,
+      "extra": "D6/2",
+      "profile": "skim",
+      "source": "China2025 PDF71/D1"
+    },
+    "cn_yj83k": {
+      "penetration_cm": 9,
+      "extra": "D6/2",
+      "profile": "skim",
+      "source": "China2025 PDF82/H4"
+    },
+    "cn_yj91": {
+      "penetration_cm": 1,
+      "airburst": "D6+2",
+      "first_sensor": true,
+      "profile": "high",
+      "source": "China2025 PDF82/H4;core7.4.2",
+      "prh_generation": 3
+    },
+    "cn_yu6": {
+      "ship_dp": 141,
+      "sub_dp": 100,
+      "fuze": "influence",
+      "diameter_mm": 533,
+      "source": "China2025 PDF76/F1"
+    },
+    "cn_yu10": {
+      "ship_dp": 141,
+      "sub_dp": 100,
+      "fuze": "influence",
+      "diameter_mm": 533,
+      "source": "China2025 PDF76/F1"
+    },
+    "cn_yu9": {
+      "ship_dp": 128,
+      "sub_dp": 91,
+      "fuze": "influence",
+      "diameter_mm": 533,
+      "source": "China2025 PDF76/F1"
+    },
+    "cn_yj9": {
+      "ship_dp": 20,
+      "penetration_cm": 5,
+      "extra": "D6/3",
+      "profile": "skim",
+      "min_launch_altitude_m": 21,
+      "source": "China2025 PDF82/H4 remarkG rail-launched"
+    },
+    "cn_dh10": {
+      "ship_dp": 52,
+      "penetration_cm": 20,
+      "extra": "D6",
+      "profile": "skim",
+      "source": "China2025 PDF71/D1"
+    },
+    "us_harpoon": {
+      "ship_dp": 40,
+      "penetration_cm": 9,
+      "extra": "D6/2",
+      "profile": "skim",
+      "source": "AmericaNavy2025 PDF77/D1 HarpoonIC"
+    },
+    "us_agm84": {
+      "ship_dp": 40,
+      "penetration_cm": 9,
+      "extra": "D6/2",
+      "profile": "skim",
+      "source": "AmericaAircraft2025 PDF99/H2-1 AGM84D"
+    },
+    "us_nsm": {
+      "ship_dp": 34,
+      "penetration_cm": 18,
+      "extra": "D6/2",
+      "profile": "skim",
+      "source": "AmericaNavy2025 PDF77/D1 NSM"
+    },
+    "us_tomahawk": {
+      "ship_dp": 51,
+      "penetration_cm": 14,
+      "extra": "D6",
+      "profile": "skim",
+      "source": "AmericaNavy2025 PDF77/D1 TacticalTomahawkIV"
+    },
+    "us_mk48": {
+      "ship_dp": 175,
+      "sub_dp": 124,
+      "fuze": "influence",
+      "diameter_mm": 533,
+      "source": "AmericaNavy2025 PDF84/F2 Mk48Mod7"
+    },
+    "us_mk54": {
+      "sub_dp": 52,
+      "fuze": "contact",
+      "diameter_mm": 324,
+      "range_nm": 6,
+      "speed_kts": 45,
+      "source": "AmericaNavy2025 PDF84/F2 Mk54 fast setting45kt/6nm; economy30kt/8nm separate"
+    }
+  },
+  "severity_limits": {
+    "A": [
+      10,
+      15,
+      17
+    ],
+    "B": [
+      10,
+      15,
+      17
+    ],
+    "C": [
+      8,
+      12,
+      14
+    ],
+    "D": [
+      8,
+      12,
+      14
+    ],
+    "E": [
+      6,
+      10,
+      12
+    ],
+    "F": [
+      4,
+      7,
+      9
+    ],
+    "G": [
+      4,
+      7,
+      9
+    ]
+  },
+  "dc_reduction": [
+    [
+      -2,
+      -2,
+      -2,
+      -1
+    ],
+    [
+      -2,
+      -2,
+      -1,
+      -1
+    ],
+    [
+      -2,
+      -1,
+      -1,
+      -1
+    ],
+    [
+      -1,
+      -1,
+      -1,
+      0
+    ],
+    [
+      -1,
+      -1,
+      0,
+      0
+    ],
+    [
+      -1,
+      0,
+      0,
+      1
+    ],
+    [
+      0,
+      0,
+      1,
+      1
+    ],
+    [
+      0,
+      1,
+      1,
+      1
+    ],
+    [
+      1,
+      1,
+      1,
+      2
+    ],
+    [
+      1,
+      1,
+      2,
+      2
+    ]
+  ],
+  "narrow_aspect_deg": 20,
+  "time": {
+    "tactical_s": 180,
+    "intermediate_s": 1800,
+    "surface_s": 180,
+    "sinking_die_s": 600
+  },
+  "tps_belt_reduction": [
+    [
+      5,
+      0
+    ],
+    [
+      10,
+      0.1
+    ],
+    [
+      20,
+      0.25
+    ],
+    [
+      30,
+      0.4
+    ]
+  ],
+  "tps_areas_per_side": 3,
+  "pressure_hull_chances": [
+    80,
+    60,
+    70,
+    50
+  ],
+  "shaped_charge_roll_modifier": 20
+}
