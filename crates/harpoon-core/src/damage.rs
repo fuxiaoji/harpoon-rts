@@ -65,6 +65,23 @@ pub fn apply_hit_at(
     apply_hit_inner(world, target_id, weapon, underwater, hit_bearing_rel, None);
 }
 
+/// Production projectile identity and signed bearing, independent of unrelated
+/// projectile iteration and event-log order. Legacy saves retain old behavior.
+pub fn apply_projectile_hit(world:&mut World, projectile:EntityId, target:EntityId, weapon:&WeaponDef, underwater:bool, shooter:Side) {
+    if !crate::rules::damage_runtime::active(world){apply_hit_from(world,target,weapon,underwater,shooter);return;}
+    let p=world.entity(projectile);let t=world.entity(target);
+    let bearing=p.zip(t).map(|(p,t)|{
+        let incoming=if p.pos.range_to(t.pos)>0.005{t.pos.bearing_to(p.pos)}else{crate::geom::normalize_deg(p.course_deg+180.0)};
+        crate::geom::angle_diff(t.course_deg,incoming)
+    });
+    let pass=p.and_then(|p|p.projectile.as_ref()).map(|p|p.passes).unwrap_or(0);
+    let deep=p.is_some_and(|p|p.ext.get("torpedo.deep")==Some(&1.0));
+    let area=p.and_then(|p|p.ext.get("torpedo.impact_area")).map(|v|*v as u8);
+    let targeted_sensor=p.and_then(|p|p.projectile.as_ref()).and_then(|p|p.targeted_sensor.clone());
+    let identity=format!("projectile:{}:{pass}:{}",projectile.0,world.tick);
+    crate::rules::damage_runtime::queue_with_parameters(world,target,weapon,underwater,bearing,Some(shooter),Some(identity),deep,area,targeted_sensor);
+}
+
 fn apply_hit_inner(
     world: &mut World,
     target_id: EntityId,
@@ -73,6 +90,10 @@ fn apply_hit_inner(
     hit_bearing_rel: Option<f64>,
     shooter_side: Option<Side>,
 ) {
+    if crate::rules::damage_runtime::active(world) {
+        crate::rules::damage_runtime::queue(world,target_id,weapon,underwater,hit_bearing_rel,shooter_side,None);
+        return;
+    }
     let Some(t) = world.entities.get(&target_id).cloned() else { return };
     if !t.alive {
         return;
@@ -244,7 +265,7 @@ fn incoming_bearing_rel(
 
 /// Broadcast battle-damage assessment to the shooter's side when they track
 /// the victim.
-fn bda_to_shooter(
+pub(crate) fn bda_to_shooter(
     world: &mut World,
     target_id: EntityId,
     weapon: &WeaponDef,
@@ -694,6 +715,7 @@ pub fn sink(world: &mut World, target_id: EntityId) {
 
 /// Fires burn and flooding drains HP over time.
 pub fn update_fires(world: &mut World) {
+    if crate::rules::damage_runtime::active(world) {return;}
     let ids: Vec<EntityId> = world
         .entities
         .values()
@@ -754,7 +776,7 @@ mod tests {
             id: "damage-test".into(),
             name: "Damage Test".into(),
             description: String::new(),
-            context: Default::default(),
+            context: crate::scenario::ScenarioContext{rules_profile:Some(crate::rules::damage_runtime::RuleProfile::Legacy),..Default::default()},
             duration_s: 100_000,
             weather: Weather { visibility_nm: 20.0, jam: [0.0, 0.0], overcast: 0.0, rain: 0.0 },
             day_night: DayNight::Day,
@@ -785,7 +807,7 @@ mod tests {
             id: "damage-pair-test".into(),
             name: "Damage Pair Test".into(),
             description: String::new(),
-            context: Default::default(),
+            context: crate::scenario::ScenarioContext{rules_profile:Some(crate::rules::damage_runtime::RuleProfile::Legacy),..Default::default()},
             duration_s: 100_000,
             weather: Weather { visibility_nm: 20.0, jam: [0.0, 0.0], overcast: 0.0, rain: 0.0 },
             day_night: DayNight::Day,
@@ -827,6 +849,7 @@ mod tests {
 
     fn test_weapon(kind: WeaponKind, damage: f64) -> WeaponDef {
         WeaponDef {
+            rule_data:None,
             id: "test_weapon".into(),
             name: "Test Weapon".into(),
             kind,

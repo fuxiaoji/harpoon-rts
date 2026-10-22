@@ -242,7 +242,7 @@ mod tests {
             id: "damage-ext-test".into(),
             name: "Damage Ext Test".into(),
             description: String::new(),
-            context: Default::default(),
+            context: crate::scenario::ScenarioContext{rules_profile:Some(crate::rules::damage_runtime::RuleProfile::Legacy),..Default::default()},
             duration_s: 100_000,
             weather: Weather { visibility_nm: 20.0, jam: [0.0, 0.0], overcast: 0.0, rain: 0.0 },
             day_night: DayNight::Day,
@@ -268,6 +268,7 @@ mod tests {
 
     fn weapon(kind: WeaponKind, damage: f64) -> WeaponDef {
         WeaponDef {
+            rule_data:None,
             id: "test_weapon".into(),
             name: "Test Weapon".into(),
             kind,

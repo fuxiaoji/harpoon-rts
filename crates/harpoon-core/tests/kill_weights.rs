@@ -140,6 +140,7 @@ fn sonobuoys_are_not_scored_kills_or_losses() {
     state.next_contact += 1;
     let buoy_entity = w.allocate_id();
     w.entities.insert(buoy_entity, harpoon_core::world::Entity {
+        rule_data:None,
         id: buoy_entity,
         side: Side::Red,
         class: "sonobuoy".into(),

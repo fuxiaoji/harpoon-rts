@@ -52,6 +52,22 @@ fn is_radar_sensor(sensor_id: &str) -> bool {
     sensor_id.starts_with("radar")
 }
 
+pub fn radar_emitting(e: &Entity) -> bool {
+    e.ext.get("emission.radar").copied().unwrap_or(1.0) > 0.5
+        && (!crate::rules::damage_runtime::marker(e)||e.ext.get("damage.power_lost").copied().unwrap_or(0.0)==0.0)
+}
+pub fn radar_operational(db:&Database,e:&Entity)->bool{
+    radar_emitting(e)&&e.systems.radar>0.05&&e.sensors.iter().any(|s|db.sensors.get(&s.sensor).is_some_and(|d|d.kind==SensorKind::Radar)&&!sensor_damaged(e,&s.sensor))
+}
+
+pub fn sensor_damaged(e:&Entity,id:&str)->bool{crate::rules::damage_runtime::marker(e)&&e.ext.get(&format!("damage.sensor.{id}")).copied().unwrap_or(0.0)>0.0}
+
+/// §5.2.8 depends on both units' heights. For an aircraft the database's
+/// nominal sensor mount/cruise height must not replace its actual altitude.
+pub fn observer_height(e:&Entity,def:&SensorDef)->f64 {
+    if e.kind==PlatformKind::Aircraft {e.altitude_m.max(0.0)}else{def.alt_m}
+}
+
 /// Effective detection range for `def` (mounted on `o`) against `t`.
 fn effective_range(
     db: &Database,
@@ -61,17 +77,18 @@ fn effective_range(
     weather_jam: f64,
     day_night: DayNight,
 ) -> Option<f64> {
-    let base = range_for_target(def, t.kind);
+    if sensor_damaged(o,&def.id)||(crate::rules::damage_runtime::marker(o)&&o.ext.get("damage.power_lost").copied().unwrap_or(0.0)>0.0&&def.kind!=SensorKind::Visual){return None;}
+    let base = range_for_target(def, t.combat_kind());
     if base <= 0.0 {
         return None;
     }
     let target_class = |e: &Entity| db.platforms.get(&e.class);
     let eff = match def.kind {
         SensorKind::Radar => {
-            if t.kind == PlatformKind::Sub {
+            if t.combat_kind() == PlatformKind::Sub {
                 return None;
             }
-            if o.systems.radar <= 0.05 {
+            if o.systems.radar <= 0.05 || !radar_emitting(o) {
                 return None;
             }
             // Air-search ranges already describe aircraft-sized targets; the
@@ -81,7 +98,7 @@ fn effective_range(
                 PlatformKind::Aircraft => 1.0,
                 _ => target_class(t).map(|c| c.rcs.factor()).unwrap_or(1.0),
             };
-            let horizon = horizon_nm(def.alt_m, t.current_alt_for_horizon());
+            let horizon = horizon_nm(observer_height(o,def), t.current_alt_for_horizon());
             (base * rcs).min(horizon) * (1.0 - weather_jam.clamp(0.0, 0.8))
                 * sensing_radar_modifier(def, t)
         }
@@ -90,7 +107,7 @@ fn effective_range(
             // sea-skimmers with active seekers.
             let emitter = match t.kind {
                 PlatformKind::Ship | PlatformKind::Aircraft | PlatformKind::Base => target_class(t)
-                    .map(|c| c.sensors.iter().any(|s| is_radar_sensor(s)))
+                    .map(|_| crate::rules::electronic_warfare::emitting(t) || radar_operational(db,t))
                     .unwrap_or(false),
                 PlatformKind::Missile => {
                     t.projectile.as_ref().map(|p| p.enabled).unwrap_or(false)
@@ -100,7 +117,7 @@ fn effective_range(
             if !emitter {
                 return None;
             }
-            let h = horizon_nm(def.alt_m, t.current_alt_for_horizon());
+            let h = horizon_nm(observer_height(o,def), t.current_alt_for_horizon());
             base.min(h * 1.5) * (1.0 - weather_jam.clamp(0.0, 0.8))
         }
         SensorKind::Visual => {
@@ -108,7 +125,7 @@ fn effective_range(
                 DayNight::Day => 1.0,
                 DayNight::Night => 0.5,
             };
-            let horizon = horizon_nm(def.alt_m, t.current_alt_for_horizon());
+            let horizon = horizon_nm(observer_height(o,def), t.current_alt_for_horizon());
             let visual_factor = target_class(t).map(|c| c.visual_factor).unwrap_or(1.0);
             (base * visual_factor * vis).min(horizon) * sensing_visual_modifier(o, t)
         }
@@ -118,7 +135,7 @@ fn effective_range(
             if t.kind != PlatformKind::Aircraft && t.kind != PlatformKind::Missile {
                 return None;
             }
-            let horizon = horizon_nm(def.alt_m, t.current_alt_for_horizon());
+            let horizon = horizon_nm(observer_height(o,def), t.current_alt_for_horizon());
             base.min(horizon) * sensing_visual_modifier(o, t)
         }
         SensorKind::SonarPassive => {
@@ -175,11 +192,12 @@ struct PendingEvent {
 }
 
 pub fn update_sensors(world: &mut World) {
-    if world.tick % SENSOR_INTERVAL_TICKS != 0 {
+    if !crate::rules::operations::active(world)&&world.tick % SENSOR_INTERVAL_TICKS != 0 {
         return;
     }
 
     let mut pending: Vec<PendingEvent> = Vec::new();
+    let mut radar_candidates=Vec::new();
 
     for side in [Side::Blue, Side::Red] {
         let observer_ids: Vec<EntityId> = world
@@ -204,16 +222,33 @@ pub fn update_sensors(world: &mut World) {
         let consider = |world: &World,
                             o: &Entity,
                             def: &SensorDef,
-                            dets: &mut BTreeMap<EntityId, DetObs>| {
+                            dets: &mut BTreeMap<EntityId, DetObs>,
+                            candidates:&mut Vec<(EntityId,String,EntityId)>| {
             for t in &targets {
+                // §5.2.8: intervening land blocks a sea-level radar line.
+                // Without elevation data do not invent airborne terrain masks.
+                if o.kind==PlatformKind::Ship && t.kind==PlatformKind::Ship && matches!(def.kind,SensorKind::Radar|SensorKind::Visual|SensorKind::Ir)
+                    && world.context.terrain.as_ref().is_some_and(|chart|chart.blocked(o.pos,t.pos)) {continue;}
                 let dist = o.pos.range_to(t.pos);
-                let Some(eff) =
-                    effective_range(&world.db, o, def, t, jam, world.day_night)
+                let strict=crate::rules::operations::active(world)&&def.kind==SensorKind::Radar;
+                let Some(mut eff) = (if strict {
+                    if sensor_damaged(o,&def.id)||o.systems.radar<=0.05||!radar_emitting(o){None}
+                    else{crate::rules::operations::radar_range(world,o,def,t).ok().filter(|r|*r>0.0)}
+                }else{effective_range(&world.db, o, def, t, jam, world.day_night)})
                 else {
                     continue;
                 };
+                if strict {
+                    // The strict range already includes source clutter and the horizon.
+                }else if let Some(combined)=crate::rules::electronic_warfare::combined_modifier(world,o,def,t) {
+                    eff=eff/sensing_radar_modifier(def,t).max(1e-9)*combined;
+                } else {eff *= crate::rules::electronic_warfare::range_modifier(world,o,def,t);}
                 if dist > eff {
                     continue;
+                }
+                if strict&&matches!(t.kind,PlatformKind::Aircraft|PlatformKind::Missile) {
+                    candidates.push((o.id,def.id.clone(),t.id));
+                    if !crate::rules::operations::radar_recognized(world,o,def,t){continue;}
                 }
                 let obs = match def.kind {
                     SensorKind::Esm => DetObs {
@@ -299,13 +334,14 @@ pub fn update_sensors(world: &mut World) {
                 if def.kind == SensorKind::SonarActive && !active_flag {
                     continue;
                 }
-                consider(world, &world.entities[oid], def, &mut dets);
+                consider(world, &world.entities[oid], def, &mut dets,&mut radar_candidates);
             }
         }
 
         // Phase B: apply to the side's contact book.
         pending.extend(apply_detections(world, side, &dets));
     }
+    crate::rules::operations::radar_clocks(world,&radar_candidates);
 
     // Active-sonar counter-detection (rules §5.4): the LISTENER hears the
     // ping — pinging exposes the pinger to every enemy passive set within
@@ -414,17 +450,21 @@ fn apply_detections(
     side: Side,
     dets: &BTreeMap<EntityId, DetObs>,
 ) -> Vec<PendingEvent> {
+    let v2=crate::rules::damage_runtime::active(world);
+    let v3=crate::rules::operations::active(world);
     let mut out: Vec<PendingEvent> = Vec::new();
 
     // Precompute per-target truth data (immutable phase).
     struct Update {
         tid: EntityId,
+        category: PlatformKind,
         truth_pos: Vec2,
         truth_course: f64,
         truth_speed: f64,
         class_name: Option<String>,
         is_incoming: bool,
         weapon_speed_kts: f64,
+        radar_only:bool,
     }
     let mut updates: Vec<(EntityId, &DetObs, Update)> = Vec::new();
     for (tid, obs) in dets {
@@ -441,12 +481,14 @@ fn apply_detections(
             obs,
             Update {
                 tid: *tid,
+                category: t.combat_kind(),
                 truth_pos: t.pos,
                 truth_course: t.course_deg,
                 truth_speed: t.speed_kts,
-                class_name: world.db.platforms.get(&t.class).map(|p| p.name.clone()),
+                class_name: if v3&&world.db.sensors.get(&obs.sensor).is_some_and(|d|d.kind==SensorKind::Radar){None}else{world.db.platforms.get(&t.class).map(|p|p.name.clone())},
                 is_incoming: t.kind == PlatformKind::Missile || t.kind == PlatformKind::Torpedo,
                 weapon_speed_kts: weapon_speed,
+                radar_only:v3&&world.db.sensors.get(&obs.sensor).is_some_and(|d|d.kind==SensorKind::Radar),
             },
         ));
     }
@@ -462,6 +504,9 @@ fn apply_detections(
 
             match existing {
                 Some(c) => {
+                    // Only a fresh detection may change the observed domain;
+                    // a submarine diving elsewhere does not update stale tracks.
+                    if v2 {c.category = upd.category;}
                     c.quality = (c.quality + 0.15).min(obs.quality_cap);
                     c.last_update_tick = world.tick;
                     c.bearing_only = obs.bearing_only;
@@ -471,13 +516,14 @@ fn apply_detections(
                     let q = c.quality;
                     let err = c.offset.scaled((1.0 - q) * (1.0 - q));
                     c.estimate = upd.truth_pos.add(err);
+                    if upd.radar_only {c.estimate=upd.truth_pos;}
                     let course_noise = (1.0 - q) * 40.0;
                     let mut rng = world
                         .rng
                         .derive(crate::rng::Rng::hash_tag(world.tick, upd.tid.0, "est_course"));
-                    c.est_course_deg =
+                    if !upd.radar_only {c.est_course_deg =
                         crate::geom::normalize_deg(upd.truth_course + rng.range(-course_noise, course_noise));
-                    c.est_speed_kts = upd.truth_speed * (1.0 - (1.0 - q) * 0.3);
+                    c.est_speed_kts = upd.truth_speed * (1.0 - (1.0 - q) * 0.3);}
                     let dist_now = upd.truth_pos.range_to(c.estimate);
                     let identified_now =
                         c.class_name.is_none() && (q >= 0.7 || dist_now < 6.0);
@@ -504,11 +550,11 @@ fn apply_detections(
                     let mut c = Contact {
                         id: cid,
                         about: *tid,
-                        category: world.entities[tid].kind,
+                        category: world.entities[tid].combat_kind(),
                         class_name: None,
                         estimate: Vec2::zero(),
-                        est_course_deg: upd.truth_course,
-                        est_speed_kts: upd.truth_speed,
+                        est_course_deg: if upd.radar_only{0.0}else{upd.truth_course},
+                        est_speed_kts: if upd.radar_only{0.0}else{upd.truth_speed},
                         bearing_only: obs.bearing_only,
                         quality: q,
                         last_update_tick: world.tick,
@@ -531,12 +577,16 @@ fn apply_detections(
                     } else {
                         let err = offset.scaled((1.0 - q) * (1.0 - q));
                         c.estimate = upd.truth_pos.add(err);
+                        if upd.radar_only {c.estimate=upd.truth_pos;}
                     }
                     state.contacts.insert(cid, c);
                 }
             }
         }
     }
+
+    let radar_targets:Vec<_>=updates.iter().filter(|(_,_,u)|u.radar_only).map(|(id,_,_)|*id).collect();
+    crate::rules::operations::update_radar_motion(world,side,&radar_targets);
 
     // Emit events (needs immutable world access).
     for (tid, _obs, upd) in &updates {
@@ -645,7 +695,8 @@ pub fn chaff_breaks_lock(world: &mut World, unit: EntityId) {
 /// conditions so the map rings match what the referee actually uses.
 pub fn nominal_ranges(db: &Database, o: &crate::world::Entity, inst: &crate::world::SensorInstance) -> (Option<f64>, Option<f64>, Option<f64>) {
     let Some(def) = db.sensors.get(&inst.sensor) else { return (None, None, None) };
-    if o.systems.radar <= 0.05 && matches!(def.kind, SensorKind::Radar) {
+    if sensor_damaged(o,&inst.sensor)||(crate::rules::damage_runtime::marker(o)&&o.ext.get("damage.power_lost").copied().unwrap_or(0.0)>0.0&&def.kind!=SensorKind::Visual){return (None,None,None);}
+    if (o.systems.radar <= 0.05 || !radar_emitting(o)) && matches!(def.kind, SensorKind::Radar) {
         return (None, None, None);
     }
     if o.systems.sonar <= 0.05 && matches!(def.kind, SensorKind::SonarPassive | SensorKind::SonarActive) {
@@ -654,7 +705,7 @@ pub fn nominal_ranges(db: &Database, o: &crate::world::Entity, inst: &crate::wor
     if def.kind == SensorKind::SonarActive && !inst.active {
         return (None, None, None);
     }
-    let horizon_to = |t_alt: f64| horizon_nm(def.alt_m, t_alt);
+    let horizon_to = |t_alt: f64| horizon_nm(observer_height(o,def), t_alt);
     let (mut a, mut sf, mut sb) = (None, None, None);
     if def.air_range_nm > 0.0 {
         let v = def.air_range_nm.min(horizon_to(6000.0));

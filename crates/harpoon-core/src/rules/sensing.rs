@@ -120,6 +120,7 @@ pub fn db() -> Database {
     db.platforms.insert(
         JAMMER_CLASS.to_string(),
         PlatformClass {
+            rule_data:None,
             id: JAMMER_CLASS.to_string(),
             name: "Fighter-Jammer (ECM)".to_string(),
             kind: PlatformKind::Aircraft,

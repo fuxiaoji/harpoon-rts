@@ -9,6 +9,7 @@ use crate::world::{World, TICK_SECONDS};
 pub fn update_movement(world: &mut World) {
     let dt = TICK_SECONDS;
     let ids: Vec<EntityId> = world.entities.keys().copied().collect();
+    let mut blocked=Vec::new();
 
     for id in ids {
         let Some(e) = world.entities.get(&id) else { continue };
@@ -32,7 +33,8 @@ pub fn update_movement(world: &mut World) {
         // Waypoint march.
         if let Some(wp) = e.waypoints.front().copied() {
             let dist = e.pos.range_to(wp);
-            if dist < 0.1 {
+            let safe_to_advance=e.waypoints.get(1).is_none_or(|next|world.context.terrain.as_ref().is_none_or(|t|!matches!(e.kind,PlatformKind::Ship|PlatformKind::Sub)||!t.blocked(e.pos,*next)));
+            if dist < 0.1 && safe_to_advance {
                 e.waypoints.pop_front();
                 if let Some(next) = e.waypoints.front().copied() {
                     e.ordered_course_deg = e.pos.bearing_to(next);
@@ -53,15 +55,25 @@ pub fn update_movement(world: &mut World) {
 
         // Turn at bounded rate.
         let diff = angle_diff(e.course_deg, e.ordered_course_deg);
-        let max_turn = turn_rate * dt;
-        e.course_deg = normalize_deg(e.course_deg + diff.clamp(-max_turn, max_turn));
+        let v2=crate::rules::damage_runtime::marker(e);
+        let bridge=crate::rules::damage_runtime::bridge_holds(e,world.tick);
+        let disabled=v2&&e.ext.get("damage.rudder_disabled").copied().unwrap_or(0.0)>0.0;
+        let max_turn = turn_rate * dt * if disabled{1.0/3.0}else{1.0};
+        if bridge{e.course_deg=e.ext.get("damage.bridge_course").copied().unwrap_or(e.course_deg);}
+        else if v2&&e.ext.get("damage.rudder_jammed").copied().unwrap_or(0.0)>0.0{
+            e.course_deg=normalize_deg(e.course_deg+e.ext.get("damage.rudder_rate").copied().unwrap_or(0.0)*dt);
+        }else{e.course_deg = normalize_deg(e.course_deg + diff.clamp(-max_turn, max_turn));}
 
         // Accelerate/decelerate (decelerate faster than accelerate).
+        if !e.waypoints.is_empty() && angle_diff(e.course_deg,e.ordered_course_deg).abs()<5.0 {
+            if let Some(speed)=e.ext.remove("terrain.resume_speed") {e.ordered_speed_kts=speed;}
+        }
         let cap = e.max_speed(&world.db);
         let target = e.ordered_speed_kts.clamp(0.0, cap);
         let delta = target - e.speed_kts;
         let limit = if delta < 0.0 { accel * 3.0 * dt } else { accel * dt };
         e.speed_kts = (e.speed_kts + delta.clamp(-limit, limit)).max(0.0);
+        if bridge{e.speed_kts=e.ext.get("damage.bridge_speed").copied().unwrap_or(e.speed_kts).min(cap);}
 
         // Vertical motion.
         if e.kind == PlatformKind::Aircraft {
@@ -69,8 +81,23 @@ pub fn update_movement(world: &mut World) {
             e.altitude_m = (e.altitude_m + climb).max(15.0);
         }
         if e.kind == PlatformKind::Sub {
+            if let Some(forced)=crate::rules::damage_runtime::forced_depth(e){e.ordered_depth_m=e.ordered_depth_m.min(forced);}
             let drop = (e.ordered_depth_m - e.depth_m).clamp(-3.0 * dt, 3.0 * dt);
-            e.depth_m = (e.depth_m + drop).clamp(10.0, {
+            let surface=v2&&e.ordered_depth_m==0.0&&e.depth_m>0.0&&e.depth_m<=25.0;
+            let diving=v2&&e.depth_m==0.0&&e.ordered_depth_m>0.0;
+            let broach=v2&&e.ext.get("damage.broach_until").copied().unwrap_or(0.0)>world.tick as f64;
+            let mut depth=e.depth_m+drop;
+            if surface{
+                e.ext.remove("nav.dive_progress");
+                let progress=e.ext.entry("nav.surface_progress".into()).or_default();*progress+=dt;
+                depth=if *progress>=crate::rules::damage_runtime::surface_seconds() as f64{0.0}else{depth.max(1.0)};
+            }else if diving&&!broach{
+                e.ext.remove("nav.surface_progress");
+                let progress=e.ext.entry("nav.dive_progress".into()).or_default();*progress+=dt;
+                if *progress<crate::rules::damage_runtime::surface_seconds() as f64{depth=0.0;}
+            }else if v2{e.ext.remove("nav.surface_progress");e.ext.remove("nav.dive_progress");}
+            if broach{depth=0.0;}
+            e.depth_m = depth.clamp(if v2{0.0}else{10.0}, {
                 let md = world.db.platforms.get(&e.class).map(|c| c.max_depth_m).unwrap_or(200.0);
                 md.max(10.0)
             });
@@ -78,7 +105,17 @@ pub fn update_movement(world: &mut World) {
 
         // Integrate position.
         let v = e.speed_kts * KTS_TO_NM_PER_S * dt;
-        e.pos = e.pos.advanced(e.course_deg, v);
+        let next=e.pos.advanced(e.course_deg,v);
+        if v>1e-12 && matches!(e.kind,PlatformKind::Ship|PlatformKind::Sub) && world.context.terrain.as_ref().is_some_and(|t|t.blocked(e.pos,next)) {
+            if !e.waypoints.is_empty() {e.ext.entry("terrain.resume_speed".into()).or_insert(e.ordered_speed_kts);}
+            e.speed_kts=0.0;e.ordered_speed_kts=0.0;e.station=None;
+            let last=e.ext.get("terrain.last_block").copied().unwrap_or(-100000.0);
+            if world.tick as f64-last>=30.0 {blocked.push((e.side,e.id));e.ext.insert("terrain.last_block".into(),world.tick as f64);}
+        } else {e.pos=next;}
+    }
+    for (side,id) in blocked {
+        world.emit(crate::events::EventKind::RulesEvent {domain:"navigation".into(),rule:"land_stop".into(),side:Some(side),unit:Some(id),contact:None,
+            detail:"Charted coast intersects swept movement; stop before land and plot a safe sea route. Navigation guard, not a grounding damage roll.".into()},crate::events::Visibility::Side(side));
     }
 }
 

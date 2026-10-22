@@ -202,8 +202,10 @@ fn advance_cursor(cursor: &mut u64, observation: &Observation) {
 fn command_unit(command: &Command) -> EntityId {
     match command {
         Command::SetCourse { unit, .. }
+        | Command::SetUnitAutomation{unit,..}
         | Command::SetSpeed { unit, .. }
         | Command::SetDepth { unit, .. }
+        | Command::SetTorpedoRun {unit,..}
         | Command::SetAltitude { unit, .. }
         | Command::Goto { unit, .. }
         | Command::Stop { unit }
@@ -217,7 +219,9 @@ fn command_unit(command: &Command) -> EntityId {
         | Command::Fire { unit, .. }
         | Command::DeployChaff { unit }
         | Command::LaunchAircraft { unit, .. }
-        | Command::RecoverAircraft { unit } => *unit,
+        | Command::RecoverAircraft { unit }
+        | Command::ReturnToBase {unit} => *unit,
+        Command::SetRadar {unit, ..} | Command::SetJamming {unit,..} | Command::SetThrottle {unit,..} | Command::DamageControl {unit,..} | Command::RetaskAircraft {unit, ..} | Command::SetEngagementPolicy {unit, ..} => *unit,
     }
 }
 

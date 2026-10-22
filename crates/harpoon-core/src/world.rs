@@ -125,6 +125,8 @@ pub struct StationState {
 /// Data attached to Missile/Torpedo entities.
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct ProjectileData {
+    #[serde(default,skip_serializing_if="Option::is_none")]
+    pub targeted_sensor:Option<String>,
     pub weapon: String,
     /// Truth target (referee-only).
     pub target: Option<EntityId>,
@@ -146,6 +148,8 @@ pub struct Entity {
     pub id: EntityId,
     pub side: Side,
     pub class: String,
+    #[serde(default,skip_serializing_if="Option::is_none")]
+    pub rule_data:Option<crate::rules::damage_runtime::PlatformDamage>,
     pub name: String,
     pub kind: PlatformKind,
     pub pos: Vec2,
@@ -198,6 +202,9 @@ pub struct Entity {
 }
 
 impl Entity {
+    pub fn combat_kind(&self)->PlatformKind{
+        if crate::rules::damage_runtime::marker(self)&&self.kind==PlatformKind::Sub&&self.depth_m==0.0{PlatformKind::Ship}else{self.kind}
+    }
     pub fn class_def<'a>(&self, db: &'a Database) -> Option<&'a PlatformClass> {
         db.platforms.get(&self.class)
     }
@@ -218,7 +225,9 @@ impl Entity {
             }
             _ => class.max_speed_kts,
         };
-        cap * self.systems.mobility
+        let cap=crate::rules::flight_profiles::speed_cap(self).map(|v|v.min(cap)).unwrap_or(cap);
+        let speed=cap * self.systems.mobility * crate::rules::damage_runtime::speed_factor(self);
+        if crate::rules::damage_runtime::marker(self)&&self.ext.get("damage.major_casualty").copied().unwrap_or(0.0)>0.0 {speed.min(15.0)}else{speed}
     }
 
     pub fn current_alt_for_horizon(&self) -> f64 {
@@ -270,6 +279,10 @@ impl Contact {
 pub struct SideState {
     pub contacts: BTreeMap<ContactId, Contact>,
     pub next_contact: u32,
+    /// Identity already observed by this side and retained for the lifetime
+    /// of a TDL shadow. Never populated from an unseen enemy platform card.
+    #[serde(default)]
+    pub tdl_identifications: BTreeMap<EntityId,(i64,String)>,
     /// Per-side battle-damage assessment for tracked enemy entities. This is
     /// derived only from hits the side actually observed (BDA), never from
     /// hidden truth.
@@ -308,7 +321,7 @@ pub struct VictoryResult {
     pub blue_points: f64,
     #[serde(default)]
     pub red_points: f64,
-    /// True when per-class kill weights decided the comparison.
+    /// True when per-class kill weights or authored exercise points decided the comparison.
     #[serde(default)]
     pub scored: bool,
     /// Kills per platform class ("ship"/"sub"/"aircraft"/"base").
@@ -335,6 +348,9 @@ pub struct SimStats {
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct World {
     pub db: Database,
+    /// Missing from historical saves: keep their original adjudication profile.
+    #[serde(default,skip_serializing_if="crate::rules::damage_runtime::Runtime::legacy_untouched")]
+    pub rules: crate::rules::damage_runtime::Runtime,
     pub tick: i64,
     pub seed: u64,
     pub rng: Rng,

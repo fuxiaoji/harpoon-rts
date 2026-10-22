@@ -212,6 +212,7 @@ fn update_towed_arrays(world: &mut World) {
     let mut transitions: Vec<(EntityId, Side, bool, f64)> = Vec::new();
     for id in ids {
         let Some(e) = world.entity_mut(id) else { continue };
+
         let was = tow_deployed(e);
         let speed = e.speed_kts;
         let mut timer = e.ext.get(EXT_TOW_TIMER).copied().unwrap_or(0.0);
@@ -316,16 +317,17 @@ fn update_diesel_batteries(world: &mut World) {
         let half_max = world.entities[&id].max_speed(&world.db) * 0.5;
         let Some(e) = world.entity_mut(id) else { continue };
 
+        let capacity=if crate::rules::damage_runtime::marker(e){e.ext.get("damage.battery_capacity").copied().unwrap_or(BATTERY_FULL)}else{BATTERY_FULL};
         let mut battery = e
             .ext
             .get(EXT_BATTERY)
             .copied()
-            .unwrap_or(BATTERY_FULL)
-            .clamp(0.0, BATTERY_FULL);
+            .unwrap_or(capacity)
+            .clamp(0.0, capacity);
         if e.depth_m > SNORKEL_DEPTH_M {
             battery = (battery - BATTERY_DRAIN_PER_S).max(0.0);
         } else {
-            battery = (battery + BATTERY_CHARGE_PER_S).min(BATTERY_FULL);
+            battery = (battery + BATTERY_CHARGE_PER_S).min(capacity);
         }
         e.ext.insert(EXT_BATTERY.to_string(), battery);
 
@@ -482,6 +484,7 @@ fn deploy_sonobuoys(world: &mut World) {
         ext.insert(EXT_EXPIRES_AT.to_string(), (now + lifetime_s) as f64);
 
         let buoy = Entity {
+            rule_data:None,
             id,
             side: drop.side,
             class: class.id.clone(),

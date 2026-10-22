@@ -9,12 +9,16 @@
 //! files (world/sim/sensors/weapons) only call these pre-agreed hooks.
 
 pub mod aaw;
+pub mod operations;
 pub mod aircombat;
 pub mod asw;
 pub mod damage_ext;
 pub mod damage_tables;
+pub mod damage_runtime;
 pub mod db_fleets;
 pub mod firectl;
+pub mod electronic_warfare;
+pub mod flight_profiles;
 pub mod sensing;
 pub mod strike;
 pub mod torpedoes;
@@ -23,13 +27,14 @@ pub mod unguided;
 /// Per-tick rules pass (battery, buoy activation, damage control, ...).
 pub fn step(world: &mut crate::world::World) {
     asw::step(world);
-    damage_ext::step(world);
+    if damage_runtime::active(world) {damage_runtime::step(world);} else {damage_ext::step(world);}
     aircombat::step(world);
     strike::step(world);
     firectl::step(world);
     torpedoes::step(world);
     unguided::step(world);
     sensing::step(world);
+    electronic_warfare::trace(world);
 }
 
 /// Extra database entries merged at load.

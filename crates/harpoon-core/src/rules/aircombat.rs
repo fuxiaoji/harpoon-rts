@@ -266,6 +266,9 @@ fn process_merges(world: &mut World) {
             end_merge(world, id, partner, passes, "aircraft_destroyed");
             continue;
         }
+        if other.altitude_m<=60.0 || world.entity(id).is_some_and(|e|e.altitude_m<=60.0) {
+            end_merge(world,id,partner,passes,"vlow_no_dogfight");continue;
+        }
 
         let fuel_a = world.entity(id).and_then(|e| fuel_fraction(world, e));
         let fuel_b = fuel_fraction(world, other);
@@ -508,6 +511,7 @@ fn start_merges(world: &mut World) {
             e.alive
                 && e.kind == PlatformKind::Aircraft
                 && e.fire_on
+                  && e.altitude_m > 60.0
                 && !is_merged(e)
                 && e.ext.get(KEY_MERGE_COOLDOWN).copied().unwrap_or(0.0) <= 0.0
         })
@@ -537,6 +541,7 @@ fn start_merges(world: &mut World) {
                 || other.kind != PlatformKind::Aircraft
                 || other.side == side
                 || !other.fire_on
+                  || other.altitude_m <= 60.0
                 || is_merged(other)
                 || other.ext.get(KEY_MERGE_COOLDOWN).copied().unwrap_or(0.0) > 0.0
             {
@@ -605,6 +610,7 @@ mod tests {
         db.platforms.insert(
             "fighter".into(),
             PlatformClass {
+                rule_data:None,
                 id: "fighter".into(),
                 name: "Test Fighter".into(),
                 kind: PlatformKind::Aircraft,
@@ -739,6 +745,17 @@ mod tests {
         let mut far = duel(12, 7.0, 0.0);
         advance(&mut far, 1);
         assert!(far.entities.values().all(|e| !is_merged(e)));
+    }
+
+    #[test]
+    fn vlow_blocks_merge_and_ends_an_existing_dogfight() {
+        let mut w=duel(12,3.0,0.0);
+        for e in w.entities.values_mut(){e.altitude_m=50.0;}
+        advance(&mut w,1);assert!(w.entities.values().all(|e|!is_merged(e)));
+        for e in w.entities.values_mut(){e.altitude_m=3000.0;}
+        advance(&mut w,1);assert!(w.entities.values().all(is_merged));
+        w.entities.values_mut().next().unwrap().altitude_m=60.0;
+        advance(&mut w,1);assert!(w.entities.values().all(|e|!is_merged(e)));
     }
 
     #[test]

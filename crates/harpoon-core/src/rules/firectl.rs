@@ -451,7 +451,7 @@ fn inject_missing(world: &mut World, side: Side, tdl: &[EntityId]) -> usize {
                 id: cid,
                 about,
                 category: sh.category,
-                class_name: None,
+                class_name: state.tdl_identifications.get(&about).filter(|(tick,_)|world.tick-*tick<=SHADOW_TTL_S).map(|(_,name)|name.clone()),
                 estimate,
                 est_course_deg: sh.course_deg,
                 est_speed_kts: sh.speed_kts,
@@ -494,6 +494,11 @@ fn tdl_sync(world: &mut World) {
     let bucket = tick / TDL_INTERVAL_S;
 
     for side in [Side::Blue, Side::Red] {
+        let state=&mut world.sides[side.index()];
+        state.tdl_identifications.retain(|_,(seen,_)|tick-*seen<=SHADOW_TTL_S);
+        for c in state.contacts.values().filter(|c|!c.stale) {
+            if let Some(name)=&c.class_name {state.tdl_identifications.insert(c.about,(tick,name.clone()));}
+        }
         let own: Vec<EntityId> = world
             .entities
             .values()
@@ -898,6 +903,7 @@ mod tests {
         );
 
         w.tick = 60;
+        w.sides[Side::Blue.index()].contacts.get_mut(&cid).unwrap().class_name=Some("Already identified MGB".into());
         step(&mut w);
         assert!(shadow_get(w.entity(id_of(&w, "BLUE DDG")).unwrap(), red_mgb).is_some());
 
@@ -939,6 +945,8 @@ mod tests {
             .clone();
         assert_ne!(injected.id, cid, "id conflict must use next_contact");
         assert_eq!(injected.sensors, vec!["tdl_shared".to_string()]);
+        assert_eq!(injected.class_name.as_deref(),Some("Already identified MGB"));
+        assert!(w.sides[Side::Blue.index()].contacts.get(&cid).unwrap().class_name.is_none(),"unidentified different target must not inherit another target's class");
         assert!((injected.quality - 0.54).abs() < 1e-9);
         assert!(injected.estimate.range_to(Vec2::new(30.0, 0.0)) < 1e-9);
     }

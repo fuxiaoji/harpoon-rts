@@ -51,6 +51,7 @@ pub fn fire_control_scan(world: &mut World) {
         .values()
         .filter(|e| {
             e.alive
+                && (!crate::rules::damage_runtime::active(world)||crate::rules::damage_runtime::weapons_operational(e))
                 && !e.kind.is_projectile()
                 && !e.weapons.is_empty()
                 && e.systems.fire_control > 0.05
@@ -78,7 +79,11 @@ pub fn fire_control_scan(world: &mut World) {
             target = pick_free_target(world, &shooter);
         }
         let Some((contact_id, target_id)) = target else { continue };
-        let Some(target_kind) = world.entity(target_id).map(|t| t.kind) else { continue };
+        let Some(target_kind) = world.entity(target_id).map(|t| t.combat_kind()) else { continue };
+        let policy_cap=world.entity(shooter.id).and_then(|s|s.ext.get("doctrine.max_in_flight")).copied().unwrap_or(0.0) as usize;
+        let committed=committed_air_rounds(world,shooter.side,target_id);
+        if matches!(target_kind,PlatformKind::Aircraft|PlatformKind::Missile) && policy_cap>0 && committed>=policy_cap {continue;}
+        if world.entity(shooter.id).is_some_and(|s|s.ext.get("doctrine.air_only")==Some(&1.0)) && !matches!(target_kind,PlatformKind::Aircraft|PlatformKind::Missile) {continue;}
 
         // Find the first weapon that can legally engage this target now.
         let mounts: Vec<(usize, WeaponDef, u8, u16, f64)> = {
@@ -88,15 +93,17 @@ pub fn fire_control_scan(world: &mut World) {
                 .enumerate()
                 .filter_map(|(i, m)| {
                     let def = world.db.weapons.get(&m.weapon)?.clone();
+                    if crate::rules::damage_runtime::active(world)&&crate::rules::damage_runtime::prh_generation(&def)>0&&crate::rules::damage_runtime::active_target_radar(world,target_id).is_none(){return None;}
                     Some((i, def, m.mounts, m.ammo, m.cooldown_s))
                 })
                 .collect()
         };
 
         for (idx, mut def, mounts_n, ammo, cooldown) in mounts {
-            if ammo == 0 || cooldown > 0.0 {
+            if mounts_n==0 || ammo == 0 || cooldown > 0.0 {
                 continue;
             }
+            if crate::rules::damage_runtime::active(world)&&world.entity(shooter.id).is_some_and(|e|e.kind==PlatformKind::Aircraft&&e.altitude_m<crate::rules::damage_runtime::minimum_release_altitude(&def)){continue;}
             // Weapon-target compatibility gate: a weapon only engages target
             // kinds its `targets` table admits (e.g. SLCM never shoots at
             // ships; SAM never at surface contacts).
@@ -104,6 +111,8 @@ pub fn fire_control_scan(world: &mut World) {
                 continue;
             }
             let dist = shooter.pos.range_to(world.entity(target_id).map(|t| t.pos).unwrap_or_default());
+            if crate::rules::operations::active(world)&&!crate::rules::operations::sam_pd_legal(&def,dist){continue;}
+            if crate::rules::operations::active(world)&&!crate::rules::operations::sam_reaction_ready(world,shooter.id,target_id,&def){continue;}
             let shooter_alt_m = shooter.altitude_m;
             let engaged = match def.kind {
                 WeaponKind::Ciws => false, // CIWS engages inside the terminal chain
@@ -165,6 +174,7 @@ pub fn fire_control_scan(world: &mut World) {
                 }
                 WeaponKind::Sam | WeaponKind::Aam => {
                     let mut salvo = def.salvo;
+                    if policy_cap>0 {salvo=salvo.min(policy_cap.saturating_sub(committed) as u8);}
                     if def.kind == WeaponKind::Sam && def.directors > 0 {
                         // SAM fire-control channels (§6.1 SAM Salvo Summary;
                         // §8.1.1 step 8, PDF p. 81): each director controls
@@ -338,6 +348,10 @@ fn pick_free_target(world: &World, shooter: &ShooterCtx) -> Option<(ContactId, E
             if e.kind == PlatformKind::Torpedo {
                 return None;
             }
+            let policy=world.entity(shooter.id)?;
+            if policy.ext.get("doctrine.air_only")==Some(&1.0) && !matches!(e.kind,PlatformKind::Aircraft|PlatformKind::Missile) {return None;}
+            let cap=policy.ext.get("doctrine.max_in_flight").copied().unwrap_or(0.0) as usize;
+            if cap>0 && matches!(e.kind,PlatformKind::Aircraft|PlatformKind::Missile) && committed_air_rounds(world,shooter.side,e.id)>=cap {return None;}
             // Sonobuoys are expendable sensors; weapons-free never spends
             // missiles on them even though they resolve as surface contacts.
             if e.class == crate::rules::asw::SONOBUOY_CLASS {
@@ -348,6 +362,11 @@ fn pick_free_target(world: &World, shooter: &ShooterCtx) -> Option<(ContactId, E
         .collect();
     candidates.sort_by(|a, b| a.0.partial_cmp(&b.0).unwrap_or(std::cmp::Ordering::Equal));
     candidates.first().map(|(_, c, e)| (*c, *e))
+}
+
+fn committed_air_rounds(world:&World,side:Side,target:EntityId)->usize {
+    world.entities.values().filter(|e|e.alive && e.projectile.as_ref().is_some_and(|p|p.launched_by_side==side && p.target==Some(target)
+        && world.db.weapons.get(&p.weapon).is_some_and(|w|matches!(w.kind,WeaponKind::Sam|WeaponKind::Aam)))).count()
 }
 
 /// Gun-line: instant adjudication with tracer event. Hit chance follows the
@@ -407,12 +426,17 @@ fn gun_salvo(
         (range_base, band)
     };
     let pk = range_base * def.pk * aspect_mult;
-    let mut rng = world.scope_rng(shooter_id, "gun");
+    let v2=crate::rules::damage_runtime::active(world);
+    let identity=if v2{crate::rules::damage_runtime::event_identity(world,shooter_id,&format!("gun:{}",def.id))}else{String::new()};
+    let mut rng = if v2{world.rng.derive(crate::Rng::hash_tag(world.tick,shooter_id.0,&identity))}else{world.scope_rng(shooter_id,"gun")};
     let mut hits = 0u8;
-    for _ in 0..rounds {
-        if rng.chance(pk) {
+    for shot in 0..rounds {
+        let roll=rng.next_f64();let hit=roll<pk;
+        if v2{world.emit(EventKind::RulesEvent{domain:"weapons".into(),rule:"gun_roll".into(),side:Some(side),unit:Some(shooter_id),contact:Some(contact_id),detail:serde_json::json!({"event":identity,"shot":shot,"uniform":roll,"probability":pk,"hit":hit}).to_string()},Visibility::Referee);}
+        if hit {
             hits += 1;
-            damage::apply_hit_from(world, target_id, def, false, side);
+            if v2{crate::rules::damage_runtime::queue(world,target_id,def,false,Some(rel_deg),Some(side),Some(format!("{identity}:shot:{shot}")));}
+            else{damage::apply_hit_from(world, target_id, def, false, side);}
         }
     }
     world.emit(
@@ -439,7 +463,13 @@ pub fn launch(
     aim_override: Option<Vec2>,
 ) -> Option<EntityId> {
     let shooter = world.entity(shooter_id)?;
+    if crate::rules::damage_runtime::active(world)&&!crate::rules::damage_runtime::weapons_operational(shooter){return None;}
+    if crate::rules::damage_runtime::active(world)&&shooter.kind==PlatformKind::Aircraft&&shooter.altitude_m<crate::rules::damage_runtime::minimum_release_altitude(def){return None;}
     let side = shooter.side;
+    let torpedo_deep=shooter.ext.get(&format!("weapon.{}.deep",def.id))==Some(&1.0);
+    let targeted_sensor=if crate::rules::damage_runtime::active(world)&&crate::rules::damage_runtime::prh_generation(def)>0{
+        Some(crate::rules::damage_runtime::active_target_radar(world,target?)?)
+    }else{None};
     let start = shooter.pos;
     let aim = aim_override
         .or(target.and_then(|t| world.entity(t)).map(|t| t.pos))
@@ -452,7 +482,7 @@ pub fn launch(
     };
     let course = start.bearing_to(aim);
     let alt = if matches!(def.guidance, Guidance::SeaSkimmer) {
-        8.0
+        if crate::rules::damage_runtime::active(world){crate::rules::damage_runtime::cruise_altitude(def)}else{8.0}
     } else if matches!(def.guidance, Guidance::HomingAir) {
         target
             .and_then(|t| world.entity(t))
@@ -465,6 +495,7 @@ pub fn launch(
         id: eid,
         side,
         class: def.id.clone(),
+        rule_data:None,
         name: def.name.clone(),
         kind,
         pos: start.advanced(course, 0.03),
@@ -492,12 +523,13 @@ pub fn launch(
         endurance_s: None,
         burn_s: 0.0,
         flooding_s: 0.0,
-            ext: Default::default(),
+            ext:if crate::rules::damage_runtime::active(world){std::collections::BTreeMap::from([("rules.v2".into(),1.0),("torpedo.deep".into(),if torpedo_deep{1.0}else{0.0})])}else{Default::default()},
         deck: None,
         mission: None,
         station: None,
         last_emit_tick: world.tick,
         projectile: Some(crate::world::ProjectileData {
+            targeted_sensor,
             weapon: def.id.clone(),
             target,
             aim,
@@ -543,13 +575,14 @@ pub fn manual_fire(world: &mut World, side: Side, unit: EntityId, contact: Conta
     // shot (§8.4.2); a normal fire-control solution needs a live target.
     let Some(contact_rec) = world.contact(side, contact).cloned() else { return false };
     let Some(e) = world.entity(unit) else { return false };
+    if crate::rules::damage_runtime::active(world)&&!crate::rules::damage_runtime::weapons_operational(e){return false;}
     if e.side != side {
         return false;
     }
     let Some(idx) = e.weapons.iter().position(|m| m.weapon == weapon_id) else { return false; };
     let (ammo_ok, cooldown_ok, ammo) = {
         let m = &e.weapons[idx];
-        (m.ammo > 0, m.cooldown_s <= 0.0, m.ammo)
+        (m.ammo > 0&&m.mounts>0, m.cooldown_s <= 0.0, m.ammo)
     };
     if !ammo_ok || !cooldown_ok {
         return false;
@@ -558,11 +591,14 @@ pub fn manual_fire(world: &mut World, side: Side, unit: EntityId, contact: Conta
     if !target.alive {
         return false;
     }
-    let (eid, target_pos, target_kind) = (target.id, target.pos, target.kind);
+    let (eid, target_pos, target_kind) = (target.id, target.pos, target.combat_kind());
     let mut def = match world.db.weapons.get(weapon_id) {
         Some(d) => d.clone(),
         None => return false,
     };
+    if crate::rules::damage_runtime::active(world)&&e.kind==PlatformKind::Aircraft&&e.altitude_m<crate::rules::damage_runtime::minimum_release_altitude(&def){return false;}
+    if crate::rules::damage_runtime::active(world)&&crate::rules::damage_runtime::prh_generation(&def)>0&&crate::rules::damage_runtime::active_target_radar(world,eid).is_none(){return false;}
+    if !def.targets.accepts(target_kind) {return false;}
 
     // Fire-control solution gate (§6.3.1 — a firing solution requires a
     // quality contact). Bearing-only launch (§6.3.6 / §8.4.2) is the
@@ -584,6 +620,8 @@ pub fn manual_fire(world: &mut World, side: Side, unit: EntityId, contact: Conta
     if firing_range > def.range_nm || firing_range < def.min_range_nm {
         return false;
     }
+    if crate::rules::operations::active(world)&&!crate::rules::operations::sam_pd_legal(&def,firing_range){return false;}
+    if crate::rules::operations::active(world)&&!crate::rules::operations::sam_reaction_ready(world,unit,eid,&def){return false;}
 
     let n = rounds.min((ammo as u8).min(def.salvo.max(1) * 2));
 
@@ -697,9 +735,11 @@ fn fly_toward(e: &mut Entity, aim: Vec2, dt: f64) {
     // across the terminal radius indefinitely, reversing course every tick.
     let v = (e.speed_kts * KTS_TO_NM_PER_S * dt).min(e.pos.range_to(aim));
     e.pos = e.pos.advanced(brg, v);
+    if crate::rules::damage_runtime::marker(e){*e.ext.entry("flight.distance_nm".into()).or_default()+=v;}
 }
 
-fn runout(_world: &World, def: &WeaponDef, data: &crate::world::ProjectileData) -> bool {
+fn runout(world: &World, id:EntityId, def: &WeaponDef, data: &crate::world::ProjectileData) -> bool {
+    if crate::rules::damage_runtime::active(world){return world.entity(id).is_none_or(|e|e.ext.get("flight.distance_nm").copied().unwrap_or(0.0)>def.range_nm);}
     let range_time_s = if def.speed_kts > 0.0 {
         def.range_nm / def.speed_kts * 3600.0
     } else {
@@ -720,7 +760,8 @@ fn remove_projectile(world: &mut World, id: EntityId) {
 fn advance_sea_skimmer(world: &mut World, id: EntityId, def: WeaponDef, mut data: crate::world::ProjectileData) {
     let dt = TICK_SECONDS;
     data.live_s += dt;
-    if !data.enabled && data.live_s > 4.0 {
+    let prh=if crate::rules::damage_runtime::active(world){crate::rules::damage_runtime::prh_generation(&def)}else{0};
+    if prh==0&&!data.enabled && data.live_s > 4.0 {
         data.enabled = true;
     }
     let Some(target_id) = data.target else {
@@ -735,14 +776,22 @@ fn advance_sea_skimmer(world: &mut World, id: EntityId, def: WeaponDef, mut data
             e.projectile = Some(data.clone());
         }
         let at = world.entity(id).map(|e| e.pos.range_to(data.aim)).unwrap_or(f64::MAX);
-        if at < 0.2 || runout(world, &def, &data) {
+        if at < 0.2 || runout(world, id, &def, &data) {
             remove_projectile(world, id);
         }
         return;
     };
 
-    // Decoyed missiles chase the decoy point.
-    let aim = match (data.decoyed, data.decoy_point) {
+    let mut radar_on=prh==0||data.targeted_sensor.as_ref().is_some_and(|sensor|sensors::radar_emitting(&target)&&target.systems.radar>0.05&&!sensors::sensor_damaged(&target,sensor));
+    if prh>=3&&!radar_on{
+        if let Some(sensor)=crate::rules::damage_runtime::active_target_radar(world,target_id){data.targeted_sensor=Some(sensor);radar_on=true;}
+    }
+    if prh>0&&radar_on{data.aim=target.pos;}
+    // PRH retains the last emitter position, rather than following silent
+    // moving ships through referee truth. Generation1 goes ballistic.
+    let aim = if prh>0&&!radar_on{
+        if prh==1{world.entity(id).map(|e|e.pos.advanced(e.course_deg,def.range_nm)).unwrap_or(data.aim)}else{data.aim}
+    }else{match (data.decoyed, data.decoy_point) {
         (true, Some(p)) => p,
         _ => {
             if data.enabled {
@@ -751,7 +800,8 @@ fn advance_sea_skimmer(world: &mut World, id: EntityId, def: WeaponDef, mut data
                 data.aim
             }
         }
-    };
+    }};
+    if crate::rules::damage_runtime::active(world){if let Some(e)=world.entity_mut(id){let range=e.pos.range_to(target.pos);crate::rules::damage_runtime::update_missile_profile(e,&def,range);}}
 
     {
         let Some(e) = world.entity_mut(id) else { return };
@@ -775,9 +825,9 @@ fn advance_sea_skimmer(world: &mut World, id: EntityId, def: WeaponDef, mut data
     let dist = world.entity(id).map(|e| e.pos.range_to(target.pos)).unwrap_or(f64::MAX);
 
     // --- defense chain (only vs live surface/base targets) ---
-    let defendable = matches!(target.kind, PlatformKind::Ship | PlatformKind::Base);
+    let defendable = matches!(target.combat_kind(), PlatformKind::Ship | PlatformKind::Base);
 
-    if defendable && !data.chaff_checked && dist < 8.0 {
+    if prh==0&&defendable && !data.chaff_checked && dist < 8.0 {
         data.chaff_checked = true;
         let t = world.entity(target_id).unwrap();
         let should_chaff = t.chaff > 0 && t.auto_chaff && t.systems.radar > 0.05;
@@ -828,6 +878,10 @@ fn advance_sea_skimmer(world: &mut World, id: EntityId, def: WeaponDef, mut data
                     let defender = target.side;
                     let contact = world.find_contact(defender, id);
                     let burst_range = dist;
+                    if crate::rules::operations::active(world){
+                        let ciws=world.entity(target_id).and_then(|t|t.weapons.get(idx)).and_then(|m|world.db.weapons.get(&m.weapon)).cloned();
+                        if let Some(ciws)=ciws {crate::rules::operations::intercept(world,id,target_id,&ciws);}
+                    }
                     remove_projectile(world, id);
                     // Only the defending side knows this intercept succeeded.
                     world.sides[defender.index()].contacts.retain(|_, c| c.about != id);
@@ -837,7 +891,7 @@ fn advance_sea_skimmer(world: &mut World, id: EntityId, def: WeaponDef, mut data
                     );
                     // Three-second rule: intercept fragments may air-burst
                     // over the defender (rules §8.1.5, AAW workstream).
-                    crate::rules::aaw::on_intercept(world, target_id, burst_range);
+                    if !crate::rules::operations::active(world){crate::rules::aaw::on_intercept(world, target_id, burst_range);}
                     return;
                 }
             }
@@ -845,7 +899,7 @@ fn advance_sea_skimmer(world: &mut World, id: EntityId, def: WeaponDef, mut data
     }
 
     // Chaff seduction window.
-    if defendable && !data.decoyed && world.entity(target_id).map(|t| t.chaff_active_s).unwrap_or(0.0) > 0.0
+    if prh==0&&defendable && !data.decoyed && world.entity(target_id).map(|t| t.chaff_active_s).unwrap_or(0.0) > 0.0
         && dist < 4.0
     {
         let mut rng = world.scope_rng(id, "chaff_seduction");
@@ -862,16 +916,25 @@ fn advance_sea_skimmer(world: &mut World, id: EntityId, def: WeaponDef, mut data
         }
     }
 
+    if prh>=2&&!radar_on&&world.entity(id).is_some_and(|p|p.pos.range_to(data.aim)<0.25)&&dist>=0.25{remove_projectile(world,id);return;}
     // Terminal impact.
     if defendable && !data.decoyed && dist < 0.25 {
         let chaff_on = world.entity(target_id).map(|t| t.chaff_active_s).unwrap_or(0.0) > 0.0;
         let mut pk = def.pk;
-        if chaff_on && !data.decoyed {
+        if prh==0&&chaff_on && !data.decoyed {
             pk *= 0.45;
+        }
+        if prh>0&&!radar_on{
+            let Some(factor)=crate::rules::damage_runtime::prh_shutdown_factor(&def) else {
+                crate::rules::damage_runtime::defer_prh_shutdown(world,id,target_id);
+                remove_projectile(world,id);
+                return;
+            };
+            pk*=factor;
         }
         let mut rng = world.scope_rng(id, "terminal");
         if rng.chance(pk) {
-            damage::apply_hit_from(world, target_id, &def, false, data.launched_by_side);
+            damage::apply_projectile_hit(world, id, target_id, &def, false, data.launched_by_side);
         }
         remove_projectile(world, id);
         return;
@@ -882,7 +945,7 @@ fn advance_sea_skimmer(world: &mut World, id: EntityId, def: WeaponDef, mut data
         return;
     }
 
-    if runout(world, &def, &data) {
+    if runout(world, id, &def, &data) {
         remove_projectile(world, id);
         return;
     }
@@ -974,7 +1037,8 @@ fn advance_homing_air(world: &mut World, id: EntityId, def: WeaponDef, mut data:
             // §8.1.1, printed 8-3 / PDF83: a successful attack shoots down
             // the air target. The fragment hook must see the incoming missile
             // before it is retired, to recover the defended ship and geometry.
-            crate::rules::aaw::on_intercept(world, target_id, burst_range);
+            if crate::rules::operations::active(world){crate::rules::operations::intercept(world,target_id,data.launched_by,&def);}
+            else{crate::rules::aaw::on_intercept(world, target_id, burst_range);}
             if target.kind.is_projectile() {
                 remove_projectile(world, target_id);
                 // Resolve only the firing side's confirmed target track.
@@ -996,7 +1060,7 @@ fn advance_homing_air(world: &mut World, id: EntityId, def: WeaponDef, mut data:
         );
         return;
     }
-    if runout(world, &def, &data) {
+    if runout(world, id, &def, &data) {
         remove_projectile(world, id);
         return;
     }
@@ -1039,7 +1103,7 @@ fn advance_torpedo(world: &mut World, id: EntityId, def: WeaponDef, mut data: cr
                 data.decoy_point = None;
                 data.passes = 0; // re-acquire
             }
-            if runout(world, &def, &data) {
+            if runout(world, id, &def, &data) {
                 remove_projectile(world, id);
                 return;
             }
@@ -1097,7 +1161,7 @@ fn advance_torpedo(world: &mut World, id: EntityId, def: WeaponDef, mut data: cr
             let mut rng = world.scope_rng(id, "torp_terminal");
             let hit = rng.chance(pk);
             if hit {
-                damage::apply_hit_from(world, target_id, &def, true, data.launched_by_side);
+                damage::apply_projectile_hit(world, id, target_id, &def, true, data.launched_by_side);
             } else {
                 data.passes = 0; // miss, re-attack if fuel remains
             }
@@ -1116,7 +1180,7 @@ fn advance_torpedo(world: &mut World, id: EntityId, def: WeaponDef, mut data: cr
         }
     }
 
-    if runout(world, &def, &data) {
+    if runout(world, id, &def, &data) {
         remove_projectile(world, id);
         return;
     }
@@ -1144,7 +1208,7 @@ fn advance_asw_ballistic(world: &mut World, id: EntityId, def: WeaponDef, mut da
             if still_close {
                 let mut rng = world.scope_rng(id, "asw_rocket");
                 if rng.chance(def.pk) {
-                    damage::apply_hit_from(world, tid, &def, true, data.launched_by_side);
+                    damage::apply_projectile_hit(world, id, tid, &def, true, data.launched_by_side);
                 }
             }
         }

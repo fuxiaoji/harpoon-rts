@@ -37,6 +37,8 @@ pub struct WeaponDef {
     /// (rules §8.4). 0 = unlimited (default).
     #[serde(default)]
     pub directors: u8,
+    #[serde(default,skip_serializing_if="Option::is_none")]
+    pub rule_data:Option<crate::rules::damage_runtime::WeaponDamage>,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -218,6 +220,8 @@ pub struct PlatformClass {
     pub is_base: bool,
     #[serde(default)]
     pub deck: Option<DeckDef>,
+    #[serde(default,skip_serializing_if="Option::is_none")]
+    pub rule_data:Option<crate::rules::damage_runtime::PlatformDamage>,
 }
 
 fn default_accel() -> f64 {

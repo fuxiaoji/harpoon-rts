@@ -29,6 +29,14 @@ pub struct Scenario {
 
 #[derive(Clone, Debug, Default, Serialize, Deserialize)]
 pub struct ScenarioContext {
+    /// New scenarios default to the repaired RTS rules. Saved World state has
+    /// its own profile, so loading old saves never silently changes the rules.
+    #[serde(default,skip_serializing_if="Option::is_none")]
+    pub rules_profile: Option<crate::rules::damage_runtime::RuleProfile>,
+    #[serde(default,skip_serializing_if="Option::is_none")]
+    pub flight_environment: Option<crate::rules::operations::FlightEnvironment>,
+    #[serde(default,skip_serializing_if="Option::is_none")]
+    pub radar_land_clutter: Option<Vec<crate::rules::operations::LandClutterRegion>>,
     pub theater: Option<Theater>,
     pub area_denial: Option<crate::mission::AreaDenialConfig>,
     #[serde(default)]
@@ -36,6 +44,12 @@ pub struct ScenarioContext {
     #[serde(default)]
     pub air_missions: std::collections::BTreeMap<String, crate::commands::AirMission>,
     pub automated_side: Option<Side>,
+    #[serde(default,skip_serializing_if="Option::is_none")]
+    pub terrain: Option<crate::terrain::Terrain>,
+    #[serde(default,skip_serializing_if="Option::is_none")]
+    pub radar_environment: Option<crate::rules::electronic_warfare::RadarEnvironment>,
+    #[serde(default,skip_serializing_if="Option::is_none")]
+    pub island_exercise: Option<crate::exercise::IslandExercise>,
 }
 
 /// Local equirectangular plane: x east, y north, distances in nautical miles.
@@ -51,6 +65,9 @@ pub struct Theater {
     pub attribution: String,
     pub source_url: String,
     pub imagery_date: String,
+    /// Optional display-only provider, frozen with the scenario/save.
+    #[serde(default,skip_serializing_if="Option::is_none")]
+    pub tile_layer: Option<String>,
 }
 
 /// Per-platform-class kill values for weighted kill-count victory. Without a
@@ -137,12 +154,22 @@ pub struct FollowSpec {
     pub distance_nm: f64,
 }
 
-pub fn load_scenario(sc: Scenario, db: Database) -> Result<World, String> {
+pub fn load_scenario(sc: Scenario, mut db: Database) -> Result<World, String> {
+    if sc.context.flight_environment.as_ref().is_some_and(|e|!e.valid()) {return Err("invalid flight wind conditions".into());}
+    if sc.context.radar_land_clutter.as_ref().is_some_and(|rs|rs.iter().any(|r|!r.valid())) {return Err("invalid radar land-clutter region".into());}
+    if sc.context.rules_profile!=Some(crate::rules::damage_runtime::RuleProfile::Legacy){crate::rules::damage_runtime::configure_database(&mut db);}
+    if sc.context.radar_environment.as_ref().is_some_and(|e|!e.valid()) {return Err("invalid radar sea-state/precipitation category".into());}
     db.validate().map_err(|e| e.to_string())?;
     validate_context(&sc, &db)?;
     let seed = sc.seed;
     let mut world = World {
         db,
+        rules: crate::rules::damage_runtime::Runtime {
+            profile:sc.context.rules_profile.unwrap_or(crate::rules::damage_runtime::RuleProfile::Rts2026),
+            table_fingerprint:(sc.context.rules_profile!=Some(crate::rules::damage_runtime::RuleProfile::Legacy)).then(||crate::rules::damage_runtime::fingerprint_for(sc.context.rules_profile.unwrap_or(crate::rules::damage_runtime::RuleProfile::Rts2026))),
+            operations:(sc.context.rules_profile==Some(crate::rules::damage_runtime::RuleProfile::Rts2026Operations)).then(Default::default),
+            ..Default::default()
+        },
         tick: 0,
         seed,
         rng: Rng::new(seed),
@@ -177,6 +204,7 @@ pub fn load_scenario(sc: Scenario, db: Database) -> Result<World, String> {
         stats: Default::default(),
     };
 
+    if let Some(t)=&mut world.context.terrain {t.normalize()?;}
     let mut follow_specs: Vec<(EntityId, FollowSpec)> = Vec::new();
     for (i, spawn) in sc.units.iter().enumerate() {
         let class = world
@@ -186,6 +214,9 @@ pub fn load_scenario(sc: Scenario, db: Database) -> Result<World, String> {
             .cloned()
             .ok_or_else(|| format!("unit {i}: unknown class {}", spawn.class))?;
         let eid = world.allocate_id();
+        if matches!(class.kind,PlatformKind::Ship|PlatformKind::Sub) && world.context.terrain.as_ref().is_some_and(|t|t.contains(spawn.pos)) {
+            return Err(format!("unit {i}: ship/submarine spawn is on charted land"));
+        }
         let name = spawn.name.clone().unwrap_or_else(|| {
             // auto_name needs &mut world; emulate deterministically here.
             world.name_counters[spawn.side.index()] += 1;
@@ -220,6 +251,7 @@ pub fn load_scenario(sc: Scenario, db: Database) -> Result<World, String> {
             id: eid,
             side: spawn.side,
             class: class.id.clone(),
+            rule_data:class.rule_data.clone(),
             name: name.clone(),
             kind: class.kind,
             pos: spawn.pos,
@@ -263,7 +295,9 @@ pub fn load_scenario(sc: Scenario, db: Database) -> Result<World, String> {
             },
             burn_s: 0.0,
             flooding_s: 0.0,
-            ext: Default::default(),
+            ext: if crate::rules::damage_runtime::active(&world) {
+                std::collections::BTreeMap::from([("rules.v2".to_string(),1.0)])
+            }else{Default::default()},
             deck,
             mission: sc.context.air_missions.get(&name).map(crate::world::MissionState::from_air_mission),
             station: None,
@@ -292,6 +326,7 @@ pub fn load_scenario(sc: Scenario, db: Database) -> Result<World, String> {
         }
     }
 
+    crate::exercise::initialize(&mut world)?;
     world.emit(
         EventKind::ScenarioStarted { name: sc.name },
         Visibility::All,
@@ -300,6 +335,7 @@ pub fn load_scenario(sc: Scenario, db: Database) -> Result<World, String> {
 }
 
 fn validate_context(sc: &Scenario, db: &Database) -> Result<(), String> {
+    crate::exercise::validate(sc,db)?;
     if let Some(t) = &sc.context.theater {
         if ![t.west, t.east, t.south, t.north, t.reference_lat].iter().all(|v| v.is_finite())
             || t.west >= t.east || t.south >= t.north || t.south < -90.0 || t.north > 90.0

@@ -13,6 +13,8 @@ pub struct UnitObs {
     pub id: EntityId,
     pub class: String,
     pub name: String,
+    #[serde(default,skip_serializing_if="is_false")]
+    pub manual_control:bool,
     pub kind: PlatformKind,
     pub side: Side,
     pub pos: crate::geom::Vec2,
@@ -20,19 +22,34 @@ pub struct UnitObs {
     pub speed_kts: f64,
     pub ordered_course_deg: f64,
     pub ordered_speed_kts: f64,
+    /// Own standing navigation only. Missing in historical recorded frames.
+    #[serde(default,skip_serializing_if="Option::is_none")]
+    pub navigation:Option<NavigationObs>,
     pub depth_m: f64,
     pub altitude_m: f64,
     pub hp: f64,
     pub hp_max: f64,
+    /// Own functional casualties only; enemy contacts never expose this map.
+    #[serde(default,skip_serializing_if="BTreeMap::is_empty")]
+    pub functional_damage:BTreeMap<String,f64>,
     pub fire_on: bool,
+    #[serde(default,skip_serializing_if="Option::is_none")]
+    pub engagement_policy:Option<crate::commands::LaunchEngagement>,
     pub assigned: Option<ContactId>,
     pub weapons: Vec<WeaponObs>,
     pub sensors: Vec<SensorObs>,
     pub chaff: u16,
     pub decoys: u16,
     pub endurance_s: Option<f64>,
+    #[serde(default)]
+    pub flight_profile: bool,
+    #[serde(default)]
+    pub offensive_jammer: Option<OffensiveJammerObs>,
     pub deck: Option<DeckObs>,
     pub mission: Option<String>,
+    /// Own task intent, with own contact IDs only; no enemy entity references.
+    #[serde(default,skip_serializing_if="Option::is_none")]
+    pub air_task:Option<crate::world::MissionState>,
     pub systems: crate::world::Systems,
     /// 潜艇是否在跃变层之下（>150m，声纳探测 ×0.5）。
     pub below_layer: Option<bool>,
@@ -41,6 +58,16 @@ pub struct UnitObs {
     /// 拖曳阵是否展开（航速 >25kt 自动收起）。
     pub towed_deployed: Option<bool>,
 }
+fn is_false(v:&bool)->bool{!*v}
+#[derive(Clone,Debug,Serialize,Deserialize)]
+pub struct NavigationObs {
+    pub waypoints:Vec<crate::geom::Vec2>,
+    pub station:Option<crate::world::StationState>,
+    pub manual_flight:bool,
+}
+
+#[derive(Clone,Debug,Serialize,Deserialize)]
+pub struct OffensiveJammerObs {pub clutter:i32,pub spot_targets:usize,pub standoff:bool,pub source:String}
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct WeaponObs {
@@ -48,6 +75,10 @@ pub struct WeaponObs {
     pub name: String,
     pub ammo: u16,
     pub cooldown_s: f64,
+    #[serde(default="default_operational",skip_serializing_if="is_operational")]
+    pub operational:bool,
+    #[serde(default,skip_serializing_if="is_zero")]
+    pub min_launch_altitude_m:f64,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -55,6 +86,8 @@ pub struct SensorObs {
     pub sensor: String,
     pub name: String,
     pub active: bool,
+    #[serde(default="default_operational",skip_serializing_if="is_operational")]
+    pub operational:bool,
     /// Nominal detection range vs air/surface/sub targets in nm (UI rings).
     pub vs_air: Option<f64>,
     pub vs_surface: Option<f64>,
@@ -65,7 +98,18 @@ pub struct SensorObs {
 pub struct DeckObs {
     pub ready: Vec<(String, u8)>,
     pub cycling: Vec<(String, u8, i64)>,
+    #[serde(default,skip_serializing_if="Vec::is_empty")]
+    pub queued:Vec<QueuedAirObs>,
+    #[serde(default="default_operational",skip_serializing_if="is_operational")]
+    pub can_launch:bool,
+    #[serde(default="default_operational",skip_serializing_if="is_operational")]
+    pub can_recover:bool,
 }
+#[derive(Clone,Debug,Serialize,Deserialize)]
+pub struct QueuedAirObs {pub class:String,pub launch_at:i64,pub mode:String}
+fn default_operational()->bool{true}
+fn is_operational(v:&bool)->bool{*v}
+fn is_zero(v:&f64)->bool{*v==0.0}
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct ContactObs {
@@ -76,6 +120,8 @@ pub struct ContactObs {
     pub estimate: crate::geom::Vec2,
     pub est_course_deg: f64,
     pub est_speed_kts: f64,
+    #[serde(default,skip_serializing_if="Option::is_none")]
+    pub motion_known:Option<bool>,
     pub quality: f64,
     pub bearing_only: bool,
     pub last_seen_s: f64,
@@ -126,6 +172,10 @@ pub struct VictoryObservation {
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Observation {
+    #[serde(default,skip_serializing_if="crate::rules::damage_runtime::RuleProfile::is_legacy")]
+    pub rules_profile:crate::rules::damage_runtime::RuleProfile,
+    #[serde(default)]
+    pub control_version:u8,
     pub tick: i64,
     pub time_s: f64,
     pub scenario_id: String,
@@ -133,7 +183,11 @@ pub struct Observation {
     #[serde(default)]
     pub scenario_description: String,
     pub theater: Option<crate::scenario::Theater>,
+    #[serde(default,skip_serializing_if="Option::is_none")]
+    pub radar_environment: Option<crate::rules::electronic_warfare::RadarEnvironment>,
     pub mission: Option<crate::mission::MissionObservation>,
+    #[serde(default,skip_serializing_if="Option::is_none")]
+    pub exercise:Option<crate::exercise::ExerciseView>,
     #[serde(default)]
     pub victory: Option<VictoryObservation>,
     pub automated_side: Option<Side>,
@@ -157,6 +211,7 @@ pub fn observe(world: &World, side: Side, since_seq: u64, max_events: usize) -> 
             id: e.id,
             class: e.class.clone(),
             name: e.name.clone(),
+            manual_control:e.ext.get("control.manual")==Some(&1.0),
             kind: e.kind,
             side: e.side,
             pos: e.pos,
@@ -164,11 +219,17 @@ pub fn observe(world: &World, side: Side, since_seq: u64, max_events: usize) -> 
             speed_kts: e.speed_kts,
             ordered_course_deg: e.ordered_course_deg,
             ordered_speed_kts: e.ordered_speed_kts,
+            navigation:if !e.waypoints.is_empty()||e.station.is_some()||e.ext.get("air.manual_control")==Some(&1.0) {
+                Some(NavigationObs{waypoints:e.waypoints.iter().copied().collect(),station:e.station.clone(),manual_flight:e.ext.get("air.manual_control")==Some(&1.0)})
+            }else{None},
             depth_m: e.depth_m,
             altitude_m: e.altitude_m,
             hp: e.hp,
             hp_max: e.hp_max,
+            functional_damage:e.ext.iter().filter(|(k,v)|k.starts_with("damage.")&&**v>0.0).map(|(k,v)|(k.clone(),*v)).collect(),
             fire_on: e.fire_on,
+            engagement_policy: e.ext.get("doctrine.max_in_flight").map(|n|crate::commands::LaunchEngagement {
+                air_only:e.ext.get("doctrine.air_only")==Some(&1.0),max_in_flight:*n as u8}),
             assigned: e.assigned,
             weapons: e
                 .weapons
@@ -183,6 +244,8 @@ pub fn observe(world: &World, side: Side, since_seq: u64, max_events: usize) -> 
                         .unwrap_or_else(|| m.weapon.clone()),
                     ammo: m.ammo,
                     cooldown_s: m.cooldown_s,
+                    operational:m.mounts>0&&(!crate::rules::damage_runtime::active(world)||crate::rules::damage_runtime::weapons_operational(e)),
+                    min_launch_altitude_m:if crate::rules::damage_runtime::active(world){world.db.weapons.get(&m.weapon).map(crate::rules::damage_runtime::minimum_release_altitude).unwrap_or(0.0)}else{0.0},
                 })
                 .collect(),
             sensors: e
@@ -199,7 +262,8 @@ pub fn observe(world: &World, side: Side, since_seq: u64, max_events: usize) -> 
                             .get(&s.sensor)
                             .map(|d| d.name.clone())
                             .unwrap_or_else(|| s.sensor.clone()),
-                        active: s.active,
+                        active: world.db.sensors.get(&s.sensor).map(|d| if d.kind == crate::db::SensorKind::Radar {crate::sensors::radar_emitting(e)} else {s.active}).unwrap_or(s.active),
+                        operational:!crate::sensors::sensor_damaged(e,&s.sensor)&&e.ext.get("damage.power_lost").copied().unwrap_or(0.0)==0.0,
                         vs_air: a,
                         vs_surface: sf,
                         vs_sub: sb,
@@ -209,11 +273,17 @@ pub fn observe(world: &World, side: Side, since_seq: u64, max_events: usize) -> 
             chaff: e.chaff,
             decoys: e.decoys,
             endurance_s: e.endurance_s,
+            flight_profile:crate::rules::flight_profiles::supported(&e.class),
+            offensive_jammer:crate::rules::electronic_warfare::capability(&e.class).map(|c|OffensiveJammerObs {clutter:c.clutter,spot_targets:c.spot_targets,standoff:c.standoff,source:c.source.clone()}),
             deck: e.deck.as_ref().map(|d| DeckObs {
-                ready: d.ready.clone(),
+                ready: d.ready.iter().map(|(c,n)|(c.clone(),n.saturating_sub(crate::rules::operations::reserved(world,e.id,c).min(255) as u8))).collect(),
                 cycling: d.cycling.clone(),
+                queued:world.rules.operations.as_ref().map(|s|s.launches.iter().filter(|j|j.carrier==e.id).map(|j|QueuedAirObs{class:j.class.clone(),launch_at:j.due,mode:j.mode.clone()}).collect()).unwrap_or_default(),
+                can_launch:!crate::rules::damage_runtime::active(world)||crate::rules::damage_runtime::flight_operational(e,true,world.tick),
+                can_recover:!crate::rules::damage_runtime::active(world)||crate::rules::damage_runtime::flight_operational(e,false,world.tick),
             }),
             mission: e.mission.as_ref().map(|m| m.tag().to_string()),
+            air_task:e.mission.clone(),
             systems: e.systems.clone(),
             below_layer: (e.kind == PlatformKind::Sub).then(|| e.depth_m > 150.0),
             battery: e.ext.get("battery").copied(),
@@ -249,6 +319,7 @@ pub fn observe(world: &World, side: Side, since_seq: u64, max_events: usize) -> 
             estimate: c.estimate_at(world.tick),
             est_course_deg: c.est_course_deg,
             est_speed_kts: c.est_speed_kts,
+            motion_known:crate::rules::operations::motion_known(world,side,c.about),
             quality: c.quality,
             bearing_only: c.bearing_only,
             last_seen_s: (world.tick - c.last_update_tick) as f64 * crate::world::TICK_SECONDS,
@@ -268,15 +339,19 @@ pub fn observe(world: &World, side: Side, since_seq: u64, max_events: usize) -> 
     let events = events.into_iter().cloned().collect();
 
     Observation {
+        rules_profile:world.rules.profile,
+        control_version:3,
         tick: world.tick,
         time_s: world.time_s(),
         scenario_id: world.scenario_id.clone(),
         scenario_name: world.scenario_name.clone(),
         scenario_description: world.scenario_description.clone(),
         theater: world.context.theater.clone(),
+        radar_environment: world.context.radar_environment.clone(),
         mission: crate::mission::observe(world, side),
+        exercise:crate::exercise::observe(world,side),
         victory: Some(VictoryObservation {
-            mode: if world.context.area_denial.is_some() {
+            mode: if world.context.island_exercise.is_some() {"exercise".into()}else if world.context.area_denial.is_some() {
                 "area_denial".into()
             } else if world.scenario_kill_count_at_end {
                 "kill_count".into()

@@ -11,6 +11,7 @@ use crate::world::{DeckState, Entity, MissionState, World, TICK_SECONDS};
 
 pub fn update_air_ops(world: &mut World) {
     cycle_decks(world);
+    crate::rules::operations::update(world);
     fly_missions(world);
 }
 
@@ -23,6 +24,7 @@ fn cycle_decks(world: &mut World) {
         .collect();
     for cid in carrier_ids {
         let now = world.tick;
+        if world.entity(cid).is_some_and(|e|crate::rules::damage_runtime::marker(e)&&e.ext.get("damage.aviation_stores_purged").copied().unwrap_or(0.0)>0.0){continue;}
         let mut ready_again: Vec<(String, u8)> = Vec::new();
         {
             let Some(deck) = world.entity_mut(cid).unwrap().deck.as_mut() else { continue };
@@ -66,11 +68,41 @@ pub fn launch_aircraft(
     count: u8,
     mission: &AirMission,
 ) -> Result<(), String> {
+    launch_planned_aircraft(world,carrier_id,class,count,mission,None)
+}
+
+pub fn launch_planned_aircraft(
+    world: &mut World, carrier_id: EntityId, class: &str, count: u8,
+    mission: &AirMission, profile: Option<&crate::commands::LaunchProfile>,
+) -> Result<(), String> {
+    launch_impl(world,carrier_id,class,count,mission,profile,false)
+}
+
+pub(crate) fn complete_queued_launch(world:&mut World,carrier:EntityId,class:&str,mission:&AirMission,profile:Option<&crate::commands::LaunchProfile>)->Result<(),String> {
+    launch_impl(world,carrier,class,1,mission,profile,true)
+}
+
+fn launch_impl(
+    world:&mut World,carrier_id:EntityId,class:&str,count:u8,
+    mission:&AirMission,profile:Option<&crate::commands::LaunchProfile>,completing:bool,
+) -> Result<(),String> {
+    if profile.is_some_and(|p|p.waypoints.len()>32||p.waypoints.iter().any(|v|!v.x.is_finite()||!v.y.is_finite())) {
+        return Err("launch route needs at most32 finite waypoints".into());
+    }
+    if profile.is_some_and(|p| !p.altitude_m.is_finite() || !(15.0..=30000.0).contains(&p.altitude_m)) {
+        return Err("launch altitude must be finite and in 15..30000 m".into());
+    }
+    if profile.and_then(|p|p.engagement.as_ref()).is_some_and(|p|p.max_in_flight>32) {
+        return Err("launch max_in_flight must be in 0..32".into());
+    }
     let Some(carrier) = world.entity(carrier_id).cloned() else {
         return Err("no such carrier".into());
     };
     if !carrier.alive {
         return Err("carrier destroyed".into());
+    }
+    if crate::rules::damage_runtime::active(world)&&!crate::rules::damage_runtime::flight_operational(&carrier,true,world.tick) {
+        return Err("launch unavailable: flight deck, air plot, electrical power or severe damage (§14)".into());
     }
     let Some(deck) = carrier.deck.clone() else {
         return Err("unit has no flight deck".into());
@@ -85,6 +117,9 @@ pub fn launch_aircraft(
     if ac_class.kind != PlatformKind::Aircraft {
         return Err(format!("{class} is not an aircraft"));
     }
+    if crate::rules::operations::active(world)&&!completing {
+        return crate::rules::operations::queue_launch(world,carrier_id,class,count,mission,profile);
+    }
 
     let mut bearing = carrier.course_deg;
     for i in 0..count {
@@ -95,6 +130,7 @@ pub fn launch_aircraft(
             id: eid,
             side: carrier.side,
             class: class.to_string(),
+            rule_data:ac_class.rule_data.clone(),
             name: format!("{} {}", carrier.side.name().to_uppercase(), ac_class.name),
             kind: PlatformKind::Aircraft,
             pos,
@@ -102,16 +138,16 @@ pub fn launch_aircraft(
             speed_kts: ac_class.max_speed_kts * 0.5,
             ordered_course_deg: carrier.course_deg,
             ordered_speed_kts: cruise_of(&ac_class),
-            waypoints: Default::default(),
-            altitude_m: 6000.0,
-            ordered_altitude_m: 8000.0,
+            waypoints: profile.map(|p|p.waypoints.iter().copied().collect()).unwrap_or_default(),
+            altitude_m: profile.map(|p|p.altitude_m).unwrap_or(6000.0),
+            ordered_altitude_m: profile.map(|p|p.altitude_m).unwrap_or(8000.0),
             depth_m: 0.0,
             ordered_depth_m: 0.0,
             hp: ac_class.hp,
             hp_max: ac_class.hp,
             alive: true,
             systems: Default::default(),
-            fire_on: true,
+            fire_on: profile.map(|p|p.weapons_free).unwrap_or(true),
             assigned: None,
             weapons: ac_class
                 .weapons
@@ -136,7 +172,16 @@ pub fn launch_aircraft(
             endurance_s: Some(ac_class.endurance_s),
             burn_s: 0.0,
             flooding_s: 0.0,
-            ext: Default::default(),
+            ext: {
+                let mut ext=std::collections::BTreeMap::new();
+                if crate::rules::damage_runtime::active(world){ext.insert("rules.v2".to_string(),1.0);}
+                if profile.is_some_and(|p|p.manual_strike) {ext.insert("manual_strike_release".to_string(),1.0);}
+                if let Some(policy)=profile.and_then(|p|p.engagement.as_ref()) {
+                    ext.insert("doctrine.air_only".to_string(),if policy.air_only {1.0}else{0.0});
+                    ext.insert("doctrine.max_in_flight".to_string(),policy.max_in_flight as f64);
+                }
+                ext
+            },
             deck: None,
             mission: {
                 let mut ms = MissionState::from_air_mission(mission);
@@ -153,6 +198,8 @@ pub fn launch_aircraft(
             last_emit_tick: world.tick,
             projectile: None,
         };
+        let mut e=e;
+        if crate::rules::damage_runtime::marker(&carrier)&&carrier.ext.get("damage.magazines_flooded").copied().unwrap_or(0.0)>0.0{for m in &mut e.weapons{m.ammo=0;}}
         world.entities.insert(eid, e);
     }
 
@@ -182,7 +229,7 @@ fn cruise_of(class: &crate::db::PlatformClass) -> f64 {
 }
 
 fn cruise_of_entity(e: &Entity, db: &Database) -> f64 {
-    db.platforms.get(&e.class).map(cruise_of).unwrap_or(300.0)
+    crate::rules::flight_profiles::cruise_at(&e.class,e.altitude_m).unwrap_or_else(||db.platforms.get(&e.class).map(cruise_of).unwrap_or(300.0))
 }
 
 fn fly_missions(world: &mut World) {
@@ -200,10 +247,12 @@ fn fly_missions(world: &mut World) {
         }
 
         // Endurance & ditching.
-        let endurance_left = e.endurance_s.unwrap_or(f64::INFINITY) - TICK_SECONDS;
+        let endurance_left = e.endurance_s.unwrap_or(f64::INFINITY) - TICK_SECONDS*crate::rules::flight_profiles::fuel_rate(e,cruise_of_entity(e,&world.db));
         let side = e.side;
         let name = e.name.clone();
-        let low_fuel = endurance_left < 900.0;
+        let return_time=world.entities.values().filter(|c|c.alive && c.side==side && c.deck.is_some() && compatible_recovery(world,id,c.id))
+            .map(|c|e.pos.range_to(c.pos)/cruise_of_entity(e,&world.db).max(60.0)*3600.0).fold(f64::INFINITY,f64::min);
+        let low_fuel = endurance_left < if return_time.is_finite() {900.0_f64.max(return_time*1.3+300.0)}else{900.0};
         let out_of_fuel = endurance_left <= 0.0;
         let now = world.tick;
         {
@@ -226,6 +275,9 @@ fn fly_missions(world: &mut World) {
         }
 
         let mission = world.entities.get(&id).and_then(|e| e.mission.clone());
+        if !matches!(mission, Some(MissionState::Rtb)) && world.entity(id).is_some_and(|e|e.ext.get("air.manual_control")==Some(&1.0)) {
+            continue;
+        }
         match mission {
             Some(MissionState::Cap { station, radius_nm, follow_carrier }) => {
                 // A follow CAP orbits its carrier's current position; a dead
@@ -303,6 +355,16 @@ fn asw_station(world: &mut World, id: EntityId, area: Vec2, radius_nm: f64) {
 
 /// Strike: fly at the contact, ripple standoff weapons at envelope, RTB.
 fn strike_run(world: &mut World, id: EntityId, contact: ContactId, released: bool) {
+    if world.entity(id).is_some_and(|e|e.ext.get("manual_strike_release")==Some(&1.0)) {
+        let armed=world.entity(id).is_some_and(|e|e.weapons.iter().any(|m|m.ammo>0
+            && world.db.weapons.get(&m.weapon).is_some_and(|w|w.kind==WeaponKind::Ascm)));
+        if !armed {
+            if let Some(e)=world.entity_mut(id) {e.mission=Some(MissionState::Rtb);}
+        }
+        // Goto / Fire / ReturnToBase own this flight. In particular, do not
+        // resolve a hidden target position to steer or release for the staff.
+        return;
+    }
     let side = world.entity(id).map(|e| e.side).unwrap_or(Side::Blue);
     let Some(target_id) = crate::weapons::resolve_contact(world, side, contact) else {
         let Some(e) = world.entity_mut(id) else { return };
@@ -398,7 +460,7 @@ fn try_recover(world: &mut World, id: EntityId) {
     let nearest_deck: Option<(EntityId, f64)> = world
         .entities
         .values()
-        .filter(|c| c.alive && c.side == side && c.deck.is_some())
+        .filter(|c| c.alive && c.side == side && c.deck.is_some() && compatible_recovery(world, id, c.id))
         .map(|c| (c.id, apos.range_to(c.pos)))
         .min_by(|a, b| a.1.partial_cmp(&b.1).unwrap_or(std::cmp::Ordering::Equal));
     let Some((carrier_id, dist)) = nearest_deck else { return };
@@ -426,7 +488,10 @@ fn try_recover(world: &mut World, id: EntityId) {
         .map(|d| d.cycle_s)
         .unwrap_or(120.0);
     let now = world.tick;
-    let ready_at = now + (cycle_s as i64);
+    let ready_at = if crate::rules::operations::active(world) {
+        let Some(ready)=crate::rules::operations::recovery_ready(world,id,carrier_id) else {return};
+        ready
+    }else{now + (cycle_s as i64)};
     let Some(e) = world.entity_mut(id) else { return };
     e.alive = false;
     e.hp = 0.0;
@@ -441,4 +506,22 @@ fn try_recover(world: &mut World, id: EntityId) {
         EventKind::AirRecovered { side, carrier: carrier_id, class: class_name, count: 1 },
         Visibility::Side(side),
     );
+}
+
+/// Conservative recovery capability: only accept aircraft explicitly listed in
+/// the receiving ship's configured wing. §4.6.4.1 prohibits ordinary fixed-wing
+/// recovery on a helicopter deck. No arresting gear is inferred from distance.
+pub fn compatible_recovery(world: &World, aircraft: EntityId, carrier: EntityId) -> bool {
+    let Some(a) = world.entity(aircraft) else {return false};
+    let Some(c) = world.entity(carrier) else {return false};
+    if crate::rules::damage_runtime::active(world)&&!crate::rules::damage_runtime::flight_operational(c,false,world.tick){return false;}
+    static CAPS:std::sync::OnceLock<serde_json::Value>=std::sync::OnceLock::new();
+    let caps=CAPS.get_or_init(||serde_json::from_str(include_str!("../../../data/rules/deck-capabilities.json")).unwrap());
+    let listed=|key:&str,class:&str|caps[key].as_array().is_some_and(|v|v.iter().any(|s|s.as_str()==Some(class)));
+    let rotary=listed("rotary_wing",&a.class)||a.class_def(&world.db).is_some_and(|a|a.dipping_sonar);
+    if c.kind!=PlatformKind::Base && !rotary && !listed("vtol",&a.class) && !listed("arresting_gear",&c.class) {return false;}
+    let fits = world.context.air_wings.get(&c.name).map(|w|w.iter().any(|f|f.class==a.class))
+        .unwrap_or_else(|| c.class_def(&world.db).and_then(|d|d.deck.as_ref()).is_some_and(|d|d.wing.iter().any(|f|f.class==a.class)));
+    let stored: u32 = c.deck.as_ref().map(|d|d.ready.iter().map(|(_,n)|*n as u32).sum::<u32>() + d.cycling.iter().map(|(_,n,_)|*n as u32).sum::<u32>()).unwrap_or(u32::MAX);
+    fits && c.deck.as_ref().is_some_and(|d|stored < d.capacity as u32)
 }
