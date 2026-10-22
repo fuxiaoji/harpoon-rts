@@ -27,7 +27,11 @@ try {
     $python313 = Join-Path $env:LOCALAPPDATA 'Programs\Python\Python313\python.exe'
     if (Test-Path -LiteralPath $python313) { $env:PYO3_PYTHON = $python313 }
     Write-Host 'Checking/building the current server; build cache is outside the source folder...'
+    # Windows PowerShell 5.1 在 Stop + *> 下把 cargo 的 stderr 进度当终止错误；构建期间临时放宽，成败仍看退出码
+    $prevEap = $ErrorActionPreference
+    $ErrorActionPreference = 'Continue'
     & $cargo build --release -p harpoon-server --bin harpoon-server --locked *> (Join-Path $runtimeDir 'build.log')
+    $ErrorActionPreference = $prevEap
     if ($LASTEXITCODE -ne 0) { throw "Build failed. See $runtimeDir\build.log" }
     $builtServer = Join-Path $env:CARGO_TARGET_DIR 'release\harpoon-server.exe'
     $binaryHash = (Get-FileHash -LiteralPath $builtServer -Algorithm SHA256).Hash.Substring(0,12)
