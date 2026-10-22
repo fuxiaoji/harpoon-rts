@@ -20,8 +20,8 @@ fn run() -> harpoon_core::World {
     for u in observe(&world,Side::Blue,0,0).units {
         if u.kind==harpoon_core::types::PlatformKind::Ship {initial.push((Side::Blue,Command::SetWeaponsFree{unit:u.id,free:true}));}
         if u.name.starts_with("CV-") {
-            initial.push((Side::Blue,Command::LaunchAircraft{unit:u.id,class:"cn_j15".into(),count:2,mission:AirMission::Cap{station:u.pos,radius_nm:25.0,follow:false}}));
-            initial.push((Side::Blue,Command::LaunchAircraft{unit:u.id,class:"cn_z18f".into(),count:2,mission:AirMission::Asw{area:u.pos,radius_nm:12.0}}));
+            initial.push((Side::Blue,Command::LaunchAircraft{profile:None,unit:u.id,class:"cn_j15".into(),count:2,mission:AirMission::Cap{station:u.pos,radius_nm:25.0,follow:false}}));
+            initial.push((Side::Blue,Command::LaunchAircraft{profile:None,unit:u.id,class:"cn_z18f".into(),count:2,mission:AirMission::Asw{area:u.pos,radius_nm:12.0}}));
         }
     }
     while !world.over && world.tick<7200 {
@@ -32,8 +32,8 @@ fn run() -> harpoon_core::World {
     }
     assert!(world.over,"mission must settle by the deadline");
     assert!(world.result.as_ref().unwrap().reason.starts_with("mission_"));
-    assert!(world.command_log.iter().any(|c| c.side==Side::Red && matches!(c.command,Command::LaunchAircraft{..})));
-    assert!(world.command_log.iter().any(|c| c.side==Side::Red && matches!(&c.command,Command::LaunchAircraft{class,..} if class=="us_f18e_asm")));
+    assert!(world.command_log.iter().any(|c| c.side==Side::Red && matches!(c.command,Command::LaunchAircraft{profile:None,..})));
+    assert!(world.command_log.iter().any(|c| c.side==Side::Red && matches!(&c.command,Command::LaunchAircraft{profile:None,class,..} if class=="us_f18e_asm")));
     world
 }
 fn main() {

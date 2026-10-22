@@ -37,7 +37,7 @@ const MAX_REPORTS: usize = 24;
 const MAX_RECENT_FOR_PROMPT: usize = 3;
 const MAX_MEMORY_TURNS: usize = 16;
 const MAX_MEMORY_CHARS: usize = 2400;
-const MAX_COMMANDS: usize = 16;
+pub(crate) const MAX_COMMANDS: usize = 16;
 const MAX_EVENTS_FOR_PROMPT: usize = 40;
 const MAX_CONTACTS_FOR_PROMPT: usize = 60;
 const MEMORY_VERSION: u32 = 1;
@@ -291,6 +291,7 @@ pub struct TurnReport {
     pub wake_conditions: Vec<WakeRule>,
 }
 
+#[derive(Serialize, Deserialize)]
 struct SideAgent {
     enabled: bool,
     autonomy: String,
@@ -299,6 +300,8 @@ struct SideAgent {
     memory: Memory,
     reports: Vec<TurnReport>,
     last_proposals: Vec<Command>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    proposal_tick: Option<i64>,
     last_error: Option<String>,
     last_turn_tick: Option<i64>,
     usage: UsageStats,
@@ -318,6 +321,7 @@ impl SideAgent {
             memory: Memory::default(),
             reports: Vec::new(),
             last_proposals: Vec::new(),
+            proposal_tick: None,
             last_error: None,
             last_turn_tick: None,
             usage: UsageStats::default(),
@@ -330,6 +334,7 @@ impl SideAgent {
 
 #[derive(Clone)]
 pub(crate) struct TurnContext {
+    pub supervision:Value,
     pub side: Side,
     pub trigger: String,
     pub settings: Settings,
@@ -401,6 +406,22 @@ pub struct Runtime {
 }
 
 impl Runtime {
+    pub(crate) fn any_busy(&self) -> bool { self.inner.lock().unwrap().sides.iter().any(|s|s.busy) }
+    pub(crate) fn suspend_auto_run(&self) {
+        for side in &mut self.inner.lock().unwrap().sides { side.auto_run=false; }
+    }
+    pub(crate) fn snapshot(&self) -> Value {
+        serde_json::to_value(&self.inner.lock().unwrap().sides).expect("agent state")
+    }
+    pub(crate) fn restore_snapshot(&self, value: Value, scenario: &str, seed: u64, tick: i64) -> Result<(), String> {
+        let mut sides: [SideAgent;2]=serde_json::from_value(value).map_err(|e|e.to_string())?;
+        for side in &mut sides { side.busy=false; side.enabled=false; side.auto_run=false; side.next_report_tick=i64::MAX;
+            side.last_proposals.clear(); side.proposal_tick=None; }
+        let mut inner=self.inner.lock().unwrap();
+        inner.generation=inner.generation.wrapping_add(1); inner.scenario_id=Some(scenario.into());
+        inner.seed=seed; inner.current_tick=tick; inner.sides=sides;
+        Ok(())
+    }
     pub fn new() -> Self {
         Self {
             inner: Mutex::new(Inner {
@@ -428,6 +449,7 @@ impl Runtime {
             let slot = &mut inner.sides[side.index()];
             slot.busy = false;
             slot.last_proposals.clear();
+            slot.proposal_tick = None;
             slot.last_error = None;
             slot.last_turn_tick = None;
             slot.memory = load_memory(scenario_id, seed, side).unwrap_or_default();
@@ -506,12 +528,15 @@ impl Runtime {
             return Err(TurnError::Busy);
         }
         slot.busy = true;
+        slot.last_proposals.clear();
+        slot.proposal_tick = None;
         slot.last_error = None;
         slot.last_turn_tick = Some(current_tick);
         if trigger == "scheduled" {
             slot.next_report_tick = current_tick.saturating_add(settings.cadence_s);
         }
         Ok(TurnContext {
+            supervision:Value::Null,
             side,
             trigger: trigger.to_string(),
             settings,
@@ -591,11 +616,12 @@ impl Runtime {
             slot.next_report_tick = game_tick.saturating_add(cadence);
         }
         slot.last_error = decision.error.clone();
-        slot.last_proposals = if decision.commands.is_empty() {
-            slot.last_proposals.clone()
-        } else {
+        // A new hold/error supersedes old advice. Commands already queued by
+        // execute mode must never become a second executable proposal.
+        slot.last_proposals = if decision.error.is_none() && !applied && ctx.autonomy == "advise" {
             decision.commands.clone()
-        };
+        } else { Vec::new() };
+        slot.proposal_tick = (!slot.last_proposals.is_empty()).then_some(ctx.tick);
         if decision.error.is_none() {
             let summary = if decision.memory.trim().is_empty() {
                 slot.memory.summary.clone()
@@ -646,12 +672,23 @@ impl Runtime {
             let slot = &mut inner.sides[ctx.side.index()];
             slot.busy = false;
             slot.last_error = Some(error);
+            slot.last_proposals.clear();
+            slot.proposal_tick = None;
         }
         report
     }
 
-    pub(crate) fn last_proposals(&self, side: Side) -> Vec<Command> {
-        self.inner.lock().unwrap().sides[side.index()].last_proposals.clone()
+    pub(crate) fn take_proposals(&self, side: Side, tick: i64) -> Result<Vec<Command>, String> {
+        let mut inner = self.inner.lock().unwrap();
+        let slot = &mut inner.sides[side.index()];
+        if slot.busy { return Err("agent is planning; refresh the report before executing".into()); }
+        if slot.last_proposals.is_empty() { return Ok(Vec::new()); }
+        if slot.proposal_tick != Some(tick) {
+            slot.last_proposals.clear(); slot.proposal_tick = None;
+            return Err("proposal observation is stale; request a new report".into());
+        }
+        slot.proposal_tick = None;
+        Ok(std::mem::take(&mut slot.last_proposals))
     }
 
     pub fn set_config(
@@ -708,7 +745,9 @@ impl Runtime {
                 return Err("autonomy must be advise or execute".into());
             }
             for side in &target_sides {
-                inner.sides[side.index()].autonomy = v.clone();
+                let slot = &mut inner.sides[side.index()];
+                if slot.autonomy != *v { slot.last_proposals.clear(); slot.proposal_tick = None; }
+                slot.autonomy = v.clone();
             }
         }
         if let Some(enabled) = req.enabled {
@@ -725,6 +764,8 @@ impl Runtime {
                 if !enabled {
                     slot.next_report_tick = i64::MAX;
                     slot.auto_run = false;
+                    slot.last_proposals.clear();
+                    slot.proposal_tick = None;
                 }
             }
         }
@@ -760,6 +801,7 @@ impl Runtime {
             slot.memory = Memory::default();
             slot.reports.clear();
             slot.last_proposals.clear();
+            slot.proposal_tick = None;
             slot.last_error = None;
             slot.last_turn_tick = None;
             slot.usage = UsageStats::default();
@@ -910,6 +952,7 @@ impl Inner {
             "usage": slot.usage.value(),
             "reports": reports,
             "last_proposals": slot.last_proposals,
+            "proposal_tick": slot.proposal_tick,
             "cadence_s": self.settings.cadence_s,
             "max_tokens": self.settings.max_tokens,
         })
@@ -1271,6 +1314,7 @@ pub(crate) fn validate_commands(
             Err(e) => rejected.push(format!("{}: {e}", command_short(command))),
         }
     }
+    if commands.len()>MAX_COMMANDS {rejected.push(format!("超过每回合 {MAX_COMMANDS} 条命令上限：{}条未执行",commands.len()-MAX_COMMANDS));}
     (valid, rejected)
 }
 
@@ -1303,6 +1347,7 @@ fn parse_and_validate_commands(
 }
 
 fn validate_command(obs: &Observation, side: Side, command: &Command) -> Result<(), String> {
+    if obs.exercise.as_ref().is_some_and(|e|e.locked) {return Err("exercise alert lock: active orders are unavailable".into());}
     let own = |id: EntityId| -> Result<&UnitObs, String> {
         let u = obs
             .units
@@ -1326,6 +1371,7 @@ fn validate_command(obs: &Observation, side: Side, command: &Command) -> Result<
         }
     };
     match command {
+        Command::SetUnitAutomation{unit,..}=>{own(*unit)?;}
         Command::SetCourse { unit, course_deg } => {
             own(*unit)?;
             finite(*course_deg, "course_deg")?;
@@ -1340,9 +1386,18 @@ fn validate_command(obs: &Observation, side: Side, command: &Command) -> Result<
         Command::SetDepth { unit, depth_m } => {
             own(*unit)?;
             finite(*depth_m, "depth_m")?;
-            if !(10.0..=1000.0).contains(depth_m) {
-                return Err("depth_m 必须在 10..1000".into());
+            if !(0.0..=1000.0).contains(depth_m) {
+                return Err("depth_m 必须在 0..1000；0表示浮航".into());
             }
+        }
+        Command::DamageControl{unit,action}=>{
+            let u=own(*unit)?;
+            if !matches!(u.kind,harpoon_core::types::PlatformKind::Ship|harpoon_core::types::PlatformKind::Sub){return Err("损管需要本方舰船或潜艇".into());}
+            if !matches!(action.as_str(),"flood_magazines"|"purge_aviation"|"reinforce_dc"){return Err("未知损管行动".into());}
+            if action=="purge_aviation"&&u.deck.is_none(){return Err("航空库惰化需要航空舰船".into());}
+        }
+        Command::SetTorpedoRun{unit,weapon,..}=>{
+            let u=own(*unit)?;if !u.weapons.iter().any(|m|m.weapon==*weapon){return Err("该单位没有此鱼雷".into());}
         }
         Command::SetAltitude { unit, altitude_m } => {
             own(*unit)?;
@@ -1382,6 +1437,27 @@ fn validate_command(obs: &Observation, side: Side, command: &Command) -> Result<
         Command::SetSonar { unit, .. } => {
             own(*unit)?;
         }
+        Command::SetRadar { unit, .. } => { own(*unit)?; }
+        Command::SetThrottle {unit,setting} => {let u=own(*unit)?;if !harpoon_core::rules::flight_profiles::supported(&u.class)||!["cruise","fmp","reheat","loiter"].contains(&setting.as_str()){return Err("机型没有已核验的油门数据或油门模式无效".into());}}
+        Command::SetJamming {unit,mode,contacts} => {
+            let u=own(*unit)?;let cap=harpoon_core::rules::electronic_warfare::capability(&u.class).ok_or("没有已核验的进攻干扰挂载")?;
+            if !["off","standoff","escort","spot"].contains(&mode.as_str()) || mode=="standoff" && !cap.standoff {return Err("该挂载不支持请求的干扰模式".into());}
+            if mode=="spot" && (contacts.is_empty()||contacts.len()>cap.spot_targets) {return Err("点干扰目标数超过挂载能力".into());}
+            for c in contacts {contact(*c)?;}
+        }
+        Command::SetEngagementPolicy {unit,max_in_flight,..} => {own(*unit)?;if *max_in_flight>32 {return Err("自动交战在飞预算必须在0..32".into());}}
+        Command::RetaskAircraft {unit, mission, ..} => {
+            if own(*unit)?.kind != harpoon_core::types::PlatformKind::Aircraft {return Err("任务重设只适用于飞机".into());}
+            match mission {
+                AirMission::Strike {contact:c} => contact(*c)?,
+                AirMission::Cap {station:p,radius_nm,..} | AirMission::Asw {area:p,radius_nm} => {
+                    finite(p.x,"point.x")?; finite(p.y,"point.y")?; finite(*radius_nm,"radius_nm")?;
+                    if !(0.1..=100.0).contains(radius_nm) {return Err("radius_nm 必须在0.1..100".into());}
+                }
+                AirMission::Recon {point:p} => {finite(p.x,"point.x")?;finite(p.y,"point.y")?;}
+                AirMission::Rtb => {}
+            }
+        }
         Command::SetWeaponsFree { unit, .. } => {
             own(*unit)?;
         }
@@ -1416,7 +1492,14 @@ fn validate_command(obs: &Observation, side: Side, command: &Command) -> Result<
                 return Err("箔条已耗尽".into());
             }
         }
-        Command::LaunchAircraft { unit, class, count, mission } => {
+        Command::LaunchAircraft { unit, class, count, mission, profile } => {
+            if let Some(p)=profile {
+                if p.waypoints.len()>32 {return Err("profile.waypoints 最多32点".into());}
+                for point in &p.waypoints {finite(point.x,"profile.waypoints.x")?;finite(point.y,"profile.waypoints.y")?;}
+                finite(p.altitude_m,"profile.altitude_m")?;
+                if !(15.0..=30000.0).contains(&p.altitude_m) {return Err("起飞高度必须在15..30000米".into());}
+                if p.engagement.as_ref().is_some_and(|p|p.max_in_flight>32) {return Err("profile.engagement.max_in_flight 必须在0..32".into());}
+            }
             let u = own(*unit)?;
             let deck = u.deck.as_ref().ok_or_else(|| "该单位没有飞行甲板".to_string())?;
             if *count == 0 || *count > 24 {
@@ -1451,6 +1534,9 @@ fn validate_command(obs: &Observation, side: Side, command: &Command) -> Result<
             if u.deck.is_none() {
                 return Err("该单位没有飞行甲板".into());
             }
+        }
+        Command::ReturnToBase {unit} => {
+            if own(*unit)?.kind!=harpoon_core::types::PlatformKind::Aircraft {return Err("只有飞机可以单机返航".into());}
         }
     }
     Ok(())
@@ -1628,10 +1714,11 @@ You are not an external MCP client; you are the in-game staff. Return commands d
 {"cmd":"clear_target","unit":1}
 {"cmd":"fire","unit":1,"contact":10,"weapon":"cn_yj18","rounds":2}
 {"cmd":"deploy_chaff","unit":1}
-{"cmd":"launch_aircraft","unit":5,"class":"cn_j15","count":2,"mission":{"mission":"cap","station":{"x":350,"y":355},"radius_nm":15}}
-{"cmd":"launch_aircraft","unit":5,"class":"cn_j15","count":2,"mission":{"mission":"strike","contact":10}}
+{"cmd":"launch_aircraft","unit":5,"class":"cn_j15","count":2,"mission":{"mission":"cap","station":{"x":350,"y":355},"radius_nm":15,"follow":true},"profile":{"altitude_m":3000,"weapons_free":false,"manual_strike":false}}
+{"cmd":"launch_aircraft","unit":5,"class":"cn_j15","count":2,"mission":{"mission":"strike","contact":10},"profile":{"altitude_m":50,"weapons_free":false,"manual_strike":true}}
 {"cmd":"launch_aircraft","unit":5,"class":"cn_z18j","count":1,"mission":{"mission":"recon","point":{"x":430,"y":350}}}
 {"cmd":"launch_aircraft","unit":5,"class":"cn_z18f","count":2,"mission":{"mission":"asw","area":{"x":430,"y":350},"radius_nm":20}}
+{"cmd":"return_to_base","unit":3}
 {"cmd":"recover_aircraft","unit":5}
 "#
     } else {
@@ -1651,10 +1738,11 @@ You are not an external MCP client; you are the in-game staff. Return commands d
 {"cmd":"clear_target","unit":1}
 {"cmd":"fire","unit":1,"contact":10,"weapon":"cn_yj18","rounds":2}
 {"cmd":"deploy_chaff","unit":1}
-{"cmd":"launch_aircraft","unit":5,"class":"fighter","count":2,"mission":{"mission":"cap","station":{"x":350,"y":355},"radius_nm":15}}
-{"cmd":"launch_aircraft","unit":5,"class":"fighter","count":2,"mission":{"mission":"strike","contact":10}}
+{"cmd":"launch_aircraft","unit":5,"class":"fighter","count":2,"mission":{"mission":"cap","station":{"x":350,"y":355},"radius_nm":15,"follow":true},"profile":{"altitude_m":3000,"weapons_free":false,"manual_strike":false}}
+{"cmd":"launch_aircraft","unit":5,"class":"fighter","count":2,"mission":{"mission":"strike","contact":10},"profile":{"altitude_m":50,"weapons_free":false,"manual_strike":true}}
 {"cmd":"launch_aircraft","unit":5,"class":"aew","count":1,"mission":{"mission":"recon","point":{"x":430,"y":350}}}
 {"cmd":"launch_aircraft","unit":5,"class":"helo_asw","count":2,"mission":{"mission":"asw","area":{"x":430,"y":350},"radius_nm":20}}
+{"cmd":"return_to_base","unit":3}
 {"cmd":"recover_aircraft","unit":5}
 "#
     };
@@ -1693,10 +1781,29 @@ format!(
 {schema}
 
 ## Mission-specific guidance
+- situation.tactical_options provides own nominal cover/SAM stock, replacement and relay checks, current target alternatives and feedback gates. Compare these before committing sorties. Mixed-source Fire orders in one accepted batch can be offset by the executor (up to300s); inspect ai_supervision.scheduled_releases and actual receipts instead of resubmitting queued shots. A queue is not a launch. Cancel obsolete ownership with an explicit retask/RTB, and keep a radar relay working while the strike members descend.
+- If situation.exercise is present, its named carrier/infrastructure objectives replace kill-count guidance. Aircraft kills do not directly score these objectives. A locked exercise side must return commands=[] until its own observation says unlocked; routine flight/sensors continue. Respect own naval_groups: independent surface groups retain separate leaders/routes rather than merging into the nearest carrier. Initial air-preparation times are authored conditions; only ready inventory may launch. Facilities, deployment and alert conditions are authored game assumptions.
+- situation.ai_supervision contains server-maintained task leases, actual own ammunition expenditure, observed BDA and support/search assignments. A newly accepted decision, including an intentional hold, triggers an executor review of standing tasks against current own observations. Only valid tasks are renewed; without a new accepted decision within600 simulated seconds, tasks expire. Invalid tracks, exhausted loads and insufficient return reserves are cancelled regardless of a renewal. A zero observed_damage means no confirmed benefit, not zero actual enemy damage. Respect resource holds and choose a different observed task, collect feedback, or hold. Raw launch/Fire requests may be reduced or held before entering the engine. Launch profiles may include plotted `waypoints`; the executor installs a mission destination at birth if none is supplied.
 - The kill-count exercise rewards destroying more enemy platforms than the opponent. Detect, close or use stand-off weapons, and keep your carriers alive. Do not wait for a perfect picture; use what you have and preserve a reserve.
 - At every scheduled turn, if you have a usable contact and a valid weapon, consider weapons free / assign_target / fire; if the enemy is undetected, move sensors and aircraft to find them.
 - Never invent unit ids, contact ids, weapon ids or coordinates. If a command is uncertain, omit it rather than hallucinate.
 - In advise mode your commands are proposals; in execute mode the server will apply every valid command. Keep each turn's list small and mutually consistent.
+
+## Air command execution
+- A launch profile may include `engagement`: {{"air_only":true,"max_in_flight":2}}. This applies before the first simulated second and avoids a post-launch configuration gap. Prefer a small initial CAP with an explicit reserve/replacement budget; more aircraft and more shots are not evidence of a better outcome. After an ineffective attack, review actual execution and BDA before repeating it; distinguish target identity, range, posture and timing one change at a time.
+- Review persistent tasks on every new observation. State which tasks continue, change, or end and when to review them again. Recheck actual mission, navigation, emissions, ammo, endurance and assigned contact; a previous command remains active until replaced. Treat an empty command list as an intentional hold, never as permission to replay old orders.
+- The optional launch `profile` applies immediately. A controlled ASM ingress may use altitude_m=50 (VLow), weapons_free=false, manual_strike=true. Before release, climb to at least the weapon's observed min_launch_altitude_m;50m ingress is not automatically a legal release altitude. Assemble and route by observed estimates, then fire within range on a fresh non-bearing-only track. Avoid dogfighting at VLow (Harpoon V 2026 §4.5.4); low altitude does not hide you from all radars or AEW.
+- The CAP mission is a patrol route, not an air-only weapon restriction. Weapons free can spend multirole aircraft's ASMs on ships. Keep it false for ammunition control, clear unwanted assignments, and assign air contacts deliberately. Assigned targets are still engaged while weapons free is false.
+- Recall a specific aircraft with return_to_base; recover_aircraft on a carrier recalls all of its aircraft. Rotate using endurance_s and retain CAP/AEW cover.
+- clear_station before independent goto; standing formation orders otherwise compete with plotted movement. Use actual launch/release/recovery events to confirm execution.
+- `retask_aircraft` explicitly replaces CAP/ASW/Recon automation: {{"cmd":"retask_aircraft","unit":3,"mission":{{"mission":"asw","area":{{"x":330,"y":350}},"radius_nm":1}},"manual":false}}. Use manual=true for plotted flight; fuel safety/RTB remains active. Retask does not refill weapons or fuel. ASW relocations need a new task area, not repeated goto against the old autopilot.
+- `set_radar` {{"cmd":"set_radar","unit":1,"active":false}} controls search-radar emissions and ESM detectability. Keep distributed AEW/air-defence coverage before silencing escorts. Passive contacts can be bearing-only and do not automatically grant a firing solution.
+- `rules_event` domain=command records executed/rejected weapon/task/emission commands. Acceptance by the planning API is only a proposal receipt. Check these outcomes and actual weapon releases before retrying; a rejected shot must not be described as launched.
+- `set_engagement_policy` takes unit, air_only (true restricts automatic selection to air/missiles), max_in_flight (0 keeps legacy allocation; 1..32 caps side-wide automatic SAM/AAM commitments to each target). Manual Fire is deliberate and still uses weapon gates. Use this to keep CAP from spending ASMs and avoid every escort firing at the same aircraft.
+- `set_throttle` takes unit and setting=cruise/fmp/reheat/loiter, only for verified flight-profile types. Low flight burns extra range; VLow cannot use reheat. Use cruise altitude for safe transit, descend before the exposed ingress, and budget the return before committing. Fully-loaded mass and drop-tank effects are not inferred from weapon count.
+- `set_jamming` takes unit, mode=off/standoff/escort/spot and contacts=[...]. Use only a unit with offensive_jammer capability; spot needs fresh ES/RWR detections and is bounded by fitted pods. A radiating jammer can itself be detected by ESM even with search radar silent. Unverified victim radar generation has no invented effect; two jammers do not multiply suppression. Escort geometry and modern radar resistance matter.
+- When situation.rules_profile=hv2026-rts-v2, inspect each own unit's functional_damage, weapon/sensor operational flags and deck can_launch/can_recover. HP alone does not describe combat capability. damage_control takes unit and action=flood_magazines (loses all ammunition), purge_aviation (ends aviation fuel/rearming), or reinforce_dc (takes weapon crews away, stops firing). These are deliberate persistent tradeoffs. set_torpedo_run takes unit, weapon and deep; only verified contact-fuzed torpedoes permit this setting. A surface hull with damage.sinking is combat ineffective but remains afloat until damage.sink_at; do not report it sunk before confirmation. A damage adjudication_blocked event is unresolved, not a confirmed hit or miss.
+- An own unit with manual_control=true is reserved by the human player. Do not issue orders to it or try to change its automation permission. Existing missions and basic self-defence can continue; only the human can explicitly release the reservation. Plan with the remaining permitted units.
 
 ## Decisive fleet battle doctrine
 - In a kill-count or fleet-decisive scenario, no patch of water is worth holding: find the enemy, fix the contact, and destroy platforms.
@@ -1706,7 +1813,7 @@ format!(
 - Do not fire without a usable track and fire-control solution, and do not sacrifice the last carrier air group for a marginal damage roll.
 
 ## Ammunition discipline
-- Each contact shows `own_in_flight`: your own rounds already targeting it. Before firing, check it. As a rule do not push a contact past ~4 ASMs in flight per window; every extra round into an already-saturated target is a wasted magazine.
+- Each contact shows `own_in_flight`. Plan a target-specific salvo budget from observed defences, shooter inventories, estimated arrival times and a retained reserve. There is no universal four-ASM saturation threshold. Count existing rounds before adding more; separate air-to-air and anti-ship commitments using actual releases and weapon ids.
 - Carriers and Aegis escorts bleed salvos dry with SAM, RAM, CIWS and decoys. Saturate deliberately (one coordinated window, several shooters), then hold fire and reassess with BDA before re-attacking.
 - Keep a reserve: do not empty a submarine's torpedoes or a shooter's missiles in the first hour unless it is sinking the target. A platform with empty magazines is a target.
 - Aircraft only carry a few ASMs; bring them home and re-arm instead of dribbling single rounds.
@@ -1715,7 +1822,7 @@ format!(
 - The AEW aircraft is your radar picture. Keep it 25-40 nm behind your CAP line, away from known enemy fighters; if enemy fighters close within ~30 nm of the AEW, recall it or vector CAP onto them. An AEW sniped over the fleet is a self-inflicted blindness.
 - When you hold a submarine contact (category Sub), react: launch ASW helos (mission asw) over the contact, vector ASW-capable ships, and weapons-free ASW rockets inside range. Enemy submarines sink your carriers for heavy points.
 - Your own submarines hunt: transit toward the enemy's last known position, and once inside torpedo range of a tracked ship, fire a 2-4 torpedo salvo. Do not trail the fleet passively.
-- Surface ships and submarines usually score far more than aircraft — see `victory.kill_weights` in the observation. Shooting down aircraft alone will lose a weighted battle; kill hulls.
+- Use `victory.kill_weights`, own losses and remaining time to balance hull attacks against affordable air defence and preserving a lead. Aircraft kills can contribute to victory; do not assume either a universal need to attack a carrier or a guaranteed win from air kills alone.
 - Sonobuoy contacts are 1-DP expendable sensors, not scoreable platforms. Never fire ASMs, guns or torpedoes at a contact identified as Sonobuoy; a missile on a buoy is a wasted magazine. (The contact list below already filters them.)
 
 {director_block}
@@ -1760,23 +1867,54 @@ fn build_user_prompt(
         .iter()
         .map(|e| serde_json::to_value(e).unwrap_or(Value::Null))
         .collect();
+    // Frequent detections must not evict the command outcome that the model
+    // needs to distinguish a received order from an actual release/rejection.
+    let mut execution_feedback:Vec<Value>=obs.events.iter().filter_map(|e| {
+        let v=serde_json::to_value(e).ok()?;
+        (matches!(v["event"].as_str(),Some("air_launch"|"air_recovered"|"deck_busy"|"weapons_release"))
+            || v["event"]=="rules_event" && (v["domain"]=="command"||v["domain"]=="tactical_ai"&&matches!(v["rule"].as_str(),Some("attack_review"|"task_review"|"resource_hold"|"resource_budget"|"support_reassess"|"package_relay")))).then_some(v)
+    }).rev().take(MAX_EVENTS_FOR_PROMPT).collect();
+    execution_feedback.reverse();
+    let task_review:Vec<Value>=obs.units.iter().filter_map(|u| {
+        let mut flags=Vec::new();
+        let has_asm=u.weapons.iter().any(|w|w.ammo>0 && db.weapons.get(&w.weapon).is_some_and(|w|w.kind==harpoon_core::db::WeaponKind::Ascm));
+        let active_emitters:Vec<_>=u.sensors.iter().filter(|s|s.active && db.sensors.get(&s.sensor)
+            .is_some_and(|s|matches!(s.kind,harpoon_core::db::SensorKind::Radar|harpoon_core::db::SensorKind::SonarActive))).map(|s|s.sensor.clone()).collect();
+        if u.kind==harpoon_core::types::PlatformKind::Sub && !active_emitters.is_empty()
+            && !u.weapons.iter().any(|w|w.ammo>0 && db.weapons.get(&w.weapon).is_some_and(|w|matches!(w.kind,harpoon_core::db::WeaponKind::Torpedo|harpoon_core::db::WeaponKind::Ascm|harpoon_core::db::WeaponKind::Slcm))) {
+            flags.push("empty_offensive_load_with_active_emissions");
+        }
+        if u.mission.as_deref()==Some("cap") && has_asm && !u.engagement_policy.as_ref().is_some_and(|p|p.air_only) {
+            flags.push("multirole_cap_without_air_only_policy");
+        }
+        if u.assigned.is_some_and(|id|!obs.contacts.iter().any(|c|c.id==id && !c.stale)) {flags.push("assigned_contact_missing_or_stale");}
+        if flags.is_empty() {None}else{Some(json!({"unit":u.id,"mission":u.mission,"flags":flags,"active_emitters":active_emitters,
+            "endurance_s":u.endurance_s,"engagement_policy":u.engagement_policy}))}
+    }).collect();
     let units: Vec<Value> = obs
         .units
         .iter()
         .map(|u| {
             json!({
                 "id": u.id.0, "name": u.name, "class": u.class, "kind": u.kind,
+                "manual_control":u.manual_control,
+                "navigation":u.navigation,
+                "air_task":u.air_task,
                 "pos": {"x": round1(u.pos.x), "y": round1(u.pos.y)},
                 "course_deg": round1(u.course_deg), "speed_kts": round1(u.speed_kts),
                 "ordered_course_deg": round1(u.ordered_course_deg), "ordered_speed_kts": round1(u.ordered_speed_kts),
                 "depth_m": round1(u.depth_m), "altitude_m": round1(u.altitude_m),
                 "hp": round1(u.hp), "hp_max": round1(u.hp_max),
+                "functional_damage":u.functional_damage,
                 "fire_on": u.fire_on, "assigned": u.assigned.map(|c| c.0),
-                "weapons": u.weapons.iter().map(|w| json!({"weapon":w.weapon,"name":w.name,"ammo":w.ammo,"cooldown_s":round1(w.cooldown_s)})).collect::<Vec<_>>(),
-                "sensors": u.sensors.iter().map(|s| json!({"sensor":s.sensor,"name":s.name,"active":s.active,"vs_air":s.vs_air,"vs_surface":s.vs_surface,"vs_sub":s.vs_sub})).collect::<Vec<_>>(),
-                "chaff": u.chaff, "decoys": u.decoys,
-                "deck": u.deck.as_ref().map(|d| json!({"ready": d.ready, "cycling": d.cycling})),
+                "engagement_policy":u.engagement_policy,
+                "weapons": u.weapons.iter().map(|w| json!({"weapon":w.weapon,"name":w.name,"ammo":w.ammo,"cooldown_s":round1(w.cooldown_s),"operational":w.operational,"min_launch_altitude_m":w.min_launch_altitude_m})).collect::<Vec<_>>(),
+                "sensors": u.sensors.iter().map(|s| json!({"sensor":s.sensor,"name":s.name,"active":s.active,"operational":s.operational,"vs_air":s.vs_air,"vs_surface":s.vs_surface,"vs_sub":s.vs_sub})).collect::<Vec<_>>(),
+                "chaff": u.chaff, "decoys": u.decoys, "endurance_s":u.endurance_s,
+                "offensive_jammer":harpoon_core::rules::electronic_warfare::capability(&u.class).map(|c|json!({"clutter":c.clutter,"spot_targets":c.spot_targets,"standoff":c.standoff,"source":c.source})),
+                "deck": u.deck.as_ref().map(|d| json!({"ready": d.ready, "cycling": d.cycling,"queued":d.queued,"can_launch":d.can_launch,"can_recover":d.can_recover})),
                 "mission": u.mission,
+                "flight_profile":u.flight_profile,
                 "systems": u.systems,
                 "below_layer": u.below_layer, "battery": u.battery, "towed_deployed": u.towed_deployed,
             })
@@ -1806,12 +1944,16 @@ fn build_user_prompt(
                 "id": c.id.0, "category": c.category, "class_name": c.class_name,
                 "estimate": {"x": round1(c.estimate.x), "y": round1(c.estimate.y)},
                 "est_course_deg": round1(c.est_course_deg), "est_speed_kts": round1(c.est_speed_kts),
+                "motion_known":c.motion_known,
                 "quality": round2(c.quality), "bearing_only": c.bearing_only,
+                "own_in_flight":c.own_in_flight,"bda_hits":c.bda_hits,
+                "bda_damage":c.bda_damage,"bda_hp_fraction":c.bda_hp_fraction,
                 "last_seen_s": round1(c.last_seen_s), "stale": c.stale, "sensors": c.sensors,
             })
         })
         .collect();
     let situation = json!({
+        "rules_profile":obs.rules_profile,
         "tick": obs.tick,
         "time_s": obs.time_s,
         "time_hhmmss": fmt_hms(obs.time_s as i64),
@@ -1823,7 +1965,9 @@ fn build_user_prompt(
         "result": obs.result,
         "victory": obs.victory,
         "mission": obs.mission,
+        "exercise":obs.exercise,
         "weather": obs.weather,
+        "radar_environment":obs.radar_environment,
         "day_night": obs.day_night,
         "director": ctx.director,
         "director_trigger": ctx.trigger_detail,
@@ -1831,6 +1975,10 @@ fn build_user_prompt(
         "own_units": units,
         "own_contacts": contacts,
         "visible_events": event_values,
+        "execution_feedback":execution_feedback,
+        "tactical_options":crate::tactical::assessment::brief(obs,db,&ctx.supervision),
+        "task_review":task_review,
+        "ai_supervision":ctx.supervision,
     });
     let history: Vec<Value> = ctx
         .recent
@@ -1924,6 +2072,10 @@ fn human_duration(seconds: i64, zh: bool) -> String {
 }
 
 fn mission_text(obs: &Observation, zh: bool) -> String {
+    if let Some(e)=&obs.exercise {
+        return format!("## Fictional exercise objectives\nActive orders locked: {}. Carrier damage points required: {}; infrastructure damage points required: {}. Also exceed the opponent preservation/counterstrike points at the time limit. Only own truth/observed BDA is available: {}. Aircraft kills are not objective points. Deployment and alert conditions are game assumptions.",
+            e.locked,e.required_carrier_points,e.required_infrastructure_points,serde_json::to_string(&e.objectives).unwrap());
+    }
     let remaining = obs.victory.as_ref().map(|v| v.remaining_s).unwrap_or(0);
     let clock = fmt_hms(remaining);
     if let Some(m) = &obs.mission {
@@ -2208,6 +2360,7 @@ async fn run_duel_job(
     let duration_s = sc.duration_s;
     let mut world = load_scenario(sc, (*db).clone())?;
     let mut memories: [Memory; 2] = Default::default();
+    let mut policies:[crate::tactical::supervision::Supervisor;2]=Default::default();
     let mut last_seq = [0u64; 2];
     let mut all_reports: [Vec<TurnReport>; 2] = [Vec::new(), Vec::new()];
     let mut current_reports: [Vec<TurnReport>; 2] = [Vec::new(), Vec::new()];
@@ -2225,7 +2378,10 @@ async fn run_duel_job(
         }
         let mut contexts: [Option<TurnContext>; 2] = [None, None];
         for side in [Side::Blue, Side::Red] {
+            let notes=policies[side.index()].observe(observations[side.index()].as_ref().unwrap(),&db);
+            crate::tactical::record_notes(&mut world,side,notes);
             contexts[side.index()] = Some(TurnContext {
+                supervision:policies[side.index()].summary(observations[side.index()].as_ref().unwrap()),
                 side,
                 trigger: "scheduled".into(),
                 settings: settings.clone(),
@@ -2256,7 +2412,14 @@ async fn run_duel_job(
         ];
         let mut commands: Vec<(Side, Command)> = Vec::new();
         for side in [Side::Blue, Side::Red] {
-            let decision = decisions[side.index()].clone();
+            let mut decision = decisions[side.index()].clone();
+            if decision.error.is_none() {
+                let obs=harpoon_core::observe(&world,side,0,256);
+                let notes=policies[side.index()].review_current(&obs,&db);crate::tactical::record_notes(&mut world,side,notes);
+                let (commands,notes)=policies[side.index()].guard(&obs,&db,std::mem::take(&mut decision.commands));
+                decision.rejected.extend(notes.iter().filter(|n|n.action=="resource_hold").map(|n|n.en.clone()));decision.commands=commands;
+                crate::tactical::record_notes(&mut world,side,notes);
+            }
             if let Some(err) = &decision.error {
                 errors.push(format!("{} T{}: {}", side.name(), tick, err));
                 if errors.len() > 40 {
@@ -2307,8 +2470,14 @@ async fn run_duel_job(
         }
         let step = cadence.min(max_ticks - world.tick).max(1);
         for i in 0..step {
-            let applied: &[(Side, Command)] = if i == 0 { commands.as_slice() } else { &[] };
-            harpoon_core::sim::tick(&mut world, applied);
+            let mut applied:Vec<(Side,Command)>=if i==0 {commands.clone()}else{vec![]};
+            if world.tick%30==0 {for side in [Side::Blue,Side::Red] {
+                let obs=harpoon_core::observe(&world,side,0,256);
+                let notes=policies[side.index()].observe(&obs,&db);crate::tactical::record_notes(&mut world,side,notes);
+                let (orders,notes)=policies[side.index()].maintenance(&obs,&db);crate::tactical::record_notes(&mut world,side,notes);
+                applied.extend(orders.into_iter().map(|c|(side,c)));
+            }}
+            harpoon_core::sim::tick(&mut world, &applied);
             if world.over {
                 break;
             }
@@ -2704,9 +2873,100 @@ mod tests {
     }
 
     #[test]
+    fn prompt_includes_own_endurance_and_bda_and_reports_command_overflow() {
+        let sc=scenario_from_json(r#"{"id":"prompt-test","name":"Prompt test","duration_s":100,"seed":1,
+            "weather":{"visibility_nm":10,"jam":[0,0]},"units":[{"side":"Blue","class":"fighter","name":"BLUE AIR","pos":[0,0]}]}"#).unwrap();
+        let world=load_scenario(sc,Database::built_in()).unwrap();
+        let mut obs=harpoon_core::observe::observe(&world,Side::Blue,0,0);
+        obs.units[0].endurance_s=Some(1234.5);
+        obs.units[0].functional_damage.insert("damage.fire_pct".into(),3.5);
+        obs.units[0].weapons[0].operational=false;
+        obs.units[0].weapons[0].min_launch_altitude_m=61.0;
+        let c=harpoon_core::observe::ContactObs {id:harpoon_core::ContactId(4),category:harpoon_core::types::PlatformKind::Ship,
+            ..serde_json::from_value(json!({"id":4,"category":"Ship","class_name":null,"estimate":{"x":1,"y":2},
+                "est_course_deg":0,"est_speed_kts":0,"quality":0.8,"bearing_only":false,"last_seen_s":0,"stale":false,"sensors":[],
+                "own_in_flight":3,"bda_hits":2,"bda_damage":100,"bda_hp_fraction":0.5})).unwrap()};
+        obs.contacts.push(c);
+        let ctx=TurnContext{supervision:Value::Null,side:Side::Blue,trigger:"test".into(),settings:Settings::from_env(),autonomy:"advise".into(),
+            memory:Memory::default(),recent:vec![],generation:0,scenario_id:"prompt-test".into(),seed:1,tick:0,director:false,wake_rules:vec![],trigger_detail:String::new()};
+        let prompt=build_user_prompt(&ctx,&obs,&world.db,None);
+        for evidence in ["\"damage.fire_pct\":3.5","\"operational\":false","\"min_launch_altitude_m\":61.0","\"rules_profile\":\"hv2026-rts-v2\""] {assert!(prompt.contains(evidence),"missing own rule-state evidence: {evidence}");}
+        for evidence in ["\"endurance_s\":1234.5","\"own_in_flight\":3","\"bda_hits\":2","\"bda_hp_fraction\":0.5"] {assert!(prompt.contains(evidence),"{evidence}");}
+        let commands=vec![Command::Stop{unit:obs.units[0].id};17];
+        let (valid,rejected)=validate_commands(&obs,Side::Blue,&commands);
+        assert_eq!(valid.len(),16);assert_eq!(rejected.len(),1);
+        let system=build_system_prompt(&ctx);assert!(system.contains("manual_strike"));assert!(system.contains("return_to_base"));
+    }
+
+    #[test]
     fn trailing_commas_are_repaired() {
         let value = extract_json("{\"report\":\"x\",\"commands\":[{\"cmd\":\"stop\",\"unit\":1,},],}").unwrap();
         assert_eq!(value["report"], "x");
         assert_eq!(value["commands"].as_array().unwrap().len(), 1);
+    }
+
+    #[test]
+    fn execution_receipts_survive_event_spam_and_empty_sub_tasks_are_flagged() {
+        let sc=scenario_from_json(r#"{"id":"review-test","name":"review","duration_s":100,"seed":1,
+            "weather":{"visibility_nm":1,"jam":[0,0]},"units":[{"side":"Blue","class":"cn_093","pos":[0,0]}]}"#).unwrap();
+        let db=Database::from_json(include_str!("../../../database/consolidated.json")).unwrap();
+        let world=load_scenario(sc,db).unwrap();let mut obs=harpoon_core::observe(&world,Side::Blue,0,0);
+        for w in &mut obs.units[0].weapons {w.ammo=0;}
+        for s in &mut obs.units[0].sensors {s.active=true;}
+        obs.units[0].assigned=Some(harpoon_core::ContactId(999));
+        obs.events=(0..80).map(|i|serde_json::from_value(json!({"seq":i+1,"tick":0,"vis":{"Side":"Blue"},
+            "event":"rules_event","domain":if i==0{"command"}else{"fixture"},"rule":if i==0{"receipt-proof"}else{"spam"},
+            "side":"Blue","unit":null,"contact":null,"detail":"test"})).unwrap()).collect();
+        let ctx=TurnContext{supervision:Value::Null,side:Side::Blue,trigger:"test".into(),settings:Settings::from_env(),autonomy:"advise".into(),
+            memory:Memory::default(),recent:vec![],generation:0,scenario_id:"review-test".into(),seed:1,tick:0,director:false,wake_rules:vec![],trigger_detail:String::new()};
+        let prompt=build_user_prompt(&ctx,&obs,&world.db,None);
+        assert!(prompt.contains("receipt-proof"),"dedicated outcome list must retain receipt outside generic tail");
+        assert!(prompt.contains("tactical_options"));assert!(prompt.contains("observed_target_options"));assert!(prompt.contains("effect_evaluation"));
+        assert!(prompt.contains("empty_offensive_load_with_active_emissions"));
+        assert!(prompt.contains("assigned_contact_missing_or_stale"));
+    }
+
+    #[test]
+    fn a_hold_error_or_already_applied_turn_cannot_leave_old_commands_executable() {
+        for (label, error, applied, commands) in [
+            ("hold", None, false, Vec::new()),
+            ("error", Some("model failed".to_string()), false, Vec::new()),
+            ("applied", None, true, vec![Command::Stop { unit: harpoon_core::EntityId(1) }]),
+        ] {
+            let runtime = Runtime::new();
+            let scenario = format!("proposal-regression-{}-{label}", std::process::id());
+            runtime.start_game(&scenario, 1, 10);
+            runtime.inner.lock().unwrap().sides[0].last_proposals =
+                vec![Command::Stop { unit: harpoon_core::EntityId(1) }];
+            let ctx = TurnContext { supervision:Value::Null,side:Side::Blue, trigger:"test".into(), settings:Settings::from_env(),
+                autonomy:"advise".into(), memory:Memory::default(), recent:vec![],
+                generation:runtime.generation(), scenario_id:scenario.clone(), seed:1, tick:10,
+                director:false, wake_rules:vec![], trigger_detail:String::new() };
+            runtime.finish_turn(&ctx, TurnDecision { report:"brief".into(), memory:String::new(),
+                intent:"review".into(), commands, rejected:vec![], error, usage:Usage::default(),
+                latency_ms:0, desired_speed:None, wake_conditions:vec![] }, applied, 0);
+            assert!(runtime.side_status(Side::Blue)["last_proposals"].as_array().unwrap().is_empty(), "{label}");
+            let _ = std::fs::remove_file(memory_path(&scenario, 1, Side::Blue));
+        }
+    }
+
+    #[test]
+    fn proposals_are_consumed_once_bound_to_their_observation_and_cleared_on_restore() {
+        let runtime = Runtime::new();
+        let seed = |side: Side, tick| {
+            let mut inner = runtime.inner.lock().unwrap();
+            let slot = &mut inner.sides[side.index()];
+            slot.last_proposals = vec![Command::Stop { unit:harpoon_core::EntityId(1) }];
+            slot.proposal_tick = Some(tick);
+        };
+        seed(Side::Blue, 10);
+        seed(Side::Red, 10);
+        assert_eq!(runtime.take_proposals(Side::Blue, 10).unwrap().len(), 1);
+        assert!(runtime.take_proposals(Side::Blue, 10).unwrap().is_empty());
+        assert!(runtime.take_proposals(Side::Red, 11).is_err());
+        assert!(runtime.take_proposals(Side::Red, 11).unwrap().is_empty());
+        seed(Side::Blue, 10);
+        runtime.restore_snapshot(runtime.snapshot(), "restored", 1, 10).unwrap();
+        assert!(runtime.take_proposals(Side::Blue, 10).unwrap().is_empty());
     }
 }

@@ -12,6 +12,7 @@ mod agent;
 mod director;
 mod tutorial;
 mod doctrine;
+mod persistence;
 
 use axum::{
     extract::{
@@ -43,6 +44,8 @@ use tower_http::services::ServeDir;
 
 #[derive(Clone)]
 struct AppState {
+    session_revision: Arc<AtomicU64>,
+    advance_plans: Arc<Mutex<persistence::AdvancePlans>>,
     game: Arc<Mutex<Game>>,
     scenario_dir: Arc<PathBuf>,
     update_tx: Arc<tokio::sync::broadcast::Sender<()>>,
@@ -53,6 +56,19 @@ struct AppState {
     /// Two-sided adversarial director status and id allocator.
     director: Arc<Mutex<director::State>>,
     director_seq: Arc<AtomicU64>,
+}
+
+impl AppState {
+    fn bump_session(&self) {
+        let now=std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap_or_default().as_micros() as u64;
+        let old=self.session_revision.load(Ordering::Relaxed);
+        self.session_revision.fetch_max(now.max(old+1),Ordering::Relaxed);
+    }
+    fn player_view(&self, world: &World, side: Side, since: u64, max: usize) -> serde_json::Value {
+        let mut value=serde_json::to_value(observe(world,side,since,max)).expect("player observation");
+        value["session_revision"]=json!(self.session_revision.load(Ordering::Relaxed));
+        value
+    }
 }
 
 /// Merge every database/volumes/*.json (underscore-prefixed files skipped)
@@ -90,12 +106,13 @@ fn load_volume_database(volumes_dir: &std::path::Path) -> Database {
 /// Deterministic TacticalStaff takeover for one side. The staff instance is
 /// kept across ticks on purpose: roles and the threat axis are assigned once
 /// and must not churn between decisions.
+#[derive(Clone, serde::Serialize, serde::Deserialize)]
 struct TacticalSlot {
     enabled: bool,
     cadence_s: i64,
     last_tick: i64,
     last_orders: usize,
-    staff: Box<dyn ai::CommandStaff>,
+    staff: tactical::TacticalStaff,
 }
 
 impl TacticalSlot {
@@ -105,12 +122,13 @@ impl TacticalSlot {
             cadence_s: 30,
             last_tick: 0,
             last_orders: 0,
-            staff: Box::new(tactical::TacticalStaff::with_db(side, db)),
+            staff: tactical::TacticalStaff::with_db(side, db),
         }
     }
 }
 
 struct Game {
+    recording: Option<persistence::Recording>,
     world: Option<World>,
     speed: f64,
     accumulator: f64,
@@ -126,15 +144,140 @@ struct Game {
     resume_speed: f64,
     planning_outstanding: u32,
     tactical: [TacticalSlot; 2],
+    ai_supervision:Option<[tactical::supervision::Supervisor;2]>,
 }
 
+fn manual_units(world:&World,commands:&[(Side,Command)])->BTreeSet<harpoon_core::EntityId> {
+    let mut locked:BTreeSet<_>=world.entities.values().filter(|e|e.ext.get("control.manual")==Some(&1.0)).map(|e|e.id).collect();
+    for (side,cmd) in commands {
+        if let Command::SetUnitAutomation{unit,enabled}=cmd {
+            if world.entity(*unit).is_some_and(|e|e.alive&&e.side==*side)&&!harpoon_core::exercise::locked(world,*side) {
+                if *enabled {locked.remove(unit);}else{locked.insert(*unit);}
+            }
+        }
+    }
+    locked
+}
 impl Game {
+    fn preview_navigation(&self,side:Side,unit:harpoon_core::EntityId,goal:harpoon_core::Vec2)->Result<Vec<harpoon_core::Vec2>,String>{
+        let world=self.world.as_ref().ok_or("no game running")?;
+        let e=world.entity(unit).filter(|e|e.side==side&&e.alive&&!e.kind.is_projectile()&&e.kind!=harpoon_core::types::PlatformKind::Base).ok_or("navigation requires an own mobile unit")?;
+        if !goal.x.is_finite()||!goal.y.is_finite()||goal.x.abs()>1_000_000.0||goal.y.abs()>1_000_000.0{return Err("invalid navigation destination".into());}
+        if matches!(e.kind,harpoon_core::types::PlatformKind::Ship|harpoon_core::types::PlatformKind::Sub){
+            if let Some(t)=&world.context.terrain{return t.route(e.pos,goal).ok_or("charted land blocks destination or no safe sea route within planner bounds".into());}
+        }
+        Ok(vec![goal])
+    }
+    fn queue_player_command(&mut self, side:Side, command:Command)->Result<(),String> {
+        let world=self.world.as_ref().ok_or("no game running")?;
+        if world.over {return Err("game has ended".into());}
+        let obs=observe(world,side,0,0);
+        let (_,rejected)=agent::validate_commands(&obs,side,std::slice::from_ref(&command));
+        if !rejected.is_empty(){return Err(rejected.join("; "));}
+        if let Command::Goto{unit,waypoints}=&command {
+            if let Some(t)=&world.context.terrain {
+                let e=world.entity(*unit).unwrap();
+                if matches!(e.kind,harpoon_core::types::PlatformKind::Ship|harpoon_core::types::PlatformKind::Sub){
+                    let mut from=e.pos;for goal in waypoints{if t.route(from,*goal).is_none(){return Err("charted land blocks destination or no safe sea route within planner bounds".into());}from=*goal;}
+                }
+            }
+        }
+        if !matches!(&command,Command::SetUnitAutomation{..}) {
+            let unit=tactical::supervision::unit_of(&command);
+            if !manual_units(world,&self.inbox).contains(&unit) {
+                self.inbox.push((side,Command::SetUnitAutomation{unit,enabled:false}));
+            }
+        }
+        self.inbox.push((side,command));
+        Ok(())
+    }
+    fn step(&mut self, external: &[(Side, Command)]) -> bool {
+        let Some(world)=self.world.as_mut() else { return false; };
+        if world.over {return false;}
+        // Retain the complete tick until the recorder has copied it, then
+        // restore the player's bounded event tail. This affects storage only.
+        let event_cap=world.event_cap;
+        if self.recording.is_some() {world.event_cap=usize::MAX;}
+        let manual=manual_units(world,external);
+        // Ownership transitions are recorded core commands, applied with the
+        // human order. Queuing or rejecting an order alone cannot revoke leases.
+        for (side,cmd) in external {
+            if let Command::SetUnitAutomation{unit,enabled:false}=cmd {
+                if world.entity(*unit).is_some_and(|e|e.side==*side&&e.alive)&&!harpoon_core::exercise::locked(world,*side) {
+                    if let Some(p)=&mut self.ai_supervision {p[side.index()].release_manual(*unit);}
+                    self.tactical[side.index()].staff.supervision.release_manual(*unit);
+                }
+            }
+        }
+        let allowed=|cmd:&Command|!matches!(cmd,Command::SetUnitAutomation{..})&&!manual.contains(&tactical::supervision::unit_of(cmd));
+        let mut c=external.to_vec();
+        if world.tick%30==0 {
+            if let Some(policies)=&mut self.ai_supervision {
+                for (idx,policy) in policies.iter_mut().enumerate() {
+                    if self.tactical[idx].enabled {continue;}
+                    let side=if idx==0 {Side::Blue}else{Side::Red};
+                    let obs=observe(world,side,0,256);
+                    let mut notes=policy.observe(&obs,&world.db);
+                    let (orders,review)=policy.maintenance(&obs,&world.db);notes.extend(review);
+                    tactical::record_notes(world,side,notes);c.extend(orders.into_iter().filter(&allowed).map(|cmd|(side,cmd)));
+                }
+            }
+        }
+        if let Some(session)=self.training.as_mut() { c.extend(session.opponent_commands(world)); }
+        if self.training.is_none() {
+            if let Some(side)=world.context.automated_side { c.extend(doctrine::orders(&observe(world,side,world.event_seq,0)).into_iter().filter(|(_,cmd)|allowed(cmd))); }
+            for (idx,slot) in self.tactical.iter_mut().enumerate() {
+                let side=if idx==0 {Side::Blue} else {Side::Red};
+                if slot.enabled && world.tick-slot.last_tick>=slot.cadence_s {
+                    let mut obs=observe(world,side,0,256);
+                    for u in &mut obs.units {u.manual_control=manual.contains(&u.id);}
+                    let orders:Vec<_>=slot.staff.decide(&obs).into_iter().filter(&allowed).collect();
+                    tactical::record_notes(world,side,slot.staff.take_notes());
+                    slot.last_orders=orders.len(); slot.last_tick=world.tick;
+                    c.extend(orders.into_iter().map(|cmd|(side,cmd)));
+                }
+            }
+        }
+        if let Some(r)=self.recording.as_mut() { r.before(world,&c); }
+        harpoon_core::sim::tick(world,&c);
+        if let Some(r)=self.recording.as_mut() { r.after(world); }
+        world.event_cap=event_cap;
+        if world.events.len()>event_cap {world.events.drain(0..world.events.len()-event_cap);}
+        self.training.as_mut().is_some_and(|s|s.after_tick(world,&c))
+    }
     fn new(db: harpoon_core::Database) -> Self {
-        Self { world: None, speed: 0.0, accumulator: 0.0, inbox: Vec::new(),
+        Self { recording: None, world: None, speed: 0.0, accumulator: 0.0, inbox: Vec::new(),
             training: None, training_completed: tutorial::load_progress(), progress_saved: true,
             director_active: false, director_id: 0,
             agent_hold: false, resume_speed: 0.0, planning_outstanding: 0,
-            tactical: [TacticalSlot::new(Side::Blue, db.clone()), TacticalSlot::new(Side::Red, db)] }
+            tactical: [TacticalSlot::new(Side::Blue, db.clone()), TacticalSlot::new(Side::Red, db)],ai_supervision:None }
+    }
+    fn supervise_ai(&mut self,side:Side,commands:Vec<Command>)->(Vec<Command>,Vec<String>) {
+        let Some(world)=&mut self.world else{return (vec![],vec!["no game".into()])};
+        let manual=manual_units(world,&self.inbox);
+        let mut rejected=Vec::new();
+        let commands=commands.into_iter().filter(|c|{
+            let id=tactical::supervision::unit_of(c);
+            let blocked=matches!(c,Command::SetUnitAutomation{..})||manual.contains(&id);
+            if blocked {rejected.push(format!("#{id:?}: manual command retained; only the player can resume AI control"));}
+            !blocked
+        }).collect();
+        let obs=observe(world,side,0,256);
+        let policy=&mut self.ai_supervision.get_or_insert_with(||Default::default())[side.index()];
+        let mut notes=policy.observe(&obs,&world.db);
+        notes.extend(policy.review_current(&obs,&world.db));
+        let (commands,guard)=policy.guard(&obs,&world.db,commands);
+        rejected.extend(guard.iter().filter(|n|n.action=="resource_hold").map(|n|n.en.clone()));
+        notes.extend(guard);tactical::record_notes(world,side,notes);(commands,rejected)
+    }
+    fn ai_summary(&self,side:Side,obs:&Observation)->serde_json::Value {
+        let mut summary=if self.tactical[side.index()].enabled {self.tactical[side.index()].staff.supervision.summary(obs)}
+        else{self.ai_supervision.as_ref().map(|p|p[side.index()].summary(obs)).unwrap_or_else(||tactical::supervision::Supervisor::default().summary(obs))};
+        if let Some(world)=self.world.as_ref() {
+            let options=tactical::assessment::brief(obs,&world.db,&summary);
+            summary["tactical_options"]=options;
+        }
+        summary
     }
     fn tactical_slot_mut(&mut self, side: Side) -> &mut TacticalSlot {
         &mut self.tactical[side.index()]
@@ -165,11 +308,14 @@ const MAX_TICKS_PER_STEP: i64 = 512;
 fn run_loop(state: AppState) {
     tokio::spawn(async move {
         let mut interval = tokio::time::interval(std::time::Duration::from_millis(100));
+        // A slow simulation batch must yield to HTTP/WS rather than replay
+        // a burst of missed wall-clock intervals while retaining the CPU.
+        interval.set_missed_tick_behavior(tokio::time::MissedTickBehavior::Skip);
         loop {
             interval.tick().await;
             // Scope 1: decide how many ticks to run (MutexGuard borrows are
             // not field-split through Deref, so keep sections minimal).
-            let work: Option<(i64, Vec<(Side, Command)>)> = {
+            let work: Option<i64> = {
                 let mut g = state.game.lock().unwrap();
                 let over = g.world.as_ref().map(|w| w.over).unwrap_or(true);
                 if !over && g.training.is_none() && g.speed <= 0.0 && !g.director_active && !g.agent_hold {
@@ -184,7 +330,7 @@ fn run_loop(state: AppState) {
                     g.accumulator -= n as f64;
                     let n = n.min(MAX_TICKS_PER_STEP);
                     if n > 0 {
-                        Some((n, std::mem::take(&mut g.inbox)))
+                        Some(n)
                     } else {
                         None
                     }
@@ -193,46 +339,19 @@ fn run_loop(state: AppState) {
                 }
             };
             let mut poked = false;
-            if let Some((n, cmds)) = work {
+            if let Some(n) = work {
                 let mut g = state.game.lock().unwrap();
+                if g.speed<=0.0 || g.director_active || g.agent_hold {continue;}
+                let cmds = std::mem::take(&mut g.inbox);
                 let mut pause_training = false;
-                let Game { world, training, tactical, .. } = &mut *g;
-                if let Some(world) = world.as_mut() {
-                    // Commands apply once on the first tick (orders persist
-                    // as entity state afterwards).
-                    let empty: Vec<(Side, Command)> = Vec::new();
-                    for i in 0..n {
-                        let mut c = if i == 0 { cmds.clone() } else { empty.clone() };
-                        if let Some(session) = training.as_mut() { c.extend(session.opponent_commands(world)); }
-                        if training.is_none() {
-                            if let Some(side) = world.context.automated_side {
-                                let obs = observe(world, side, world.event_seq, 0);
-                                c.extend(doctrine::orders(&obs));
-                            }
-                            for (idx, slot) in tactical.iter_mut().enumerate() {
-                                let side = if idx == 0 { Side::Blue } else { Side::Red };
-                                if slot.enabled && world.tick - slot.last_tick >= slot.cadence_s {
-                                    let obs = observe(world, side, world.event_seq, 0);
-                                    let orders = slot.staff.decide(&obs);
-                                    slot.last_orders = orders.len();
-                                    slot.last_tick = world.tick;
-                                    c.extend(orders.into_iter().map(|cmd| (side, cmd)));
-                                }
-                            }
-                        }
-                        harpoon_core::sim::tick(world, &c);
-                        if training.as_mut().is_some_and(|session| session.after_tick(world, &c)) {
-                            pause_training = true;
-                            break;
-                        }
-                        if world.over {
-                            break;
-                        }
-                    }
-                    poked = true;
+                for i in 0..n {
+                    if g.step(if i==0 {&cmds} else {&[]}) { pause_training=true; break; }
+                    if g.world.as_ref().is_none_or(|w|w.over) {break;}
                 }
+                poked=true;
                 if pause_training { g.speed = 0.0; g.accumulator = 0.0; }
                 g.record_training();
+                persistence::complete(&mut g,&state.agents);
             }
             if poked {
                 let _ = state.update_tx.send(());
@@ -375,36 +494,57 @@ async fn new_game(
         .map_err(|e| (StatusCode::BAD_REQUEST, e))?;
     let tick = world.tick;
     let name = world.scenario_name.clone();
+    let rules_db=world.db.clone();
     let scenario_id = world.scenario_id.clone();
     let seed = world.seed;
     let mut g = state.game.lock().unwrap();
     let completed = g.training_completed.clone();
-    *g = Game { world: Some(world), speed: req.speed, accumulator: 0.0, inbox: Vec::new(),
+    *g = Game { recording: Some(persistence::Recording::new(&world)), world: Some(world), speed: req.speed, accumulator: 0.0, inbox: Vec::new(),
         training: None, training_completed: completed, progress_saved: true,
         director_active: false, director_id: 0,
         agent_hold: false, resume_speed: 0.0, planning_outstanding: 0,
-        tactical: [TacticalSlot::new(Side::Blue, (*state.db).clone()), TacticalSlot::new(Side::Red, (*state.db).clone())] };
+        tactical: [TacticalSlot::new(Side::Blue, rules_db.clone()), TacticalSlot::new(Side::Red, rules_db)],ai_supervision:None };
+    state.bump_session();
     drop(g);
     state.agents.start_game(&scenario_id, seed, tick);
+    let _=state.update_tx.send(());
     Ok(Json(json!({"started": true, "scenario": name, "seeded_at_tick": tick})))
 }
 
 async fn state_handler(
     State(state): State<AppState>,
     Query(q): Query<StateQuery>,
-) -> Result<Json<Observation>, (StatusCode, String)> {
+) -> Result<Json<serde_json::Value>, (StatusCode, String)> {
     let side = Side::parse(&q.side).ok_or((StatusCode::BAD_REQUEST, "side must be Blue|Red".into()))?;
     let g = state.game.lock().unwrap();
     let Some(world) = g.world.as_ref() else {
         return Err((StatusCode::CONFLICT, "no game running; POST /api/game first".into()));
     };
-    Ok(Json(observe(world, side, q.since, q.max_events)))
+    let mut view=state.player_view(world, side, q.since, q.max_events);
+    view["ai_supervision"]=g.ai_summary(side,&observe(world,side,world.event_seq,0));
+    Ok(Json(view))
+}
+
+/// Static public geography only; never contains entities, tracks or orders.
+async fn terrain_handler(State(state):State<AppState>)->Json<serde_json::Value> {
+    let g=state.game.lock().unwrap();
+    Json(g.world.as_ref().map(|w|json!({"scenario_id":w.scenario_id,"terrain":w.context.terrain})).unwrap_or(json!({"terrain":null})))
+}
+#[derive(Deserialize)]
+struct NavigationQuery{side:String,unit:u32,x:f64,y:f64}
+async fn navigation_preview_handler(State(state):State<AppState>,Query(q):Query<NavigationQuery>)->Result<Json<serde_json::Value>,(StatusCode,String)>{
+    let side=Side::parse(&q.side).ok_or((StatusCode::BAD_REQUEST,"side must be Blue|Red".into()))?;
+    let g=state.game.lock().unwrap();let goal=harpoon_core::Vec2::new(q.x,q.y);
+    let route=g.preview_navigation(side,harpoon_core::EntityId(q.unit),goal).map_err(|e|(StatusCode::BAD_REQUEST,e))?;
+    Ok(Json(json!({"unit":q.unit,"side":side,"tick":g.world.as_ref().unwrap().tick,"session_revision":state.session_revision.load(Ordering::SeqCst),"requested":goal,"waypoints":route})))
 }
 
 #[derive(Deserialize)]
 struct CommandReq {
     side: String,
     command: Command,
+    #[serde(default)]
+    session_revision:Option<u64>,
 }
 
 async fn command_handler(
@@ -413,10 +553,13 @@ async fn command_handler(
 ) -> Result<Json<serde_json::Value>, (StatusCode, String)> {
     let side = Side::parse(&req.side).ok_or((StatusCode::BAD_REQUEST, "side must be Blue|Red".into()))?;
     let mut g = state.game.lock().unwrap();
+    if req.session_revision.is_some_and(|r|r!=state.session_revision.load(Ordering::SeqCst)) {
+        return Err((StatusCode::CONFLICT,"game changed; refresh observation before issuing orders".into()));
+    }
     if g.world.is_none() {
         return Err((StatusCode::CONFLICT, "no game running".into()));
     }
-    g.inbox.push((side, req.command));
+    g.queue_player_command(side,req.command).map_err(|e|(StatusCode::BAD_REQUEST,e))?;
     Ok(Json(json!({"queued": true, "pending": g.inbox.len()})))
 }
 
@@ -493,11 +636,11 @@ async fn run_agent_turn(
             .map(|w| w.tick)
             .ok_or((StatusCode::CONFLICT, "no game running".to_string()))?
     };
-    let ctx = state
+    let mut ctx = state
         .agents
         .prepare_turn(side, trigger, tick)
         .map_err(agent_error)?;
-    let obs = {
+    let (obs, db) = {
         let g = state.game.lock().unwrap();
         let Some(world) = g.world.as_ref() else {
             state
@@ -505,7 +648,9 @@ async fn run_agent_turn(
                 .abort_turn(&ctx, "no game running".to_string());
             return Err((StatusCode::CONFLICT, "no game running".to_string()));
         };
-        observe(world, side, ctx.memory.last_event_seq, 120)
+        let obs=observe(world, side, ctx.memory.last_event_seq, 256);
+        ctx.supervision=g.ai_summary(side,&obs);
+        (obs, world.db.clone())
     };
     let last_event_seq = obs
         .events
@@ -513,11 +658,10 @@ async fn run_agent_turn(
         .map(|e| e.seq)
         .max()
         .unwrap_or(ctx.memory.last_event_seq);
-    let db = state.db.clone();
     let ctx_for_llm = ctx.clone();
     let obs_for_llm = obs.clone();
     let request_message = message.clone();
-    let decision = match tokio::task::spawn_blocking(move || {
+    let mut decision = match tokio::task::spawn_blocking(move || {
         agent::execute_turn(&ctx_for_llm, &obs_for_llm, &db, request_message.as_deref())
     })
     .await
@@ -539,17 +683,20 @@ async fn run_agent_turn(
     if decision.error.is_none()
         && same_generation
         && ctx.autonomy == "execute"
-        && !decision.commands.is_empty()
     {
         let mut g = state.game.lock().unwrap();
         let same_world = g.world.as_ref().is_some_and(|world| {
             world.scenario_id == ctx.scenario_id && world.seed == ctx.seed && !world.over
         });
         if same_world && g.training.is_none() {
+            let current=observe(g.world.as_ref().unwrap(),side,0,0);
+            let (valid,rejected)=agent::validate_commands(&current,side,&decision.commands);
+            decision.rejected.extend(rejected);
+            let (valid,rejected)=g.supervise_ai(side,valid);decision.rejected.extend(rejected);decision.commands=valid;
             for command in &decision.commands {
                 g.inbox.push((side, command.clone()));
             }
-            applied = true;
+            applied = !decision.commands.is_empty();
         }
     }
     let report = state
@@ -648,10 +795,6 @@ async fn agent_execute(
     AxPath(side): AxPath<String>,
 ) -> Result<Json<serde_json::Value>, (StatusCode, String)> {
     let side = Side::parse(&side).ok_or((StatusCode::BAD_REQUEST, "side must be Blue|Red".into()))?;
-    let proposals = state.agents.last_proposals(side);
-    if proposals.is_empty() {
-        return Ok(Json(json!({"queued": 0, "rejected": []})));
-    }
     let mut g = state.game.lock().unwrap();
     if g.training.is_some() {
         return Err((StatusCode::CONFLICT, "training session is active".into()));
@@ -666,7 +809,11 @@ async fn agent_execute(
         }
         observe(world, side, 0, 0)
     };
-    let (valid, rejected) = agent::validate_commands(&obs, side, &proposals);
+    // Consume under the game lock so simultaneous clicks cannot queue twice.
+    let proposals = state.agents.take_proposals(side, obs.tick)
+        .map_err(|e| (StatusCode::CONFLICT, e))?;
+    let (valid, mut rejected) = agent::validate_commands(&obs, side, &proposals);
+    let (valid,policy_rejected)=g.supervise_ai(side,valid);rejected.extend(policy_rejected);
     for command in &valid {
         g.inbox.push((side, command.clone()));
     }
@@ -714,9 +861,11 @@ async fn training_start(State(state): State<AppState>, Json(req): Json<TrainingS
     let session = tutorial::Session::new(course, TRAINING_ATTEMPT.fetch_add(1, Ordering::Relaxed), &mut world)
         .map_err(|e| (StatusCode::BAD_REQUEST, e))?;
     let mut g = state.game.lock().unwrap();
+    g.recording = None;
     g.world = Some(world); g.training = Some(session); g.speed = 0.0; g.accumulator = 0.0; g.inbox.clear();
     g.director_active = false; g.director_id = 0;
     g.agent_hold = false; g.resume_speed = 0.0; g.planning_outstanding = 0;
+    state.bump_session();
     drop(g);
     state.agents.start_game(&tutorial_scenario, tutorial_seed, tutorial_tick);
     let _ = state.update_tx.send(());
@@ -807,6 +956,7 @@ async fn director_start(
     let scenario_id = world.scenario_id.clone();
     let seed = world.seed;
     let duration = world.duration_s;
+    let rules_db=world.db.clone();
     let tick = world.tick;
     let id = state.director_seq.fetch_add(1, Ordering::Relaxed) + 1;
     let max_ticks = req.max_ticks.unwrap_or(duration).clamp(1, duration.max(1));
@@ -816,7 +966,10 @@ async fn director_start(
         g.director_active = false;
         g.director_id = 0;
         let completed = g.training_completed.clone();
+        state.bump_session();
         *g = Game {
+            ai_supervision:None,
+            recording: Some(persistence::Recording::new(&world)),
             world: Some(world),
             speed: 0.0,
             accumulator: 0.0,
@@ -829,7 +982,7 @@ async fn director_start(
             agent_hold: false,
             resume_speed: 0.0,
             planning_outstanding: 0,
-            tactical: [TacticalSlot::new(Side::Blue, (*state.db).clone()), TacticalSlot::new(Side::Red, (*state.db).clone())],
+            tactical: [TacticalSlot::new(Side::Blue, rules_db.clone()), TacticalSlot::new(Side::Red, rules_db)],
         };
     }
     state.agents.start_game(&scenario_id, seed, tick);
@@ -952,7 +1105,7 @@ async fn run_director(
         });
         let _ = state.update_tx.send(());
 
-        let ctx_blue = match state.agents.prepare_director_turn(
+        let mut ctx_blue = match state.agents.prepare_director_turn(
             Side::Blue,
             tick_now,
             blue.rules.clone(),
@@ -967,7 +1120,7 @@ async fn run_director(
                 return;
             }
         };
-        let ctx_red = match state.agents.prepare_director_turn(
+        let mut ctx_red = match state.agents.prepare_director_turn(
             Side::Red,
             tick_now,
             red.rules.clone(),
@@ -983,6 +1136,7 @@ async fn run_director(
                 return;
             }
         };
+        {let g=state.game.lock().unwrap();ctx_blue.supervision=g.ai_summary(Side::Blue,&obs_blue);ctx_red.supervision=g.ai_summary(Side::Red,&obs_red);}
         let last_seq_blue = obs_blue
             .events
             .iter()
@@ -1010,7 +1164,7 @@ async fn run_director(
             tokio::join!(call_blue, call_red)
         })
         .await;
-        let (decision_blue, decision_red) = match joined {
+        let (mut decision_blue, mut decision_red) = match joined {
             Ok((Ok(b), Ok(r))) => (b, r),
             Ok((Err(e), _)) => {
                 state.agents.abort_turn(&ctx_blue, format!("blue task failed: {e}"));
@@ -1070,6 +1224,12 @@ async fn run_director(
         } else {
             director::effective_rules(&decision_red.wake_conditions)
         };
+        {
+            let mut g=state.game.lock().unwrap();
+            for (side,decision) in [(Side::Blue,&mut decision_blue),(Side::Red,&mut decision_red)] {
+                if decision.error.is_none() {let (commands,rejected)=g.supervise_ai(side,std::mem::take(&mut decision.commands));decision.commands=commands;decision.rejected.extend(rejected);}
+            }
+        }
         let commands_blue = decision_blue.commands.clone();
         let commands_red = decision_red.commands.clone();
         let applied_blue = decision_blue.error.is_none() && !commands_blue.is_empty();
@@ -1143,9 +1303,16 @@ async fn run_director(
             for i in 0..n {
                 let (over, hb, hr, tick) = {
                     let mut g = state.game.lock().unwrap();
-                    let Some(world) = g.world.as_mut() else { return };
+                    let Game {world,recording,..}=&mut *g;
+                    let Some(world) = world.as_mut() else { return };
                     let applied: &[(Side, Command)] = if i == 0 { &pending } else { &[] };
+                    let event_cap=world.event_cap;
+                    if recording.is_some() {world.event_cap=usize::MAX;}
+                    if let Some(r)=recording.as_mut() {r.before(world,applied);}
                     harpoon_core::sim::tick(world, applied);
+                    if let Some(r)=recording.as_mut() {r.after(world);}
+                    world.event_cap=event_cap;
+                    if world.events.len()>event_cap {world.events.drain(0..world.events.len()-event_cap);}
                     let hb = blue.evaluate(world);
                     let hr = red.evaluate(world);
                     (world.over, hb, hr, world.tick)
@@ -1228,12 +1395,14 @@ fn finish_director(state: &AppState, id: u64) {
         g.director_id = 0;
         g.speed = 0.0;
         g.accumulator = 0.0;
+        persistence::complete(&mut g,&state.agents);
     }
     let _ = state.update_tx.send(());
 }
 
 async fn db_handler(State(state): State<AppState>) -> impl IntoResponse {
-    Json((*state.db).clone())
+    let g=state.game.lock().unwrap();
+    Json(g.world.as_ref().map(|w|w.db.clone()).unwrap_or_else(||(*state.db).clone()))
 }
 
 /// AI interface: ask the configured command staff to decide orders for a side
@@ -1244,13 +1413,15 @@ async fn ai_step(
     AxPath(side_str): AxPath<String>,
 ) -> Result<Json<serde_json::Value>, (StatusCode, String)> {
     let side = Side::parse(&side_str).ok_or((StatusCode::BAD_REQUEST, "side must be Blue|Red".into()))?;
-    let (obs, pending) = {
+    let revision=state.session_revision.load(Ordering::SeqCst);
+    let (obs, pending, db) = {
         let g = state.game.lock().unwrap();
         let world = g.world.as_ref().ok_or((StatusCode::CONFLICT, "no game running".into()))?;
-        (observe(world, side, 0, 100), g.inbox.len())
+        (observe(world, side, 0, 100), g.inbox.len(), world.db.clone())
     };
+    let expected_tick=obs.tick;
     let staff_result = tokio::task::spawn_blocking(move || {
-        let mut staff = ai::make_staff(side, &state.db);
+        let mut staff = ai::make_staff(side, &db);
         let cmds = staff.decide(&obs);
         (staff.name(), cmds)
     })
@@ -1258,10 +1429,14 @@ async fn ai_step(
     .map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))?;
     let (staff_name, cmds) = staff_result;
     let mut g = state.game.lock().unwrap();
+    if state.session_revision.load(Ordering::SeqCst)!=revision || g.world.as_ref().is_none_or(|w|w.tick!=expected_tick) {return Err((StatusCode::CONFLICT,"AI observation expired; request a fresh decision".into()));}
+    let current=observe(g.world.as_ref().unwrap(),side,0,256);
+    let (cmds,mut rejected)=agent::validate_commands(&current,side,&cmds);
+    let (cmds,holds)=g.supervise_ai(side,cmds);rejected.extend(holds);
     for c in &cmds {
         g.inbox.push((side, c.clone()));
     }
-    Ok(Json(json!({"staff": staff_name, "commands": cmds, "pending_before": pending})))
+    Ok(Json(json!({"staff": staff_name, "commands": cmds, "rejected":rejected,"pending_before": pending})))
 }
 
 #[derive(Deserialize)]
@@ -1376,6 +1551,7 @@ impl SelfplayCtx {
             for (staff, side) in [(&mut blue, Side::Blue), (&mut red, Side::Red)] {
                 let obs = observe(&world, side, 0, 50);
                 applied.extend(staff.decide(&obs).into_iter().map(|c| (side, c)));
+                tactical::record_notes(&mut world,side,staff.take_notes());
             }
         }
         harpoon_core::sim::tick(&mut world, &applied);
@@ -1452,7 +1628,7 @@ async fn ws_session(socket: WebSocket, state: AppState, side: Side) {
             }
             let obs = {
                 let g = push_state.game.lock().unwrap();
-                g.world.as_ref().map(|w| observe(w, side, 0, 100))
+                g.world.as_ref().map(|w| {let mut view=push_state.player_view(w,side,0,100);view["ai_supervision"]=g.ai_summary(side,&observe(w,side,w.event_seq,0));view})
             };
             if let Some(obs) = obs {
                 let Ok(txt) = serde_json::to_string(&obs) else { break };
@@ -1474,7 +1650,9 @@ async fn ws_session(socket: WebSocket, state: AppState, side: Side) {
             if let Some(cmd) = v.get("command").cloned() {
                 if let Ok(command) = serde_json::from_value::<Command>(cmd) {
                     let mut g = state.game.lock().unwrap();
-                    g.inbox.push((side, command));
+                    if v.get("session_revision").and_then(|r|r.as_u64()).is_some_and(|r|r!=state.session_revision.load(Ordering::SeqCst)) {continue;}
+                    // Use the same validation and persistent control transfer as HTTP.
+                    let _=g.queue_player_command(side,command);
                 }
             }
         }
@@ -1508,6 +1686,8 @@ async fn main() {
     let volumes_dir = std::path::PathBuf::from("database/volumes");
     let merged_db = load_volume_database(&volumes_dir);
     let state = AppState {
+        session_revision: Arc::new(AtomicU64::new(0)),
+        advance_plans: Arc::new(Mutex::new(persistence::AdvancePlans::default())),
         game: Arc::new(Mutex::new(Game::new(merged_db.clone()))),
         scenario_dir: scenario_dir.clone(),
         update_tx: Arc::new(update_tx),
@@ -1522,11 +1702,23 @@ async fn main() {
     let static_dir = if web_dir.exists() { web_dir.clone() } else { PathBuf::from("web") };
     let serve = ServeDir::new(&static_dir);
 
+    let local_routes=Router::new()
+        .route("/api/saves", get(persistence::list).post(persistence::create))
+        .route("/api/saves/:id/load", post(persistence::load))
+        .route("/api/saves/:id/replay", get(persistence::saved_archive))
+        .route("/api/saves/:id/verify", post(persistence::verify_saved))
+        .route("/api/replay/current", get(persistence::archive))
+        .route("/api/replay/verify", post(persistence::verify))
+        .route("/api/advance", post(persistence::advance))
+        .route_layer(axum::middleware::from_fn(persistence::local_only));
     let app = Router::new()
+        .merge(local_routes)
         .route("/api/health", get(health))
         .route("/api/scenarios", get(list_scenarios))
         .route("/api/game", post(new_game))
         .route("/api/state", get(state_handler))
+        .route("/api/terrain", get(terrain_handler))
+        .route("/api/navigation/preview",get(navigation_preview_handler))
         .route("/api/command", post(command_handler))
         .route("/api/time", post(time_handler).get(time_get))
         .route("/api/tutorial/catalog", get(training_catalog))
@@ -1564,5 +1756,5 @@ async fn main() {
     let listener = tokio::net::TcpListener::bind(&addr).await.expect("bind");
     eprintln!("harpoon-server listening on http://{addr}  (LLM staff: {})",
         if std::env::var("HARPOON_LLM_BASE_URL").is_ok() { "enabled" } else { "heuristic fallback" });
-    axum::serve(listener, app).await.unwrap();
+    axum::serve(listener, app.into_make_service_with_connect_info::<std::net::SocketAddr>()).await.unwrap();
 }

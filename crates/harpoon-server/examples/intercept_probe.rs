@@ -106,7 +106,7 @@ fn trial_aam(seed: u64) -> (u32, u32) {
                 let uid = harpoon_core::types::EntityId(unit);
                 let pos = w.entity(uid).map(|e| e.pos).unwrap_or_default();
                 let toward = if side == Side::Blue { 90.0 } else { 270.0 };
-                c.push((side, Command::LaunchAircraft {
+                c.push((side, Command::LaunchAircraft { profile: None,
                     unit: uid,
                     class: "fighter".into(),
                     count: 4,

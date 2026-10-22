@@ -4,29 +4,29 @@ use harpoon_core::types::PlatformKind;
 
 pub fn orders(obs: &Observation) -> Vec<(Side, Command)> {
     let next_tick = obs.tick + 1;
-    if obs.over || next_tick % 30 != 0 { return Vec::new(); }
+    if obs.over || obs.exercise.as_ref().is_some_and(|e|e.locked) || next_tick % 30 != 0 { return Vec::new(); }
     let mut out = Vec::new();
     for unit in obs.units.iter().filter(|u| u.kind == PlatformKind::Ship) {
         let Some(deck) = &unit.deck else { continue };
         let ready = |class: &str| deck.ready.iter().find(|(c, _)| c == class).map(|(_, n)| *n).unwrap_or(0);
         let command = if next_tick == 30 && ready("us_f18e") >= 2 {
-            Some(Command::LaunchAircraft { unit: unit.id, class: "us_f18e".into(), count: 2,
+            Some(Command::LaunchAircraft { profile: None, unit: unit.id, class: "us_f18e".into(), count: 2,
                 mission: AirMission::Cap { station: unit.pos, radius_nm: 25.0, follow: true } })
         } else if next_tick >= 1800 && (next_tick - 1800) % 1800 == 0 && ready("us_f18e") >= 2 {
             // Rotate the combat air patrol so it keeps escorting the group.
-            Some(Command::LaunchAircraft { unit: unit.id, class: "us_f18e".into(), count: 2,
+            Some(Command::LaunchAircraft { profile: None, unit: unit.id, class: "us_f18e".into(), count: 2,
                 mission: AirMission::Cap { station: unit.pos, radius_nm: 25.0, follow: true } })
         } else if next_tick == 60 && ready("us_mh60r") >= 2 {
-            Some(Command::LaunchAircraft { unit: unit.id, class: "us_mh60r".into(), count: 2,
+            Some(Command::LaunchAircraft { profile: None, unit: unit.id, class: "us_mh60r".into(), count: 2,
                 mission: AirMission::Asw { area: unit.pos, radius_nm: 15.0 } })
         } else if next_tick == 90 && ready("us_f18e_asm") >= 2 && obs.mission.is_some() {
             // Scout a publicly briefed exercise area; never an unseen enemy coordinate.
-            Some(Command::LaunchAircraft { unit: unit.id, class: "us_f18e_asm".into(), count: 2,
+            Some(Command::LaunchAircraft { profile: None, unit: unit.id, class: "us_f18e_asm".into(), count: 2,
                 mission: AirMission::Recon { point: obs.mission.as_ref().unwrap().config.center } })
         } else if next_tick >= 120 && (next_tick - 120) % 900 == 0 && ready("us_f18e_asm") >= 2 {
             let target = obs.contacts.iter().filter(|c| !c.stale && !c.bearing_only && c.quality > 0.4 && c.category == PlatformKind::Ship)
                 .min_by(|a,b| unit.pos.range_to(a.estimate).total_cmp(&unit.pos.range_to(b.estimate)));
-            target.map(|c| Command::LaunchAircraft { unit: unit.id, class: "us_f18e_asm".into(), count: 2,
+            target.map(|c| Command::LaunchAircraft { profile: None, unit: unit.id, class: "us_f18e_asm".into(), count: 2,
                 mission: AirMission::Strike { contact: c.id } })
         } else { None };
         if let Some(c) = command { out.push((obs.your_side, c)); }

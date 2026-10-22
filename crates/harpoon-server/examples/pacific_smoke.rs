@@ -297,7 +297,7 @@ fn beat(world: &mut World, d: &mut Driver) -> Vec<(Side, Command)> {
     // --- blue air operations -------------------------------------------
     if !d.blue_cap_1 && tick >= 300 {
         if let (Some(cvn), true) = (cvn, ready(world, cvn, "fighter") >= 4) {
-            cmds.push((Side::Blue, Command::LaunchAircraft {
+            cmds.push((Side::Blue, Command::LaunchAircraft { profile: None,
                 unit: cvn, class: "fighter".into(), count: 4,
                 mission: AirMission::Cap { station: p(50.0, 44.0), radius_nm: 5.0, follow: false },
             }));
@@ -306,7 +306,7 @@ fn beat(world: &mut World, d: &mut Driver) -> Vec<(Side, Command)> {
     }
     if !d.blue_helo && tick >= 300 {
         if let (Some(cvn), true) = (cvn, ready(world, cvn, "helo_asw") >= 2) {
-            cmds.push((Side::Blue, Command::LaunchAircraft {
+            cmds.push((Side::Blue, Command::LaunchAircraft { profile: None,
                 unit: cvn, class: "helo_asw".into(), count: 2,
                 mission: AirMission::Asw { area: p(32.0, 30.0), radius_nm: 6.0 },
             }));
@@ -315,7 +315,7 @@ fn beat(world: &mut World, d: &mut Driver) -> Vec<(Side, Command)> {
     }
     if !d.blue_cap_2 && tick >= 6800 {
         if let (Some(cvn), true) = (cvn, ready(world, cvn, "fighter") >= 4) {
-            cmds.push((Side::Blue, Command::LaunchAircraft {
+            cmds.push((Side::Blue, Command::LaunchAircraft { profile: None,
                 unit: cvn, class: "fighter".into(), count: 4,
                 mission: AirMission::Cap { station: p(50.0, 44.0), radius_nm: 5.0, follow: false },
             }));
@@ -324,7 +324,7 @@ fn beat(world: &mut World, d: &mut Driver) -> Vec<(Side, Command)> {
     }
     if !d.blue_cap_3 && tick >= 14400 {
         if let (Some(cvn), true) = (cvn, ready(world, cvn, "fighter") >= 4) {
-            cmds.push((Side::Blue, Command::LaunchAircraft {
+            cmds.push((Side::Blue, Command::LaunchAircraft { profile: None,
                 unit: cvn, class: "fighter".into(), count: 4,
                 mission: AirMission::Cap { station: p(50.0, 44.0), radius_nm: 5.0, follow: false },
             }));
@@ -333,7 +333,7 @@ fn beat(world: &mut World, d: &mut Driver) -> Vec<(Side, Command)> {
     }
     if !d.blue_cap_4 && tick >= 21600 {
         if let (Some(cvn), true) = (cvn, ready(world, cvn, "fighter") >= 4) {
-            cmds.push((Side::Blue, Command::LaunchAircraft {
+            cmds.push((Side::Blue, Command::LaunchAircraft { profile: None,
                 unit: cvn, class: "fighter".into(), count: 4,
                 mission: AirMission::Cap { station: p(50.0, 44.0), radius_nm: 5.0, follow: false },
             }));
@@ -344,7 +344,7 @@ fn beat(world: &mut World, d: &mut Driver) -> Vec<(Side, Command)> {
     // --- red air operations --------------------------------------------
     if !d.red_cap_1 && tick >= 900 {
         if let (Some(af), true) = (airfield, ready(world, airfield, "fighter") >= 4) {
-            cmds.push((Side::Red, Command::LaunchAircraft {
+            cmds.push((Side::Red, Command::LaunchAircraft { profile: None,
                 unit: af, class: "fighter".into(), count: 4,
                 mission: AirMission::Cap { station: p(54.0, 47.0), radius_nm: 5.0, follow: false },
             }));
@@ -353,7 +353,7 @@ fn beat(world: &mut World, d: &mut Driver) -> Vec<(Side, Command)> {
     }
     if !d.red_cap_2 && tick >= 18000 {
         if let (Some(af), true) = (airfield, ready(world, airfield, "fighter") >= 4) {
-            cmds.push((Side::Red, Command::LaunchAircraft {
+            cmds.push((Side::Red, Command::LaunchAircraft { profile: None,
                 unit: af, class: "fighter".into(), count: 4,
                 mission: AirMission::Cap { station: p(54.0, 47.0), radius_nm: 5.0, follow: false },
             }));
@@ -366,7 +366,7 @@ fn beat(world: &mut World, d: &mut Driver) -> Vec<(Side, Command)> {
             let n = ready(world, airfield, "bomber");
             if n >= 2 {
                 if let Some((cid, _)) = red_cvn_contact(world) {
-                    cmds.push((Side::Red, Command::LaunchAircraft {
+                    cmds.push((Side::Red, Command::LaunchAircraft { profile: None,
                         unit: airfield.unwrap(), class: "bomber".into(), count: 3.min(n),
                         mission: AirMission::Strike { contact: cid },
                     }));
@@ -429,7 +429,7 @@ fn beat(world: &mut World, d: &mut Driver) -> Vec<(Side, Command)> {
     if !d.blue_anti_ship && tick >= 2400 {
         if let Some((cid, _)) = blue_contact_named(world, "Missile Boat") {
             if let (Some(cvn), true) = (cvn, ready(world, cvn, "striker") >= 2) {
-                cmds.push((Side::Blue, Command::LaunchAircraft {
+                cmds.push((Side::Blue, Command::LaunchAircraft { profile: None,
                     unit: cvn, class: "striker".into(), count: 2,
                     mission: AirMission::Strike { contact: cid },
                 }));
@@ -453,7 +453,7 @@ fn beat(world: &mut World, d: &mut Driver) -> Vec<(Side, Command)> {
                 }
             }
             if let (Some(cvn), true) = (cvn, ready(world, cvn, "striker") >= 2) {
-                cmds.push((Side::Blue, Command::LaunchAircraft {
+                cmds.push((Side::Blue, Command::LaunchAircraft { profile: None,
                     unit: cvn, class: "striker".into(), count: 2,
                     mission: AirMission::Strike { contact: cid },
                 }));
@@ -479,7 +479,7 @@ fn beat(world: &mut World, d: &mut Driver) -> Vec<(Side, Command)> {
                 }
             }
             if let (Some(cvn), true) = (cvn, ready(world, cvn, "striker") >= 2) {
-                cmds.push((Side::Blue, Command::LaunchAircraft {
+                cmds.push((Side::Blue, Command::LaunchAircraft { profile: None,
                     unit: cvn, class: "striker".into(), count: 2,
                     mission: AirMission::Strike { contact: cid },
                 }));

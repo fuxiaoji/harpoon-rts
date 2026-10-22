@@ -21,6 +21,17 @@ pub trait CommandStaff: Send {
     fn name(&self) -> &'static str;
     /// Decide this tick's commands for `side`.
     fn decide(&mut self, obs: &Observation) -> Vec<Command>;
+    /// Explanations of orders just proposed, never a claim of execution.
+    fn take_notes(&mut self) -> Vec<StaffNote> { Vec::new() }
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct StaffNote {
+    pub unit: EntityId,
+    pub contact: Option<ContactId>,
+    pub action: String,
+    pub zh: String,
+    pub en: String,
 }
 
 // ---------------------------------------------------------------------------
@@ -46,6 +57,7 @@ impl CommandStaff for HeuristicStaff {
     }
 
     fn decide(&mut self, obs: &Observation) -> Vec<Command> {
+        if obs.over || obs.exercise.as_ref().is_some_and(|e|e.locked) {return Vec::new();}
         let mut cmds = Vec::new();
         let enemy = self.side.other();
 
@@ -112,7 +124,7 @@ impl CommandStaff for HeuristicStaff {
                 .find(|(c, n)| c == "helo_asw" && *n > 0)
                 .is_some();
             if cap_ready {
-                cmds.push(Command::LaunchAircraft {
+                cmds.push(Command::LaunchAircraft { profile: None,
                     unit: u.id,
                     class: "fighter".into(),
                     count: 2,
@@ -120,7 +132,7 @@ impl CommandStaff for HeuristicStaff {
                 });
             }
             if helo_ready {
-                cmds.push(Command::LaunchAircraft {
+                cmds.push(Command::LaunchAircraft { profile: None,
                     unit: u.id,
                     class: "helo_asw".into(),
                     count: 2,
@@ -136,7 +148,7 @@ impl CommandStaff for HeuristicStaff {
                     .min_by(|a, b| a.1.quality.partial_cmp(&b.1.quality).unwrap())
                 {
                     let _ = c;
-                    cmds.push(Command::LaunchAircraft {
+                    cmds.push(Command::LaunchAircraft { profile: None,
                         unit: u.id,
                         class: "striker".into(),
                         count: 2,

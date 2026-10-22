@@ -3,19 +3,25 @@
 //! Doctrine basis: docs/design/naval-doctrine.md (P1..P8), distilled from the
 //! Harpoon V rulebook and modern carrier-group practice.
 //!
-//! Each friendly unit is assigned a role once (carrier, AEW, CAP, ASW screen,
+//! Each friendly combatant is assigned a role (carrier, AEW, CAP, ASW screen,
 //! gun screen, striker, submarine, raider) and follows a per-role finite state
 //! machine:
 //!
 //!   ON_STATION -> ENGAGE -> (WITHDRAW | RETREAT)
 //!
-//! with global coordination rules: CAP rotation, AEW standing patrol, a
-//! strike window where every shooter with a solution fires together, and a
-//! retreat rule for badly damaged ships. Tunables live in `Params`
-//! (data/ai/tactical_params.json overrides defaults; the self-play tuner
-//! writes improved sets back).
+//! with launch cohorts, plotted VLow ingress, bounded CAP/escort, private
+//! intent logs and sensor-only assets excluded from combat command loops.
+//! Tunables in `Params` are AI policy, separate from adjudication data.
 
-use crate::ai::CommandStaff;
+use crate::ai::{CommandStaff, StaffNote};
+#[path = "tactical/aviation.rs"]
+mod aviation;
+#[path = "tactical/coordination.rs"]
+mod coordination;
+#[path = "tactical/supervision.rs"]
+pub mod supervision;
+#[path = "tactical/assessment.rs"]
+pub mod assessment;
 use harpoon_core::commands::{AirMission, Command};
 use harpoon_core::db::{Database, WeaponKind};
 use harpoon_core::observe::{Observation, UnitObs};
@@ -24,6 +30,7 @@ use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
+#[serde(default)]
 pub struct Params {
     pub cap_min_size: u32,
     pub cap_fuel_rtb_s: f64,
@@ -34,7 +41,18 @@ pub struct Params {
     pub sub_attack_range_nm: f64,
     pub sub_patrol_speed_kts: f64,
     pub salvo_min_interval_s: i64,
+    pub strike_altitude_m: f64,
+    pub strike_assembly_s: i64,
+    pub strike_wave_interval_s: i64,
+    pub cap_leash_nm: f64,
+    pub asw_barrier_nm: f64,
+    #[serde(skip_serializing_if = "default_policy_timer")]
+    pub strike_retarget_s: i64,
+    #[serde(skip_serializing_if = "default_policy_timer")]
+    pub strike_relay_hold_s: i64,
 }
+
+fn default_policy_timer(value: &i64) -> bool { *value == 180 }
 
 impl Default for Params {
     fn default() -> Self {
@@ -48,6 +66,13 @@ impl Default for Params {
             sub_attack_range_nm: 9.0,
             sub_patrol_speed_kts: 4.0,
             salvo_min_interval_s: 20,
+            strike_altitude_m: 50.0,
+            strike_assembly_s: 330,
+            strike_wave_interval_s: 600,
+            cap_leash_nm: 55.0,
+            asw_barrier_nm: 12.0,
+            strike_retarget_s: 180,
+            strike_relay_hold_s: 180,
         }
     }
 }
@@ -66,7 +91,10 @@ impl Params {
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub enum Role {
     Carrier,
+    Airbase,
     Aew,
+    Ew,
+    Scout,
     Cap,
     AswScreen,
     GunScreen,
@@ -76,14 +104,14 @@ pub enum Role {
     Other,
 }
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
 enum State {
     OnStation,
     Withdraw,
     Retreat,
 }
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Serialize, Deserialize)]
 struct UnitMind {
     role: Role,
     state: State,
@@ -92,25 +120,40 @@ struct UnitMind {
 
 fn is_aew_class(class: &str) -> bool {
     let c = class.to_ascii_lowercase();
-    c.contains("aew") || c.contains("e2") || c.contains("e-2") || c.contains("kj600")
-        || c.contains("kj200") || c.contains("z18j") || c.contains("e3")
+    c.contains("aew")
+        || c.contains("e2")
+        || c.contains("e-2")
+        || c.contains("kj600")
+        || c.contains("kj200")
+        || c.contains("z18j")
+        || c.contains("e3")
 }
 
 fn is_aew(u: &UnitObs) -> bool {
     let n = u.name.to_ascii_uppercase();
-    let c = u.class.to_ascii_lowercase();
-    n.contains("AEW") || c.contains("aew") || c.contains("e2") || c.contains("kj600") || c.contains("e3")
+    n.contains("AEW") || is_aew_class(&u.class)
 }
 
 fn is_helo(u: &UnitObs) -> bool {
     let n = u.name.to_ascii_uppercase();
     let c = u.class.to_ascii_lowercase();
-    n.contains("MH-") || n.contains("SH-") || n.contains("Z-") || n.contains("卡-")
-        || c.contains("helo") || c.contains("z18") || c.contains("z9") || c.contains("merlin")
-        || c.contains("ch14") || c.contains("ch148")
+    n.contains("MH-")
+        || n.contains("SH-")
+        || n.contains("Z-")
+        || n.contains("卡-")
+        || c.contains("helo")
+        || c.contains("z18")
+        || c.contains("z9")
+        || c.contains("merlin")
+        || c.contains("ch14")
+        || c.contains("ch148")
 }
 
-fn contact_pos(obs: &Observation, id: ContactId, fallback: harpoon_core::Vec2) -> harpoon_core::Vec2 {
+fn contact_pos(
+    obs: &Observation,
+    id: ContactId,
+    fallback: harpoon_core::Vec2,
+) -> harpoon_core::Vec2 {
     obs.contacts
         .iter()
         .find(|c| c.id == id)
@@ -118,29 +161,47 @@ fn contact_pos(obs: &Observation, id: ContactId, fallback: harpoon_core::Vec2) -
         .unwrap_or(fallback)
 }
 
+fn controllable(u: &UnitObs) -> bool {
+    !u.manual_control && !u.kind.is_projectile() && u.class != harpoon_core::rules::asw::SONOBUOY_CLASS
+}
+
+fn known_sensor_contact(c: &harpoon_core::observe::ContactObs) -> bool {
+    c.class_name
+        .as_deref()
+        .unwrap_or("")
+        .to_ascii_lowercase()
+        .contains("buoy")
+}
+
 impl TacticalStaff {
     fn role_for(&self, u: &UnitObs) -> Role {
+        if u.kind==PlatformKind::Base && u.deck.is_some() {return Role::Airbase;}
         // Many surface combatants carry a helicopter deck; only a real carrier
         // (large hull or CV-class name) runs the carrier state machine.
         let carrier_name = {
             let n = u.name.to_ascii_uppercase();
             let c = u.class.to_ascii_lowercase();
-            n.contains("CV") || c.contains("cv") || c.contains("carrier")
-                || c.contains("cn_001") || c.contains("cn_002")
-                || c.contains("us_ford") || c.contains("us_nimitz")
+            n.contains("CV")
+                || c.contains("cv")
+                || c.contains("carrier")
+                || c.contains("cn_001")
+                || c.contains("cn_002")
+                || c.contains("us_ford")
+                || c.contains("us_nimitz")
         };
-        if u.deck.is_some() && u.kind == PlatformKind::Ship
-            && (u.hp_max >= 700.0 || carrier_name)
-        {
+        if u.deck.is_some() && u.kind == PlatformKind::Ship && (u.hp_max >= 700.0 || carrier_name) {
             return Role::Carrier;
         }
         match u.kind {
             PlatformKind::Sub => Role::Submarine,
             PlatformKind::Aircraft => {
-                if is_aew(u) {
+                if harpoon_core::rules::electronic_warfare::capability(&u.class).is_some() {Role::Ew}
+                else if is_aew(u) {
                     Role::Aew
                 } else if is_helo(u) {
                     Role::AswScreen
+                } else if u.mission.as_deref()==Some("recon") {
+                    Role::Scout
                 } else if u.mission.as_deref() == Some("strike") {
                     // Multirole fighters are only strikers while tasked as such.
                     Role::Striker
@@ -177,21 +238,36 @@ impl TacticalStaff {
     }
 }
 
+#[derive(Clone, Serialize, Deserialize)]
 pub struct TacticalStaff {
+    #[serde(default,skip_serializing_if="supervision::Supervisor::is_empty")]
+    pub supervision:supervision::Supervisor,
     #[allow(dead_code)]
     side: Side,
     params: Params,
     minds: BTreeMap<EntityId, UnitMind>,
-    roles_assigned: bool,
     /// 威胁轴：从己方锚点指向最早一次对敌探测的方位（度，0=北，顺时针）。
     threat_axis_deg: f64,
     threat_axis_locked: bool,
     /// 每艘航母上次组织打击波次的 tick（P4 多域协同窗口）。
     last_strike_wave: BTreeMap<EntityId, i64>,
-    /// 每艘航母上次组织反潜直升机的 tick。
-    last_asw_wave: BTreeMap<EntityId, i64>,
     /// Weapon kinds and ranges; the observation only carries mount ids.
+    #[serde(skip)]
     db: Option<Database>,
+    air_minds: BTreeMap<EntityId, aviation::AirMind>,
+    #[serde(default,skip_serializing_if="BTreeMap::is_empty")]
+    packages:BTreeMap<EntityId,aviation::Package>,
+    last_launch: BTreeMap<EntityId, i64>,
+    wave_targets: BTreeMap<EntityId, ContactId>,
+    notes: Vec<StaffNote>,
+    note_keys: BTreeMap<EntityId, (String, Option<ContactId>)>,
+    identified_sensors: std::collections::BTreeSet<ContactId>,
+    #[serde(default)]
+    track_memory: BTreeMap<ContactId, (i64, harpoon_core::observe::ContactObs)>,
+    #[serde(default)]
+    pending_salvos: Vec<coordination::PendingSalvo>,
+    #[serde(default)]
+    posture: u8,
 }
 
 impl TacticalStaff {
@@ -199,22 +275,33 @@ impl TacticalStaff {
         Self::with_db_or_none(side, None)
     }
 
+    pub(crate) fn restore_database(&mut self, db: Database) { self.db = Some(db); }
+
     pub fn with_db(side: Side, db: Database) -> Self {
         Self::with_db_or_none(side, Some(db))
     }
 
     fn with_db_or_none(side: Side, db: Option<Database>) -> Self {
         Self {
+            supervision:Default::default(),
             side,
             params: Params::load_optional(),
             minds: BTreeMap::new(),
-            roles_assigned: false,
             // Blue looks east, Red west until the first contact locks the axis.
             threat_axis_deg: if side == Side::Blue { 90.0 } else { 270.0 },
             threat_axis_locked: false,
             last_strike_wave: BTreeMap::new(),
-            last_asw_wave: BTreeMap::new(),
             db,
+            air_minds: BTreeMap::new(),
+            packages:BTreeMap::new(),
+            last_launch: BTreeMap::new(),
+            wave_targets: BTreeMap::new(),
+            notes: Vec::new(),
+            note_keys: BTreeMap::new(),
+            identified_sensors: Default::default(),
+            track_memory: Default::default(),
+            pending_salvos: Default::default(),
+            posture:0,
         }
     }
 
@@ -250,15 +337,26 @@ impl TacticalStaff {
             .unwrap_or(60.0)
     }
 
+    fn cruise_of(&self, class:&str)->f64 {
+        self.db.as_ref().and_then(|db|db.platforms.get(class)).map(|p|p.cruise_speed_kts.max(60.0)).unwrap_or(300.0)
+    }
+
     /// Pick an equipped, loaded mount whose kind is in `kinds` and whose range
     /// covers `dist`. Returns the weapon id, nominal range and ready ammo.
-    fn pick_weapon(&self, u: &UnitObs, kinds: &[WeaponKind], dist: f64) -> Option<(String, f64, u16)> {
+    fn pick_weapon(
+        &self,
+        u: &UnitObs,
+        kinds: &[WeaponKind],
+        dist: f64,
+    ) -> Option<(String, f64, u16)> {
         let mut best: Option<(String, f64, u16)> = None;
         for w in &u.weapons {
             if w.ammo == 0 || w.cooldown_s > 0.0 {
                 continue;
             }
-            let Some(kind) = self.kind_of(&w.weapon) else { continue };
+            let Some(kind) = self.kind_of(&w.weapon) else {
+                continue;
+            };
             if !kinds.contains(&kind) {
                 continue;
             }
@@ -279,7 +377,10 @@ impl TacticalStaff {
             .get(class)
             .map(|p| {
                 p.weapons.iter().any(|m| {
-                    db.weapons.get(&m.weapon).map(|w| w.kind == kind).unwrap_or(false)
+                    db.weapons
+                        .get(&m.weapon)
+                        .map(|w| w.kind == kind)
+                        .unwrap_or(false)
                 })
             })
             .unwrap_or(false)
@@ -311,85 +412,67 @@ impl TacticalStaff {
     }
 
     fn ensure_roles(&mut self, obs: &Observation) {
-        if self.roles_assigned {
-            return;
-        }
-        for u in &obs.units {
-            self.minds.insert(
-                u.id,
-                UnitMind { role: self.role_for(u), state: State::OnStation, last_salvo_tick: -100_000 },
-            );
-        }
-        self.roles_assigned = true;
-    }
-
-    /// P1: 威胁轴由最早一次对敌探测决定，之后锁定（避免自旋）。
-    fn lock_threat_axis(&mut self, obs: &Observation) {
-        if self.threat_axis_locked || obs.contacts.is_empty() {
-            return;
-        }
-        let Some(anchor) = obs.units.first() else { return };
-        self.threat_axis_deg = anchor.pos.bearing_to(obs.contacts[0].estimate);
-        self.threat_axis_locked = true;
-    }
-
-    fn standoff_point(&self, anchor: &harpoon_core::Vec2, distance: f64) -> harpoon_core::Vec2 {
-        anchor.advanced(self.threat_axis_deg, distance)
-    }
-
-    /// P8: 打击目标选择——按存活价值排序，敌预警机双倍权重；返回 (接触, 距离, 分)。
-    fn best_strike_target(&self, obs: &Observation, shooter: &UnitObs) -> Option<(ContactId, f64, f64)> {
-        let mut best: Option<(ContactId, f64, f64)> = None;
-        for c in &obs.contacts {
-            if c.stale || c.quality < self.params.strike_min_q {
-                continue;
-            }
-            let value = match c.class_name.as_deref() {
-                Some(n) if n.contains("CV") || n.contains("Carrier") || n.contains("FORD") || n.contains("NIMITZ") => 60.0,
-                Some(n) if n.contains("AEW") || n.contains("E-2") || n.contains("KJ") => 50.0,
-                Some(n) if n.contains("Burke") || n.contains("055") || n.contains("052") || n.contains("Ticonderoga") => 30.0,
-                _ => 15.0,
-            };
-            let dist = shooter.pos.range_to(c.estimate);
-            let score = value - dist * 0.08;
-            if best.map(|(_, _, s)| score > s).unwrap_or(true) {
-                best = Some((c.id, dist, score));
-            }
-        }
-        best
-    }
-
-    /// CAP 的对空火控解目标：最近的、有雷达解的敌机。
-    fn best_air_target(&self, obs: &Observation, shooter: &UnitObs) -> Option<ContactId> {
-        obs.contacts
+        let ids: std::collections::BTreeSet<_> = obs
+            .units
             .iter()
-            .filter(|c| c.category == PlatformKind::Aircraft && !c.stale && c.quality > 0.4)
+            .filter(|u| controllable(u))
+            .map(|u| u.id)
+            .collect();
+        self.minds.retain(|id, _| ids.contains(id));
+        for u in obs.units.iter().filter(|u| controllable(u)) {
+            let role = self.role_for(u);
+            self.minds
+                .entry(u.id)
+                .and_modify(|m| m.role = role)
+                .or_insert(UnitMind {
+                    role,
+                    state: State::OnStation,
+                    last_salvo_tick: -100000,
+                });
+        }
+    }
+
+    fn sensor_contact(&self, c: &harpoon_core::observe::ContactObs) -> bool {
+        known_sensor_contact(c) || self.identified_sensors.contains(&c.id)
+    }
+
+    fn lock_threat_axis(&mut self, obs: &Observation) {
+        let Some(anchor) = self.anchor_of(obs) else {
+            return;
+        };
+        let Some(c) = obs
+            .contacts
+            .iter()
+            .filter(|c| {
+                c.category == PlatformKind::Ship
+                    && !self.sensor_contact(c)
+                    && !c.stale
+                    && !c.bearing_only
+                    && c.quality > 0.4
+            })
             .min_by(|a, b| {
-                shooter
+                anchor
                     .pos
                     .range_to(a.estimate)
-                    .partial_cmp(&shooter.pos.range_to(b.estimate))
-                    .unwrap_or(std::cmp::Ordering::Equal)
+                    .total_cmp(&anchor.pos.range_to(b.estimate))
             })
-            .map(|c| c.id)
-    }
-
-    /// 有合格解的水面/岸上目标（供舰射反舰）。
-    fn best_surface_target(&self, obs: &Observation, shooter: &UnitObs) -> Option<(ContactId, f64)> {
-        obs.contacts
-            .iter()
-            .filter(|c| !c.stale && c.quality >= self.params.strike_min_q)
-            .filter(|c| matches!(c.category, PlatformKind::Ship | PlatformKind::Base))
-            .map(|c| (c.id, shooter.pos.range_to(c.estimate)))
-            .min_by(|a, b| a.1.partial_cmp(&b.1).unwrap_or(std::cmp::Ordering::Equal))
+        else {
+            return;
+        };
+        self.threat_axis_deg = anchor.pos.bearing_to(c.estimate);
+        self.threat_axis_locked = true;
     }
 
     /// P8: 岸上目标（SLCM/ASCM 对地）。
     fn best_base_target(&self, obs: &Observation, shooter: &UnitObs) -> Option<(ContactId, f64)> {
         obs.contacts
             .iter()
-            .filter(|c| !c.stale && c.quality >= self.params.strike_min_q
-                && c.category == PlatformKind::Base)
+            .filter(|c| {
+                !c.stale
+                    && self.supervision.target_allowed(c.id,obs.tick)
+                    && c.quality >= self.params.strike_min_q
+                    && c.category == PlatformKind::Base
+            })
             .map(|c| (c.id, shooter.pos.range_to(c.estimate)))
             .min_by(|a, b| a.1.partial_cmp(&b.1).unwrap_or(std::cmp::Ordering::Equal))
     }
@@ -398,16 +481,38 @@ impl TacticalStaff {
     fn best_ship_target(&self, obs: &Observation, shooter: &UnitObs) -> Option<(ContactId, f64)> {
         let mut best: Option<(ContactId, f64, f64)> = None;
         for c in &obs.contacts {
-            if c.stale || c.quality < 0.25 || c.category != PlatformKind::Ship {
+            if c.stale
+                || c.bearing_only
+                || c.quality < 0.4
+                || c.category != PlatformKind::Ship
+                || c.bda_hp_fraction == Some(0.0)
+                || self.sensor_contact(c)
+                || !self.supervision.target_allowed(c.id,obs.tick)
+            {
                 continue;
             }
             let value = match c.class_name.as_deref() {
-                Some(n) if n.contains("CV") || n.contains("Carrier") || n.contains("FORD") || n.contains("NIMITZ") => 60.0,
-                Some(n) if n.contains("Burke") || n.contains("055") || n.contains("052") || n.contains("Ticonderoga") => 30.0,
+                Some(n)
+                    if n.contains("CV")
+                        || n.contains("Carrier")
+                        || n.contains("FORD")
+                        || n.contains("NIMITZ") =>
+                {
+                    60.0
+                }
+                Some(n)
+                    if n.contains("Burke")
+                        || n.contains("055")
+                        || n.contains("052")
+                        || n.contains("Ticonderoga") =>
+                {
+                    30.0
+                }
                 _ => 15.0,
             };
             let dist = shooter.pos.range_to(c.estimate);
-            let score = value - dist * 0.02;
+            let retries=self.supervision.attacks.get(&c.id).map(|a|a.unconfirmed_batches).unwrap_or(0);
+            let score = value - dist * 0.02 - retries as f64*value;
             if best.map(|(_, _, s)| score > s).unwrap_or(true) {
                 best = Some((c.id, dist, score));
             }
@@ -424,11 +529,16 @@ impl TacticalStaff {
             .min_by(|a, b| a.1.partial_cmp(&b.1).unwrap_or(std::cmp::Ordering::Equal))
     }
 
-    fn anchor_of<'a>(&'a self, obs: &'a Observation) -> Option<&'a UnitObs> {
+    fn anchor_of<'a>(&self, obs: &'a Observation) -> Option<&'a UnitObs> {
         obs.units
             .iter()
             .find(|u| self.minds.get(&u.id).map(|m| m.role) == Some(Role::Carrier))
-            .or_else(|| obs.units.iter().find(|u| u.kind == PlatformKind::Ship))
+            .or_else(||obs.units.iter().find(|u|self.role_for(u)==Role::Airbase))
+            .or_else(|| {
+                obs.units
+                    .iter()
+                    .find(|u| u.kind == PlatformKind::Ship && controllable(u))
+            })
     }
 }
 
@@ -436,548 +546,374 @@ impl CommandStaff for TacticalStaff {
     fn name(&self) -> &'static str {
         "tactical_fsm"
     }
+    fn take_notes(&mut self) -> Vec<StaffNote> {
+        std::mem::take(&mut self.notes)
+    }
 
     fn decide(&mut self, obs: &Observation) -> Vec<Command> {
-        if obs.over {
+        self.notes.clear();
+        if obs.over || obs.your_side != self.side || obs.exercise.as_ref().is_some_and(|e|e.locked) {
             return Vec::new();
         }
+        self.notes.clear();
+        self.track_memory.retain(|_,(tick,_)|obs.tick-*tick<=1800);
+        for c in &obs.contacts {
+            let mut remembered=c.clone();
+            if remembered.class_name.is_none() {
+                remembered.class_name=self.track_memory.get(&c.id).and_then(|(_,old)|old.class_name.clone());
+            }
+            if !c.stale && (c.quality>=self.params.strike_min_q&&!c.bearing_only
+                || self.track_memory.get(&c.id).is_none_or(|(_,old)|old.quality<self.params.strike_min_q)) {self.track_memory.insert(c.id,(obs.tick,remembered));}
+        }
+        // TDL may restore the same track id with class_name=None. Retain a
+        // classification this side actually observed instead of treating its
+        // known buoy as an unidentified warship again.
+        for c in &obs.contacts {
+            if c.class_name.is_some() {
+                if known_sensor_contact(c) {
+                    self.identified_sensors.insert(c.id);
+                } else {
+                    self.identified_sensors.remove(&c.id);
+                }
+            }
+        }
         self.ensure_roles(obs);
+        for e in &obs.events {if let harpoon_core::EventKind::DeckBusy{carrier,reason,..}=&e.kind {
+            if self.last_launch.get(carrier).is_some_and(|tick|e.tick>*tick) {
+                let when=self.last_launch.remove(carrier).unwrap();
+                if self.last_strike_wave.get(carrier)==Some(&when){self.last_strike_wave.remove(carrier);self.wave_targets.remove(carrier);}
+                self.note(*carrier,None,"launch_rejected",format!("实际起飞被核心拒绝：{}；撤销本次出击冷却和未成立波次",reason),format!("Actual launch rejected: {}; roll back launch cooldown and unformed wave",reason));
+            }
+        }}
+        if let Some(db)=&self.db {self.notes.extend(self.supervision.observe(obs,db));self.notes.extend(self.supervision.review_current(obs,db));}
         self.lock_threat_axis(obs);
-
-        let p = self.params.clone();
-        let mut cmds: Vec<Command> = Vec::new();
-
-        // P3: CAP 轮换——空中 CAP 机少于阈值时命令航母补飞。
-        let cap_airborne = obs
+        // This is an estimate from own confirmed kills and own observed losses,
+        // never the referee's hidden opponent score.
+        self.posture=if obs.exercise.is_some() {0}else{obs.victory.as_ref().map(|v| {
+            let lost=v.own_losses_by_kind.iter().map(|(k,n)|v.kill_weights.as_ref().map(|w|w.for_kind(k)).unwrap_or(1.0)*(*n as f64)).sum::<f64>();
+            if v.remaining_s<1800 && v.own_kill_points-lost>5.0 {1}
+            else if v.remaining_s<3600 && v.own_kill_points-lost< -5.0 {2}else{0}
+        }).unwrap_or(0)};
+        let mut cmds=Vec::new();
+        self.manage_aviation(obs, &mut cmds);
+        for u in obs.units.iter().filter(|u|controllable(u)) {
+            cmds.push(Command::SetEngagementPolicy {unit:u.id,air_only:u.kind!=PlatformKind::Sub,max_in_flight:if obs.contacts.iter().any(|c|c.category==PlatformKind::Missile && !c.stale && u.pos.range_to(c.estimate)<8.0){4}else{2}});
+            if matches!(self.role_for(u),Role::GunScreen|Role::Carrier) {
+                let aew_cover=obs.units.iter().any(|a|self.role_for(a)==Role::Aew && a.sensors.iter().any(|s|s.active && s.vs_air.is_some()));
+                let imminent=obs.contacts.iter().any(|c|!c.stale && matches!(c.category,PlatformKind::Missile|PlatformKind::Aircraft) && u.pos.range_to(c.estimate)<45.0);
+                let duty=(u.id.0 as i64%2)==(obs.tick/300%2);
+                cmds.push(Command::SetRadar {unit:u.id,active:!aew_cover||imminent||duty});
+            }
+        }
+        let carriers: Vec<_> = obs
             .units
             .iter()
-            .filter(|u| u.kind == PlatformKind::Aircraft && self.role_for(u) == Role::Cap)
-            .count() as u32;
-        if cap_airborne < p.cap_min_size {
-            for carrier in obs.units.iter().filter(|u| {
-                u.deck.is_some() && self.minds.get(&u.id).map(|m| m.role) == Some(Role::Carrier)
-            }) {
-                if let Some(deck) = &carrier.deck {
-                    if let Some((class, _)) = deck
-                        .ready
-                        .iter()
-                        .find(|(c, n)| *n > 0 && (c.contains("fighter") || c.contains("f18") || c.contains("f35") || c.contains("j15")))
-                    {
-                        cmds.push(Command::LaunchAircraft {
-                            unit: carrier.id,
-                            class: class.clone(),
-                            count: 2,
-                            mission: AirMission::Cap {
-                                station: carrier.pos.advanced(self.threat_axis_deg, 30.0),
-                                radius_nm: 15.0,
-                                follow: true,
-                            },
-                        });
-                        break;
-                    }
-                }
-            }
-        }
-
-        // 威胁轴前出点（锚点缺省时用编队首个单位）。
-        let anchor_pos = self
-            .anchor_of(obs)
-            .map(|a| a.pos)
-            .or_else(|| obs.units.first().map(|u| u.pos));
-
-        for u in &obs.units {
-            // P0 战略机动：有接触就水面/潜艇向敌推进。
-            let nearest_contact = obs.contacts.iter()
-                .filter(|c| !c.stale && c.quality > 0.25)
-                .map(|c| (c, u.pos.range_to(c.estimate)))
-                .min_by(|a, b| a.1.partial_cmp(&b.1).unwrap_or(std::cmp::Ordering::Equal));
-            let is_carrier = self.minds.get(&u.id).map(|m| m.role) == Some(Role::Carrier);
-            let advancing = nearest_contact.is_some() && !is_carrier && u.kind != PlatformKind::Aircraft;
-            if advancing {
-                if let Some((c, dist)) = nearest_contact {
-                    let bearing = u.pos.bearing_to(c.estimate);
-                    match u.kind {
-                        PlatformKind::Sub => {
-                            if dist > 12.0 {
-                                cmds.push(Command::ClearStation { unit: u.id });
-                                cmds.push(Command::SetCourse { unit: u.id, course_deg: bearing });
-                                cmds.push(Command::SetSpeed { unit: u.id, speed_kts: 12.0 });
-                            }
-                        }
-                        PlatformKind::Ship => {
-                            if dist > 18.0 {
-                                // 解除编队锁定（follow 覆盖 SetCourse/SetSpeed）
-                                cmds.push(Command::ClearStation { unit: u.id });
-                                cmds.push(Command::SetCourse { unit: u.id, course_deg: bearing });
-                                cmds.push(Command::SetSpeed { unit: u.id, speed_kts: 28.0 });
-                            }
-                            let ascm = u.weapons.iter()
-                                .find(|w| (w.weapon.contains("yj") || w.weapon.contains("p700")
-                                    || w.weapon.contains("p270") || w.weapon.contains("ascm")
-                                    || w.weapon.starts_with("asm")) && w.ammo > 0);
-                            if let Some(w) = ascm {
-                                if dist <= 55.0 {
-                                    // 集火：优先打 BDA 显示损伤最重的已接触目标
-                                    let focus = obs.contacts.iter()
-                                        .filter(|fc| fc.id == c.id
-                                            || (fc.category == PlatformKind::Ship && !fc.stale && fc.quality > 0.25
-                                                && u.pos.range_to(fc.estimate) <= 55.0))
-                                        .min_by(|a, b| a.bda_hp_fraction.unwrap_or(1.0)
-                                            .total_cmp(&b.bda_hp_fraction.unwrap_or(1.0)))
-                                        .map(|fc| fc.id)
-                                        .unwrap_or(c.id);
-                                    cmds.push(Command::AssignTarget { unit: u.id, contact: focus });
-                                    cmds.push(Command::Fire {
-                                        unit: u.id, contact: focus,
-                                        weapon: w.weapon.clone(), rounds: 2,
-                                    });
-                                }
-                            }
-                        }
-                        _ => {}
-                    }
-                }
-            }
-
-            // 全局撤退规则：重伤舰退出阵位（P7）。撤退状态是"粘性"的：
-            // 一旦进入就不再退出（用 minds 表写回，下一 tick 生效）。
-            let retreating = self
-                .minds
-                .get(&u.id)
-                .map(|m| m.state == State::Retreat)
-                .unwrap_or(false)
-                || (u.kind != PlatformKind::Aircraft
-                    && u.hp / u.hp_max.max(1.0) <= p.retreat_hp_frac);
-            if retreating {
-                self.minds.get_mut(&u.id).map(|m| m.state = State::Retreat);
-                let home = anchor_pos.unwrap_or(u.pos);
-                cmds.push(Command::SetCourse { unit: u.id, course_deg: u.pos.bearing_to(home) });
-                cmds.push(Command::SetSpeed { unit: u.id, speed_kts: 25.0 });
+            .filter(|u| self.role_for(u) == Role::Carrier)
+            .collect();
+        for u in obs
+            .units
+            .iter()
+            .filter(|u| u.kind != PlatformKind::Aircraft && controllable(u))
+        {
+            let Some(mut mind) = self.minds.get(&u.id).cloned() else {
+                continue;
+            };
+            let home = carriers
+                .iter()
+                .min_by(|a, b| u.pos.range_to(a.pos).total_cmp(&u.pos.range_to(b.pos)))
+                .map(|a| a.pos)
+                .unwrap_or(u.pos);
+            if u.kind!=PlatformKind::Base && (mind.state == State::Retreat
+                || u.hp / u.hp_max.max(1.0) <= self.params.retreat_hp_frac)
+            {
+                mind.state = State::Retreat;
+                cmds.push(Command::ClearStation { unit: u.id });
+                cmds.push(Command::Goto {
+                    unit: u.id,
+                    waypoints: vec![],
+                });
+                cmds.push(Command::SetCourse {
+                    unit: u.id,
+                    course_deg: home.bearing_to(u.pos),
+                });
+                cmds.push(Command::SetSpeed {
+                    unit: u.id,
+                    speed_kts: 18.0,
+                });
                 cmds.push(Command::ClearTarget { unit: u.id });
+                self.note(
+                    u.id,
+                    None,
+                    "retreat",
+                    format!("{}：重伤退出阵位并后撤", u.name),
+                    format!("{}: damaged; leave screen and withdraw", u.name),
+                );
+                self.minds.insert(u.id, mind);
                 continue;
             }
-            let Some(mind) = self.minds.get(&u.id).cloned() else { continue };
-
-            // 舰载机一律按引擎任务逻辑飞行（air_missions/弹射时给定），
-            // 参谋只负责目标指派与打击波次组织。
-            if u.kind == PlatformKind::Aircraft {
-                match mind.role {
-                    Role::Cap => {
-                        if let Some(contact) = self.best_air_target(obs, u) {
-                            cmds.push(Command::AssignTarget { unit: u.id, contact });
-                        } else if let Some((contact, _, _)) = self.best_strike_target(obs, u) {
-                            cmds.push(Command::AssignTarget { unit: u.id, contact });
-                        }
-                    }
-                    Role::AswScreen => {
-                        if let Some((contact, dist)) = self.best_sub_target(obs, u) {
-                            if dist < 6.0 {
-                                cmds.push(Command::AssignTarget { unit: u.id, contact });
-                            }
-                        }
-                    }
-                    _ => {}
-                }
-                continue;
-            }
-
-            // 水面/水下单位的状态机。
-            let mut mind = mind;
             match mind.role {
+                Role::Airbase => {
+                    cmds.push(Command::ClearTarget {unit:u.id});
+                    cmds.push(Command::SetWeaponsFree {unit:u.id,free:true});
+                }
                 Role::Carrier => {
                     if u.ordered_speed_kts < 1.0 {
-                        cmds.push(Command::SetSpeed { unit: u.id, speed_kts: 18.0 });
+                        cmds.push(Command::SetSpeed {
+                            unit: u.id,
+                            speed_kts: 18.0,
+                        });
                     }
-                    let Some(deck) = &u.deck else { continue };
-
-                    // AEW 补充：预警机燃油耗尽返航后必须重新放飞，否则
-                    // 全队失去空中探测（此前它落地后就再也没上天）。
-                    let aew_airborne = obs
-                        .units
-                        .iter()
-                        .filter(|a| a.kind == PlatformKind::Aircraft)
-                        .filter(|a| self.minds.get(&a.id).map(|m| m.role) == Some(Role::Aew))
-                        .count();
-                    if aew_airborne < 1 {
-                        let last = self.last_asw_wave.get(&u.id).copied().unwrap_or(-100_000);
-                        if obs.tick - last >= 60 {
-                            if let Some((class, _)) = deck
-                                .ready
-                                .iter()
-                                .find(|(c, n)| *n > 0 && is_aew_class(c))
-                            {
-                                // Orbit astern: an AEW must never sit on the
-                                // threat axis where enemy CAP hunts it.
-                                let astern = u
-                                    .pos
-                                    .advanced(self.threat_axis_deg + 180.0, 30.0);
-                                cmds.push(Command::LaunchAircraft {
-                                    unit: u.id, class: class.clone(), count: 1,
-                                    mission: AirMission::Recon { point: astern },
-                                });
-                                self.last_asw_wave.insert(u.id, obs.tick);
-                            }
-                        }
-                    }
-
-                    // 反潜：保持至少 2 架反潜直升机在空。有潜艇接触就扑向
-                    // 接触区；没有接触则在威胁轴前方 40 海里建立声呐屏障，
-                    // 主动搜索而不是等潜艇先开火。
-                    let asw_airborne = obs
-                        .units
-                        .iter()
-                        .filter(|a| a.kind == PlatformKind::Aircraft)
-                        .filter(|a| self.minds.get(&a.id).map(|m| m.role) == Some(Role::AswScreen))
-                        .count();
-                    if asw_airborne < 2 {
-                        let last = self.last_asw_wave.get(&u.id).copied().unwrap_or(-100_000);
-                        if obs.tick - last >= 300 {
-                            if let Some((class, n)) = deck
-                                .ready
-                                .iter()
-                                .find(|(c, n)| *n > 0 && self.can_fly_asw(c))
-                            {
-                                let area = self
-                                    .best_sub_target(obs, u)
-                                    .filter(|(_, dist)| *dist <= 80.0)
-                                    .map(|(c, _)| contact_pos(obs, c, u.pos))
-                                    .unwrap_or_else(|| {
-                                        self.standoff_point(&u.pos, 40.0)
-                                    });
-                                cmds.push(Command::LaunchAircraft {
-                                    unit: u.id, class: class.clone(),
-                                    count: (*n).min(2),
-                                    mission: AirMission::Asw { area, radius_nm: 15.0 },
-                                });
-                                self.last_asw_wave.insert(u.id, obs.tick);
-                            }
-                        }
-                    }
-
-                    // P4/P8: 组织打击波次。只在没有足量在空突击机时补充，
-                    // 一次 4 机（不足则 2 机），每 5 分钟一波，避免零散送死。
-                    let strike_airborne = obs
-                        .units
-                        .iter()
-                        .filter(|a| a.kind == PlatformKind::Aircraft)
-                        .filter(|a| self.minds.get(&a.id).map(|m| m.role) == Some(Role::Striker))
-                        .filter(|a| a.weapons.iter().any(|w| {
-                            matches!(self.kind_of(&w.weapon), Some(WeaponKind::Ascm)) && w.ammo > 0
-                        }))
-                        .count();
-                    if strike_airborne >= 4 {
-                        continue;
-                    }
-                    let last = self.last_strike_wave.get(&u.id).copied().unwrap_or(-100_000);
-                    if obs.tick - last < 300 {
-                        continue;
-                    }
-                    let anchor_here = u.pos;
-                    let target_contact = obs
-                        .contacts
-                        .iter()
-                        .filter(|c| {
-                            // Last-known-position strikes: a contact that went
-                            // stale within the last 5 minutes is still a valid
-                            // aim point, otherwise the staff stalls forever
-                            // once every track ages out.
-                            (c.last_seen_s <= 300.0)
-                                && c.quality >= p.strike_min_q * 0.6
-                                && anchor_here.range_to(c.estimate) <= 260.0
-                                && matches!(c.category, PlatformKind::Ship | PlatformKind::Base)
-                        })
-                        .min_by(|a, b| {
-                            let va = match a.class_name.as_deref() {
-                                Some(n) if n.contains("CV") || n.contains("FORD") || n.contains("NIMITZ") => 0.0,
-                                Some(n) if n.contains("Burke") || n.contains("055") || n.contains("052") => 1.0,
-                                _ => 2.0,
-                            };
-                            let vb = match b.class_name.as_deref() {
-                                Some(n) if n.contains("CV") || n.contains("FORD") || n.contains("NIMITZ") => 0.0,
-                                Some(n) if n.contains("Burke") || n.contains("055") || n.contains("052") => 1.0,
-                                _ => 2.0,
-                            };
-                            va.partial_cmp(&vb)
-                                .unwrap_or(std::cmp::Ordering::Equal)
-                                .then_with(|| {
-                                    anchor_here
-                                        .range_to(a.estimate)
-                                        .partial_cmp(&anchor_here.range_to(b.estimate))
-                                        .unwrap_or(std::cmp::Ordering::Equal)
-                                })
-                        })
-                        .map(|c| c.id);
-                    let Some(target_contact) = target_contact else { continue };
-                    let Some((class, n)) = deck
-                        .ready
-                        .iter()
-                        .find(|(c, n)| *n > 0 && self.can_fly_anti_ship(c))
-                    else {
-                        continue;
-                    };
-                    cmds.push(Command::LaunchAircraft {
-                        unit: u.id,
-                        class: class.clone(),
-                        count: (*n).min(4).max(2),
-                        mission: AirMission::Strike { contact: target_contact },
+                    // Keep the fleet at stand-off rather than close a detected
+                    // airborne contact as if it were the enemy fleet center.
+                    let threatened = obs.contacts.iter().any(|c| {
+                        c.category == PlatformKind::Ship
+                            && !self.sensor_contact(c)
+                            && !c.stale
+                            && c.quality > 0.25
+                            && u.pos.range_to(c.estimate) < match self.posture {1=>140.0,2=>70.0,_=>90.0}
                     });
-                    self.last_strike_wave.insert(u.id, obs.tick);
-                }
-
-                Role::Aew => {
-                    // P2/P8: 预警机存活优先。敌战斗机/未知空中目标逼近 60 海里
-                    // 内时，立即把巡逻点撤到舰队后方（威胁反方向 40 海里），
-                    // 低速脱离；威胁消失后再回到标准阵位。
-                    let threat = obs
-                        .contacts
-                        .iter()
-                        .filter(|c| {
-                            !c.stale && c.quality > 0.25
-                                && c.category == PlatformKind::Aircraft
-                        })
-                        .map(|c| u.pos.range_to(c.estimate))
-                        .min_by(|a, b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal));
-                    let threatened = threat.map(|d| d < 60.0).unwrap_or(false);
-                    let home = anchor_pos.unwrap_or(u.pos);
-                    let astern = home.advanced(self.threat_axis_deg + 180.0, 40.0);
                     if threatened {
-                        cmds.push(Command::ClearStation { unit: u.id });
                         cmds.push(Command::SetCourse {
                             unit: u.id,
-                            course_deg: u.pos.bearing_to(astern),
+                            course_deg: (self.threat_axis_deg + 180.0) % 360.0,
                         });
-                        cmds.push(Command::SetSpeed { unit: u.id, speed_kts: unit_obs_ext::cruise(u) });
-                    } else if u.mission.is_none() {
-                        let standoff = self.standoff_point(&home, p.aew_standoff_nm);
-                        cmds.push(Command::SetCourse {
-                            unit: u.id,
-                            course_deg: u.pos.bearing_to(standoff),
-                        });
-                        cmds.push(Command::SetSpeed {
-                            unit: u.id,
-                            speed_kts: unit_obs_ext::cruise(u),
-                        });
+                        self.note(
+                            u.id,
+                            None,
+                            "carrier_standoff",
+                            format!("{}：向威胁轴后方机动，保持航空作战距离", u.name),
+                            format!("{}: turn away to preserve air-operation stand-off", u.name),
+                        );
                     }
-                }
-
-                Role::GunScreen => {
-                    let standoff = self.standoff_point(
-                        &anchor_pos.unwrap_or(u.pos),
-                        p.screen_standoff_nm,
-                    );
-                    cmds.push(Command::SetCourse { unit: u.id, course_deg: u.pos.bearing_to(standoff) });
-                    cmds.push(Command::SetSpeed { unit: u.id, speed_kts: 18.0 });
+                    cmds.push(Command::ClearTarget { unit: u.id });
                     if !u.fire_on {
-                        cmds.push(Command::SetWeaponsFree { unit: u.id, free: true });
-                    }
-                    // P8: 对空 > 水面 > 岸上（SLCM 对地）。
-                    if let Some(contact) = self.best_air_target(obs, u) {
-                        cmds.push(Command::AssignTarget { unit: u.id, contact });
-                    } else if let Some((contact, dist)) = self.best_surface_target(obs, u) {
-                        cmds.push(Command::AssignTarget { unit: u.id, contact });
-                        // 舰射反舰：使用实际装备的反舰弹（YJ-18/捕鲸叉等）。
-                        if let Some((weapon, _range, ammo)) =
-                            self.pick_weapon(u, &[WeaponKind::Ascm], dist)
-                        {
-                            cmds.push(Command::Fire {
-                                unit: u.id, contact, weapon,
-                                rounds: if ammo >= 4 { 2 } else { 1 },
-                            });
-                        }
-                    } else if let Some((base_contact, dist)) = self.best_base_target(obs, u) {
-                        cmds.push(Command::AssignTarget { unit: u.id, contact: base_contact });
-                        // 对地巡航导弹：实际 ID 是 cn_dh10 / us_tomahawk，不能用 "slcm"。
-                        if let Some((weapon, _range, _ammo)) =
-                            self.pick_weapon(u, &[WeaponKind::Slcm], dist)
-                        {
-                            cmds.push(Command::Fire {
-                                unit: u.id, contact: base_contact, weapon, rounds: 1,
-                            });
-                        }
-                    } else {
-                        cmds.push(Command::ClearTarget { unit: u.id });
-                    }
-                    // 防空舰同样带反潜武器：有潜艇接触时先打潜艇。
-                    if let Some((contact, dist)) = self.best_sub_target(obs, u) {
-                        if let Some((weapon, _range, ammo)) = self.pick_weapon(
-                            u, &[WeaponKind::AswRocket, WeaponKind::Lwt], dist,
-                        ) {
-                            cmds.push(Command::AssignTarget { unit: u.id, contact });
-                            cmds.push(Command::Fire {
-                                unit: u.id, contact, weapon,
-                                rounds: if ammo >= 2 { 2 } else { 1 },
-                            });
-                        }
+                        cmds.push(Command::SetWeaponsFree {
+                            unit: u.id,
+                            free: true,
+                        });
                     }
                 }
-
-                Role::AswScreen => {
-                    // P6: 反潜屏卫限速 15 节保拖曳阵；发现潜艇接触则指派并
-                    // 实际发射火箭深弹/轻鱼雷，而不是只等自动武器。
-                    cmds.push(Command::SetSpeed { unit: u.id, speed_kts: 15.0 });
-                    if !u.fire_on {
-                        cmds.push(Command::SetWeaponsFree { unit: u.id, free: true });
-                    }
-                    if let Some((contact, dist)) = self.best_sub_target(obs, u) {
-                        cmds.push(Command::AssignTarget { unit: u.id, contact });
-                        if let Some((weapon, _range, ammo)) = self.pick_weapon(
-                            u, &[WeaponKind::AswRocket, WeaponKind::Lwt], dist,
-                        ) {
-                            cmds.push(Command::Fire {
-                                unit: u.id, contact, weapon,
-                                rounds: if ammo >= 2 { 2 } else { 1 },
-                            });
-                        }
-                    }
-                }
-
                 Role::Submarine => {
-                    if let Some((contact, dist)) = self.best_ship_target(obs, u) {
-                        if let Some((weapon, _range, ammo)) =
-                            self.pick_weapon(u, &[WeaponKind::Torpedo, WeaponKind::Lwt], dist)
+                    // Explicit torpedo salvos only. An assigned standing target
+                    // otherwise triggers a second, uncontrolled auto salvo.
+                    cmds.push(Command::ClearStation { unit: u.id });
+                    cmds.push(Command::ClearTarget { unit: u.id });
+                    cmds.push(Command::SetWeaponsFree {
+                        unit: u.id,
+                        free: false,
+                    });
+                    let armed=u.weapons.iter().any(|w|w.ammo>0 && matches!(self.kind_of(&w.weapon),Some(WeaponKind::Torpedo|WeaponKind::Ascm|WeaponKind::Slcm)));
+                    if !armed {
+                        // Exhaustion changes the standing task. Do not keep an
+                        // empty submarine charging its last hostile contact.
+                        cmds.push(Command::Goto {unit:u.id,waypoints:vec![]});
+                        cmds.push(Command::SetRadar {unit:u.id,active:false});
+                        cmds.push(Command::SetSonar {unit:u.id,active:false});
+                        cmds.push(Command::SetSpeed {unit:u.id,speed_kts:self.params.sub_patrol_speed_kts});
+                        if let Some((cid,_))=self.best_ship_target(obs,u) {
+                            cmds.push(Command::SetCourse {unit:u.id,course_deg:(u.pos.bearing_to(contact_pos(obs,cid,u.pos))+180.0)%360.0});
+                        }
+                        mind.state=State::Withdraw;
+                        self.note(u.id,None,"sub_reserve","进攻弹药耗尽：解除追击、关闭主动发射并低速撤离".into(),"offensive load empty: cancel pursuit, silence active emitters and withdraw slowly".into());
+                    } else if mind.state == State::Withdraw && obs.tick - mind.last_salvo_tick < 120 {
+                        cmds.push(Command::SetSpeed {
+                            unit: u.id,
+                            speed_kts: 18.0,
+                        });
+                    } else if let Some((contact, dist)) = self.best_ship_target(obs, u) {
+                        let inflight = obs
+                            .contacts
+                            .iter()
+                            .find(|c| c.id == contact)
+                            .map(|c| c.own_in_flight)
+                            .unwrap_or(0);
+                        if let Some((weapon, _, ammo)) = self
+                            .pick_weapon(u, &[WeaponKind::Torpedo], dist)
+                            .filter(|_| inflight < 4 && obs.tick - mind.last_salvo_tick >= 120)
                         {
-                            cmds.push(Command::AssignTarget { unit: u.id, contact });
                             cmds.push(Command::Fire {
-                                unit: u.id, contact, weapon,
-                                rounds: if ammo >= 4 { 2 } else { 1 },
+                                unit: u.id,
+                                contact,
+                                weapon,
+                                rounds: ammo.min(2) as u8,
                             });
-                            cmds.push(Command::SetSpeed { unit: u.id, speed_kts: 18.0 });
                             cmds.push(Command::SetCourse {
                                 unit: u.id,
-                                course_deg: (u.course_deg + 120.0) % 360.0,
+                                course_deg: (u.course_deg + 110.0) % 360.0,
                             });
-                            self.minds.get_mut(&u.id).map(|m| m.state = State::Withdraw);
+                            cmds.push(Command::SetSpeed {
+                                unit: u.id,
+                                speed_kts: 18.0,
+                            });
+                            mind.state = State::Withdraw;
+                            mind.last_salvo_tick = obs.tick;
+                            self.note(
+                                u.id,
+                                Some(contact),
+                                "sub_salvo",
+                                format!("{}：向C{}下令鱼雷齐射后脱离", u.name, contact.0),
+                                format!(
+                                    "{}: order torpedo salvo on C{}, then withdraw",
+                                    u.name, contact.0
+                                ),
+                            );
                         } else {
+                            mind.state = State::OnStation;
                             cmds.push(Command::SetCourse {
                                 unit: u.id,
                                 course_deg: u.pos.bearing_to(contact_pos(obs, contact, u.pos)),
                             });
-                            let approach = if dist > 20.0 { 16.0 } else { p.sub_patrol_speed_kts };
-                            cmds.push(Command::SetSpeed { unit: u.id, speed_kts: approach });
+                            cmds.push(Command::SetSpeed {
+                                unit: u.id,
+                                speed_kts: if dist > 25.0 {
+                                    12.0
+                                } else {
+                                    self.params.sub_patrol_speed_kts
+                                },
+                            });
+                            self.note(
+                                u.id,
+                                Some(contact),
+                                "sub_approach",
+                                format!("{}：接近C{}，等待射程与在飞弹药窗口", u.name, contact.0),
+                                format!(
+                                    "{}: approach C{}; await range and salvo window",
+                                    u.name, contact.0
+                                ),
+                            );
                         }
                     } else {
                         cmds.push(Command::SetSpeed {
                             unit: u.id,
-                            speed_kts: p.sub_patrol_speed_kts,
+                            speed_kts: self.params.sub_patrol_speed_kts,
                         });
                     }
                 }
-
-                Role::Raider => {
-                    if let Some((contact, dist)) = self.best_ship_target(obs, u) {
-                        cmds.push(Command::AssignTarget { unit: u.id, contact });
-                        if let Some((weapon, _range, _ammo)) =
-                            self.pick_weapon(u, &[WeaponKind::Ascm], dist)
+                Role::GunScreen | Role::AswScreen | Role::Raider | Role::Other => {
+                    // Distribute escorts about their nearest carrier; never
+                    // abandon that carrier to chase a distant aircraft blip.
+                    let group=obs.exercise.as_ref().and_then(|e|e.naval_groups.iter().find(|g|g.members.contains(&u.id)));
+                    let group_leader=group.and_then(|g|obs.units.iter().find(|v|v.id==g.leader)
+                        .or_else(||obs.units.iter().filter(|v|g.members.contains(&v.id)).min_by_key(|v|v.id)));
+                    let leader=if group.is_some() {group_leader}else{carriers.iter().copied().filter(|_|u.kind==PlatformKind::Ship)
+                        .min_by(|a,b|u.pos.range_to(a.pos).total_cmp(&u.pos.range_to(b.pos)))};
+                    if let Some(leader)=leader.filter(|v|v.id!=u.id) {
+                        let offset = if u.id.0 % 2 == 0 { 35.0 } else { -35.0 };
+                        cmds.push(Command::Follow {
+                            unit: u.id,
+                            leader: leader.id,
+                            bearing_rel_deg: (self.threat_axis_deg - leader.course_deg + offset)
+                                .rem_euclid(360.0),
+                            distance_nm: if mind.role == Role::AswScreen {
+                                10.0
+                            } else {
+                                self.params.screen_standoff_nm
+                            },
+                        });
+                    } else if let Some(g)=group {
+                        cmds.push(Command::ClearStation {unit:u.id});
+                        self.note(u.id,None,"group_independent",format!("{}：保持{}独立航路，不转投其他航母编队",u.name,g.name),format!("{}: retain {} independent route; do not merge with another carrier group",u.name,g.name));
+                    }
+                    if !u.fire_on {
+                        cmds.push(Command::SetWeaponsFree {
+                            unit: u.id,
+                            free: true,
+                        });
+                    }
+                    // Keep automatic air defence unpinned; deliberate surface
+                    // salvos use Fire without overriding the air-defence target.
+                    cmds.push(Command::ClearTarget { unit: u.id });
+                    let target = self
+                        .best_sub_target(obs, u)
+                        .and_then(|(c, d)| {
+                            self.pick_weapon(u, &[WeaponKind::AswRocket, WeaponKind::Lwt], d)
+                                .map(|w| (c, w))
+                        })
+                        .or_else(|| {
+                            self.best_ship_target(obs, u).and_then(|(c, d)| {
+                                self.pick_weapon(u, &[WeaponKind::Ascm], d).map(|w| (c, w))
+                            })
+                        })
+                        .or_else(|| {
+                            self.best_base_target(obs, u).and_then(|(c, d)| {
+                                self.pick_weapon(u, &[WeaponKind::Slcm], d).map(|w| (c, w))
+                            })
+                        });
+                    if let Some((contact, (weapon, _, ammo))) = target {
+                        let inflight = obs
+                            .contacts
+                            .iter()
+                            .find(|c| c.id == contact)
+                            .map(|c| c.own_in_flight)
+                            .unwrap_or(0);
+                        if obs.tick - mind.last_salvo_tick
+                            >= self.params.salvo_min_interval_s.max(60)
+                            && inflight < 8
                         {
-                            if obs.tick - mind.last_salvo_tick >= p.salvo_min_interval_s {
-                                cmds.push(Command::Fire {
-                                    unit: u.id, contact, weapon, rounds: 2,
-                                });
-                                mind.last_salvo_tick = obs.tick;
-                                self.minds.get_mut(&u.id).map(|m| m.state = State::Withdraw);
-                            }
-                        }
-                        if mind.state == State::Withdraw {
-                            cmds.push(Command::SetCourse {
+                            cmds.push(Command::Fire {
                                 unit: u.id,
-                                course_deg: (u.course_deg + 90.0) % 360.0,
+                                contact,
+                                weapon,
+                                rounds: ammo.min(2) as u8,
                             });
-                            cmds.push(Command::SetSpeed { unit: u.id, speed_kts: 30.0 });
-                        } else {
-                            cmds.push(Command::SetCourse {
-                                unit: u.id,
-                                course_deg: u.pos.bearing_to(contact_pos(obs, contact, u.pos)),
-                            });
-                            cmds.push(Command::SetSpeed { unit: u.id, speed_kts: 20.0 });
+                            mind.last_salvo_tick = obs.tick;
+                            self.note(
+                                u.id,
+                                Some(contact),
+                                "screen_salvo",
+                                format!("{}：保持屏卫，向C{}下令齐射", u.name, contact.0),
+                                format!(
+                                    "{}: hold screen and order salvo at C{}",
+                                    u.name, contact.0
+                                ),
+                            );
                         }
-                    } else {
-                        cmds.push(Command::SetWeaponsFree { unit: u.id, free: true });
                     }
                 }
-
-                // 其余角色（无角色舰等）保持武器自由。
-                _ => {
-                    if !u.fire_on && u.kind == PlatformKind::Ship {
-                        cmds.push(Command::SetWeaponsFree { unit: u.id, free: true });
-                    }
-                }
+                _ => {}
+            }
+            self.minds.insert(u.id, mind);
+        }
+        // Reassociation/retasking above may have replaced a lost track. Review
+        // the current package assignment, not a stale pre-planning snapshot.
+        for command in &cmds {
+            match command {
+                Command::RetaskAircraft{unit,mission,..}=>if let Some(t)=self.supervision.tasks.get_mut(unit){t.contact=if let AirMission::Strike{contact}=mission{Some(*contact)}else{None};},
+                Command::AssignTarget{unit,contact} if !obs.units.iter().any(|u|u.id==*unit&&u.mission.as_deref()==Some("strike"))=>if obs.contacts.iter().any(|c|c.id==*contact&&!c.stale&&!c.bearing_only&&c.quality>=self.params.strike_min_q){if let Some(t)=self.supervision.tasks.get_mut(unit){t.contact=Some(*contact);}},
+                _=>{}
             }
         }
-
-        // P8: 基地打击——任一 Slcm 舰对已识别岸上目标齐射。
-        for u in &obs.units {
-            if u.kind != PlatformKind::Ship {
-                continue;
-            }
-            let has_slcm = u.weapons.iter().any(|w| {
-                w.ammo > 0 && matches!(self.kind_of(&w.weapon), Some(WeaponKind::Slcm))
-            });
-            if !has_slcm {
-                continue;
-            }
-            let Some(mind) = self.minds.get(&u.id) else { continue };
-            if mind.last_salvo_tick > 0 && obs.tick - mind.last_salvo_tick < 180 {
-                continue;
-            }
-            for c in &obs.contacts {
-                if c.stale || c.quality < 0.25 || c.category != PlatformKind::Base {
-                    continue;
-                }
-                let dist = u.pos.range_to(c.estimate);
-                if dist <= 160.0 {
-                    let Some((weapon, _range, _ammo)) =
-                        self.pick_weapon(u, &[WeaponKind::Slcm], dist)
-                    else { continue };
-                    cmds.push(Command::AssignTarget { unit: u.id, contact: c.id });
-                    cmds.push(Command::Fire {
-                        unit: u.id,
-                        contact: c.id,
-                        weapon,
-                        rounds: 1,
-                    });
-                    if let Some(m) = self.minds.get_mut(&u.id) {
-                        m.last_salvo_tick = obs.tick;
-                    }
-                    break;
-                }
+        if let Some(db)=&self.db {self.notes.extend(self.supervision.review_current(obs,db));let (maintenance,notes)=self.supervision.maintenance(obs,db);self.notes.extend(notes);cmds.extend(maintenance);}
+        let cmds=self.coordinate_salvos(obs,cmds);
+        let accepted=if let Some(db)=&self.db {
+            let (cmds,notes)=self.supervision.guard(obs,db,cmds);self.notes.extend(notes);cmds
+        }else{cmds};
+        // Commit launch state only for orders that survived whole-batch policy.
+        for command in &accepted {
+            if let Command::LaunchAircraft{unit,mission,..}=command {
+                self.last_launch.insert(*unit,obs.tick);
+                if let AirMission::Strike{contact}=mission {self.last_strike_wave.insert(*unit,obs.tick);self.wave_targets.insert(*unit,*contact);}
             }
         }
-
-        cmds
+        accepted
     }
 }
 
-pub mod unit_obs_ext {
-    use super::is_helo;
-    use harpoon_core::observe::UnitObs;
-    use harpoon_core::types::PlatformKind;
-
-    pub fn max_speed_hint(u: &UnitObs) -> f64 {
-        match u.kind {
-            PlatformKind::Aircraft => {
-                if is_helo(u) { 130.0 } else { 500.0 }
-            }
-            PlatformKind::Sub => 18.0,
-            PlatformKind::Ship => {
-                if u.hp_max >= 800.0 { 30.0 } else { 28.0 }
-            }
-            _ => 20.0,
-        }
-    }
-
-    pub fn cruise(u: &UnitObs) -> f64 {
-        let max = max_speed_hint(u);
-        if max > 200.0 { max * 0.7 } else { max * 0.75 }
-    }
-
-    #[allow(dead_code)]
-    pub fn strike_envelope_nm(u: &UnitObs) -> f64 {
-        u.weapons
-            .iter()
-            .filter(|w| w.weapon.starts_with("asm"))
-            .map(|_| 38.25) // 45 nm envelope × 0.85 release fraction
-            .next()
-            .unwrap_or(0.0)
+/// Write private intent through the existing generic event carrier. No new
+/// combat rule or event visibility exception is introduced.
+pub fn record_notes(world: &mut harpoon_core::World, side: Side, notes: Vec<StaffNote>) {
+    for note in notes {
+        world.emit(
+            harpoon_core::events::EventKind::RulesEvent {
+                domain: "tactical_ai".into(),
+                rule: note.action.clone(),
+                side: Some(side),
+                unit: Some(note.unit),
+                contact: note.contact,
+                detail: serde_json::to_string(&note).unwrap(),
+            },
+            harpoon_core::events::Visibility::Side(side),
+        );
     }
 }
 
@@ -1041,6 +977,347 @@ mod tests {
     }
 
     #[test]
+    fn an_empty_submarine_cancels_pursuit_and_active_emissions() {
+        let mut w=world(r#"{"side":"Blue","class":"cn_093","name":"SUB","pos":[0,0]},
+            {"side":"Red","class":"us_ford","name":"TARGET","pos":[20,0]}"#,"{}");
+        let target=id_of(&w,"TARGET");track(&mut w,Side::Blue,target);
+        let mut o=observe(&w,Side::Blue,0,0);let sub=o.units[0].id;
+        for m in &mut o.units[0].weapons {m.ammo=0;}
+        let mut staff=TacticalStaff::with_db(Side::Blue,db());let c=staff.decide(&o);
+        assert!(!c.iter().any(|c|matches!(c,Command::Fire{..})));
+        assert!(c.iter().any(|c|matches!(c,Command::SetRadar{unit,active:false} if *unit==sub)));
+        assert!(c.iter().any(|c|matches!(c,Command::SetSonar{unit,active:false} if *unit==sub)));
+        assert!(staff.take_notes().iter().any(|n|n.action=="sub_reserve"));
+    }
+    #[test]fn declared_surface_groups_do_not_collapse_into_the_nearest_carrier() {
+        let w=world(r#"{"side":"Blue","class":"cn_001","name":"CV","pos":[0,0]},
+            {"side":"Blue","class":"cn_055","name":"LEAD","pos":[100,0]},
+            {"side":"Blue","class":"cn_052d","name":"MEMBER","pos":[10,0]}"#,"{}");
+        let mut o=observe(&w,Side::Blue,0,0);let leader=id_of(&w,"LEAD");let member=id_of(&w,"MEMBER");
+        o.exercise=Some(serde_json::from_value(serde_json::json!({"locked":false,"alerted_at":null,"objectives":[],
+            "required_carrier_points":30,"required_infrastructure_points":20,"naval_groups":[
+                {"side":"Blue","name":"Independent","leader":leader,"members":[leader,member]}]})).unwrap());
+        let mut staff=TacticalStaff::with_db(Side::Blue,db());let c=staff.decide(&o);
+        assert!(c.iter().any(|c|matches!(c,Command::Follow{unit,leader:l,..} if *unit==member && *l==leader)));
+        assert!(!c.iter().any(|c|matches!(c,Command::Follow{unit,..} if *unit==leader)));
+        o.units.retain(|u|u.id!=leader);let c=staff.decide(&o);
+        assert!(!c.iter().any(|c|matches!(c,Command::Follow{unit,..} if *unit==member)),"surviving member becomes independent leader instead of merging");
+    }
+
+    #[test]
+    fn strikers_are_ordered_to_low_level_ingress() {
+        let mut w = world(
+            r#"{"side":"Blue","class":"cn_001","name":"CV","pos":[0,0]},
+               {"side":"Red","class":"us_ford","name":"TARGET","pos":[120,0]}"#,
+            r#"{"CV":[{"class":"cn_j15","count":4}]}"#,
+        );
+        let target = id_of(&w, "TARGET");
+        track(&mut w, Side::Blue, target);
+        let cv = id_of(&w, "CV");
+        // 从甲板放飞一组突击机（引擎会按默认爬到 8000 m）。
+        let strike = AirMission::Strike {
+            contact: harpoon_core::types::ContactId(1),
+        };
+        assert!(harpoon_core::air::launch_aircraft(&mut w, cv, "cn_j15", 2, &strike).is_ok());
+        let obs = observe(&w, Side::Blue, 0, 0);
+        let mut staff = TacticalStaff::with_db(Side::Blue, db());
+        let cmds = staff.decide(&obs);
+        // §4.5.4 / p4-3: VLow is 21–60m; 50m is this AI's
+        // selected flight profile, not a mandatory anti-ship rule.
+        assert!(
+            cmds.iter().any(|c| matches!(
+                c,
+                Command::SetAltitude { altitude_m, .. } if *altitude_m == 50.0
+            )),
+            "strikers must be ordered to low level; got {:?}",
+            cmds
+        );
+    }
+
+    #[test]
+    fn strike_waits_for_descent_and_clears_route_on_rtb() {
+        let mut w = world(
+            r#"{"side":"Blue","class":"cn_001","name":"CV","pos":[0,0]},
+               {"side":"Red","class":"us_ford","name":"TARGET","pos":[160,0]}"#,
+            r#"{"CV":[{"class":"cn_j15","count":2}]}"#,
+        );
+        let cv = id_of(&w, "CV");
+        let target = id_of(&w, "TARGET");
+        let cid = track(&mut w, Side::Blue, target);
+        harpoon_core::air::launch_aircraft(
+            &mut w,
+            cv,
+            "cn_j15",
+            2,
+            &AirMission::Strike { contact: cid },
+        )
+        .unwrap();
+        let ids: Vec<_> = w
+            .entities
+            .values()
+            .filter(|e| e.kind == PlatformKind::Aircraft)
+            .map(|e| e.id)
+            .collect();
+        let mut staff = TacticalStaff::with_db(Side::Blue, db());
+        let first = staff.decide(&observe(&w, Side::Blue, 0, 0));
+        assert!(ids.iter().all(|id| first.iter().any(
+            |c| matches!(c,Command::Goto {unit,waypoints} if unit==id && !waypoints.is_empty())
+        )));
+        assert!(!first
+            .iter()
+            .any(|c| matches!(c,Command::Fire {unit,..} if ids.contains(unit))));
+        for id in &ids {
+            w.entities.get_mut(id).unwrap().mission = Some(harpoon_core::world::MissionState::Rtb);
+        }
+        let cmds = staff.decide(&observe(&w, Side::Blue, 0, 0));
+        assert!(ids.iter().all(|id| cmds.iter().any(
+            |c| matches!(c,Command::Goto {unit,waypoints} if unit==id && waypoints.is_empty())
+        )));
+        assert!(ids.iter().all(|id|cmds.iter().any(|c|matches!(c,Command::SetAltitude {unit,altitude_m} if unit==id && *altitude_m==3000.0))),"RTB phase must select cruise altitude rather than hold the ingress height");
+    }
+
+    #[test]
+    fn cap_has_leash_and_bearing_only_tracks_do_not_authorize_interception() {
+        let mut w = world(
+            r#"{"side":"Blue","class":"cn_001","name":"CV","pos":[0,0]},
+               {"side":"Blue","class":"cn_j15","name":"CAP","pos":[20,0]},
+               {"side":"Red","class":"us_e2d","name":"AEW","pos":[140,0]}"#,
+            "{}",
+        );
+        let target = id_of(&w, "AEW");
+        let cap = id_of(&w, "CAP");
+        let cid = track(&mut w, Side::Blue, target);
+        let c = w.sides[0].contacts.get_mut(&cid).unwrap();
+        c.category = PlatformKind::Aircraft;
+        let mut staff = TacticalStaff::with_db(Side::Blue, db());
+        let cmds = staff.decide(&observe(&w, Side::Blue, 0, 0));
+        assert!(!cmds
+            .iter()
+            .any(|c| matches!(c,Command::AssignTarget {unit,..} if *unit==cap)));
+        let c = w.sides[0].contacts.get_mut(&cid).unwrap();
+        c.estimate = Vec2::new(30.0, 0.0);
+        c.bearing_only = true;
+        let cmds = staff.decide(&observe(&w, Side::Blue, 0, 0));
+        assert!(!cmds
+            .iter()
+            .any(|c| matches!(c,Command::AssignTarget {unit,..} if *unit==cap)));
+        w.sides[0].contacts.get_mut(&cid).unwrap().bearing_only = false;
+        let cmds = staff.decide(&observe(&w, Side::Blue, 0, 0));
+        assert!(cmds.iter().any(
+            |c| matches!(c,Command::AssignTarget {unit,contact} if *unit==cap && *contact==cid)
+        ));
+    }
+
+    #[test]
+    fn one_launch_per_deck_ready_count_and_defensive_cap_first() {
+        let w = world(
+            r#"{"side":"Blue","class":"cn_001","name":"CV","pos":[0,0]},
+                        {"side":"Red","class":"us_ford","name":"TARGET","pos":[160,0]}"#,
+            r#"{"CV":[{"class":"cn_j15","count":1},{"class":"cn_z18f","count":2}]}"#,
+        );
+        let mut staff = TacticalStaff::with_db(Side::Blue, db());
+        let cmds = staff.decide(&observe(&w, Side::Blue, 0, 0));
+        let launches: Vec<_> = cmds
+            .iter()
+            .filter(|c| matches!(c, Command::LaunchAircraft { .. }))
+            .collect();
+        assert_eq!(launches.len(), 1);
+        assert!(matches!(
+            launches[0],
+            Command::LaunchAircraft {
+                count: 1,
+                mission: AirMission::Cap { .. },
+                ..
+            }
+        ));
+    }
+
+    #[test]
+    fn action_notes_are_private_deduplicated_and_hidden_truth_does_not_affect_orders() {
+        let mut w = world(
+            r#"{"side":"Blue","class":"cn_001","name":"CV","pos":[0,0]},
+                            {"side":"Red","class":"us_ford","name":"HIDDEN","pos":[160,0]}"#,
+            r#"{"CV":[{"class":"cn_j15","count":4}]}"#,
+        );
+        let obs = observe(&w, Side::Blue, 0, 0);
+        let mut a = TacticalStaff::with_db(Side::Blue, db());
+        let orders = a.decide(&obs);
+        let notes = a.take_notes();
+        assert!(!notes.is_empty());
+        let hidden = id_of(&w, "HIDDEN");
+        w.entities.get_mut(&hidden).unwrap().pos = Vec2::new(500.0, 500.0);
+        let mut b = TacticalStaff::with_db(Side::Blue, db());
+        assert_eq!(
+            serde_json::to_value(orders).unwrap(),
+            serde_json::to_value(b.decide(&observe(&w, Side::Blue, 0, 0))).unwrap()
+        );
+        record_notes(&mut w, Side::Blue, notes);
+        assert!(observe(&w,Side::Blue,0,usize::MAX).events.iter().any(|e|matches!(&e.kind,harpoon_core::EventKind::RulesEvent {domain,..} if domain=="tactical_ai")));
+        assert!(!observe(&w,Side::Red,0,usize::MAX).events.iter().any(|e|matches!(&e.kind,harpoon_core::EventKind::RulesEvent {domain,..} if domain=="tactical_ai")));
+        a.decide(&obs);
+        assert!(
+            a.take_notes().is_empty(),
+            "unchanged orders must not repeat their explanation"
+        );
+    }
+
+    #[test]
+    fn sensor_buoys_never_receive_movement_or_weapons_free_orders() {
+        let w = world(
+            r#"{"side":"Blue","class":"cn_001","name":"CV","pos":[0,0]},
+                        {"side":"Red","class":"us_ford","name":"TARGET","pos":[160,0]}"#,
+            "{}",
+        );
+        let mut obs = observe(&w, Side::Blue, 0, 0);
+        let mut buoy = obs.units[0].clone();
+        buoy.id = EntityId(999);
+        buoy.class = harpoon_core::rules::asw::SONOBUOY_CLASS.into();
+        buoy.deck = None;
+        buoy.weapons.clear();
+        buoy.fire_on = false;
+        obs.units.push(buoy);
+        let mut staff = TacticalStaff::with_db(Side::Blue, db());
+        for c in staff.decide(&obs) {
+            assert_ne!(
+                serde_json::to_value(c).unwrap()["unit"],
+                serde_json::json!(999)
+            );
+        }
+    }
+
+    #[test]
+    fn identified_buoys_never_attract_a_carrier_strike_or_set_the_threat_axis() {
+        let mut w = world(
+            r#"{"side":"Blue","class":"cn_001","name":"CV","pos":[0,0]},
+                            {"side":"Red","class":"us_ford","name":"TARGET","pos":[120,0]}"#,
+            r#"{"CV":[{"class":"cn_j15","count":4}]}"#,
+        );
+        let cv = id_of(&w, "CV");
+        let target = id_of(&w, "TARGET");
+        let real = track(&mut w, Side::Blue, target);
+        w.sides[0].contacts.get_mut(&real).unwrap().class_name = Some("Destroyer".into());
+        let mut buoy = w.sides[0].contacts[&real].clone();
+        buoy.id = ContactId(99);
+        buoy.class_name = Some("Sonobuoy".into());
+        buoy.estimate = Vec2::new(0.0, 20.0);
+        w.sides[0].contacts.insert(buoy.id, buoy);
+        harpoon_core::air::launch_aircraft(
+            &mut w,
+            cv,
+            "cn_j15",
+            2,
+            &AirMission::Cap {
+                station: Vec2::zero(),
+                radius_nm: 15.0,
+                follow: true,
+            },
+        )
+        .unwrap();
+        let mut staff = TacticalStaff::with_db(Side::Blue, db());
+        let cmds = staff.decide(&observe(&w, Side::Blue, 0, 0));
+        assert!(cmds.iter().any(|c|matches!(c,Command::LaunchAircraft {mission:AirMission::Strike {contact},..} if *contact==real)));
+        assert!((staff.threat_axis_deg - 90.0).abs() < 0.01);
+        assert!(!cmds
+            .iter()
+            .any(|c| matches!(c,Command::SetCourse {unit,..} if *unit==cv)));
+        w.sides[0].contacts.remove(&real);
+        let mut staff = TacticalStaff::with_db(Side::Blue, db());
+        let cmds = staff.decide(&observe(&w, Side::Blue, 0, 0));
+        assert!(!cmds.iter().any(|c| matches!(
+            c,
+            Command::LaunchAircraft {
+                mission: AirMission::Strike { .. },
+                ..
+            }
+        )));
+        // Re-sharing the track through TDL can lose the class label. The
+        // commander must remember the identification it already received.
+        w.sides[0]
+            .contacts
+            .get_mut(&ContactId(99))
+            .unwrap()
+            .class_name = None;
+        let cmds = staff.decide(&observe(&w, Side::Blue, 0, 0));
+        assert!(!cmds.iter().any(|c| matches!(
+            c,
+            Command::LaunchAircraft {
+                mission: AirMission::Strike { .. },
+                ..
+            }
+        )));
+    }
+
+    #[test]
+    fn stale_strike_searches_observed_last_position_but_only_fires_after_reacquisition() {
+        let mut w = world(
+            r#"{"side":"Blue","class":"cn_001","name":"CV","pos":[0,0]},
+                            {"side":"Red","class":"us_ford","name":"TARGET","pos":[150,0]}"#,
+            r#"{"CV":[{"class":"cn_j15","count":2}]}"#,
+        );
+        let cv = id_of(&w, "CV");
+        let target = id_of(&w, "TARGET");
+        let cid = track(&mut w, Side::Blue, target);
+        harpoon_core::air::launch_aircraft(
+            &mut w,
+            cv,
+            "cn_j15",
+            2,
+            &AirMission::Strike { contact: cid },
+        )
+        .unwrap();
+        let ids: Vec<_> = w
+            .entities
+            .values()
+            .filter(|u| u.kind == PlatformKind::Aircraft)
+            .map(|u| u.id)
+            .collect();
+        let mut staff = TacticalStaff::with_db(Side::Blue, db());
+        let orders = staff.decide(&observe(&w, Side::Blue, 0, 0));
+        let station = orders
+            .iter()
+            .find_map(|c| {
+                if let Command::Goto { unit, waypoints } = c {
+                    if ids.contains(unit) {
+                        waypoints.first().copied()
+                    } else {
+                        None
+                    }
+                } else {
+                    None
+                }
+            })
+            .unwrap();
+        w.tick = 600;
+        for id in &ids {
+            let u = w.entities.get_mut(id).unwrap();
+            u.pos = station;
+            u.altitude_m = 50.0;
+        }
+        w.sides[0].contacts.get_mut(&cid).unwrap().stale = true;
+        let orders = staff.decide(&observe(&w, Side::Blue, 0, 0));
+        assert!(!orders
+            .iter()
+            .any(|c| matches!(c,Command::Fire {unit,..} if ids.contains(unit))));
+        assert!(orders.iter().any(|c|matches!(c,Command::Goto {unit,waypoints} if ids.contains(unit) && waypoints.first().is_some_and(|p|p.x>100.0))));
+        let c = w.sides[0].contacts.get_mut(&cid).unwrap();
+        c.stale = false;
+        c.last_update_tick = w.tick;
+        for id in &ids {
+            let aircraft=w.entities.get_mut(id).unwrap();
+            aircraft.pos = Vec2::new(130.0, 0.0);
+            aircraft.altitude_m=81.0; // VLow ingress, then a legal Low release.
+        }
+        let orders = staff.decide(&observe(&w, Side::Blue, 0, 0));
+        assert!(!staff.pending_salvos.is_empty()||orders.iter().any(|c|matches!(c,Command::Fire{unit,contact,..}if ids.contains(unit)&&*contact==cid)),"reacquired strike must schedule or submit an actual release");
+        w.tick+=90;
+        let mut orders=orders;
+        orders.extend(staff.decide(&observe(&w,Side::Blue,0,0)));
+        assert!(orders.iter().any(
+            |c| matches!(c,Command::Fire {unit,contact,..} if ids.contains(unit) && *contact==cid)
+        ));
+    }
+
+    #[test]
     fn submarine_fires_its_actual_torpedo_mount() {
         let mut w = world(
             r#"{"side":"Blue","class":"cn_093a","name":"SUB","pos":[0,0]},
@@ -1071,7 +1348,11 @@ mod tests {
         track(&mut w, Side::Blue, target);
         let obs = observe(&w, Side::Blue, 0, 0);
         let mut staff = TacticalStaff::with_db(Side::Blue, db());
-        let cmds = staff.decide(&obs);
+        let mut cmds = staff.decide(&obs);
+        for t in [30,60,90,120,150,180] {
+            w.tick=t;
+            cmds.extend(staff.decide(&observe(&w,Side::Blue,0,0)));
+        }
         assert_eq!(
             fired_weapon(&cmds),
             Some("cn_yj18"),
@@ -1089,6 +1370,19 @@ mod tests {
         );
         let target = id_of(&w, "TARGET");
         track(&mut w, Side::Blue, target);
+        let cv = id_of(&w, "CV");
+        harpoon_core::air::launch_aircraft(
+            &mut w,
+            cv,
+            "cn_j15",
+            2,
+            &AirMission::Cap {
+                station: Vec2::zero(),
+                radius_nm: 15.0,
+                follow: true,
+            },
+        )
+        .unwrap();
         let obs = observe(&w, Side::Blue, 0, 0);
         let mut staff = TacticalStaff::with_db(Side::Blue, db());
         let cmds = staff.decide(&obs);
@@ -1106,7 +1400,8 @@ mod tests {
     #[ignore = "3-hour dual-staff soak (~50 s debug); run explicitly for full coverage"]
     fn dual_staff_runs_three_hour_carrier_duel() {
         let db = db();
-        let sc = scenario_from_json(include_str!("../../../scenarios/carrier_duel_3h.json")).unwrap();
+        let sc =
+            scenario_from_json(include_str!("../../../scenarios/carrier_duel_3h.json")).unwrap();
         let mut world = harpoon_core::load_scenario(sc, db.clone()).unwrap();
         let mut staffs = [
             TacticalStaff::with_db(Side::Blue, db.clone()),
@@ -1122,15 +1417,14 @@ mod tests {
                 }
             }
             harpoon_core::sim::tick(&mut world, &cmds);
-            if world.over { break; }
+            if world.over {
+                break;
+            }
         }
         assert!(world.over, "three-hour exercise must reach a decision");
         let mut missions: BTreeMap<String, usize> = Default::default();
         let mut weapons: BTreeMap<String, usize> = Default::default();
         let mut chaff = 0usize;
-        let mut chaff_by_air = 0usize;
-        let mut air_kills = 0usize;
-        let mut torpedoes = 0usize;
         for e in &world.events {
             match &e.kind {
                 harpoon_core::events::EventKind::AirLaunch { mission, .. } => {
@@ -1139,30 +1433,34 @@ mod tests {
                 harpoon_core::events::EventKind::WeaponsRelease { weapon, .. } => {
                     let key = weapon.to_ascii_lowercase();
                     if key.contains("torp") || key.contains("mk48") || key.contains("yu") {
-                        torpedoes += 1;
-                    } else if key.contains("yj") || key.contains("harpoon")
-                        || key.contains("agm84") || key.contains("asm")
+                        // Count only anti-ship missiles below.
+                    } else if key.contains("yj")
+                        || key.contains("harpoon")
+                        || key.contains("agm84")
+                        || key.contains("asm")
                     {
                         *weapons.entry(weapon.clone()).or_default() += 1;
                     }
                 }
                 harpoon_core::events::EventKind::ChaffDeployed { unit, .. } => {
                     chaff += 1;
-                    if world.entities.get(unit).map(|u| u.kind) == Some(PlatformKind::Aircraft) {
-                        chaff_by_air += 1;
-                    }
+                    let _ = unit;
                 }
-                harpoon_core::events::EventKind::AirShotDown { .. } => air_kills += 1,
                 _ => {}
             }
         }
-        assert!(missions.keys().any(|m| m == "strike"), "carrier strike waves must launch");
-        assert!(!weapons.is_empty(), "surface/air anti-ship launches must occur");
+        assert!(
+            missions.keys().any(|m| m == "strike"),
+            "carrier strike waves must launch"
+        );
+        assert!(
+            !weapons.is_empty(),
+            "surface/air anti-ship launches must occur"
+        );
         assert!(chaff > 0, "automatic chaff must fire at least once");
         assert!(
             missions.keys().any(|m| m == "asw"),
             "standing ASW barrier must launch helos even without sub contacts"
         );
     }
-
 }

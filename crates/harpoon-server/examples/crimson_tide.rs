@@ -172,7 +172,7 @@ fn beat(world: &mut World, d: &mut Driver) -> Vec<(Side, Command)> {
     if Side::parse("blue").is_some() {
         if !d.blue_cap && tick >= 300 {
             if let Some(cvn) = cvn {
-                cmds.push((Side::Blue, Command::LaunchAircraft {
+                cmds.push((Side::Blue, Command::LaunchAircraft { profile: None,
                     unit: cvn, class: "fighter".into(), count: 2,
                     mission: AirMission::Cap { station: p(44.0, 44.0), radius_nm: 18.0, follow: false },
                 }));
@@ -181,7 +181,7 @@ fn beat(world: &mut World, d: &mut Driver) -> Vec<(Side, Command)> {
         }
         if !d.blue_helo && tick >= 300 {
             if let Some(cvn) = cvn {
-                cmds.push((Side::Blue, Command::LaunchAircraft {
+                cmds.push((Side::Blue, Command::LaunchAircraft { profile: None,
                     unit: cvn, class: "helo_asw".into(), count: 2,
                     mission: AirMission::Asw { area: p(6.0, 6.0), radius_nm: 10.0 },
                 }));
@@ -190,7 +190,7 @@ fn beat(world: &mut World, d: &mut Driver) -> Vec<(Side, Command)> {
         }
         if !d.blue_recon && tick >= 600 {
             if let Some(cvn) = cvn {
-                cmds.push((Side::Blue, Command::LaunchAircraft {
+                cmds.push((Side::Blue, Command::LaunchAircraft { profile: None,
                     unit: cvn, class: "fighter".into(), count: 1,
                     mission: AirMission::Recon { point: p(80.0, 72.0) },
                 }));
@@ -205,7 +205,7 @@ fn beat(world: &mut World, d: &mut Driver) -> Vec<(Side, Command)> {
                         .contact(Side::Blue, cid)
                         .map(|c| c.estimate_at(tick))
                         .unwrap_or_default();
-                    cmds.push((Side::Blue, Command::LaunchAircraft {
+                    cmds.push((Side::Blue, Command::LaunchAircraft { profile: None,
                         unit: cvn.unwrap_or(EntityId(1)),
                         class: "helo_asw".into(),
                         count: 1,
@@ -223,7 +223,7 @@ fn beat(world: &mut World, d: &mut Driver) -> Vec<(Side, Command)> {
                     cmds.push((Side::Blue, Command::Fire {
                         unit: ddg, contact: cid, weapon: "slcm".into(), rounds: 2,
                     }));
-                    cmds.push((Side::Blue, Command::LaunchAircraft {
+                    cmds.push((Side::Blue, Command::LaunchAircraft { profile: None,
                         unit: cvn, class: "striker".into(), count: 2,
                         mission: AirMission::Strike { contact: cid },
                     }));
@@ -234,7 +234,7 @@ fn beat(world: &mut World, d: &mut Driver) -> Vec<(Side, Command)> {
         // CAP refresh mid-game.
         if !d.blue_cap_refresh && tick >= 14400 {
             if let Some(cvn) = cvn {
-                cmds.push((Side::Blue, Command::LaunchAircraft {
+                cmds.push((Side::Blue, Command::LaunchAircraft { profile: None,
                     unit: cvn, class: "fighter".into(), count: 2,
                     mission: AirMission::Cap { station: p(44.0, 44.0), radius_nm: 18.0, follow: false },
                 }));
@@ -254,7 +254,7 @@ fn beat(world: &mut World, d: &mut Driver) -> Vec<(Side, Command)> {
     {
         if !d.red_cap && tick >= 900 {
             if let Some(airfield) = airfield {
-                cmds.push((Side::Red, Command::LaunchAircraft {
+                cmds.push((Side::Red, Command::LaunchAircraft { profile: None,
                     unit: airfield, class: "fighter".into(), count: 2,
                     mission: AirMission::Cap { station: p(48.0, 48.0), radius_nm: 15.0, follow: false },
                 }));
@@ -265,7 +265,7 @@ fn beat(world: &mut World, d: &mut Driver) -> Vec<(Side, Command)> {
             if let Some(airfield) = airfield {
                 if let Some((cid, _)) = contact_on(world, Side::Red, cvn) {
                     if contact_quality(world, Side::Red, cid) > 0.5 {
-                        cmds.push((Side::Red, Command::LaunchAircraft {
+                        cmds.push((Side::Red, Command::LaunchAircraft { profile: None,
                             unit: airfield, class: "bomber".into(), count: 2,
                             mission: AirMission::Strike { contact: cid },
                         }));

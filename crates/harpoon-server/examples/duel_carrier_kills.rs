@@ -79,7 +79,7 @@ impl SimpleTactical {
                 if let Some(deck) = &carrier.deck {
                     for (cls, n) in &deck.ready {
                         if *n > 0 && (cls.contains("fighter") || cls.contains("f18") || cls.contains("f35") || cls.contains("j15")) {
-                            cmds.push(Command::LaunchAircraft {
+                            cmds.push(Command::LaunchAircraft { profile: None,
                                 unit: carrier.id, class: cls.clone(), count: 2,
                                 mission: AirMission::Cap {
                                     station: carrier.pos.advanced(90.0, 30.0), radius_nm: 15.0,
@@ -100,7 +100,7 @@ impl SimpleTactical {
                     for (cls, n) in &deck.ready {
                         if *n > 0 && (cls.contains("striker") || cls.contains("bomber") || cls.contains("j15") || cls.contains("f18")) {
                             if let Some(c) = obs.contacts.iter().find(|c| c.category == PlatformKind::Ship && !c.stale && c.quality >= 0.4) {
-                                cmds.push(Command::LaunchAircraft {
+                                cmds.push(Command::LaunchAircraft { profile: None,
                                     unit: carrier.id, class: cls.clone(), count: 2,
                                     mission: AirMission::Strike { contact: c.id },
                                 });
