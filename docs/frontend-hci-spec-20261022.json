@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "status": "design_proposal_not_implemented",
+  "date": "2026-10-22",
+  "report": "frontend-hci-review-20261022.md",
+  "scope": ["desktop", "tablet_landscape", "tablet_portrait"],
+  "excluded_scope": ["phone", "weapon_rule_changes", "real_world_deployments", "llm_battle"],
+  "evidence": {
+    "method": "standalone_headless_playwright_edge_read_only",
+    "directory": "E:/CodexBuilds/harpoon-hci-review-20261022/live-csg-confirmed",
+    "scenario_id": "csg_littoral",
+    "side": "Blue",
+    "tick_before": 0,
+    "tick_after": 0,
+    "session_revision": 1792640857240628,
+    "own_units": 15,
+    "game_commands_sent": 0,
+    "browser_mutation_requests_blocked_per_viewport": 1,
+    "blocked_request_reason": "page language initialization posts agent config",
+    "page_errors": 0,
+    "touch_hardware_tested": false,
+    "battle_execution_tested": false
+  },
+  "viewports": [
+    {
+      "width": 1600,
+      "height": 1000,
+      "map_width": 1210,
+      "map_height": 691.8125,
+      "initial_navigation_y": 834.125,
+      "sidebar_bottom": 800,
+      "document_height": 1000,
+      "proposed_layout": "persistent map, group/task rail, contextual inspector, command tray"
+    },
+    {
+      "width": 1024,
+      "height": 768,
+      "map_width": 710,
+      "map_height": 503.8125,
+      "initial_navigation_y": 836.625,
+      "sidebar_bottom": 612,
+      "document_height": 768,
+      "proposed_layout": "persistent map with one active side panel and command tray"
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "map_width": 768,
+      "map_height": 593.90625,
+      "initial_navigation_y": 1171.71875,
+      "document_height": 1774,
+      "page_scroll_after_selection": 856,
+      "proposed_layout": "persistent clock and map, internally scrolling bottom drawer"
+    }
+  ],
+  "minimum_delivery": [
+    "localized display names keyed by stable IDs",
+    "explicit inspect and route draft modes",
+    "multi selection and named selection groups",
+    "capability aware batch navigation with per unit feedback",
+    "server enforced manual lock respected by all automation sources",
+    "persistent desktop and tablet command surfaces"
+  ],
+  "selection_model": {
+    "selected_unit_ids": "Set<EntityId>",
+    "focused_unit_id": "EntityId or null",
+    "selected_contact_id": "ContactId or null, distinct from EntityId",
+    "display_group": "selection convenience only",
+    "formation": "leader and relative stations using existing Follow semantics",
+    "task": "persistent objective, assigned members, permissions and lifecycle",
+    "mixed_value_text_zh": "各不相同",
+    "empty_input_means": "no change, never zero by coercion",
+    "new_session_policy": "invalidate unbound local groups; do not reuse IDs silently"
+  },
+  "map_modes": {
+    "default": "inspect",
+    "inspect_blank_tap": "no game command",
+    "route": "draft waypoints, preview affected members, explicit commit or cancel",
+    "multi_pointer": "cancel tap recognition and handle pinch independently",
+    "touch_target_design_min_css_px": 44
+  },
+  "authority_model_proposal": {
+    "minimum_granularity": "whole unit manual lock",
+    "future_domains": ["navigation", "sensors", "engagement", "air_operations", "damage_control"],
+    "default_manual_lock_expiry": "explicit user resume",
+    "revision_required": true,
+    "storage": "authoritative server state, included in saves and own observation",
+    "all_sources_must_check": ["tactical_fsm", "scenario_doctrine", "supervisor_maintenance", "scheduled_release", "llm_plan_application"],
+    "rejected_manual_command_releases_old_task": false,
+    "manual_navigation_implies_disable_system_self_defence": false,
+    "resume_replays_pre_lock_plan": false,
+    "resume_uses_current_own_observation": true
+  },
+  "task_row_proposal": {
+    "fields": ["task_id", "purpose", "members", "controller", "region_or_contact", "state", "reason", "next_review_at", "authority_revision"],
+    "states": ["draft", "queued", "executing", "on_station", "needs_review", "paused_by_player", "returning", "completed", "rejected", "cancelled"],
+    "actions": ["locate", "inspect_members", "pause_assistance", "manual_takeover", "resume_assistance", "cancel_task"],
+    "existing_air_mission_is_not_generic_fleet_task": true
+  },
+  "display_name_contract": {
+    "keys": ["platform_id", "weapon_id", "sensor_id"],
+    "presentation_fields": ["zh_name", "short_name", "original_name", "aliases", "translation_note"],
+    "protocol_and_save_ids_change": false,
+    "unknown_contact_uses_hidden_class": false,
+    "fallback": "original name or readable category plus ID, marked untranslated",
+    "outputs": ["unit_list", "contact_list", "canvas_measure_and_draw", "inspector", "weapon_menu", "flight_deck", "task_row", "toast", "event_feed", "replay"]
+  },
+  "priority_findings": {
+    "P0": ["H01 implicit blank-map movement", "H02 manual control can be overwritten by automation"],
+    "P1": ["H03 no multi selection", "H04 unit list below AI panels", "H05 portrait scrolls map away", "H06 incomplete dynamic names", "H07 task summary lacks task control", "H08 navigation draft survives selection incorrectly", "H09 single pointer and small touch targets", "H10 temporary alerts lack resolution queue"],
+    "P2": ["H11 batch command correlation", "H12 stale help and implementation vocabulary"]
+  },
+  "acceptance_status": "all proposed acceptance cases A01-A17 pending implementation and execution",
+  "read_only_completed": ["source audit", "1600x1000 selection and scroll", "1024x768 selection and scroll", "768x1024 selection and scroll"]
+}

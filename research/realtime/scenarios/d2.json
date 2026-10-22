@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "family": "D2",
+  "episode_s": 1200,
+  "goal_radius_nm": 0.12,
+  "initial_goal": {"x": 3.0, "y": 0.0},
+  "change": {"earliest_s": 97, "latest_s": 197, "lifetime_s": 180, "offset_nm": 0.6},
+  "scenario": {
+    "id": "research_navigation_v1",
+    "name": "Research navigation task",
+    "description": "Follow the public waypoint task. Task updates, if any, become visible when issued.",
+    "duration_s": 1200,
+    "seed": 0,
+    "weather": {"visibility_nm": 12, "jam": [0, 0]},
+    "day_night": "Day",
+    "victory": {"target_vp": 0},
+    "units": [
+      {"side": "Blue", "class": "ddg_aegis", "name": "TASK VESSEL", "pos": {"x": 0, "y": 0}, "course_deg": 90, "speed_kts": 18, "waypoints": [{"x": 3, "y": 0}], "fire_on": false},
+      {"side": "Red", "class": "ddg_aegis", "name": "DISTANT CONTROL", "pos": {"x": 5000, "y": 5000}, "speed_kts": 0, "fire_on": false}
+    ]
+  }
+}

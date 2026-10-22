@@ -1,0 +1,869 @@
+{
+  "status": "validated_post_hoc_reanalysis",
+  "source_root": "E:\\CodexBuilds\\harpoon-research-m3a-20261022-v5",
+  "source_manifest_sha256": "bc2e0d836e2aac8f75ea42a4247fb0837c008a04bfa1c9dca9e9492e95350dd5",
+  "consumed_artifacts_verified": [
+    {
+      "path": "timing/summary.json",
+      "bytes": 51550,
+      "sha256": "75006dab829b788450e09d8a0a87c721e6715990c1bd6fb60629514eb5901fd0"
+    },
+    {
+      "path": "quality/analysis.json",
+      "bytes": 16264,
+      "sha256": "d16e57f4e13addb5fc8a3de2694c9011a07d66fad002e9e0300f22ca861b89f4"
+    },
+    {
+      "path": "delay-frontier/summary.json",
+      "bytes": 2883,
+      "sha256": "11a78fc9175c964c982ed1b2b0baf204aab77bf48a5ae0c4908047ff99667738"
+    },
+    {
+      "path": "constraint-controls/summary.json",
+      "bytes": 2796,
+      "sha256": "a163377d5ed24a3dec30a1be4c08b100fc072db7f5e67b1198dfdd0c8c13542a"
+    },
+    {
+      "path": "public-cost-guard30-verified/summary.json",
+      "bytes": 1467,
+      "sha256": "1e7dd0738aa3afe3fba34b9b39269982ef5517adb0710852ccf4d2bca5374bbe"
+    }
+  ],
+  "new_model_calls": 0,
+  "new_environment_trajectories": 0,
+  "timing_totals": {
+    "gf60": {
+      "episodes": 16,
+      "completed": 12,
+      "online_calls": 26,
+      "calls_with_logical_initialization": 42
+    },
+    "gf300": {
+      "episodes": 16,
+      "completed": 5,
+      "online_calls": 18,
+      "calls_with_logical_initialization": 34
+    },
+    "gf600": {
+      "episodes": 16,
+      "completed": 1,
+      "online_calls": 14,
+      "calls_with_logical_initialization": 30
+    },
+    "eh": {
+      "episodes": 16,
+      "completed": 12,
+      "online_calls": 32,
+      "calls_with_logical_initialization": 48
+    },
+    "em": {
+      "episodes": 16,
+      "completed": 12,
+      "online_calls": 32,
+      "calls_with_logical_initialization": 48
+    },
+    "ehq30": {
+      "episodes": 16,
+      "completed": 12,
+      "online_calls": 24,
+      "calls_with_logical_initialization": 40
+    },
+    "emcold": {
+      "episodes": 16,
+      "completed": 9,
+      "online_calls": 42,
+      "calls_with_logical_initialization": 42
+    }
+  },
+  "eh_em_identical_world_and_calls_cells": 16,
+  "eh_q30_identical_completion_cells": 16,
+  "quality": {
+    "requests": 18,
+    "valid_optimal": 17,
+    "failures_excluded_from_conditional_plan_decomposition": [
+      {
+        "tag": "small-37",
+        "effort": "high",
+        "index": 13,
+        "call_dir": "E:\\CodexBuilds\\harpoon-research-m3a-20261022-v5\\quality\\calls\\r013",
+        "status": "failed",
+        "latency_s": 142.4082125999994,
+        "usage": null,
+        "money": null,
+        "optimum": 36,
+        "scores": {
+          "wide-0": 0
+        },
+        "feasible": false,
+        "normalized": 0.0
+      }
+    ]
+  },
+  "static_time_translation_pairs_checked": 17,
+  "delay_decompositions": [
+    {
+      "tag": "small-23",
+      "effort": "low",
+      "request_index": 0,
+      "delay_sim_s": 0,
+      "zero_delay_optimum": 36,
+      "known_delay_optimum": 36,
+      "saved_plan_score": 36,
+      "finite_class_opportunity_loss": 0,
+      "saved_plan_gap_to_known_delay_optimum": 0
+    },
+    {
+      "tag": "small-23",
+      "effort": "low",
+      "request_index": 0,
+      "delay_sim_s": 60,
+      "zero_delay_optimum": 36,
+      "known_delay_optimum": 36,
+      "saved_plan_score": 36,
+      "finite_class_opportunity_loss": 0,
+      "saved_plan_gap_to_known_delay_optimum": 0
+    },
+    {
+      "tag": "small-23",
+      "effort": "low",
+      "request_index": 0,
+      "delay_sim_s": 180,
+      "zero_delay_optimum": 36,
+      "known_delay_optimum": 30,
+      "saved_plan_score": 30,
+      "finite_class_opportunity_loss": 6,
+      "saved_plan_gap_to_known_delay_optimum": 0
+    },
+    {
+      "tag": "small-23",
+      "effort": "medium",
+      "request_index": 1,
+      "delay_sim_s": 0,
+      "zero_delay_optimum": 36,
+      "known_delay_optimum": 36,
+      "saved_plan_score": 36,
+      "finite_class_opportunity_loss": 0,
+      "saved_plan_gap_to_known_delay_optimum": 0
+    },
+    {
+      "tag": "small-23",
+      "effort": "medium",
+      "request_index": 1,
+      "delay_sim_s": 60,
+      "zero_delay_optimum": 36,
+      "known_delay_optimum": 36,
+      "saved_plan_score": 36,
+      "finite_class_opportunity_loss": 0,
+      "saved_plan_gap_to_known_delay_optimum": 0
+    },
+    {
+      "tag": "small-23",
+      "effort": "medium",
+      "request_index": 1,
+      "delay_sim_s": 180,
+      "zero_delay_optimum": 36,
+      "known_delay_optimum": 30,
+      "saved_plan_score": 30,
+      "finite_class_opportunity_loss": 6,
+      "saved_plan_gap_to_known_delay_optimum": 0
+    },
+    {
+      "tag": "small-23",
+      "effort": "high",
+      "request_index": 2,
+      "delay_sim_s": 0,
+      "zero_delay_optimum": 36,
+      "known_delay_optimum": 36,
+      "saved_plan_score": 36,
+      "finite_class_opportunity_loss": 0,
+      "saved_plan_gap_to_known_delay_optimum": 0
+    },
+    {
+      "tag": "small-23",
+      "effort": "high",
+      "request_index": 2,
+      "delay_sim_s": 60,
+      "zero_delay_optimum": 36,
+      "known_delay_optimum": 36,
+      "saved_plan_score": 36,
+      "finite_class_opportunity_loss": 0,
+      "saved_plan_gap_to_known_delay_optimum": 0
+    },
+    {
+      "tag": "small-23",
+      "effort": "high",
+      "request_index": 2,
+      "delay_sim_s": 180,
+      "zero_delay_optimum": 36,
+      "known_delay_optimum": 30,
+      "saved_plan_score": 28,
+      "finite_class_opportunity_loss": 6,
+      "saved_plan_gap_to_known_delay_optimum": 2
+    },
+    {
+      "tag": "complex-11",
+      "effort": "low",
+      "request_index": 3,
+      "delay_sim_s": 0,
+      "zero_delay_optimum": 43,
+      "known_delay_optimum": 43,
+      "saved_plan_score": 43,
+      "finite_class_opportunity_loss": 0,
+      "saved_plan_gap_to_known_delay_optimum": 0
+    },
+    {
+      "tag": "complex-11",
+      "effort": "low",
+      "request_index": 3,
+      "delay_sim_s": 60,
+      "zero_delay_optimum": 43,
+      "known_delay_optimum": 42,
+      "saved_plan_score": 40,
+      "finite_class_opportunity_loss": 1,
+      "saved_plan_gap_to_known_delay_optimum": 2
+    },
+    {
+      "tag": "complex-11",
+      "effort": "low",
+      "request_index": 3,
+      "delay_sim_s": 180,
+      "zero_delay_optimum": 43,
+      "known_delay_optimum": 42,
+      "saved_plan_score": 9,
+      "finite_class_opportunity_loss": 1,
+      "saved_plan_gap_to_known_delay_optimum": 33
+    },
+    {
+      "tag": "complex-11",
+      "effort": "high",
+      "request_index": 4,
+      "delay_sim_s": 0,
+      "zero_delay_optimum": 43,
+      "known_delay_optimum": 43,
+      "saved_plan_score": 43,
+      "finite_class_opportunity_loss": 0,
+      "saved_plan_gap_to_known_delay_optimum": 0
+    },
+    {
+      "tag": "complex-11",
+      "effort": "high",
+      "request_index": 4,
+      "delay_sim_s": 60,
+      "zero_delay_optimum": 43,
+      "known_delay_optimum": 42,
+      "saved_plan_score": 35,
+      "finite_class_opportunity_loss": 1,
+      "saved_plan_gap_to_known_delay_optimum": 7
+    },
+    {
+      "tag": "complex-11",
+      "effort": "high",
+      "request_index": 4,
+      "delay_sim_s": 180,
+      "zero_delay_optimum": 43,
+      "known_delay_optimum": 42,
+      "saved_plan_score": 9,
+      "finite_class_opportunity_loss": 1,
+      "saved_plan_gap_to_known_delay_optimum": 33
+    },
+    {
+      "tag": "complex-11",
+      "effort": "medium",
+      "request_index": 5,
+      "delay_sim_s": 0,
+      "zero_delay_optimum": 43,
+      "known_delay_optimum": 43,
+      "saved_plan_score": 43,
+      "finite_class_opportunity_loss": 0,
+      "saved_plan_gap_to_known_delay_optimum": 0
+    },
+    {
+      "tag": "complex-11",
+      "effort": "medium",
+      "request_index": 5,
+      "delay_sim_s": 60,
+      "zero_delay_optimum": 43,
+      "known_delay_optimum": 42,
+      "saved_plan_score": 26,
+      "finite_class_opportunity_loss": 1,
+      "saved_plan_gap_to_known_delay_optimum": 16
+    },
+    {
+      "tag": "complex-11",
+      "effort": "medium",
+      "request_index": 5,
+      "delay_sim_s": 180,
+      "zero_delay_optimum": 43,
+      "known_delay_optimum": 42,
+      "saved_plan_score": 0,
+      "finite_class_opportunity_loss": 1,
+      "saved_plan_gap_to_known_delay_optimum": 42
+    },
+    {
+      "tag": "small-11",
+      "effort": "medium",
+      "request_index": 6,
+      "delay_sim_s": 0,
+      "zero_delay_optimum": 36,
+      "known_delay_optimum": 36,
+      "saved_plan_score": 36,
+      "finite_class_opportunity_loss": 0,
+      "saved_plan_gap_to_known_delay_optimum": 0
+    },
+    {
+      "tag": "small-11",
+      "effort": "medium",
+      "request_index": 6,
+      "delay_sim_s": 60,
+      "zero_delay_optimum": 36,
+      "known_delay_optimum": 36,
+      "saved_plan_score": 36,
+      "finite_class_opportunity_loss": 0,
+      "saved_plan_gap_to_known_delay_optimum": 0
+    },
+    {
+      "tag": "small-11",
+      "effort": "medium",
+      "request_index": 6,
+      "delay_sim_s": 180,
+      "zero_delay_optimum": 36,
+      "known_delay_optimum": 30,
+      "saved_plan_score": 28,
+      "finite_class_opportunity_loss": 6,
+      "saved_plan_gap_to_known_delay_optimum": 2
+    },
+    {
+      "tag": "small-11",
+      "effort": "low",
+      "request_index": 7,
+      "delay_sim_s": 0,
+      "zero_delay_optimum": 36,
+      "known_delay_optimum": 36,
+      "saved_plan_score": 36,
+      "finite_class_opportunity_loss": 0,
+      "saved_plan_gap_to_known_delay_optimum": 0
+    },
+    {
+      "tag": "small-11",
+      "effort": "low",
+      "request_index": 7,
+      "delay_sim_s": 60,
+      "zero_delay_optimum": 36,
+      "known_delay_optimum": 36,
+      "saved_plan_score": 36,
+      "finite_class_opportunity_loss": 0,
+      "saved_plan_gap_to_known_delay_optimum": 0
+    },
+    {
+      "tag": "small-11",
+      "effort": "low",
+      "request_index": 7,
+      "delay_sim_s": 180,
+      "zero_delay_optimum": 36,
+      "known_delay_optimum": 30,
+      "saved_plan_score": 28,
+      "finite_class_opportunity_loss": 6,
+      "saved_plan_gap_to_known_delay_optimum": 2
+    },
+    {
+      "tag": "small-11",
+      "effort": "high",
+      "request_index": 8,
+      "delay_sim_s": 0,
+      "zero_delay_optimum": 36,
+      "known_delay_optimum": 36,
+      "saved_plan_score": 36,
+      "finite_class_opportunity_loss": 0,
+      "saved_plan_gap_to_known_delay_optimum": 0
+    },
+    {
+      "tag": "small-11",
+      "effort": "high",
+      "request_index": 8,
+      "delay_sim_s": 60,
+      "zero_delay_optimum": 36,
+      "known_delay_optimum": 36,
+      "saved_plan_score": 36,
+      "finite_class_opportunity_loss": 0,
+      "saved_plan_gap_to_known_delay_optimum": 0
+    },
+    {
+      "tag": "small-11",
+      "effort": "high",
+      "request_index": 8,
+      "delay_sim_s": 180,
+      "zero_delay_optimum": 36,
+      "known_delay_optimum": 30,
+      "saved_plan_score": 28,
+      "finite_class_opportunity_loss": 6,
+      "saved_plan_gap_to_known_delay_optimum": 2
+    },
+    {
+      "tag": "complex-23",
+      "effort": "low",
+      "request_index": 9,
+      "delay_sim_s": 0,
+      "zero_delay_optimum": 43,
+      "known_delay_optimum": 43,
+      "saved_plan_score": 43,
+      "finite_class_opportunity_loss": 0,
+      "saved_plan_gap_to_known_delay_optimum": 0
+    },
+    {
+      "tag": "complex-23",
+      "effort": "low",
+      "request_index": 9,
+      "delay_sim_s": 60,
+      "zero_delay_optimum": 43,
+      "known_delay_optimum": 42,
+      "saved_plan_score": 26,
+      "finite_class_opportunity_loss": 1,
+      "saved_plan_gap_to_known_delay_optimum": 16
+    },
+    {
+      "tag": "complex-23",
+      "effort": "low",
+      "request_index": 9,
+      "delay_sim_s": 180,
+      "zero_delay_optimum": 43,
+      "known_delay_optimum": 42,
+      "saved_plan_score": 24,
+      "finite_class_opportunity_loss": 1,
+      "saved_plan_gap_to_known_delay_optimum": 18
+    },
+    {
+      "tag": "complex-23",
+      "effort": "high",
+      "request_index": 10,
+      "delay_sim_s": 0,
+      "zero_delay_optimum": 43,
+      "known_delay_optimum": 43,
+      "saved_plan_score": 43,
+      "finite_class_opportunity_loss": 0,
+      "saved_plan_gap_to_known_delay_optimum": 0
+    },
+    {
+      "tag": "complex-23",
+      "effort": "high",
+      "request_index": 10,
+      "delay_sim_s": 60,
+      "zero_delay_optimum": 43,
+      "known_delay_optimum": 42,
+      "saved_plan_score": 26,
+      "finite_class_opportunity_loss": 1,
+      "saved_plan_gap_to_known_delay_optimum": 16
+    },
+    {
+      "tag": "complex-23",
+      "effort": "high",
+      "request_index": 10,
+      "delay_sim_s": 180,
+      "zero_delay_optimum": 43,
+      "known_delay_optimum": 42,
+      "saved_plan_score": 24,
+      "finite_class_opportunity_loss": 1,
+      "saved_plan_gap_to_known_delay_optimum": 18
+    },
+    {
+      "tag": "complex-23",
+      "effort": "medium",
+      "request_index": 11,
+      "delay_sim_s": 0,
+      "zero_delay_optimum": 43,
+      "known_delay_optimum": 43,
+      "saved_plan_score": 43,
+      "finite_class_opportunity_loss": 0,
+      "saved_plan_gap_to_known_delay_optimum": 0
+    },
+    {
+      "tag": "complex-23",
+      "effort": "medium",
+      "request_index": 11,
+      "delay_sim_s": 60,
+      "zero_delay_optimum": 43,
+      "known_delay_optimum": 42,
+      "saved_plan_score": 26,
+      "finite_class_opportunity_loss": 1,
+      "saved_plan_gap_to_known_delay_optimum": 16
+    },
+    {
+      "tag": "complex-23",
+      "effort": "medium",
+      "request_index": 11,
+      "delay_sim_s": 180,
+      "zero_delay_optimum": 43,
+      "known_delay_optimum": 42,
+      "saved_plan_score": 24,
+      "finite_class_opportunity_loss": 1,
+      "saved_plan_gap_to_known_delay_optimum": 18
+    },
+    {
+      "tag": "small-37",
+      "effort": "medium",
+      "request_index": 12,
+      "delay_sim_s": 0,
+      "zero_delay_optimum": 36,
+      "known_delay_optimum": 36,
+      "saved_plan_score": 36,
+      "finite_class_opportunity_loss": 0,
+      "saved_plan_gap_to_known_delay_optimum": 0
+    },
+    {
+      "tag": "small-37",
+      "effort": "medium",
+      "request_index": 12,
+      "delay_sim_s": 60,
+      "zero_delay_optimum": 36,
+      "known_delay_optimum": 36,
+      "saved_plan_score": 36,
+      "finite_class_opportunity_loss": 0,
+      "saved_plan_gap_to_known_delay_optimum": 0
+    },
+    {
+      "tag": "small-37",
+      "effort": "medium",
+      "request_index": 12,
+      "delay_sim_s": 180,
+      "zero_delay_optimum": 36,
+      "known_delay_optimum": 30,
+      "saved_plan_score": 30,
+      "finite_class_opportunity_loss": 6,
+      "saved_plan_gap_to_known_delay_optimum": 0
+    },
+    {
+      "tag": "small-37",
+      "effort": "low",
+      "request_index": 14,
+      "delay_sim_s": 0,
+      "zero_delay_optimum": 36,
+      "known_delay_optimum": 36,
+      "saved_plan_score": 36,
+      "finite_class_opportunity_loss": 0,
+      "saved_plan_gap_to_known_delay_optimum": 0
+    },
+    {
+      "tag": "small-37",
+      "effort": "low",
+      "request_index": 14,
+      "delay_sim_s": 60,
+      "zero_delay_optimum": 36,
+      "known_delay_optimum": 36,
+      "saved_plan_score": 36,
+      "finite_class_opportunity_loss": 0,
+      "saved_plan_gap_to_known_delay_optimum": 0
+    },
+    {
+      "tag": "small-37",
+      "effort": "low",
+      "request_index": 14,
+      "delay_sim_s": 180,
+      "zero_delay_optimum": 36,
+      "known_delay_optimum": 30,
+      "saved_plan_score": 28,
+      "finite_class_opportunity_loss": 6,
+      "saved_plan_gap_to_known_delay_optimum": 2
+    },
+    {
+      "tag": "complex-37",
+      "effort": "medium",
+      "request_index": 15,
+      "delay_sim_s": 0,
+      "zero_delay_optimum": 43,
+      "known_delay_optimum": 43,
+      "saved_plan_score": 43,
+      "finite_class_opportunity_loss": 0,
+      "saved_plan_gap_to_known_delay_optimum": 0
+    },
+    {
+      "tag": "complex-37",
+      "effort": "medium",
+      "request_index": 15,
+      "delay_sim_s": 60,
+      "zero_delay_optimum": 43,
+      "known_delay_optimum": 42,
+      "saved_plan_score": 26,
+      "finite_class_opportunity_loss": 1,
+      "saved_plan_gap_to_known_delay_optimum": 16
+    },
+    {
+      "tag": "complex-37",
+      "effort": "medium",
+      "request_index": 15,
+      "delay_sim_s": 180,
+      "zero_delay_optimum": 43,
+      "known_delay_optimum": 42,
+      "saved_plan_score": 24,
+      "finite_class_opportunity_loss": 1,
+      "saved_plan_gap_to_known_delay_optimum": 18
+    },
+    {
+      "tag": "complex-37",
+      "effort": "high",
+      "request_index": 16,
+      "delay_sim_s": 0,
+      "zero_delay_optimum": 43,
+      "known_delay_optimum": 43,
+      "saved_plan_score": 43,
+      "finite_class_opportunity_loss": 0,
+      "saved_plan_gap_to_known_delay_optimum": 0
+    },
+    {
+      "tag": "complex-37",
+      "effort": "high",
+      "request_index": 16,
+      "delay_sim_s": 60,
+      "zero_delay_optimum": 43,
+      "known_delay_optimum": 42,
+      "saved_plan_score": 26,
+      "finite_class_opportunity_loss": 1,
+      "saved_plan_gap_to_known_delay_optimum": 16
+    },
+    {
+      "tag": "complex-37",
+      "effort": "high",
+      "request_index": 16,
+      "delay_sim_s": 180,
+      "zero_delay_optimum": 43,
+      "known_delay_optimum": 42,
+      "saved_plan_score": 24,
+      "finite_class_opportunity_loss": 1,
+      "saved_plan_gap_to_known_delay_optimum": 18
+    },
+    {
+      "tag": "complex-37",
+      "effort": "low",
+      "request_index": 17,
+      "delay_sim_s": 0,
+      "zero_delay_optimum": 43,
+      "known_delay_optimum": 43,
+      "saved_plan_score": 43,
+      "finite_class_opportunity_loss": 0,
+      "saved_plan_gap_to_known_delay_optimum": 0
+    },
+    {
+      "tag": "complex-37",
+      "effort": "low",
+      "request_index": 17,
+      "delay_sim_s": 60,
+      "zero_delay_optimum": 43,
+      "known_delay_optimum": 42,
+      "saved_plan_score": 26,
+      "finite_class_opportunity_loss": 1,
+      "saved_plan_gap_to_known_delay_optimum": 16
+    },
+    {
+      "tag": "complex-37",
+      "effort": "low",
+      "request_index": 17,
+      "delay_sim_s": 180,
+      "zero_delay_optimum": 43,
+      "known_delay_optimum": 42,
+      "saved_plan_score": 24,
+      "finite_class_opportunity_loss": 1,
+      "saved_plan_gap_to_known_delay_optimum": 18
+    }
+  ],
+  "constraint_controls": [
+    {
+      "tag": "complex-11",
+      "variant": "original",
+      "score": 43,
+      "routes": 446,
+      "enumeration_wall_s": 0.9994854000015039
+    },
+    {
+      "tag": "complex-11",
+      "variant": "more_shared_kits",
+      "score": 70,
+      "routes": 446,
+      "enumeration_wall_s": 1.0172671000000264
+    },
+    {
+      "tag": "complex-11",
+      "variant": "no_predecessors",
+      "score": 52,
+      "routes": 726,
+      "enumeration_wall_s": 1.6357280000011087
+    },
+    {
+      "tag": "complex-11",
+      "variant": "all_capabilities",
+      "score": 43,
+      "routes": 930,
+      "enumeration_wall_s": 2.0892169999988255
+    },
+    {
+      "tag": "complex-11",
+      "variant": "more_capacity",
+      "score": 43,
+      "routes": 1892,
+      "enumeration_wall_s": 4.338049500000125
+    },
+    {
+      "tag": "complex-11",
+      "variant": "long_return_horizon",
+      "score": 43,
+      "routes": 446,
+      "enumeration_wall_s": 2.5402338999992935
+    },
+    {
+      "tag": "complex-23",
+      "variant": "original",
+      "score": 43,
+      "routes": 446,
+      "enumeration_wall_s": 1.0028082999997423
+    },
+    {
+      "tag": "complex-23",
+      "variant": "more_shared_kits",
+      "score": 68,
+      "routes": 446,
+      "enumeration_wall_s": 1.003572499999791
+    },
+    {
+      "tag": "complex-23",
+      "variant": "no_predecessors",
+      "score": 52,
+      "routes": 726,
+      "enumeration_wall_s": 1.6191264999997657
+    },
+    {
+      "tag": "complex-23",
+      "variant": "all_capabilities",
+      "score": 43,
+      "routes": 930,
+      "enumeration_wall_s": 2.093340100000205
+    },
+    {
+      "tag": "complex-23",
+      "variant": "more_capacity",
+      "score": 43,
+      "routes": 1892,
+      "enumeration_wall_s": 4.303372500000478
+    },
+    {
+      "tag": "complex-23",
+      "variant": "long_return_horizon",
+      "score": 43,
+      "routes": 446,
+      "enumeration_wall_s": 2.494973700000628
+    },
+    {
+      "tag": "complex-37",
+      "variant": "original",
+      "score": 43,
+      "routes": 446,
+      "enumeration_wall_s": 0.9983443999990413
+    },
+    {
+      "tag": "complex-37",
+      "variant": "more_shared_kits",
+      "score": 70,
+      "routes": 446,
+      "enumeration_wall_s": 1.01711670000077
+    },
+    {
+      "tag": "complex-37",
+      "variant": "no_predecessors",
+      "score": 52,
+      "routes": 726,
+      "enumeration_wall_s": 1.6199692000009236
+    },
+    {
+      "tag": "complex-37",
+      "variant": "all_capabilities",
+      "score": 43,
+      "routes": 930,
+      "enumeration_wall_s": 2.0769292999993922
+    },
+    {
+      "tag": "complex-37",
+      "variant": "more_capacity",
+      "score": 43,
+      "routes": 1892,
+      "enumeration_wall_s": 4.357475900000281
+    },
+    {
+      "tag": "complex-37",
+      "variant": "long_return_horizon",
+      "score": 43,
+      "routes": 446,
+      "enumeration_wall_s": 2.504237600000124
+    }
+  ],
+  "costed_guard30_planner": [
+    {
+      "tag": "small-11",
+      "algorithm": "exact_guard30",
+      "planner_wall_s": 0.1216982,
+      "delay_sim_s": 1,
+      "score": 36,
+      "reserved_delay_s": 30,
+      "model_calls": 0,
+      "model_tokens": null,
+      "money": null
+    },
+    {
+      "tag": "small-23",
+      "algorithm": "exact_guard30",
+      "planner_wall_s": 0.1185457,
+      "delay_sim_s": 1,
+      "score": 36,
+      "reserved_delay_s": 30,
+      "model_calls": 0,
+      "model_tokens": null,
+      "money": null
+    },
+    {
+      "tag": "small-37",
+      "algorithm": "exact_guard30",
+      "planner_wall_s": 0.1215502,
+      "delay_sim_s": 1,
+      "score": 36,
+      "reserved_delay_s": 30,
+      "model_calls": 0,
+      "model_tokens": null,
+      "money": null
+    },
+    {
+      "tag": "complex-11",
+      "algorithm": "exact_guard30",
+      "planner_wall_s": 1.0405253,
+      "delay_sim_s": 6,
+      "score": 43,
+      "reserved_delay_s": 30,
+      "model_calls": 0,
+      "model_tokens": null,
+      "money": null
+    },
+    {
+      "tag": "complex-23",
+      "algorithm": "exact_guard30",
+      "planner_wall_s": 1.0283252,
+      "delay_sim_s": 6,
+      "score": 43,
+      "reserved_delay_s": 30,
+      "model_calls": 0,
+      "model_tokens": null,
+      "money": null
+    },
+    {
+      "tag": "complex-37",
+      "algorithm": "exact_guard30",
+      "planner_wall_s": 1.0108782,
+      "delay_sim_s": 6,
+      "score": 43,
+      "reserved_delay_s": 30,
+      "model_calls": 0,
+      "model_tokens": null,
+      "money": null
+    }
+  ],
+  "interpretation": [
+    "Arithmetic decomposition within the frozen finite action class, not causal mediation.",
+    "Known-delay optimum is a hindsight diagnostic bound, not a deployable free policy.",
+    "Saved-plan branches are repeated measurements of the original requests, not new samples.",
+    "The failed request remains in all-request results; no plan is invented for it.",
+    "Only the listed consumed files are hash-verified here, not the complete archive."
+  ]
+}

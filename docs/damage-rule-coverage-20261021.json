@@ -1,0 +1,2233 @@
+{
+  "schema_version": "1.0",
+  "date": "2026-10-21",
+  "scope": "Current Rust RTS damage chain, whole chapter14 and all expanded-table domains; linked phase/guidance and selected annex rows. This is NOT an audit of every chapter in the complete game.",
+  "production_rule_change": false,
+  "coverage_not_implementation": true,
+  "sources": [
+    {
+      "key": "english",
+      "path": "D:\\desktop\\鱼叉\\【20260405】鱼叉5（本体+中美俄数据库）\\14-2.HpnV_Rules_1_Jan_26.pdf",
+      "sha256": "8196ffc715bbcccd862d8597c607de7816dac5baee31fa659f89dfaf4323700c",
+      "pages": [
+        127,
+        128,
+        129,
+        130,
+        131,
+        132,
+        133,
+        134,
+        135,
+        136,
+        137,
+        138,
+        139,
+        140
+      ],
+      "total_pages": 140
+    },
+    {
+      "key": "core-cn",
+      "path": "D:\\desktop\\鱼叉\\【20260405】鱼叉5（本体+中美俄数据库）\\1-3.（核心）兵棋推演手册26版.pdf",
+      "sha256": "851e85f8848ad868876e66d06d12f2be180029e6314f51f0b9d380ec8dc619d7",
+      "pages": [
+        127,
+        128,
+        129,
+        130,
+        131,
+        132,
+        133,
+        134,
+        135,
+        136,
+        137,
+        138,
+        139,
+        140,
+        141
+      ],
+      "total_pages": 143
+    },
+    {
+      "key": "expanded",
+      "path": "D:\\desktop\\鱼叉\\【20260405】鱼叉5（本体+中美俄数据库）\\3-2.（扩展损伤手册26版）Harpoon_V_Expanded_Critical_Hit_Tables_(Chinese_Language).pdf",
+      "sha256": "a2c3878ccfcbfcba02f714f11d5527573dee736a0deae092b9833977c52b32b5",
+      "pages": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "total_pages": 16
+    },
+    {
+      "key": "players",
+      "path": "D:\\desktop\\鱼叉\\【20260405】鱼叉5（本体+中美俄数据库）\\2-2.（推演手册2026版本）Harpoon_V_Player_s_Handbook_(Chinese_Language).pdf",
+      "sha256": "908b0c9eb8d1330ff8b2b77cdeaba3239315281e24adea2b8487e2ff417eff47",
+      "pages": [
+        2,
+        3,
+        5,
+        6,
+        7,
+        8,
+        13,
+        14,
+        15,
+        17,
+        18,
+        19,
+        21,
+        22,
+        24,
+        30,
+        33,
+        34,
+        35,
+        39
+      ],
+      "total_pages": 41
+    },
+    {
+      "key": "china",
+      "path": "D:\\desktop\\鱼叉\\【20260405】鱼叉5（本体+中美俄数据库）\\6-3.（数据库）2025版Chinas_Navy_1_Dec_25.pdf",
+      "sha256": "9ff46ff0c91f323d48c37e9917df6d87583fbe0df337a6dd0bb40bc488d98b2c",
+      "pages": [
+        71,
+        72,
+        76,
+        77,
+        81,
+        82
+      ],
+      "total_pages": 105
+    },
+    {
+      "key": "america",
+      "path": "D:\\desktop\\鱼叉\\【20260405】鱼叉5（本体+中美俄数据库）\\5-4.Americas_Navy_1_Dec_25.pdf",
+      "sha256": "189416d65b92d5e2fa50c59c99e309ca5715a5db287e5323295152034e61c5c8",
+      "pages": [
+        7
+      ],
+      "total_pages": 136
+    }
+  ],
+  "summary": {
+    "items": 80,
+    "required_items": 77,
+    "optional_items": 3,
+    "fully_verified_rust_rule_items": 0,
+    "expanded_domains": 14
+  },
+  "items": [
+    {
+      "id": "HV26-DMG-PHASE",
+      "group": "调度",
+      "rule": "2.3.3/14.1",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          20,
+          127
+        ],
+        "visually_checked": true
+      },
+      "title": "阶段同时结算",
+      "requirement": "双方同一阶段损伤统一在阶段结束应用；按阶段汇总损伤比率。",
+      "current_execution": "当前1秒tick逐命中立即改HP、系统和alive；未建立规则阶段损伤账本。",
+      "data_status": "missing",
+      "execution_status": "approximation_or_partial",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P0",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/sim.rs"
+    },
+    {
+      "id": "HV26-DMG-DP",
+      "group": "基础损伤",
+      "rule": "14.1",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          127
+        ],
+        "visually_checked": true
+      },
+      "title": "损伤点与估算浮动",
+      "requirement": "采用对应武器/目标的DP，并按明确装甲/引信程序处理。",
+      "current_execution": "所有命中使用scalar DP乘0.85–1.15随机浮动；不是书中固定DP程序。",
+      "data_status": "partial",
+      "execution_status": "approximation_or_partial",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": "scalar_jitter"
+      },
+      "priority": "P0",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-SPEED",
+      "group": "基础损伤",
+      "rule": "14.1.1",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          127
+        ],
+        "visually_checked": true
+      },
+      "title": "DP与最高航速",
+      "requirement": "损伤25/50/75/90%对应最高航速75/50/25/0%，叠加轮机限制并遵守加减速。",
+      "current_execution": "max_speed只乘mobility；Ford损伤834后仍32节。",
+      "data_status": "missing",
+      "execution_status": "approximation_or_partial",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": "dp_speed"
+      },
+      "priority": "P1",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/world.rs"
+    },
+    {
+      "id": "HV26-DMG-MASSIVE",
+      "group": "基础损伤",
+      "rule": "14.2.1",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          132
+        ],
+        "visually_checked": true
+      },
+      "title": "严重舰体损伤",
+      "requirement": "剩25%原始DP：武器停止作用，潜艇上浮，航母不能起降。",
+      "current_execution": "未按剩余DP统一限制武器、潜艇深度和航母起降。",
+      "data_status": "missing",
+      "execution_status": "missing",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": "massive_damage_launch"
+      },
+      "priority": "P0",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-SMALL-DP",
+      "group": "小艇",
+      "rule": "14.1/14.1.2",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          127,
+          129
+        ],
+        "visually_checked": true
+      },
+      "title": "F/G不跨回合累计普通DP",
+      "requirement": "F/G用人员、浮力和关键损伤；单回合伤害达到2倍原始DP时沉没。",
+      "current_execution": "所有舰艇沿用累计HP归零流程，没有size F/G语义。",
+      "data_status": "missing",
+      "execution_status": "approximation_or_partial",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P1",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-RATIO",
+      "group": "关键损伤产生",
+      "rule": "14.1.2",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          127,
+          129
+        ],
+        "visually_checked": true
+      },
+      "title": "每阶段损伤比率",
+      "requirement": "A–E以阶段DP损伤/受损后剩余DP查D6比率表；F/G分母用原始DP。",
+      "current_execution": "每击10%–40%概率，最多一次常规关键损伤。",
+      "data_status": "root_python_table_only",
+      "execution_status": "approximation_or_partial",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P0",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-RATIO-MIN",
+      "group": "关键损伤产生",
+      "rule": "14.1.2",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          129
+        ],
+        "visually_checked": true
+      },
+      "title": "1%原始DP门槛",
+      "requirement": "低于原始DP 1%的普通损伤不生成比率关键损伤；独立自动程序另处理。",
+      "current_execution": "30mm单击8DP对1667DP目标，512个种子产生51个关键事件。",
+      "data_status": "root_python_table_only",
+      "execution_status": "approximation_or_partial",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": "below_one_percent"
+      },
+      "priority": "P0",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-RATIO-HIGH",
+      "group": "关键损伤产生",
+      "rule": "14.1.2/14.2.1",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          129,
+          132
+        ],
+        "visually_checked": true
+      },
+      "title": "超过1与达到3的比率",
+      "requirement": "超过1的每0.2另加关键损伤；比率达到3按10%DP剩余及严重损伤处理。",
+      "current_execution": "未执行上述边界；概率上限替代。",
+      "data_status": "root_python_table_only",
+      "execution_status": "missing",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P1",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-MISSILE-EXTRA",
+      "group": "关键损伤产生",
+      "rule": "14.1.5",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          130
+        ],
+        "visually_checked": true
+      },
+      "title": "导弹附加关键损伤",
+      "requirement": "附录DP后的骰式是附加关键损伤次数；按10–24/25–44/45+条件；无骰式附注的武器无此附加。",
+      "current_execution": "未有extra_critical_dice字段与独立调用；不能把骰式加到舰体DP。",
+      "data_status": "root_python_partial",
+      "execution_status": "missing",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P0",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-MISSILE-FIRE",
+      "group": "关键损伤产生",
+      "rule": "14.1.2/14.1.5",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          129,
+          130
+        ],
+        "visually_checked": true
+      },
+      "title": "导弹自动火灾与例外",
+      "requirement": "满足导弹撞击附加程序且弹头DP≥10，另加自动火灾；滑翔炸弹等无附录骰式的例外不可套用。",
+      "current_execution": "未执行独立自动火灾；随机Fire行不能替代。",
+      "data_status": "root_python_partial",
+      "execution_status": "missing",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P0",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-KEEL",
+      "group": "关键损伤产生",
+      "rule": "14.1.2",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          129
+        ],
+        "visually_checked": true
+      },
+      "title": "单次大伤害龙骨折断",
+      "requirement": "单件武器造成≥60%原始DP后按武器类别掷D10判龙骨；鱼雷/雷与炸弹/导弹阈值不同。",
+      "current_execution": "未执行龙骨检定；HP归零或任意武器殉爆不是替代。",
+      "data_status": "missing",
+      "execution_status": "missing",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P1",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-LIGHT-GUN",
+      "group": "关键损伤产生",
+      "rule": "14.1.3",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          129
+        ],
+        "visually_checked": true
+      },
+      "title": "小口径限制",
+      "requirement": "按口径、目标尺寸E及以上、1%门槛与穿透限制可产生的关键损伤种类。",
+      "current_execution": "小口径沿用Gun全列，能产生轮机、声纳、进水、CIC等。",
+      "data_status": "root_source_index",
+      "execution_status": "approximation_or_partial",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": "below_one_percent"
+      },
+      "priority": "P1",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-BOW-EXTRA",
+      "group": "关键损伤产生",
+      "rule": "14.1.2/14.1.7",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          129,
+          130,
+          131
+        ],
+        "visually_checked": true
+      },
+      "title": "估算首尾附加10%",
+      "requirement": "未查到一般首尾命中另加10%轻关键损伤的原规则；须与触发鱼雷首尾及尾流制导规定区分。",
+      "current_execution": "现有独立10% bow_collapse/rudder分支，注释为work-order估算。",
+      "data_status": "unsupported_estimate",
+      "execution_status": "approximation_or_partial",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P1",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-CLASS-AVIATION",
+      "group": "列选择",
+      "rule": "14.1.2 footnotes",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          128
+        ],
+        "visually_checked": true
+      },
+      "title": "航空舰船识别",
+      "requirement": "按舰型/主甲板至少半面积用于飞行作业；1–2个直升机起降点不算航空舰船。",
+      "current_execution": "以PlatformClass.deck.is_some()判定，直升机甲板护航舰也会进入航空判断。",
+      "data_status": "missing",
+      "execution_status": "approximation_or_partial",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P0",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-CLASS-MISSILE",
+      "group": "列选择",
+      "rule": "14.1.2",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          128
+        ],
+        "visually_checked": true
+      },
+      "title": "导弹命中航空舰船/小艇",
+      "requirement": "导弹命中航空舰船与战斗小艇改用对应目标类型列。",
+      "current_execution": "critical_column_for只按武器kind选择Missile列，不查询目标类型。",
+      "data_status": "missing",
+      "execution_status": "approximation_or_partial",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P0",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-CLASS-SUB",
+      "group": "列选择",
+      "rule": "14.1.2/expanded general",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          128,
+          129
+        ],
+        "visually_checked": true
+      },
+      "title": "水面/水下潜艇与武器",
+      "requirement": "区分浮航潜艇水面攻击、水下攻击、深弹/鱼雷的潜艇重/轻表。",
+      "current_execution": "underwater或Torpedo始终使用同一水面水下攻击列，无潜艇重/轻列。",
+      "data_status": "missing",
+      "execution_status": "approximation_or_partial",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P0",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-CLASS-ERA",
+      "group": "列选择",
+      "rule": "14.1.2",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          128
+        ],
+        "visually_checked": true
+      },
+      "title": "年代/商辅/登陆舰列",
+      "requirement": "区分1955前后、商辅、小型货船、LST/LPD与有飞行甲板的LHA/LPH。",
+      "current_execution": "仅Gun/Missile/Torpedo/Bomb四类，无这些选择依据。",
+      "data_status": "missing",
+      "execution_status": "approximation_or_partial",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P1",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-STARS",
+      "group": "装甲",
+      "rule": "14.1.2/14.1.6",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          128,
+          130
+        ],
+        "visually_checked": true
+      },
+      "title": "带星号部位穿透",
+      "requirement": "每列每行保留星号和部位；未穿透则不能施加受装甲保护的关键损伤。",
+      "current_execution": "CriticalRow无星号/部位字段；不能用一个全局starred列表代替。",
+      "data_status": "missing",
+      "execution_status": "approximation_or_partial",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P0",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/rules/damage_tables.rs"
+    },
+    {
+      "id": "HV26-DMG-ARMOR-PEN",
+      "group": "装甲",
+      "rule": "14.1.6",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          130
+        ],
+        "visually_checked": true
+      },
+      "title": "Pen与装甲厚度",
+      "requirement": "武器Pen严格大于对应belt/deck厚度才全伤；否则半伤，并处理CHP。",
+      "current_execution": "无Pen、belt/deck cm字段，使用类名首侧尾估计倍率。",
+      "data_status": "missing",
+      "execution_status": "approximation_or_partial",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P0",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/rules/damage_ext.rs"
+    },
+    {
+      "id": "HV26-DMG-ARMOR-ASPECT",
+      "group": "装甲",
+      "rule": "14.1.6",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          130
+        ],
+        "visually_checked": true
+      },
+      "title": "武器剖面选择装甲部位",
+      "requirement": "导弹低空巡航/末段与普通甲板攻击区分；炮按射程段和D100比例选择带/甲板。",
+      "current_execution": "只按类名与来向0/90/180估计，不按飞行剖面/炮射程选belt/deck。",
+      "data_status": "missing",
+      "execution_status": "approximation_or_partial",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P1",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/rules/damage_tables.rs"
+    },
+    {
+      "id": "HV26-DMG-BOMB-PEN",
+      "group": "装甲",
+      "rule": "14.1.6",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          130
+        ],
+        "visually_checked": true
+      },
+      "title": "航空炸弹穿透条件",
+      "requirement": "普通/穿甲炸弹、投放高度、延迟和减速炸弹按相应Pen条件。",
+      "current_execution": "未有炸弹投放方式/Pen等字段。",
+      "data_status": "missing",
+      "execution_status": "missing",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P1",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-TORP-TARGET-DP",
+      "group": "水下武器",
+      "rule": "14.1/Annex F",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          127,
+          131
+        ],
+        "visually_checked": true
+      },
+      "title": "鱼雷对舰/对潜DP",
+      "requirement": "同一鱼雷按目标采用对应附件F列；Yu6/10对舰141、对潜100。",
+      "current_execution": "单一damage=120同时用于船和潜艇。",
+      "data_status": "missing",
+      "execution_status": "approximation_or_partial",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P0",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-TORP-FUZE",
+      "group": "水下武器",
+      "rule": "14.1.7",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          130,
+          131
+        ],
+        "visually_checked": true
+      },
+      "title": "触发与感应引信",
+      "requirement": "区分浅/深触发与龙骨下感应；感应不应用belt/TPS；小艇不能直接套深航命中。",
+      "current_execution": "WeaponDef无C/I字段和攻击深度选择；统一Torpedo装甲倍率。",
+      "data_status": "missing",
+      "execution_status": "approximation_or_partial",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P0",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-TPS",
+      "group": "水下武器",
+      "rule": "14.1.7",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          131,
+          132
+        ],
+        "visually_checked": true
+      },
+      "title": "左右舷抗雷结构",
+      "requirement": "深触发适用；左右舷分别记容量、单次吸收上限R/3、同部位耗尽；感应不减伤。",
+      "current_execution": "仅常数乘0.75，无左右舷容量或部位消耗；us_ford未落入cvn估算表。",
+      "data_status": "missing",
+      "execution_status": "approximation_or_partial",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P0",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-TORP-BOW",
+      "group": "水下武器",
+      "rule": "14.1.7",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          130,
+          131
+        ],
+        "visually_checked": true
+      },
+      "title": "窄首尾触发命中",
+      "requirement": "窄首尾触发命中半伤、不穿过belt/TPS；尾击前两关键损伤为轮机/舵。",
+      "current_execution": "角度≤45/≥135一律视作首尾减伤，无引信/具体首尾条件。",
+      "data_status": "partial",
+      "execution_status": "approximation_or_partial",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P1",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-TORP-FLOOD",
+      "group": "水下武器",
+      "rule": "14.1.2/14.1.7",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          129,
+          131
+        ],
+        "visually_checked": true
+      },
+      "title": "触发鱼雷自动进水",
+      "requirement": "触发命中、且穿过TPS后独立自动进水；TPS超载可降低进水严重性。",
+      "current_execution": "只有随机Flooding行；无TPS穿透条件和独立自动结果。",
+      "data_status": "missing",
+      "execution_status": "approximation_or_partial",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P1",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-TORP-WAKE",
+      "group": "水下武器",
+      "rule": "14.1.2",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          129
+        ],
+        "visually_checked": true
+      },
+      "title": "尾流制导先定损伤",
+      "requirement": "尾流制导鱼雷前两个所生成的关键损伤指定为舵与轮机，自动进水不计入。",
+      "current_execution": "缺少依据制导工作模式改写前两个关键结果的程序。",
+      "data_status": "missing",
+      "execution_status": "approximation_or_partial",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P1",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-SUB-PRESSURE",
+      "group": "潜艇",
+      "rule": "14.1.2",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          129
+        ],
+        "visually_checked": true
+      },
+      "title": "鱼雷耐压壳检定",
+      "requirement": "按直径、单/双壳与大小潜艇、成形装药判耐压壳穿透概率，未穿透再用重损伤表。",
+      "current_execution": "未有直径/船壳构型/尺寸与独立80/60、70/50等检定。",
+      "data_status": "missing",
+      "execution_status": "missing",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P0",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-MINE",
+      "group": "水下武器",
+      "rule": "14.1.7/13.6",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          130,
+          131
+        ],
+        "visually_checked": true
+      },
+      "title": "水雷部位与引信",
+      "requirement": "锚雷首向与侧向、沉底雷龙骨下、触发/感应分别处理。",
+      "current_execution": "无对应武器/引信/作用方式损伤模型。",
+      "data_status": "missing",
+      "execution_status": "approximation_or_partial",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P1",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-AIRBURST-DP",
+      "group": "空爆/反辐射",
+      "rule": "14.1.4",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          129,
+          130
+        ],
+        "visually_checked": true
+      },
+      "title": "空爆不扣普通舰体DP",
+      "requirement": "空爆按来源生成关键损伤，不施加普通舰体DP；任何合格装甲/CHP挡碎片。",
+      "current_execution": "Bomb列混合同普通炸弹/火箭，仍先扣HP。",
+      "data_status": "missing",
+      "execution_status": "approximation_or_partial",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P0",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-ARM",
+      "group": "空爆/反辐射",
+      "rule": "7.4.2/14.1.4",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          77,
+          129,
+          130
+        ],
+        "visually_checked": true
+      },
+      "title": "反辐射专用程序",
+      "requirement": "PRH世代、雷达开关/再开、空爆关键次数，第一关键损伤必为所攻击雷达。",
+      "current_execution": "cn_yj91配置SeaSkimmer、damage10；无指定雷达关键与PRH行为。",
+      "data_status": "missing",
+      "execution_status": "approximation_or_partial",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": "arm_hull_damage"
+      },
+      "priority": "P0",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-AIRBURST-COUNT",
+      "group": "空爆/反辐射",
+      "rule": "14.1.4",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          129,
+          130
+        ],
+        "visually_checked": true
+      },
+      "title": "炸弹/集束/火炮空爆",
+      "requirement": "分别声明引信、DP区间转关键次数；火炮空爆忽略DP但比率关键翻倍等条件。",
+      "current_execution": "未区分这些来源，Bomb/Rocket直接选同一列。",
+      "data_status": "missing",
+      "execution_status": "missing",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P1",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-AIRBURST-MAG",
+      "group": "空爆/反辐射",
+      "rule": "14.1.4/expanded general",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          130
+        ],
+        "visually_checked": true
+      },
+      "title": "空爆武器行不殉爆",
+      "requirement": "空爆武器关键损伤不会触发发射架/弹药库爆炸。",
+      "current_execution": "Bomb列确有禁止殉爆分支和种子测试，但YJ91仍选Missile列；不能据此宣称全空爆完成。",
+      "data_status": "partial",
+      "execution_status": "approximation_or_partial",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P1",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-BOMB-DECK",
+      "group": "航母",
+      "rule": "14.1.2",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          129
+        ],
+        "visually_checked": true
+      },
+      "title": "大型炸弹自动甲板关键",
+      "requirement": "≥50kg/100lb炸弹每次命中航空母舰、满足穿透后另加飞行甲板关键损伤。",
+      "current_execution": "只有随机Bomb表FlightDeck行，没有该独立自动关键。",
+      "data_status": "missing",
+      "execution_status": "approximation_or_partial",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P1",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-GUN-DECK",
+      "group": "航母",
+      "rule": "14.1.2",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          129
+        ],
+        "visually_checked": true
+      },
+      "title": "远距离大口径炮甲板关键",
+      "requirement": "≥120mm在Long/Extreme命中航母时按60/70%另判甲板关键并检查装甲。",
+      "current_execution": "未执行该额外程序和射程段/口径条件。",
+      "data_status": "missing",
+      "execution_status": "missing",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P1",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-DECK-LOC",
+      "group": "航母",
+      "rule": "14.5 Flight Deck",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          135
+        ],
+        "visually_checked": true
+      },
+      "title": "飞行甲板位置与起降限制",
+      "requirement": "D6定位首/中/尾，损失相应弹射器/阻拦装置，分别限制起飞/降落，VTOL条件独立。",
+      "current_execution": "只写ext.flight_deck_hit=1并起火；air.rs不起降消费。",
+      "data_status": "partial",
+      "execution_status": "approximation_or_partial",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": "deck_flag_unconsumed"
+      },
+      "priority": "P0",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-DECK-RECOVER",
+      "group": "航母",
+      "rule": "14.5 Flight Deck",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          135
+        ],
+        "visually_checked": true
+      },
+      "title": "受损甲板回收",
+      "requirement": "舰尾损伤阻止普通固定翼着舰；有翼型/阻拦索并不能取代损伤检查。",
+      "current_execution": "compatible_recovery只查翼型、阻拦索及容量，无关键损伤检查。",
+      "data_status": "missing",
+      "execution_status": "approximation_or_partial",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": "deck_recovery_unrestricted"
+      },
+      "priority": "P0",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/air.rs"
+    },
+    {
+      "id": "HV26-DMG-HANGAR",
+      "group": "航母",
+      "rule": "14.5 Flight Deck/Hangar",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          135
+        ],
+        "visually_checked": true
+      },
+      "title": "机库与甲板停放飞机链",
+      "requirement": "甲板所在位置的停机、穿甲机库波及、机库D6飞机及逐机Aircraft关键分别处理。",
+      "current_execution": "无停放位置、机库关键或被毁飞机链。",
+      "data_status": "missing",
+      "execution_status": "approximation_or_partial",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P1",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-AIRCRAFT-STORED",
+      "group": "航母",
+      "rule": "14.5 Aircraft",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          134
+        ],
+        "visually_checked": true
+      },
+      "title": "舰载机关键与可选装弹状态",
+      "requirement": "每个飞机关键毁一机并产生D6−2%火；可选挂弹/加油状态另增火灾及2/3弹药DP。",
+      "current_execution": "未有这套舰内飞机毁伤链；可选挂弹条款不能隐式开启。",
+      "data_status": "missing",
+      "execution_status": "missing",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P1",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-AMMO-FUEL",
+      "group": "航母",
+      "rule": "14.5 Ammo/Fuel",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          134
+        ],
+        "visually_checked": true
+      },
+      "title": "航空弹药/燃料与处置",
+      "requirement": "D10区分航空弹药库和燃料库；弹药殉爆、燃料火+2及DC+2；注水/吹气后失去补弹加油。",
+      "current_execution": "无Ammo/Fuel类型、相关状态或处置命令。",
+      "data_status": "missing",
+      "execution_status": "approximation_or_partial",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P0",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-AIR-PLOT",
+      "group": "航母",
+      "rule": "14.1.2/14.5",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          128,
+          134
+        ],
+        "visually_checked": true
+      },
+      "title": "舰桥/塔台分支",
+      "requirement": "航空舰船Bridge结果再掷D6分Bridge/AirPlot，停起降D6/2战术回合并伴随火灾。",
+      "current_execution": "Bridge统一扣fire_control/mobility，无塔台及时间恢复分支。",
+      "data_status": "missing",
+      "execution_status": "approximation_or_partial",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P1",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-FIRE-SEVERITY",
+      "group": "火灾进水",
+      "rule": "14.4",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          133,
+          134
+        ],
+        "visually_checked": true
+      },
+      "title": "百分比严重性",
+      "requirement": "D6%原始DP的火灾/进水严重性，非穿透与小口径修正；各事件保留来源。",
+      "current_execution": "固定60/120秒时长、封顶180/300秒、每秒0.05/0.15DP。",
+      "data_status": "missing",
+      "execution_status": "approximation_or_partial",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P0",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-FIRE-DELAY",
+      "group": "火灾进水",
+      "rule": "14.1/14.4",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          127,
+          133
+        ],
+        "visually_checked": true
+      },
+      "title": "二次损伤时序",
+      "requirement": "普通A–E第3战术回合结算且先初次损管；触发雷/鱼雷进水与F/G等有立即处理例外。",
+      "current_execution": "新火灾第一秒即0.05DP损失；未区分例外。",
+      "data_status": "missing",
+      "execution_status": "approximation_or_partial",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": "instant_fire_drain"
+      },
+      "priority": "P0",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-DC-CATEGORY",
+      "group": "火灾进水",
+      "rule": "14.4",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          133
+        ],
+        "visually_checked": true
+      },
+      "title": "合计严重性与级别表",
+      "requirement": "火+进水合计决定按尺寸级别的Minor/Major/Severe/Overwhelmed；按服役年代修正D10。",
+      "current_execution": "每秒80%进度，火60/水120点，与尺寸/年代/合计严重性无关。",
+      "data_status": "missing",
+      "execution_status": "approximation_or_partial",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P0",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/rules/damage_ext.rs"
+    },
+    {
+      "id": "HV26-DMG-DC-ROLL",
+      "group": "火灾进水",
+      "rule": "14.4",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          133,
+          134
+        ],
+        "visually_checked": true
+      },
+      "title": "损管骰与恶化",
+      "requirement": "按合计压力，每次全部火灾一枚D10、全部进水一枚D10，再按结果减少/增加严重性；不能保证自动单调扑灭。",
+      "current_execution": "按进水优先累积进度并清零时长；有限时长还能自然结束。",
+      "data_status": "missing",
+      "execution_status": "approximation_or_partial",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P1",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/rules/damage_ext.rs"
+    },
+    {
+      "id": "HV26-DMG-DC-OPS",
+      "group": "火灾进水",
+      "rule": "14.4",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          133
+        ],
+        "visually_checked": true
+      },
+      "title": "重大灾情限制行动",
+      "requirement": "Major+火灾/进水按类别限速、调整相对风向、停止飞行或要求潜艇上浮/浅航，未满足影响损管。",
+      "current_execution": "未按灾情严重性联动飞行、航向、速度和潜艇深度。",
+      "data_status": "missing",
+      "execution_status": "missing",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P1",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-DC-CATASTROPHE",
+      "group": "火灾进水",
+      "rule": "14.4",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          133
+        ],
+        "visually_checked": true
+      },
+      "title": "失控火灾/进水",
+      "requirement": "Overwhelmed按中间回合累计25%判殉爆/倾覆；注水弹库等玩家处置有代价。",
+      "current_execution": "未有合计失控灾情、倾覆及应急注水行为。",
+      "data_status": "missing",
+      "execution_status": "missing",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P1",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-DC-CREW",
+      "group": "火灾进水",
+      "rule": "14.4",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          134
+        ],
+        "visually_checked": true
+      },
+      "title": "抽调人员与邻舰援助",
+      "requirement": "调武器人员灭火需停武器；援助舰满足100码、同航速/航向等条件，有延迟与容量约束。",
+      "current_execution": "未有损管人员配置、代价、靠帮协助或拖船能力。",
+      "data_status": "missing",
+      "execution_status": "missing",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P1",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-ENG",
+      "group": "系统关键",
+      "rule": "14.5 Engineering",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          135
+        ],
+        "visually_checked": true
+      },
+      "title": "轮机与电力",
+      "requirement": "降一个航速档，单轴/单机舱双降；起D6−2%火；累计轮机伤掷电力丧失及持续回合。",
+      "current_execution": "随机降低mobility0.4–1，无实际伴随火灾、电力或累计次数。",
+      "data_status": "missing",
+      "execution_status": "approximation_or_partial",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P1",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-BRIDGE",
+      "group": "系统关键",
+      "rule": "14.5 Bridge",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          134
+        ],
+        "visually_checked": true
+      },
+      "title": "舰桥失能时序",
+      "requirement": "维持原航向航速、损失导航雷达，D6/2回合后降级操作且改令延迟两回合；小艇恢复不同。",
+      "current_execution": "固定mobility/fire_control各扣0.3，无导航雷达/延迟/分类型恢复。",
+      "data_status": "missing",
+      "execution_status": "approximation_or_partial",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P1",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-RUDDER",
+      "group": "系统关键",
+      "rule": "14.5 Rudder",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          135
+        ],
+        "visually_checked": true
+      },
+      "title": "舵卡死/失灵与潜艇深度",
+      "requirement": "D6分卡死或失灵，1/3最高速与15度转向；潜艇每计划阶段按速度判深度失控。",
+      "current_execution": "只写rudder_hit并扣mobility，movement未消费卡舵方向/转向/深度限制。",
+      "data_status": "partial",
+      "execution_status": "approximation_or_partial",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P1",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-CIC",
+      "group": "系统关键",
+      "rule": "14.5 CIC",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          134,
+          135
+        ],
+        "visually_checked": true
+      },
+      "title": "CIC与局部控制",
+      "requirement": "损失非局部控制武器与全部传感器，保留舰桥导航雷达例外；需部件/控制模式数据。",
+      "current_execution": "fire_control置0、radar减0.5，声纳/单个设备/局部火控未按原文区分。",
+      "data_status": "partial",
+      "execution_status": "approximation_or_partial",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P1",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-SENSOR",
+      "group": "系统关键",
+      "rule": "14.5 Sensor",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          135
+        ],
+        "visually_checked": true
+      },
+      "title": "传感器与对抗设施",
+      "requirement": "从实际装备传感器中选一项，干扰、诱饵、潜望镜独立设备，可再次命中。",
+      "current_execution": "按65/25%偏好将整体radar或sonar置0，未从实际设备清单均匀抽取；对抗装备未接入。",
+      "data_status": "partial",
+      "execution_status": "approximation_or_partial",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P1",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-WEAPON",
+      "group": "系统关键",
+      "rule": "14.5 Weapon",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          135,
+          136
+        ],
+        "visually_checked": true
+      },
+      "title": "随机发射架与指挥仪",
+      "requirement": "随机决定受损武器；同次表骰/指挥仪条件，指挥仪与发射架分开；整个该组管/格失能。",
+      "current_execution": "从有弹项选mounts最少者；无指挥仪损伤，只把整项ammo清0。",
+      "data_status": "partial",
+      "execution_status": "approximation_or_partial",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P1",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-REPEAT-MOUNT",
+      "group": "系统关键",
+      "rule": "14.5 Weapon",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          136
+        ],
+        "visually_checked": true
+      },
+      "title": "空弹/已毁武器再中",
+      "requirement": "武器被打坏仍可再次命中并忽略，不把概率重新分给其他有弹挂载。",
+      "current_execution": "过滤ammo>0，已损/空弹项退出选择，改变后续命中分布。",
+      "data_status": "missing",
+      "execution_status": "approximation_or_partial",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P1",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-MAGAZINE",
+      "group": "系统关键",
+      "rule": "14.5 Weapon",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          135,
+          136
+        ],
+        "visually_checked": true
+      },
+      "title": "甲板上爆炸与甲板下殉爆",
+      "requirement": "有爆炸性弹药再掷；甲板下弹库毁舰，甲板上架/装填管为半数武器DP，保留弹药种类与分组。",
+      "current_execution": "任一非Bomb关键的有弹挂载10%直接整舰归零；弹药种类/位置未区分。",
+      "data_status": "missing",
+      "execution_status": "approximation_or_partial",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P0",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-FLOTATION",
+      "group": "小艇",
+      "rule": "14.5 Flotation",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          135
+        ],
+        "visually_checked": true
+      },
+      "title": "F/G浮力格",
+      "requirement": "F艇5格、G艇4格，每中降一航速级；浮力格耗尽沉没。",
+      "current_execution": "未有size、浮力格与相应速度程序。",
+      "data_status": "missing",
+      "execution_status": "missing",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P1",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-PERSONNEL",
+      "group": "小艇",
+      "rule": "14.5 Personnel",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          135
+        ],
+        "visually_checked": true
+      },
+      "title": "小艇6个人员因数",
+      "requirement": "依次影响轻武器、火灾、退战和损管；不是普通mobility HP替代。",
+      "current_execution": "未有人员因数和指令约束。",
+      "data_status": "missing",
+      "execution_status": "missing",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P1",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-SUB-BATTERY",
+      "group": "潜艇",
+      "rule": "14.5 Battery",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          134
+        ],
+        "visually_checked": true
+      },
+      "title": "电池/AIP/核潜艇",
+      "requirement": "D6×5%电池损失，上限30%；AIP25%被击，核潜艇指定Battery结果转Engineering。",
+      "current_execution": "未有Battery/AIP结果与核潜艇特例。",
+      "data_status": "missing",
+      "execution_status": "missing",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P1",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-SUB-CONTROL",
+      "group": "潜艇",
+      "rule": "14.5 Control",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          135
+        ],
+        "visually_checked": true
+      },
+      "title": "潜艇控制舱",
+      "requirement": "Minor掷Bridge/CIC，Major同时二者，保持深度并延迟改令。",
+      "current_execution": "未有Control及轻重列。",
+      "data_status": "missing",
+      "execution_status": "missing",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P1",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-SUB-DEFORM",
+      "group": "潜艇",
+      "rule": "14.5 Hull Deformation",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          135
+        ],
+        "visually_checked": true
+      },
+      "title": "船体变形与深度限制",
+      "requirement": "随累计变形要求中I/浅航，超限按25/30%深度档判失压，第三次转穿透。",
+      "current_execution": "未有耐压壳形状、损伤次数或深度联动。",
+      "data_status": "missing",
+      "execution_status": "missing",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P1",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-SUB-HULL",
+      "group": "潜艇",
+      "rule": "14.5 Hull Penetration",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          135
+        ],
+        "visually_checked": true
+      },
+      "title": "船体穿透与上浮窗口",
+      "requirement": "浅/中I有50%上浮弃舰机会，D10×2战术回合沉没；更深直接损失。",
+      "current_execution": "未有船体穿透程序，仅普通HP归零。",
+      "data_status": "missing",
+      "execution_status": "missing",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P1",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-CARGO",
+      "group": "商辅与运输",
+      "rule": "14.5 Cargo",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          129,
+          134
+        ],
+        "visually_checked": true
+      },
+      "title": "货舱伤害链",
+      "requirement": "按实际弹药/燃料/部队/货物/车辆/飞机及装载量处理；弹药可能波及其他舱和邻舰。",
+      "current_execution": "未有Cargo类型、位置、货物数量及连锁处置。",
+      "data_status": "missing",
+      "execution_status": "missing",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P1",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-SINKING",
+      "group": "沉没",
+      "rule": "14.3",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          133
+        ],
+        "visually_checked": true
+      },
+      "title": "沉没延迟与例外",
+      "requirement": "一般舰船/浮航潜艇掷D10×10分钟沉没；水下潜艇与弹库爆炸立即。",
+      "current_execution": "hp<=0立即alive=false并记Sunk，120秒清理仅UI残留，不是规则沉没状态。",
+      "data_status": "missing",
+      "execution_status": "approximation_or_partial",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P1",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-RCS",
+      "group": "特殊影响",
+      "rule": "14.2.2",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          132
+        ],
+        "visually_checked": true
+      },
+      "title": "受损隐身舰特征",
+      "requirement": "原始DP损伤≥10%使低于尺寸级的特征提高一级，不能超过本舰尺寸级。",
+      "current_execution": "未按伤害改变rcs。",
+      "data_status": "missing",
+      "execution_status": "missing",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P1",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/sensors.rs"
+    },
+    {
+      "id": "HV26-DMG-NOISE",
+      "group": "特殊影响",
+      "rule": "14.2.3",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          132
+        ],
+        "visually_checked": true
+      },
+      "title": "水下损伤声学特征",
+      "requirement": "水下攻击造成≥10%原始DP后Noisy并丧失消声瓦收益，已有Noisy/Loud例外。",
+      "current_execution": "未有对应损伤来源阈值和声学退化。",
+      "data_status": "missing",
+      "execution_status": "missing",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P1",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/sensors.rs"
+    },
+    {
+      "id": "HV26-DMG-BEACHED",
+      "group": "特殊影响",
+      "rule": "14.2.4",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          132
+        ],
+        "visually_checked": true
+      },
+      "title": "搁浅舰船毁伤",
+      "requirement": "搁浅/搁滩目标需要两倍DP才能摧毁，进水严重性−2，超过本DP不能复浮。",
+      "current_execution": "当前海岸路径保护没有该损伤状态；不应用照片颜色推水深。",
+      "data_status": "missing",
+      "execution_status": "approximation_or_partial",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P1",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-CREW-TRANSFER",
+      "group": "小艇",
+      "rule": "14.2.5",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          132
+        ],
+        "visually_checked": true
+      },
+      "title": "人员转移",
+      "requirement": "靠帮、航速、同航向、伤员分组和碰撞风险限制转移。",
+      "current_execution": "未有小艇人员及转移程序。",
+      "data_status": "missing",
+      "execution_status": "missing",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P1",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-REPAIRS",
+      "group": "修理",
+      "rule": "14.6",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          136
+        ],
+        "visually_checked": true
+      },
+      "title": "战后修理时间与概率",
+      "requirement": "传感器/轮机/武器等战后6/12/24/48小时按剩余DP/原始DP判修复，前两次减半。",
+      "current_execution": "最后命中300秒后开始每60秒统一恢复0.2系统值。",
+      "data_status": "missing",
+      "execution_status": "approximation_or_partial",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": "five_minute_repair"
+      },
+      "priority": "P1",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-REPAIR-TYPES",
+      "group": "修理",
+      "rule": "14.6",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          136
+        ],
+        "visually_checked": true
+      },
+      "title": "修理分类型与副作用",
+      "requirement": "舰体仅在港修、火灾重燃、进水抽水及补片再破、舵卡解脱20/40/60%等分别处理。",
+      "current_execution": "未有类型化修理、战斗结束基准、重燃、补片和舵恢复骰。",
+      "data_status": "missing",
+      "execution_status": "missing",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P1",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-NUCLEAR",
+      "group": "特殊武器",
+      "rule": "14.1.8",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          131,
+          132
+        ],
+        "visually_checked": true
+      },
+      "title": "核武器效果",
+      "requirement": "按战斗部、介质、半径、引爆/失效等独立程序；列为基础章节未覆盖功能，非本轮启用内容。",
+      "current_execution": "未有核武器效果执行。",
+      "data_status": "missing",
+      "execution_status": "missing",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P1",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-AIR-HIT",
+      "group": "航空",
+      "rule": "14.1/14.9",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          127,
+          137
+        ],
+        "visually_checked": true
+      },
+      "title": "飞机命中及战后受损回收",
+      "requirement": "基础规则命中后退出战斗；14.9战后50/50毁伤或可选即时分级不得混用。",
+      "current_execution": "共享命中入口仍走HP/舰船关键；大量武器DP高会即时毁机，但未核验所有路径满足基础退出/战后分类。",
+      "data_status": "partial",
+      "execution_status": "approximation_or_partial",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P1",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-SERVICEABILITY",
+      "group": "可选规则",
+      "rule": "14.7",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          136
+        ],
+        "visually_checked": true
+      },
+      "title": "装备完好率",
+      "requirement": "可选开局/每日故障、海军等级、基地修理加成独立开关与条件。",
+      "current_execution": "未有该可选模式与状态，未以此标为现有常规局必需缺陷。",
+      "data_status": "missing",
+      "execution_status": "missing",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P2",
+      "optional": true,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-SAR",
+      "group": "可选规则",
+      "rule": "14.8",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          136,
+          137
+        ],
+        "visually_checked": true
+      },
+      "title": "搜救",
+      "requirement": "可选落水者、侦测、海况、回收速率/容量及胜利条件。",
+      "current_execution": "未有搜救流程，原文标optional；不与基础损伤遗漏计为一类。",
+      "data_status": "missing",
+      "execution_status": "missing",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P2",
+      "optional": true,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-AIR-DAMAGE-OPTION",
+      "group": "可选规则",
+      "rule": "14.9",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          137
+        ],
+        "visually_checked": true
+      },
+      "title": "可选即时飞机分级损伤",
+      "requirement": "显式选择即时50/50或D10分级，累积命中/机动/武器/传感器限制。",
+      "current_execution": "未有独立模式选择及完整分级状态。",
+      "data_status": "missing",
+      "execution_status": "missing",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P2",
+      "optional": true,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-RNG",
+      "group": "工程审计",
+      "rule": "repository deterministic replay",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          127
+        ],
+        "visually_checked": true
+      },
+      "title": "每个命中唯一随机身份",
+      "requirement": "同秒不同命中分别生成稳定可重演随机事件；不依赖任意实体遍历顺序。",
+      "current_execution": "scope_rng(target,damage)重复创建同tick同target同purpose的流。",
+      "data_status": "missing",
+      "execution_status": "approximation_or_partial",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": "same_tick_stream"
+      },
+      "priority": "P0",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/world.rs"
+    },
+    {
+      "id": "HV26-DMG-GEOMETRY",
+      "group": "工程审计",
+      "rule": "14.1.6/14.1.7",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          130,
+          131
+        ],
+        "visually_checked": true
+      },
+      "title": "命中身份与有符号来向",
+      "requirement": "每个命中绑定真实投射物/发射者与左/右舷、部位、引信/剖面，支撑装甲/TPS。",
+      "current_execution": "nearest projectile匹配并abs角差，丢左右舷；近枪射击也估计最近发射者。",
+      "data_status": "partial",
+      "execution_status": "approximation_or_partial",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P1",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-DICE-LOG",
+      "group": "工程审计",
+      "rule": "repository deterministic replay",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          127,
+          129,
+          130
+        ],
+        "visually_checked": true
+      },
+      "title": "完整掷骰和规则追踪",
+      "requirement": "记录事件ID、来源表列、每枚骰、修正、部位与状态变化，并可保存恢复比较。",
+      "current_execution": "Impact/CriticalHit只记结果，没有每枚dice和阶段输入账本；世界可序列化不等于规则审计轨迹完整。",
+      "data_status": "partial",
+      "execution_status": "approximation_or_partial",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P1",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-ROOT-DATA",
+      "group": "旧原型数据",
+      "rule": "14.1.2 Critical Hit Table",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          128
+        ],
+        "visually_checked": true
+      },
+      "title": "旧Python表转录错误",
+      "requirement": "每个D20列20格，guided与post1955应各自对应原表，星号按行列记录。",
+      "current_execution": "根data/rules/damage_tables.json的underwater只有19格，guided复制post列且两者与原表不符；verified:true不能作证。",
+      "data_status": "incorrect_root_python",
+      "execution_status": "approximation_or_partial",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P0",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    },
+    {
+      "id": "HV26-DMG-VARIANT",
+      "group": "附件数据",
+      "rule": "China Annex D1/H4/F1; America A4",
+      "source": {
+        "document": "english",
+        "pdf_pages": [
+          130,
+          131
+        ],
+        "visually_checked": true
+      },
+      "title": "变体与配置拆分",
+      "requirement": "同武器舰/空变体、飞行剖面、对舰/对潜、导引头/穿透、载机设施与年代分别有来源。",
+      "current_execution": "YJ12舰空共用216nm/48/SeaSkimmer；YJ91普通反舰；Yu6/10折中120；Ford缺装甲/设施记录。",
+      "data_status": "partial",
+      "execution_status": "approximation_or_partial",
+      "tests": {
+        "strict_compliance": "not_verified",
+        "baseline_probe": null
+      },
+      "priority": "P0",
+      "optional": false,
+      "rust_path": "crates/harpoon-core/src/damage.rs"
+    }
+  ],
+  "expanded_tables": [
+    {
+      "rule_id": "HV-ECT-00",
+      "pdf_page": 2,
+      "title": "通用规则与轻型武器的致命损伤",
+      "optional": false,
+      "source_status": "visually_checked",
+      "data_status": "index_only_not_rust_data",
+      "execution_status": "missing",
+      "strict_tests": "not_verified"
+    },
+    {
+      "rule_id": "HV-ECT-01",
+      "pdf_page": 3,
+      "title": "1955年前水面战斗舰船（尺寸A至E）",
+      "optional": false,
+      "source_status": "visually_checked",
+      "data_status": "index_only_not_rust_data",
+      "execution_status": "missing",
+      "strict_tests": "not_verified"
+    },
+    {
+      "rule_id": "HV-ECT-02",
+      "pdf_page": 4,
+      "title": "1955年后水面战斗舰船（尺寸A至E）",
+      "optional": false,
+      "source_status": "visually_checked",
+      "data_status": "partial_d100_bands_in_rust",
+      "execution_status": "partial_generic_effects_and_wrong_selection",
+      "strict_tests": "not_verified"
+    },
+    {
+      "rule_id": "HV-ECT-03",
+      "pdf_page": 5,
+      "title": "制导武器对水面战斗舰船（尺寸A至E）",
+      "optional": false,
+      "source_status": "visually_checked",
+      "data_status": "partial_d100_bands_in_rust",
+      "execution_status": "partial_generic_effects_and_wrong_selection",
+      "strict_tests": "not_verified"
+    },
+    {
+      "rule_id": "HV-ECT-04",
+      "pdf_page": 6,
+      "title": "战斗小艇（尺寸F至G）",
+      "optional": false,
+      "source_status": "visually_checked",
+      "data_status": "index_only_not_rust_data",
+      "execution_status": "missing",
+      "strict_tests": "not_verified"
+    },
+    {
+      "rule_id": "HV-ECT-05",
+      "pdf_page": 7,
+      "title": "航空舰船",
+      "optional": false,
+      "source_status": "visually_checked",
+      "data_status": "index_only_not_rust_data",
+      "execution_status": "missing",
+      "strict_tests": "not_verified"
+    },
+    {
+      "rule_id": "HV-ECT-06",
+      "pdf_page": 8,
+      "title": "水下攻击",
+      "optional": false,
+      "source_status": "visually_checked",
+      "data_status": "partial_d100_bands_in_rust",
+      "execution_status": "partial_generic_effects_and_wrong_selection",
+      "strict_tests": "not_verified"
+    },
+    {
+      "rule_id": "HV-ECT-07",
+      "pdf_page": 9,
+      "title": "空爆和弹片命中",
+      "optional": false,
+      "source_status": "visually_checked",
+      "data_status": "partial_d100_bands_in_rust",
+      "execution_status": "partial_generic_effects_and_wrong_selection",
+      "strict_tests": "not_verified"
+    },
+    {
+      "rule_id": "HV-ECT-08",
+      "pdf_page": 10,
+      "title": "商船和辅助舰船（尺寸A至E）",
+      "optional": false,
+      "source_status": "visually_checked",
+      "data_status": "index_only_not_rust_data",
+      "execution_status": "missing",
+      "strict_tests": "not_verified"
+    },
+    {
+      "rule_id": "HV-ECT-09",
+      "pdf_page": 11,
+      "title": "运输小艇（尺寸F至G）",
+      "optional": false,
+      "source_status": "visually_checked",
+      "data_status": "index_only_not_rust_data",
+      "execution_status": "missing",
+      "strict_tests": "not_verified"
+    },
+    {
+      "rule_id": "HV-ECT-10",
+      "pdf_page": 12,
+      "title": "潜艇（重度损伤）",
+      "optional": false,
+      "source_status": "visually_checked",
+      "data_status": "index_only_not_rust_data",
+      "execution_status": "missing",
+      "strict_tests": "not_verified"
+    },
+    {
+      "rule_id": "HV-ECT-11",
+      "pdf_page": 13,
+      "title": "潜艇（轻度损伤）",
+      "optional": false,
+      "source_status": "visually_checked",
+      "data_status": "index_only_not_rust_data",
+      "execution_status": "missing",
+      "strict_tests": "not_verified"
+    },
+    {
+      "rule_id": "HV-ECT-12",
+      "pdf_page": 14,
+      "title": "《海上指挥》主要水面战斗舰船（尺寸A/B）（经调整）",
+      "optional": true,
+      "source_status": "visually_checked",
+      "data_status": "index_only_not_rust_data",
+      "execution_status": "missing",
+      "strict_tests": "not_verified"
+    },
+    {
+      "rule_id": "HV-ECT-13",
+      "pdf_page": 15,
+      "title": "《海上指挥》次要水面战斗舰船（尺寸C/D/E）（经调整）",
+      "optional": true,
+      "source_status": "visually_checked",
+      "data_status": "index_only_not_rust_data",
+      "execution_status": "missing",
+      "strict_tests": "not_verified"
+    }
+  ]
+}

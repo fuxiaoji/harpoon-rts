@@ -1,0 +1,74 @@
+{
+  "status": "passed",
+  "scope": "post-hoc evidence arithmetic, five consumed hashes, local document links, syntax, UTF-8, design counts and independent design review; no environment rerun",
+  "new_model_calls": 0,
+  "new_environment_trajectories": 0,
+  "consumed_original_hashes_verified": 5,
+  "loss_decompositions": 51,
+  "figure_visual_review": "passed",
+  "corrected_shared_resource_scores": {
+    "complex-11": 70,
+    "complex-23": 68,
+    "complex-37": 70
+  },
+  "design_counts": {
+    "r1_main_scripted": 256,
+    "r1_response_sensitivity": 48,
+    "r2_mechanism_cells": 24,
+    "r3_future_request_cap": 72
+  },
+  "source_script_sha256": "b715c7a6dabdaa74fdb06185e3a58f425b24395e5e46b76454aa6cb554c573ba",
+  "files": [
+    {
+      "path": "harpoon-rts/scripts/review-realtime-evidence.py",
+      "bytes": 7625,
+      "sha256": "b715c7a6dabdaa74fdb06185e3a58f425b24395e5e46b76454aa6cb554c573ba"
+    },
+    {
+      "path": "harpoon-rts/docs/research-direction-review-20261022.md",
+      "bytes": 9320,
+      "sha256": "c75f8db6410fda39970b3b12102f49c98f82753a09bca32de383858e26e6e2df"
+    },
+    {
+      "path": "harpoon-rts/research/realtime/m3b-protocol.md",
+      "bytes": 18566,
+      "sha256": "44e077b5d617b448938d76612ff24b60bcbac521e91168db7522dd7d5e9345b5"
+    },
+    {
+      "path": "harpoon-rts/research/realtime/README.md",
+      "bytes": 11690,
+      "sha256": "8abf9f5204ea9818f26550ea93e8df410348af41db9df221fd2d1302e59823e5"
+    },
+    {
+      "path": "harpoon-rts/docs/research-realtime-m3a-20261022.md",
+      "bytes": 9239,
+      "sha256": "4ef263daf747e3cd75c8ba073b049e8560ec3d04886373f3df545782b04894b9"
+    },
+    {
+      "path": "plan.md",
+      "bytes": 62122,
+      "sha256": "2b53603965f85d5fffee6a9eee6f076c84612baf00bd9c5cc98783ad69557a3c"
+    },
+    {
+      "path": "havedone.md",
+      "bytes": 99179,
+      "sha256": "9656aa8c523303aec8000e7fd1cc676b5dfa2efeba57f3805c577d29360ed1ec"
+    },
+    {
+      "path": "harpoon-rts/research/realtime/review-20261022-v2/evidence-review.json",
+      "bytes": 24068,
+      "sha256": "e4cea0727b7af7d73f7d3d2ebddbc961abaf51421ae4fdb8f00e4f6dfe60fd30"
+    },
+    {
+      "path": "harpoon-rts/research/realtime/review-20261022-v2/delay-loss-decomposition.png",
+      "bytes": 81193,
+      "sha256": "6259f23a2f9800c98f1738335b7de3f21cfb9ced5ad4663625fbcbff830231db"
+    },
+    {
+      "path": "harpoon-rts/research/realtime/review-20261022-v2/delay-loss-decomposition.svg",
+      "bytes": 65659,
+      "sha256": "e52e1086966ca3f27dda479830817660f3ff2ecb8f7a07100ca1719033e7a0f0"
+    }
+  ],
+  "excluded_from_self_hash": "validation.json and inventory.csv"
+}

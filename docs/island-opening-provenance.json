@@ -1,0 +1,127 @@
+{
+  "version": "2026-10-21",
+  "scenario": "taiwan_island_opening.json",
+  "sha256": "2352e161af0d4e517cef7b58781653b99a3d7295be988ffff5f7b785c6f0e40b",
+  "fictional_facilities": true,
+  "real_deployments_used": false,
+  "imagery": {
+    "west": 114,
+    "east": 138,
+    "south": 16,
+    "north": 34,
+    "reference_lat": 25,
+    "image": "maps/island-wide-114-16-138-34-blue-marble.jpg",
+    "attribution": "NASA GIBS / MODIS / NASA Earth Observatory | Coast: GSHHG 2.3.7 LGPL, generalized 0.001 degrees",
+    "source_url": "https://gibs.earthdata.nasa.gov/layer-metadata/v1.0/BlueMarble_NextGeneration.json",
+    "imagery_date": "2004-08",
+    "tile_layer": "eox-s2cloudless-2016"
+  },
+  "terrain_source": "GSHHG 2.3.7 high shoreline; LGPL; regional game generalization only, no bathymetry/elevation",
+  "minimum_submarine_separation_nm": 80,
+  "departure_waypoints": {
+    "RED CARRIER 1": [
+      745.2826482834827,
+      629.8293977791625
+    ],
+    "RED CARRIER 2": [
+      858.6858227498968,
+      742.4687355501944
+    ]
+  },
+  "asset_sources": "database/volumes/_exercise_asset_sources.json",
+  "boundaries": [
+    "Generic Base HP and deck cycles are inherited RTS exercise proxies",
+    "No ballistic missile or satellite imaging model",
+    "Initial briefing snapshot is not live enemy truth"
+  ],
+  "author_assumptions": {
+    "defender_air_preparation_s": 360,
+    "immediate_cap_per_host": 2,
+    "shore_aircraft": 144,
+    "cruise_rounds": 192
+  },
+  "naval_groups": [
+    {
+      "side": "Blue",
+      "name": "BLUE CARRIER GROUP 1",
+      "leader": "BLUE CARRIER 1",
+      "members": [
+        "BLUE CARRIER 1",
+        "BLUE ESCORT 1-1",
+        "BLUE ESCORT 1-2",
+        "BLUE ESCORT 1-3",
+        "BLUE ESCORT 1-4",
+        "BLUE ESCORT 1-5",
+        "BLUE ESCORT 1-6",
+        "BLUE ESCORT 1-7",
+        "BLUE ESCORT 1-8"
+      ]
+    },
+    {
+      "side": "Blue",
+      "name": "BLUE CARRIER GROUP 2",
+      "leader": "BLUE CARRIER 2",
+      "members": [
+        "BLUE CARRIER 2",
+        "BLUE ESCORT 2-1",
+        "BLUE ESCORT 2-2",
+        "BLUE ESCORT 2-3",
+        "BLUE ESCORT 2-4",
+        "BLUE ESCORT 2-5",
+        "BLUE ESCORT 2-6",
+        "BLUE ESCORT 2-7",
+        "BLUE ESCORT 2-8"
+      ]
+    },
+    {
+      "side": "Blue",
+      "name": "BLUE NORTH SURFACE GROUP",
+      "leader": "BLUE NORTH SURFACE 1",
+      "members": [
+        "BLUE NORTH SURFACE 1",
+        "BLUE NORTH SURFACE 2",
+        "BLUE NORTH SURFACE 3",
+        "BLUE NORTH SURFACE 4"
+      ]
+    },
+    {
+      "side": "Blue",
+      "name": "BLUE SOUTH SURFACE GROUP",
+      "leader": "BLUE SOUTH SURFACE 1",
+      "members": [
+        "BLUE SOUTH SURFACE 1",
+        "BLUE SOUTH SURFACE 2",
+        "BLUE SOUTH SURFACE 3",
+        "BLUE SOUTH SURFACE 4"
+      ]
+    },
+    {
+      "side": "Red",
+      "name": "RED PORT GROUP 1",
+      "leader": "RED CARRIER 1",
+      "members": [
+        "RED CARRIER 1",
+        "RED MOORED ESCORT 1-1",
+        "RED MOORED ESCORT 1-2",
+        "RED MOORED ESCORT 1-3",
+        "RED MOORED ESCORT 1-4",
+        "RED MOORED ESCORT 1-5",
+        "RED MOORED ESCORT 1-6"
+      ]
+    },
+    {
+      "side": "Red",
+      "name": "RED PORT GROUP 2",
+      "leader": "RED CARRIER 2",
+      "members": [
+        "RED CARRIER 2",
+        "RED MOORED ESCORT 2-1",
+        "RED MOORED ESCORT 2-2",
+        "RED MOORED ESCORT 2-3",
+        "RED MOORED ESCORT 2-4",
+        "RED MOORED ESCORT 2-5",
+        "RED MOORED ESCORT 2-6"
+      ]
+    }
+  ]
+}
