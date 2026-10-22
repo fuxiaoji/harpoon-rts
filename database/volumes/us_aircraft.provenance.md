@@ -142,3 +142,11 @@ Aviation 1955–Present, 1 Dec 25 Digital Update）。
   引擎通用传感器与武器类别，未逐项建立 34 套专用雷达/挂载。
 - `us_aim120` 的 30 nmi 是任务书指定值，与书内 60/44 nmi 不一致；如果后续要
   严格按书，可改为 60（AIM-120D）或 44（AIM-120C-7）。
+
+## 2026-10-22 调整：us_f35c AIM-120 载弹量
+
+`us_f35c` 的 AIM-120 由每挂点 1 枚改为每挂点 2 枚（总 4 枚），对应 F-35
+标准的 4 枚内埋 BVR 弹空优构型；其余字段不变。这是虚构 2026 年载弹假设，
+非数据书原文（原书仅列 2×AIM-120）。同步应用于
+`database/consolidated.json`。改动动机：近岸航母编队战（csg_littoral）
+平衡校准，见该剧本与 `us_aircraft_mission_fits.provenance.md` 同日记录。

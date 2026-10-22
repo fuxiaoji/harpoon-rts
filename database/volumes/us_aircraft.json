@@ -77,7 +77,7 @@
       "sensors": ["radar_air_med", "esm_std", "visual"],
       "weapons": [
         {"weapon": "us_aim9x", "mounts": 2, "ammo": 1},
-        {"weapon": "us_aim120", "mounts": 2, "ammo": 1},
+        {"weapon": "us_aim120", "mounts": 2, "ammo": 2},
         {"weapon": "us_gbu31", "mounts": 2, "ammo": 1}
       ],
       "chaff": 30, "decoys": 15, "endurance_s": 6331

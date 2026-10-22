@@ -26,7 +26,7 @@
           "count": 4
         },
         {
-          "class": "cn_z18j",
+          "class": "cn_kj600",
           "count": 3
         },
         {
@@ -48,7 +48,7 @@
           "count": 4
         },
         {
-          "class": "cn_z18j",
+          "class": "cn_kj600",
           "count": 3
         },
         {
@@ -58,11 +58,11 @@
       ],
       "CVN-78 FORD": [
         {
-          "class": "us_f18e",
+          "class": "us_f18e_b",
           "count": 22
         },
         {
-          "class": "us_f18e_asm",
+          "class": "us_f18e_lracm",
           "count": 8
         },
         {
@@ -84,12 +84,16 @@
       ],
       "CVN-68 NIMITZ": [
         {
-          "class": "us_f18e",
-          "count": 24
+          "class": "us_f18e_b",
+          "count": 14
         },
         {
-          "class": "us_f18e_asm",
+          "class": "us_f18e_lracm",
           "count": 8
+        },
+        {
+          "class": "us_f35c",
+          "count": 10
         },
         {
           "class": "us_e2d",
@@ -27850,7 +27854,7 @@
       "class": "cn_093a",
       "name": "BLUE SSN-1",
       "pos": [
-        408.4,
+        340.4,
         364.0
       ],
       "course_deg": 90
@@ -27860,7 +27864,7 @@
       "class": "cn_093a",
       "name": "BLUE SSN-2",
       "pos": [
-        412.4,
+        344.4,
         352.0
       ],
       "course_deg": 90
@@ -27870,14 +27874,14 @@
       "class": "cn_093a",
       "name": "BLUE SSN-3",
       "pos": [
-        408.4,
+        340.4,
         340.0
       ],
       "course_deg": 90
     },
     {
       "side": "Blue",
-      "class": "cn_z18j",
+      "class": "cn_kj600",
       "name": "BLUE AEW-1",
       "pos": [
         268.4,
@@ -27982,7 +27986,7 @@
       "class": "us_virginia",
       "name": "RED SSN-1",
       "pos": [
-        304.7,
+        372.7,
         340.0
       ],
       "course_deg": 270
@@ -27992,7 +27996,7 @@
       "class": "us_virginia",
       "name": "RED SSN-2",
       "pos": [
-        300.7,
+        368.7,
         328.0
       ],
       "course_deg": 270
@@ -28002,7 +28006,7 @@
       "class": "us_virginia",
       "name": "RED SSN-3",
       "pos": [
-        304.7,
+        372.7,
         316.0
       ],
       "course_deg": 270
@@ -28018,7 +28022,7 @@
     },
     {
       "side": "Red",
-      "class": "us_f18e",
+      "class": "us_f18e_b",
       "name": "RED CAP-1",
       "pos": [
         410.7,
@@ -28027,7 +28031,7 @@
     },
     {
       "side": "Red",
-      "class": "us_f18e",
+      "class": "us_f18e_b",
       "name": "RED CAP-2",
       "pos": [
         410.7,

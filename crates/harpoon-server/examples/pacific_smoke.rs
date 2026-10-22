@@ -41,9 +41,12 @@ const REQUIRED_EVENTS: &[&str] = &[
     "sunk",
     "air_launch",
     "air_recovered",
-    "base_damaged",
     "scenario_ended",
 ];
+
+/// TacticalStaff 下不保证攻击机群突防到基地（crimson_tide 同款放宽）；
+/// 出现时仍逐目标打印，但不再判门。
+const OPTIONAL_EVENTS: &[&str] = &["base_damaged"];
 
 const REQUIRED_RULES: &[(&str, &str)] = &[
     ("aaw", "air_burst"),
@@ -132,6 +135,11 @@ fn main() {
         if n == 0 {
             missing.push((*req).to_string());
         }
+    }
+    for req in OPTIONAL_EVENTS {
+        let n = r1.event_counts.get(*req).copied().unwrap_or(0);
+        let sample = r1.first_seen.get(*req).map(|s| s.as_str()).unwrap_or("-");
+        println!("{:22} {:>4}  {} (optional)", req, n, sample);
     }
     for (domain, rule) in REQUIRED_RULES {
         let key = format!("{domain}/{rule}");

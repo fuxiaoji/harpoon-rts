@@ -763,6 +763,28 @@ fn trace(w: &mut World, id: EntityId, rule: &str, detail: serde_json::Value) {
         side.map(Visibility::Side).unwrap_or(Visibility::Referee),
     );
 }
+
+/// Bound adjudication identity strings. Saturation salvos and multi-generation
+/// secondary explosions compound identity chains (`a:initial_secondary:...`);
+/// the full chain otherwise lands in resolved_hits keys, batch ids and every
+/// trace payload, reaching megabyte strings per roll. Shorten once at each hit
+/// entry point: identity stays deterministic (prefix + full-string FNV-1a) so
+/// RNG derives and dedup keys remain reproducible.
+fn short_tag(s: &str) -> String {
+    if s.len() <= 96 {
+        return s.to_string();
+    }
+    let mut h: u64 = 0xcbf2_9ce4_8422_2325;
+    for b in s.as_bytes() {
+        h ^= u64::from(*b);
+        h = h.wrapping_mul(0x100_0000_01b3);
+    }
+    let mut cut = 64;
+    while !s.is_char_boundary(cut) {
+        cut -= 1;
+    }
+    format!("{}#{h:016x}", &s[..cut])
+}
 fn die(w: &mut World, id: EntityId, r: &mut Rng, sides: u8, identity: &str, label: &str) -> u8 {
     let roll = (r.next_f64() * sides as f64) as u8 + 1;
     trace(
@@ -857,11 +879,11 @@ pub fn queue_with_parameters(
     if !w.entity(target).is_some_and(|t| t.alive) {
         return;
     }
-    let identity = origin.unwrap_or_else(|| {
+    let identity = short_tag(&origin.unwrap_or_else(|| {
         let seq = w.rules.manual_sequences.entry(target).or_default();
         *seq += 1;
         format!("manual:{}:{}:{}", w.tick, target.0, *seq)
-    });
+    }));
     let key = format!("{}:{identity}", target.0);
     if !w.rules.resolved_hits.insert(key) {
         return;
@@ -919,6 +941,7 @@ fn queue_secondary(w: &mut World, t: &Entity, dp: f64, flood: bool, identity: St
     if dp <= 0.0 {
         return;
     }
+    let identity = short_tag(&identity);
     let Some(mut def) = w.db.weapons.values().next().cloned() else {
         return;
     };
@@ -1262,11 +1285,12 @@ fn resolve(w: &mut World, mut hits: Vec<Hit>) {
             continue;
         }
         let total: f64 = hs.iter().map(|h| h.dp).sum();
-        let batch_id = hs
-            .iter()
-            .map(|h| h.hit.identity.as_str())
-            .collect::<Vec<_>>()
-            .join("|");
+        let batch_id = short_tag(
+            &hs.iter()
+                .map(|h| h.hit.identity.as_str())
+                .collect::<Vec<_>>()
+                .join("|"),
+        );
         let mut suppress = BTreeSet::new();
         for h in hs {
             let spec = weapon_spec(&h.hit.weapon);
@@ -1495,6 +1519,7 @@ fn resolve(w: &mut World, mut hits: Vec<Hit>) {
 
 /// §8.1.5: half the source airframe critical count; no ordinary DP, no automatic fire.
 pub fn intercept_fragments(w:&mut World,target:EntityId,missile:&WeaponDef,identity:String)->Result<(),String> {
+    let identity = short_tag(&identity);
     let Some(spec)=missile.rule_data.clone().or_else(||weapon(&missile.id).cloned()) else {
         return Err("8.1.5: missile airframe critical notation not verified".into());
     };

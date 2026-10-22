@@ -35,6 +35,42 @@
       "chaff": 30,
       "decoys": 15,
       "endurance_s": 7004
+    },
+    "us_f18e_lracm": {
+      "id": "us_f18e_lracm",
+      "name": "F/A-18E/F Super Hornet (LRASM strike fit)",
+      "kind": "Aircraft",
+      "hp": 29,
+      "max_speed_kts": 920,
+      "cruise_speed_kts": 460,
+      "turn_rate_deg_s": 15,
+      "rcs": "Small",
+      "vp_value": 16,
+      "sensors": [
+        "radar_air_med",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "us_aim9x",
+          "mounts": 1,
+          "ammo": 2
+        },
+        {
+          "weapon": "us_aim120",
+          "mounts": 1,
+          "ammo": 2
+        },
+        {
+          "weapon": "us_agm158c",
+          "mounts": 1,
+          "ammo": 2
+        }
+      ],
+      "chaff": 30,
+      "decoys": 15,
+      "endurance_s": 7004
     }
   },
   "weapons": {},
