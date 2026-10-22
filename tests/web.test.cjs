@@ -4,6 +4,21 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { translateText } = require('../web/i18n.js');
 
+test('individual aircraft recall uses the individual order without recalling nearby patrols',()=>{
+  const app=fs.readFileSync(path.join(__dirname,'../web/app.js'),'utf8');
+  assert.match(app,/unit.kind === 'Aircraft' \? 'return_to_base' : 'recover_aircraft'/);
+  assert.equal(translateText('RETURN TO BASE','zh-CN'),'单机返航');
+});
+
+test('AI orders have their own log filter and stay visible in important reports',()=>{
+  const app=fs.readFileSync(path.join(__dirname,'../web/app.js'),'utf8');
+  const html=fs.readFileSync(path.join(__dirname,'../web/command.html'),'utf8');
+  const css=fs.readFileSync(path.join(__dirname,'../web/style.css'),'utf8');
+  assert.match(app,/includes\(event.domain\)\) return 'tactical'/);
+  assert.match(html,/data-log-filter="tactical"/);
+  assert.doesNotMatch(css,/data-filter="important"\]\s+\[data-category="tactical"/);
+});
+
 test('language adapter translates dynamic presentation without changing numeric values', () => {
   assert.equal(translateText('NEWEST FIRST · 37 EVENTS', 'zh-CN'), '最新在前 · 37 条记录');
   assert.equal(translateText('12 KT · 5 NM', 'zh-CN'), '12 节 · 5 海里');

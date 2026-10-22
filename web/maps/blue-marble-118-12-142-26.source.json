@@ -1,0 +1,16 @@
+{
+  "dataset": "NASA Blue Marble Next Generation",
+  "imagery_date": "2004-08",
+  "request": "https://gibs.earthdata.nasa.gov/wms/epsg4326/best/wms.cgi?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&LAYERS=BlueMarble_NextGeneration&STYLES=&SRS=EPSG:4326&BBOX=118,12,142,26&WIDTH=2400&HEIGHT=1600&FORMAT=image/jpeg",
+  "bbox_west_south_east_north": [
+    118,
+    12,
+    142,
+    26
+  ],
+  "file": "blue-marble-118-12-142-26.jpg",
+  "sha256": "5501af5381eb24479493b31541f7e7c3ac2b9ae5c97fbfa92a051e845fceaeea",
+  "bytes": 74166,
+  "purpose": "Correctly georeferenced game theater basemap",
+  "attribution": "NASA GIBS / MODIS / NASA Earth Observatory"
+}

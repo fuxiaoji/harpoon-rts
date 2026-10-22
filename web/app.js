@@ -352,6 +352,9 @@
     weaponById: new Map(),
     sensorById: new Map(),
     selectedUnitId: null,
+    selectedUnitIds: new Set(),
+    commandMode: 'browse',
+    multiSelect: false,
     selectedContactId: null,
     fireWeaponId: null,
     fireOptionsKey: null,
@@ -533,6 +536,7 @@
       const db = await requestJson('/api/db');
       if (!isObject(db)) return;
       state.db = db;
+      window.HarpoonNames?.register(db);
       state.platformById = new Map();
       state.platformByName = new Map();
       state.weaponById = new Map();
@@ -814,6 +818,8 @@
   function resetRuntime() {
     state.observation = null;
     state.selectedUnitId = null;
+    state.selectedUnitIds.clear();
+    state.commandMode = 'browse';
     state.selectedContactId = null;
     state.fireWeaponId = null;
     state.fireOptionsKey = null;
@@ -845,7 +851,13 @@
     if (!isObject(obs)) return;
     if (obs.your_side && obs.your_side !== state.side) return;
 
-    const previous = state.observation;
+    let previous = state.observation;
+    // A restored game may use the same scenario/seed at an earlier tick.
+    // Ignore late frames from an older session, but reset UI on a newer one.
+    if(previous && obs.session_revision && previous.session_revision){
+      if(Number(obs.session_revision)<Number(previous.session_revision))return;
+      if(Number(obs.session_revision)>Number(previous.session_revision)){resetRuntime();previous=null;}
+    }
     if (
       previous
       && previous.scenario_id === obs.scenario_id
@@ -857,6 +869,12 @@
     }
 
     state.observation = obs;
+    const dbSession = `${obs.session_revision || ''}:${obs.scenario_id || ''}:${obs.rules_profile || 'rts-legacy-v1'}`;
+    if (state.dbSession !== dbSession && !state.dbRefreshPending) {
+      state.dbSession = dbSession;
+      state.dbRefreshPending = true;
+      void loadDatabase().finally(() => { state.dbRefreshPending = false; });
+    }
     if (obs.scenario_id) {
       state.scenarioId = obs.scenario_id;
       if (dom.scenarioSelect.value !== obs.scenario_id) {
@@ -887,6 +905,7 @@
   function reconcileSelection(obs) {
     const units = Array.isArray(obs.units) ? obs.units : [];
     const contacts = Array.isArray(obs.contacts) ? obs.contacts : [];
+    state.selectedUnitIds = new Set([...state.selectedUnitIds].filter(id=>units.some(u=>Number(u.id)===id)));
 
     if (state.selectedUnitId !== null && !units.some((u) => Number(u.id) === state.selectedUnitId)) {
       state.selectedUnitId = null;
@@ -903,6 +922,20 @@
       ? state.observation.units
       : [];
     return units.find((u) => Number(u.id) === state.selectedUnitId) || null;
+  }
+  function selectUnits(ids) {
+    const own = new Set((state.observation?.units || []).filter(u=>!['Missile','Torpedo'].includes(u.kind)).map(u=>Number(u.id)));
+    state.selectedUnitIds = new Set(ids.map(Number).filter(id=>own.has(id)));
+    state.selectedUnitId = [...state.selectedUnitIds].at(-1) ?? null;
+    state.fireOptionsKey = null;
+    renderSidebar();
+  }
+  function selectUnit(id,additive=false) {
+    const unit=state.observation?.units?.find(u=>Number(u.id)===Number(id));
+    if(unit&&['Missile','Torpedo'].includes(unit.kind)){state.selectedUnitId=Number(id);state.selectedUnitIds.clear();state.fireOptionsKey=null;renderSidebar();return;}
+    const ids=additive?new Set(state.selectedUnitIds):new Set();
+    if(additive&&ids.has(Number(id)))ids.delete(Number(id));else ids.add(Number(id));
+    selectUnits([...ids]);
   }
 
   function selectedContact() {
@@ -936,7 +969,8 @@
 
   function weaponName(id) {
     const def = weaponDefinition(id);
-    return def && def.name ? def.name : titleCaseWords(id || 'Weapon');
+    const original=def && def.name ? def.name : titleCaseWords(id || 'Weapon');
+    return window.HarpoonNames?.name('weapon',id,original)||original;
   }
 
   function sensorName(id) {
@@ -946,8 +980,10 @@
 
   function aircraftName(id) {
     const def = state.platformById.get(String(id));
-    return def && def.name ? def.name : titleCaseWords(id || 'Aircraft');
+    const original=def && def.name ? def.name : titleCaseWords(id || 'Aircraft');
+    return window.HarpoonNames?.name('platform',id,original)||original;
   }
+  function unitName(unit) {return window.HarpoonNames?.unit(unit)||unit?.name||`#${unit?.id}`;}
 
   function unitKindCode(unit) {
     const classId = String(unit.class || '').toLowerCase();
@@ -1010,6 +1046,7 @@
 
   function updateMapBrief(obs) {
     window.HarpoonTheater?.renderHUD(obs);
+    window.HarpoonAiHealth?.render(obs);
     if (dom.scoreStrip) {
       const victory = obs && obs.victory;
       dom.scoreStrip.hidden = !victory;
@@ -1053,6 +1090,11 @@
         ? ''
         : 'Awaiting deployment orders.');
     dom.mapDesc.textContent = description || 'Double-blind tactical picture.';
+    if (obs?.exercise) {
+      dom.mapDesc.textContent = obs.exercise.locked
+        ? battleText('警戒锁定：日常巡逻与传感器运行；首次发现来袭导弹或遭受攻击后开放主动命令。','ALERT LOCK: routine patrol/sensors continue; active orders unlock on observed missiles or a hostile hit.')
+        : battleText('虚构演习：按航母、机场与港口目标损伤及保存/反击成果计分；未知损伤不按满血或摧毁计算。','FICTIONAL EXERCISE: named carrier/facility damage and force preservation/counterstrike decide the result; unknown damage remains unknown.');
+    }
     dom.mapDesc.title = description;
 
     if (!obs) {
@@ -1067,6 +1109,7 @@
     const blueJam = Math.round(clamp(numberOr(jam[0], 0), 0, 1) * 100);
     const redJam = Math.round(clamp(numberOr(jam[1], 0), 0, 1) * 100);
     dom.weatherChips.innerHTML = [
+      `<span class="wx-chip" title="${obs.rules_profile === 'hv2026-rts-v3' ? battleText('航空勤务、雷达及防空来源子集；未核型号阻断，全书未完成', 'Source-backed aviation/radar/AAW subset; unverified fits blocked, full rules incomplete') : obs.rules_profile === 'hv2026-rts-v2' ? battleText('新版损伤链验收中；规则录入尚未覆盖全书', 'New damage rules under validation; full rulebook coverage remains incomplete') : battleText('历史规则版本，保留原局结算', 'Historical rules preserved for this game')}">${obs.rules_profile === 'hv2026-rts-v3' ? 'HV2026 · RTS v3' : obs.rules_profile === 'hv2026-rts-v2' ? 'HV2026 · RTS v2' : 'RTS · legacy v1'}</span>`,
       `<span class="wx-chip">VIS ${visibility === null ? '—' : fmtRange(visibility)} NM</span>`,
       `<span class="wx-chip">${dayNight}</span>`,
       `<span class="wx-chip">JAM B${blueJam} / R${redJam}</span>`,
@@ -1101,7 +1144,7 @@
       ? window.HarpoonTheater?.reason(result.reason) || result.reason
       : 'Scenario complete.';
     const killLine = result && Number.isFinite(Number(result.blue_kills)) && Number.isFinite(Number(result.red_kills))
-      ? `  ·  KILLS BLUE ${fmtInt(result.blue_kills)} / RED ${fmtInt(result.red_kills)}`
+      ? `  ·  LOSSES BLUE ${fmtInt(result.red_kills)} / RED ${fmtInt(result.blue_kills)}`
       : '';
     dom.outcomeVp.textContent = result
       ? `VP BLUE ${fmtRange(result.vp_blue)}  ·  RED ${fmtRange(result.vp_red)}${killLine}${playerWon ? '  ·  COMMAND OBJECTIVE MET' : ''}`
@@ -1286,16 +1329,23 @@
 
   function renderNavigation(unit, obs) {
     const friendlyHtml = (obs?.units || []).filter(u => !['Missile', 'Torpedo'].includes(u.kind)).map(u =>
-      `<button type="button" data-select-unit="${Number(u.id)}" aria-pressed="${Number(u.id) === state.selectedUnitId}">${escapeHtml(u.name || `#${u.id}`)}</button>`).join('');
+      `<button type="button" data-select-unit="${Number(u.id)}" title="${escapeHtml(u.name || '')}" aria-pressed="${state.selectedUnitIds.has(Number(u.id))}">${escapeHtml(unitName(u))}${u.manual_control ? ' · '+battleText('人工','Manual') : ''}</button>`).join('');
     const contactHtml = (obs?.contacts || []).map(c =>
       `<button type="button" data-select-contact="${Number(c.id)}" title="${escapeHtml(contactTrack(c).explanation)}" aria-pressed="${Number(c.id) === state.selectedContactId}">C${c.id} · ${escapeHtml(categoryInfo(c.category).label)}${contactTrack(c).coasting ? ` · ${escapeHtml(contactTrack(c).label)}` : ''}</button>`).join('');
-    const friendlyKey = JSON.stringify([state.selectedUnitId, ...(obs?.units || []).map(u => [u.id,u.name])]);
+    const friendlyKey = JSON.stringify([[...state.selectedUnitIds], window.HarpoonI18n?.language, ...(obs?.units || []).map(u => [u.id,u.name,u.manual_control])]);
     const contactKey = JSON.stringify([state.selectedContactId, window.HarpoonI18n?.language, ...(obs?.contacts || []).map(c => [c.id,c.category,contactTrack(c).label])]);
     if ($('friendly-list').dataset.renderKey !== friendlyKey) { $('friendly-list').innerHTML = friendlyHtml; $('friendly-list').dataset.renderKey = friendlyKey; }
     if ($('contact-list').dataset.renderKey !== contactKey) { $('contact-list').innerHTML = contactHtml; $('contact-list').dataset.renderKey = contactKey; }
     $('nav-inputs').hidden = !unit;
     renderMissionsPanel(obs);
     if (!unit) return;
+    if($('nav-inputs').dataset.unit!==String(unit.id)) {
+      $('nav-inputs').dataset.unit=String(unit.id);
+      $('nav-speed').value=unit.ordered_speed_kts??unit.speed_kts??0;
+      $('nav-course').value=unit.ordered_course_deg??unit.course_deg??0;
+      $('nav-depth').value=unit.depth_m??0;
+      $('nav-altitude').value=unit.altitude_m??0;
+    }
     const platform = platformForUnit(unit);
     $('nav-speed').max = platform?.max_speed_kts || 1000;
     $('nav-depth').max = platform?.max_depth_m || 250;
@@ -1304,9 +1354,14 @@
     for (const button of $('nav-controls').querySelectorAll('[data-nav]')) {
       const action = button.dataset.nav;
       button.disabled = !!obs?.over || (action === 'depth' && unit.kind !== 'Sub')
+        || (['radar-on','radar-off','throttle','jamming','manual-flight','asw-relocate'].includes(action) && !(obs.control_version>=2))
+        || (action === 'throttle' && !unit.flight_profile)
+        || (action === 'jamming' && !unit.offensive_jammer)
         || (action === 'altitude' && unit.kind !== 'Aircraft')
+        || (['manual-flight','asw-relocate'].includes(action) && unit.kind !== 'Aircraft')
         || (action.startsWith('sonar') && !unit.sensors?.some(s => s.sensor.startsWith('sonar_a')));
     }
+    for(const option of $('nav-jamming').options)option.disabled=(option.value==='standoff'&&!unit.offensive_jammer?.standoff)||(option.value==='spot'&&!unit.offensive_jammer?.spot_targets);
   }
 
   function renderUnitDetails(unit, obs) {
@@ -1317,11 +1372,14 @@
     const platform = platformForUnit(unit);
 
     dom.unitKindBadge.textContent = unitKindCode(unit);
-    dom.unitName.textContent = unit.name || `Unit #${unit.id}`;
+    dom.unitName.textContent = unitName(unit);
     dom.unitName.title = unit.name || '';
-    dom.unitClass.textContent = platform && platform.name ? platform.name : titleCaseWords(unit.class || unit.kind || 'Unit');
+    dom.unitClass.textContent = window.HarpoonNames?.name('platform',unit.class,platform?.name || unit.class) || platform?.name || unit.class;
     dom.unitClass.title = unit.class || '';
     dom.unitId.textContent = `#${unit.id}`;
+    let navInfo=$('unit-navigation');if(!navInfo){navInfo=document.createElement('p');navInfo.id='unit-navigation';navInfo.style.cssText='font:12px/1.6 "Microsoft YaHei",sans-serif;color:#a9cddd';dom.unitContent.append(navInfo);}
+    const station=unit.navigation?.station,leader=station&&(obs?.units||[]).find(u=>Number(u.id)===Number(station.leader));
+    navInfo.textContent=(unit.manual_control?battleText('人工接管','Manual control'):battleText('允许AI辅助','AI permitted'))+' · '+(station?battleText(`跟随 ${leader?unitName(leader):'#'+station.leader}，相对方位${fmt1(station.bearing_rel_deg)}° / ${fmt1(station.distance_nm)}海里`,`Following ${leader?unitName(leader):'#'+station.leader}, relative ${fmt1(station.bearing_rel_deg)}° / ${fmt1(station.distance_nm)}nm`):battleText(`剩余航点${unit.navigation?.waypoints?.length||0}`,`${unit.navigation?.waypoints?.length||0} remaining waypoints`))+(unit.navigation?.manual_flight?battleText(' · 手动飞行',' · Manual flight'):'');
     dom.unitSideBadge.textContent = state.side.toUpperCase();
     dom.unitSideBadge.style.color = style.hex;
 
@@ -1390,8 +1448,8 @@
     dom.btnChaff.title = unit.chaff > 0 ? `Deploy one chaff bundle (${unit.chaff} remaining)` : 'No chaff remaining';
 
     dom.btnStop.disabled = disabled;
-    dom.btnRecover.disabled = disabled || !unit.deck;
-    dom.recoverState.textContent = unit.deck ? 'FLIGHT DECK' : 'NO FLIGHT DECK';
+    dom.btnRecover.disabled = disabled || (!unit.deck && unit.kind !== 'Aircraft');
+    dom.recoverState.textContent = unit.kind === 'Aircraft' ? 'RETURN TO BASE' : unit.deck ? 'FLIGHT DECK' : 'NO FLIGHT DECK';
 
     if (unit.assigned !== null && unit.assigned !== undefined) {
       dom.assignedTarget.textContent = `DESIGNATED TARGET · C${unit.assigned}`;
@@ -1412,10 +1470,12 @@
     dom.weaponsList.innerHTML = weapons.map((mount) => {
       const ammo = numberOr(mount.ammo, 0);
       const cooldown = numberOr(mount.cooldown_s, 0);
+      const status = mount.operational === false ? battleText('失能', 'DISABLED')
+        : ammo <= 0 ? battleText('无弹', 'EMPTY') : cooldown > 0 ? `${fmt1(cooldown)}s` : 'RDY';
       return `
         <div class="weapon-row">
           <div class="weapon-name">
-            <b title="${escapeHtml(mount.weapon || '')}">${escapeHtml(mount.name || weaponName(mount.weapon))}</b>
+            <b title="${escapeHtml(`${mount.name || ''} · ${mount.weapon || ''}`)}">${escapeHtml(weaponName(mount.weapon))}</b>
             <small>${escapeHtml(mount.weapon || '')}</small>
           </div>
           <div class="weapon-stat">
@@ -1424,7 +1484,7 @@
           </div>
           <div class="weapon-stat">
             <span>CD</span>
-            <b class="${cooldown > 0 ? 'is-cooling' : ''}">${cooldown > 0 ? `${fmt1(cooldown)}s` : 'RDY'}</b>
+            <b class="${mount.operational === false || ammo <= 0 ? 'is-empty' : cooldown > 0 ? 'is-cooling' : ''}">${status}</b>
           </div>
         </div>`;
     }).join('');
@@ -1450,6 +1510,7 @@
       } else if (kind === 'SonarPassive') {
         stateLabel = 'LISTENING';
       }
+      if (sensor.operational === false) { stateLabel = battleText('失能', 'DISABLED'); online = false; }
       // 探测距离提示：对空/对海/对潜（海里），让玩家知道这个传感器管什么、看多远
       const ranges = [];
       if (numberOr(sensor.vs_air, 0) > 0) ranges.push(`空 ${fmtRange(sensor.vs_air)}NM`);
@@ -1498,6 +1559,12 @@
     const lines = [];
     const ready = Array.isArray(unit.deck.ready) ? unit.deck.ready : [];
     const cycling = Array.isArray(unit.deck.cycling) ? unit.deck.cycling : [];
+    for (const job of unit.deck.queued || []) {
+      const remaining = Math.max(0, Math.ceil(numberOr(job.launch_at, 0) - numberOr(obs?.tick, 0)));
+      lines.push(`<div class="deck-line"><span>${escapeHtml(aircraftName(job.class))}</span><b>${battleText('放飞排队','QUEUED')} · ${remaining}s</b></div>`);
+    }
+    if (unit.deck.can_launch === false) lines.push(`<span class="deck-empty">${battleText('甲板或舰体受损：暂停放飞', 'Deck or hull damage: launch unavailable')}</span>`);
+    if (unit.deck.can_recover === false) lines.push(`<span class="deck-empty">${battleText('回收设施不可用：需改降', 'Recovery unavailable: divert aircraft')}</span>`);
     for (const entry of ready) {
       if (!Array.isArray(entry)) continue;
       const cls = String(entry[0]);
@@ -1510,7 +1577,7 @@
         `<div class="deck-line"><span>${escapeHtml(aircraftName(cls))}</span>` +
         `<b>×${escapeHtml(entry[1])} READY</b>` +
         `<span style="display:flex;gap:4px;margin-left:8px">` +
-        (count > 0 && !over
+        (count > 0 && !over && unit.deck.can_launch !== false
           ? `<button class="cmd-btn" data-deck-launch="1" data-class="${escapeHtml(cls)}" data-count="${Math.min(2, count)}" data-mission="${mission}" style="font-size:8px;padding:2px 5px">${missionLabel}</button>` +
             (strike && contact
               ? `<button class="cmd-btn" data-deck-launch="1" data-class="${escapeHtml(cls)}" data-count="${Math.min(2, count)}" data-mission="strike" style="font-size:8px;padding:2px 5px">STRIKE</button>`
@@ -1555,6 +1622,33 @@
           <b class="system-value ${valueClass}">${value}</b>
         </div>`;
     }).join('');
+    if (['hv2026-rts-v2','hv2026-rts-v3'].includes(state.observation?.rules_profile) && ['Ship', 'Sub'].includes(unit.kind)) {
+      const damage = unit.functional_damage || {};
+      const fire = numberOr(damage['damage.fire_pct'], 0), flood = numberOr(damage['damage.flood_pct'], 0);
+      const notes = [];
+      if (fire || flood) notes.push(battleText(`火灾 ${fire.toFixed(1)}% · 进水 ${flood.toFixed(1)}%`, `Fire ${fire.toFixed(1)}% · Flooding ${flood.toFixed(1)}%`));
+      if (damage['damage.rudder_jammed']) notes.push(battleText('舵机卡住', 'Rudder jammed'));
+      if (damage['damage.rudder_disabled']) notes.push(battleText('舵机失灵：航速与转向受限', 'Rudder disabled: speed and turning limited'));
+      if (damage['damage.sinking']) {
+        const seconds = Math.max(0, Math.ceil(damage['damage.sink_at'] - state.observation.tick));
+        notes.push(battleText(`失去战斗力，沉没倒计时：${seconds}秒`, `Combat ineffective; sinking in ${seconds}s`));
+      } else if (damage['damage.doomed']) notes.push(battleText('耐压壳失效：浮航弃艇，等待沉没', 'Pressure hull lost: surface and abandon; sinking'));
+      if (damage['damage.flood_must_surface']) notes.push(battleText('严重进水损管未奏效：必须浮航', 'Severe flooding not controlled: must surface'));
+      if (damage['damage.dc_weapons_crew']) notes.push(battleText('武器组已转损管：停止射击', 'Weapon crews on damage control: firing stopped'));
+      if (damage['damage.magazines_flooded']) notes.push(battleText('弹药库已注水', 'Magazines flooded'));
+      if (damage['damage.aviation_stores_purged']) notes.push(battleText('航空库已惰化：不能加油挂弹', 'Aviation stores purged: refuel/rearm unavailable'));
+      const tick = numberOr(state.observation?.tick, 0);
+      if (damage['damage.bridge_until'] > tick) notes.push(battleText(`舰桥失能：${Math.ceil(damage['damage.bridge_until'] - tick)}秒后恢复降级指挥`, `Bridge disabled: degraded command in ${Math.ceil(damage['damage.bridge_until'] - tick)}s`));
+      if (damage['damage.bridge_order_delay']) notes.push(battleText('航行命令延迟6分钟', 'Navigation orders delayed6 minutes'));
+      if (notes.length) dom.systemsList.innerHTML += `<div class="deck-empty">${notes.map(escapeHtml).join('<br>')}</div>`;
+      if (!state.observation?.over && fire + flood > 0 && !damage['damage.doomed']) {
+        const actions = [];
+        if (!damage['damage.dc_weapons_crew']) actions.push(['reinforce_dc', battleText('武器组转损管（停火）', 'Weapon crews to damage control (cease fire)')]);
+        if (!damage['damage.magazines_flooded']) actions.push(['flood_magazines', battleText('弹药库注水（丢弃弹药）', 'Flood magazines (lose ammunition)')]);
+        if (unit.deck && damage['damage.aviation_fuel'] && !damage['damage.aviation_stores_purged']) actions.push(['purge_aviation', battleText('惰化航空库（停止整备）', 'Purge aviation stores (stop rearming)')]);
+        dom.systemsList.innerHTML += actions.map(([action, label]) => `<button class="cmd-btn" data-damage-control="${action}">${label}</button>`).join('');
+      }
+    }
   }
 
   function renderTargetPanel(unit, contact, obs) {
@@ -1584,9 +1678,10 @@
     const cat = categoryInfo(contact.category);
     const quality = clamp(numberOr(contact.quality, 0), 0, 1);
     const platform = platformForContact(contact);
-    const displayName = contact.class_name
+    const originalName = contact.class_name
       || (platform && platform.name)
       || cat.label;
+    const displayName = window.HarpoonNames?.text(originalName) || originalName;
     const bearingOnly = !!contact.bearing_only;
     const stale = !!contact.stale;
     const track = contactTrack(contact);
@@ -1630,8 +1725,8 @@
         'Own ordnance already targeted on this contact; use it to decide between re-attack and magazine discipline.');
     }
     dom.targetRange.textContent = range === null ? '—' : `${fmtRange(range)} NM`;
-    dom.targetCourse.textContent = fmtCourse(contact.est_course_deg);
-    dom.targetSpeed.textContent = `${fmt1(contact.est_speed_kts)} KT`;
+    dom.targetCourse.textContent = contact.motion_known === false ? battleText('跟踪中 · 待判','TRACKING · UNKNOWN') : fmtCourse(contact.est_course_deg);
+    dom.targetSpeed.textContent = contact.motion_known === false ? battleText('待判','UNKNOWN') : `${fmt1(contact.est_speed_kts)} KT`;
     dom.targetLastseen.textContent = fmtAge(contact.last_seen_s);
 
     const tags = [];
@@ -1683,7 +1778,7 @@
     const weapons = Array.isArray(unit.weapons) ? unit.weapons : [];
     const signature = `${unit.id}|${contact.id}|${weapons.map((mount) => {
       const fit = weaponCanEngage(mount.weapon, cat) ? 1 : 0;
-      return `${mount.weapon}:${numberOr(mount.ammo, 0)}:${fit}`;
+      return `${mount.weapon}:${numberOr(mount.ammo, 0)}:${mount.operational !== false}:${fit}`;
     }).join(',')}`;
 
     if (signature !== state.fireOptionsKey) {
@@ -1702,8 +1797,9 @@
         else pieces.push('EMPTY');
         if (def && Number.isFinite(Number(def.range_nm))) pieces.push(`${fmtRange(def.range_nm)} NM`);
         if (!fits) pieces.push('NO FIT');
+        if (mount.operational === false) pieces.push(battleText('失能', 'DISABLED'));
         option.textContent = pieces.join(' · ');
-        option.disabled = ammo <= 0 || !fits;
+        option.disabled = ammo <= 0 || mount.operational === false || !fits;
         dom.fireWeapon.appendChild(option);
         if (!option.disabled && !firstUsable) firstUsable = String(mount.weapon || '');
       }
@@ -1737,7 +1833,7 @@
     const fits = mount ? weaponCanEngage(mount.weapon, cat) : false;
     const range = rangeNm(unit.pos, contact.estimate);
     dom.fireWeapon.disabled = !mount || over;
-    dom.btnFire.disabled = !mount || over || numberOr(mount.ammo, 0) <= 0 || !fits;
+    dom.btnFire.disabled = !mount || over || mount.operational === false || numberOr(mount.ammo, 0) <= 0 || !fits;
 
     const notes = [];
     let warn = false;
@@ -1792,7 +1888,7 @@
   // ------------------------------------------------------------------
   async function sendCommandRaw(command, side = state.side) {
     try {
-      const result = await postJson('/api/command', { side, command });
+      const result = await postJson('/api/command', { side, command, session_revision:state.observation?.session_revision });
       return { ok: true, data: result, status: 200, message: '' };
     } catch (err) {
       return {
@@ -1967,10 +2063,10 @@
 
   async function issueRecoverAircraft() {
     const unit = selectedUnit();
-    if (!unit || !unit.deck || (state.observation && state.observation.over)) return;
+    if (!unit || (!unit.deck && unit.kind !== 'Aircraft') || (state.observation && state.observation.over)) return;
     dom.btnRecover.disabled = true;
     try {
-      await postCommand({ cmd: 'recover_aircraft', unit: Number(unit.id) }, 'RECOVER AIRCRAFT');
+      await postCommand({ cmd: unit.kind === 'Aircraft' ? 'return_to_base' : 'recover_aircraft', unit: Number(unit.id) }, 'RECOVER AIRCRAFT');
     } finally {
       dom.btnRecover.disabled = false;
       renderOrders(unit, !!(state.observation && state.observation.over));
@@ -2068,8 +2164,9 @@
     const kind = String(event.event || 'event');
     const contact = contactRef(event.contact ?? event.target_contact);
     const unit = unitRef(event.unit);
-    const shooter = event.shooter_name || unitRef(event.shooter);
-    const unitName = event.unit_name || event.base_name || null;
+    const shooter = event.shooter_name ? (window.HarpoonNames?.text(event.shooter_name)||event.shooter_name) : unitRef(event.shooter);
+    const rawName = event.unit_name || event.base_name || null;
+    const unitName = rawName ? (window.HarpoonNames?.text(rawName) || rawName) : null;
     const weapon = event.weapon ? weaponName(event.weapon) : 'Weapon';
     const side = event.side ? String(event.side).toUpperCase() : '';
 
@@ -2089,7 +2186,7 @@
       case 'contact_identified':
         return {
           headline: `CONTACT IDENTIFIED · ${contact}`,
-          detail: `Classified as ${event.class_name || 'unknown class'}${side ? ` · ${side}` : ''}`,
+          detail: `Classified as ${window.HarpoonNames?.text(event.class_name) || event.class_name || 'unknown class'}${side ? ` · ${side}` : ''}`,
           tone: 'intel',
         };
       case 'contact_lost':
@@ -2209,6 +2306,7 @@
 
   function eventCategory(event) {
     const kind = String(event?.event || '');
+    if (kind === 'rules_event' && ['tactical_ai','llm_ai'].includes(event.domain)) return 'tactical';
     if (kind === 'scenario_ended') return 'result';
     if (['contact_sank','sunk','air_shot_down','ditched','impact','critical_hit','base_damaged','base_destroyed','gun_action'].includes(kind)) return 'combat';
     if (['weapons_release','sam_shot','intercept','incoming','torpedo_detected','chaff_deployed','decoy_fooled'].includes(kind)) return 'ordnance';
@@ -2218,11 +2316,11 @@
 
   function eventPriority(event) {
     const category = eventCategory(event);
-    return category === 'result' ? 3 : category === 'combat' ? 2 : category === 'ordnance' ? 1 : category === 'ops' ? 1 : 0;
+    return category === 'result' ? 3 : ['combat','tactical'].includes(category) ? 2 : category === 'ordnance' ? 1 : category === 'ops' ? 1 : 0;
   }
 
   function applyEventFilter(filter = state.eventFilter) {
-    state.eventFilter = ['important','all','combat','detection'].includes(filter) ? filter : 'important';
+    state.eventFilter = ['important','all','combat','detection','tactical'].includes(filter) ? filter : 'important';
     dom.eventList.dataset.filter = state.eventFilter;
     document.querySelectorAll('[data-log-filter]').forEach((button) => {
       button.classList.toggle('is-active', button.dataset.logFilter === state.eventFilter);
@@ -2247,7 +2345,7 @@
         <div class="event-headline">${escapeHtml(report ? report.title : I.text(info.headline))}</div>
         <div class="event-detail">${escapeHtml(report ? report.meaning : I.text(info.detail))}</div>
         ${note ? `<div class="event-meaning">${escapeHtml(note)}</div>` : ''}
-        ${report ? `<details class="event-audit"><summary>${en ? 'Adjudication details' : '裁决详情与关键数值'}</summary><p>${escapeHtml(report.detail || (en ? 'No trace available.' : '本条格式暂未提供中文数值解释，请展开原始记录核对。'))}</p>${!en && event.detail ? `<details class="trace-raw"><summary>原始记录（英文）</summary><pre lang="en">${escapeHtml(event.detail)}</pre></details>` : ''}</details>` : ''}
+        ${report ? `<details class="event-audit"><summary>${['tactical_ai','llm_ai'].includes(event.domain) ? (en ? 'Order details' : '行动说明') : (en ? 'Adjudication details' : '裁决详情与关键数值')}</summary><p>${escapeHtml(report.detail || (en ? 'No trace available.' : '本条格式暂未提供中文数值解释，请展开原始记录核对。'))}</p>${!en && event.detail ? `<details class="trace-raw"><summary>${['tactical_ai','llm_ai'].includes(event.domain) ? '原始行动记录' : '原始记录（英文）'}</summary><pre lang="en">${escapeHtml(event.detail)}</pre></details>` : ''}</details>` : ''}
       </div>
       <span class="event-vis">${escapeHtml(I.text(eventVisibilityLabel(event)))}</span>`;
     return node;
@@ -2517,7 +2615,7 @@
 
   function zoomAt(screenX, screenY, factor) {
     const before = screenToWorld(screenX, screenY);
-    map.view.scale = clamp(map.view.scale * factor, 0.3, 32);
+    map.view.scale = clamp(map.view.scale * factor, 0.3, state.observation?.theater?.tile_layer ? 256 : 32);
     map.view.cx = before.x - (screenX - map.w / 2) / map.view.scale;
     map.view.cy = before.y + (screenY - map.h / 2) / map.view.scale;
     map.userAdjusted = true;
@@ -2590,7 +2688,7 @@
       const contact = findContactById(map.hover.id);
       if (contact) {
         const cat = categoryInfo(contact.category);
-        const name = contact.class_name || cat.label;
+        const name = window.HarpoonNames?.text(contact.class_name || cat.label) || contact.class_name || cat.label;
         const range = unit ? rangeNm(unit.pos, contact.estimate) : null;
         dom.cursorReadout.textContent = `C${contact.id} ${name.toUpperCase()}${range === null ? '' : ` · ${fmtRange(range)} NM`}`;
         return;
@@ -2599,7 +2697,7 @@
     if (map.hover && map.hover.type === 'unit') {
       const unit = (state.observation && state.observation.units || []).find((candidate) => Number(candidate.id) === map.hover.id);
       if (unit) {
-        dom.cursorReadout.textContent = `${unit.name || `UNIT #${unit.id}`}`;
+        dom.cursorReadout.textContent = unitName(unit);
         return;
       }
     }
@@ -2615,13 +2713,15 @@
     return `${sign}${n.toFixed(1)}`;
   }
 
-  function handleMapClick(screenX, screenY) {
+  function handleMapClick(screenX, screenY,additive=false) {
     const hit = pickAt(screenX, screenY);
+    if(hit?.type==='unit') {
+      const overlapping=(state.observation?.units||[]).filter(u=>{const p=screenPositionForUnit(u);return Math.hypot(p.x-screenX,p.y-screenY)<=22;}).map(u=>Number(u.id));
+      if(overlapping.length>1){window.dispatchEvent(new CustomEvent('harpoon:unit-choices',{detail:{ids:overlapping,x:screenX,y:screenY,additive:additive||state.multiSelect}}));return;}
+    }
     if (hit) {
       if (hit.type === 'unit') {
-        state.selectedUnitId = hit.id;
-        state.fireOptionsKey = null;
-        renderSidebar();
+        selectUnit(hit.id,additive||state.multiSelect);
         return;
       }
       if (hit.type === 'contact') {
@@ -2631,16 +2731,27 @@
         return;
       }
     }
-    appendWaypoint(screenToWorld(screenX, screenY));
+    if(state.commandMode==='route') {
+      const point=screenToWorld(screenX,screenY);
+      state.commandMode='browse';
+      window.dispatchEvent(new CustomEvent('harpoon:map-order-point',{detail:point}));
+      renderSidebar();
+    }
   }
 
   function setupMapInteractions() {
     const canvas = dom.mapCanvas;
+    const touches=new Map();let pinch=null;
+    const touchPair=()=>{const [a,b]=[...touches.values()];return a&&b?{x:(a.x+b.x)/2,y:(a.y+b.y)/2,d:Math.max(1,Math.hypot(a.x-b.x,a.y-b.y))}:null;};
 
     canvas.addEventListener('pointerdown', (event) => {
       if (event.button !== 0) return;
       canvas.focus({ preventScroll: true });
       const point = localPoint(event);
+      if(event.pointerType==='touch') {
+        touches.set(event.pointerId,point);
+        if(touches.size>1){pinch=touchPair();map.drag=null;canvas.classList.remove('is-dragging');return;}
+      }
       map.drag = {
         pointerId: event.pointerId,
         startX: point.x,
@@ -2648,6 +2759,8 @@
         lastX: point.x,
         lastY: point.y,
         moved: false,
+        mode:state.commandMode,
+        additive:event.shiftKey||state.multiSelect,
       };
       try {
         canvas.setPointerCapture(event.pointerId);
@@ -2658,13 +2771,15 @@
 
     canvas.addEventListener('pointermove', (event) => {
       const point = localPoint(event);
+      if(event.pointerType==='touch'&&touches.has(event.pointerId))touches.set(event.pointerId,point);
+      if(pinch){const next=touchPair();if(next){zoomAt(pinch.x,pinch.y,clamp(next.d/pinch.d,0.55,1.8));map.view.cx-=(next.x-pinch.x)/map.view.scale;map.view.cy+=(next.y-pinch.y)/map.view.scale;map.userAdjusted=true;pinch=next;}return;}
       if (map.drag && map.drag.pointerId === event.pointerId) {
         const dx = point.x - map.drag.lastX;
         const dy = point.y - map.drag.lastY;
         const totalDx = point.x - map.drag.startX;
         const totalDy = point.y - map.drag.startY;
-        if (!map.drag.moved && Math.hypot(totalDx, totalDy) > 4) map.drag.moved = true;
-        if (map.drag.moved) {
+        if (!map.drag.moved && Math.hypot(totalDx, totalDy) > (event.pointerType==='touch'?10:4)) map.drag.moved = true;
+        if (map.drag.moved && map.drag.mode!=='box') {
           map.view.cx -= dx / map.view.scale;
           map.view.cy += dy / map.view.scale;
           map.userAdjusted = true;
@@ -2680,9 +2795,11 @@
     });
 
     const endDrag = (event) => {
+      touches.delete(event.pointerId);if(pinch){if(touches.size<2)pinch=null;map.drag=null;return;}
       if (!map.drag || (event.pointerId !== undefined && event.pointerId !== map.drag.pointerId)) return;
       const point = localPoint(event);
       const wasMoved = map.drag.moved;
+      const drag = map.drag;
       map.drag = null;
       canvas.classList.remove('is-dragging');
       try {
@@ -2690,12 +2807,19 @@
       } catch {
         /* pointer may already be released */
       }
-      if (!wasMoved) handleMapClick(point.x, point.y);
+      if(wasMoved&&drag.mode==='box') {
+        const ids=(state.observation?.units||[]).filter(u=>!['Missile','Torpedo'].includes(u.kind)).filter(u=>{
+          const p=worldToScreen(u.pos.x,u.pos.y);
+          return p.x>=Math.min(drag.startX,point.x)&&p.x<=Math.max(drag.startX,point.x)&&p.y>=Math.min(drag.startY,point.y)&&p.y<=Math.max(drag.startY,point.y);
+        }).map(u=>Number(u.id));
+        state.commandMode='browse';selectUnits(drag.additive?[...state.selectedUnitIds,...ids]:ids);
+      } else if (!wasMoved) handleMapClick(point.x, point.y,event.shiftKey);
       updateHover(point.x, point.y);
     };
 
     canvas.addEventListener('pointerup', endDrag);
     canvas.addEventListener('pointercancel', () => {
+      touches.clear();pinch=null;
       map.drag = null;
       canvas.classList.remove('is-dragging');
     });
@@ -2778,7 +2902,9 @@
     ctx.clearRect(0, 0, map.w, map.h);
     drawOcean(ctx);
     window.HarpoonTheater?.drawBasemap(ctx,state.observation,worldToScreen,map.w,map.h);
+    window.HarpoonCoastlines?.draw(ctx,state.observation,worldToScreen,map.w,map.h);
     drawGrid(ctx);
+    window.HarpoonNavigation?.draw(ctx,state.observation,worldToScreen);
 
     const obs = state.observation;
     if (!obs) {
@@ -2803,6 +2929,12 @@
     drawContacts(ctx, obs, now);
     drawUnits(ctx, obs, selected, now);
     drawHoverPreview(ctx, selected);
+    window.HarpoonFleet?.draw(ctx,worldToScreen);
+    if(map.drag?.mode==='box'&&map.drag.moved) {
+      ctx.save();ctx.fillStyle='rgba(75,202,255,.12)';ctx.strokeStyle='#4bcaff';ctx.lineWidth=1.5;
+      ctx.fillRect(map.drag.startX,map.drag.startY,map.drag.lastX-map.drag.startX,map.drag.lastY-map.drag.startY);
+      ctx.strokeRect(map.drag.startX,map.drag.startY,map.drag.lastX-map.drag.startX,map.drag.lastY-map.drag.startY);ctx.restore();
+    }
     updateScaleDisplay();
   }
 
@@ -3005,7 +3137,9 @@
 
   function drawRoutes(ctx, unit) {
     if (!unit) return;
-    const route = state.routes.get(routeKey(unit.id));
+    const route = Number(state.observation?.control_version)>=3 ? unit.navigation?.waypoints||[] : state.routes.get(routeKey(unit.id));
+    const station=unit.navigation?.station,leader=station&&state.observation?.units?.find(u=>Number(u.id)===Number(station.leader));
+    if(leader){const a=screenPositionForUnit(unit),b=screenPositionForUnit(leader);ctx.save();ctx.strokeStyle='#4bcaffaa';ctx.setLineDash([3,5]);ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();ctx.restore();}
     if (!route || !route.length) return;
     const pos = map.smooth.get(`u:${unit.id}`) || unit.pos;
     const start = worldToScreen(pos.x, pos.y);
@@ -3202,7 +3336,7 @@
 
   function drawContactLabel(ctx, screen, size, contact, cat, selected, stale) {
     const quality = Math.round(clamp(numberOr(contact.quality, 0), 0, 1) * 100);
-    const className = contact.class_name ? String(contact.class_name).toUpperCase() : cat.label.toUpperCase();
+    const className = contact.class_name ? (window.HarpoonNames?.text(contact.class_name)||contact.class_name) : cat.label;
     const speed = numberOr(contact.est_speed_kts, 0);
     const line1 = `C${contact.id}  ${className}`;
     const line2Parts = [`Q${quality}`];
@@ -3260,21 +3394,24 @@
       entries.push({
         unit,
         screen,
-        selected: !!(selectedUnitInPanel && Number(selectedUnitInPanel.id) === Number(unit.id)),
+        selected: state.selectedUnitIds.has(Number(unit.id)) || !!(selectedUnitInPanel && Number(selectedUnitInPanel.id) === Number(unit.id)),
       });
     }
 
-    const detailed=entries.filter(e=>!obs.theater || e.selected || (map.hover?.type==='unit' && map.hover.id===Number(e.unit.id)));
+    // Group selection highlights symbols; full labels belong to the focus or
+    // hovered unit. A 100-unit selection must not create 100 overlapping cards.
+    const detailed=entries.filter(e=>(!obs.theater&&units.length<=24) || Number(e.unit.id)===state.selectedUnitId || (map.hover?.type==='unit' && map.hover.id===Number(e.unit.id)));
     const layouts = layoutUnitLabels(detailed);
     for (const entry of entries) {
       const layout=layouts.get(Number(entry.unit.id));
-      if(obs.theater && !layout) drawCompactUnit(ctx,entry.unit,entry.screen,style);
+      if(!layout) drawCompactUnit(ctx,entry.unit,entry.screen,style,entry.selected);
       else drawUnit(ctx, entry.unit, entry.screen, style, entry.selected, now, layout);
     }
   }
 
-  function drawCompactUnit(ctx,unit,screen,style) {
+  function drawCompactUnit(ctx,unit,screen,style,selected=false) {
     const angle=numberOr(unit.course_deg)*Math.PI/180;
+    if(selected){ctx.save();ctx.strokeStyle=style.hex;ctx.lineWidth=1.6;ctx.beginPath();ctx.arc(screen.x,screen.y,11,0,Math.PI*2);ctx.stroke();ctx.restore();}
     ctx.save();ctx.translate(screen.x,screen.y);ctx.rotate(angle);
     ctx.strokeStyle=style.hex;ctx.fillStyle='rgba(75,202,255,.25)';ctx.lineWidth=1.3;
     ctx.beginPath();
@@ -3284,12 +3421,13 @@
     ctx.fill();ctx.stroke();ctx.restore();
     if(/^CV[N]?-/.test(unit.name)) {
       ctx.save();ctx.font='600 12px "Microsoft YaHei",sans-serif';ctx.textAlign='right';
-      const width=ctx.measureText(window.HarpoonI18n?.text(unit.name)||unit.name).width;
+      const label=unitName(unit);
+      const width=ctx.measureText(label).width;
       const box={x:screen.x-width-12,y:screen.y-12,w:width,h:18};
       const blocked=screenObstacles().some(o=>intersectArea(o,box)>0);
       const labelX=blocked?screen.x+12:screen.x-12;ctx.textAlign=blocked?'left':'right';
-      ctx.strokeStyle='#061420';ctx.lineWidth=4;ctx.strokeText(unit.name,labelX,screen.y+2);
-      ctx.fillStyle=style.hex;ctx.fillText(unit.name,labelX,screen.y+2);ctx.restore();
+      ctx.strokeStyle='#061420';ctx.lineWidth=4;ctx.strokeText(label,labelX,screen.y+2);
+      ctx.fillStyle=style.hex;ctx.fillText(label,labelX,screen.y+2);ctx.restore();
     }
   }
 
@@ -3580,7 +3718,7 @@
   }
 
   function drawUnitLabel(ctx, screen, iconRadius, unit, style, selected, layout) {
-    const name = unit.name || `UNIT #${unit.id}`;
+    const name = unitName(unit);
     const speed = numberOr(unit.speed_kts, 0);
     const hp = numberOr(unit.hp, 0);
     const hpMax = Math.max(1, numberOr(unit.hp_max, 1));
@@ -3741,10 +3879,11 @@
   }
 
   function bindUi() {
-    $('nav-controls').addEventListener('click', event => {
+    const obsSupportsManualRoutes=()=>Number(state.observation?.control_version)>=3;
+    document.querySelector('.sidebar-scroll').addEventListener('click', async event => {
       const selected = event.target.closest('[data-select-unit],[data-select-contact]');
       if (selected) {
-        if (selected.dataset.selectUnit) state.selectedUnitId = Number(selected.dataset.selectUnit);
+        if (selected.dataset.selectUnit) {selectUnit(Number(selected.dataset.selectUnit),event.shiftKey||state.multiSelect);return;}
         if (selected.dataset.selectContact) state.selectedContactId = Number(selected.dataset.selectContact);
         renderSidebar(); return;
       }
@@ -3759,6 +3898,12 @@
         altitude: () => ({ cmd: 'set_altitude', altitude_m: Number($('nav-altitude').value) }),
         'sonar-on': () => ({ cmd: 'set_sonar', active: true }),
         'sonar-off': () => ({ cmd: 'set_sonar', active: false }),
+        'radar-on': () => ({cmd:'set_radar',active:true}),
+        'radar-off': () => ({cmd:'set_radar',active:false}),
+        throttle: () => ({cmd:'set_throttle',setting:$('nav-throttle').value}),
+        jamming: () => ({cmd:'set_jamming',mode:$('nav-jamming').value,contacts:$('nav-jamming').value==='spot'&&state.selectedContactId?[Number(state.selectedContactId)]:[]}),
+        'manual-flight': () => ({cmd:'retask_aircraft',mission:{mission:'recon',point:unit.pos},manual:true}),
+        'asw-relocate': () => ({cmd:'retask_aircraft',mission:{mission:'asw',area:{x:Number($('nav-x').value),y:Number($('nav-y').value)},radius_nm:1},manual:false}),
         goto: () => ({ cmd: 'goto', waypoints: [{ x: Number($('nav-x').value), y: Number($('nav-y').value) }] }),
       };
       const command = commands[action]?.();
@@ -3766,6 +3911,19 @@
       if (!command) return;
       const invalid = input.find(el => !el.checkValidity() || el.value === '');
       if (invalid) { invalid.required = true; invalid.reportValidity(); return; }
+      if(action==='speed'&&obsSupportsManualRoutes()&&window.HarpoonFleet) {
+        for(const order of window.HarpoonFleet.speedOrders(state.observation,[Number(unit.id)],command.speed_kts))if(!await postCommand(order,'ORDER'))break;
+        return;
+      }
+      if((action==='goto'||action==='course')&&obsSupportsManualRoutes()) {
+        const id=Number(unit.id);
+        if(action==='goto'){try{await window.HarpoonUI.previewNavigation(id,command.waypoints[0]);}catch(error){showToast(errorText(error),'error');return;}}
+        const orders=action==='goto'&&window.HarpoonFleet
+          ? window.HarpoonFleet.routeOrders(state.observation,[id],command.waypoints[0],false)
+          : [{cmd:'clear_station',unit:id},{cmd:'goto',unit:id,waypoints:[]},...(unit.kind==='Aircraft'?[{cmd:'retask_aircraft',unit:id,mission:{mission:'recon',point:unit.pos},manual:true}]:[]),{...command,unit:id}];
+        for(const order of orders)if(!await postCommand(order,'ORDER'))break;
+        return;
+      }
       void postCommand({ ...command, unit: Number(unit.id) }, 'ORDER');
     });
     dom.sideToggle.addEventListener('click', (event) => {
@@ -3813,6 +3971,13 @@
     dom.btnFire.addEventListener('click', () => void issueFire());
 
     // Flight-deck scramble buttons (delegated: rows re-render each frame).
+    dom.systemsList.addEventListener('click', async (event) => {
+      const button = event.target instanceof Element ? event.target.closest('[data-damage-control]') : null;
+      const unit = selectedUnit();
+      if (!button || !unit || state.observation?.over) return;
+      try { await postCommand({ cmd: 'damage_control', unit: Number(unit.id), action: button.dataset.damageControl }, button.textContent); }
+      catch (error) { showToast(String(error.message || error), 'error'); }
+    });
     dom.deckList.addEventListener('click', (event) => {
       const btn = event.target && event.target.closest
         ? event.target.closest('[data-deck-launch]')
@@ -3853,9 +4018,10 @@
 
     document.addEventListener('keydown', (event) => {
       const target = event.target;
-      const typing = target && (target.tagName === 'INPUT' || target.tagName === 'SELECT' || target.tagName === 'TEXTAREA');
-      if (typing) return;
+      const typing = target?.closest?.('input,select,textarea,[contenteditable="true"]');
+      if (typing||event.isComposing||document.querySelector('dialog[open],.operator-overlay:not([hidden])')) return;
       if (event.key === 'Escape') {
+        state.commandMode='browse';window.dispatchEvent(new CustomEvent('harpoon:cancel-map-order'));renderSidebar();
         if (state.selectedContactId !== null) {
           state.selectedContactId = null;
           renderSidebar();
@@ -3863,6 +4029,8 @@
       } else if (event.key.toLowerCase() === 'f') {
         map.userAdjusted = false;
         fitMap();
+      } else if(event.code==='Space'&&!event.repeat&&!event.ctrlKey&&!event.altKey&&!event.metaKey&&!target?.closest?.('button,a,summary,[role="button"]')) {
+        event.preventDefault();void changeGameSpeed(state.speed===0?1:0);
       }
     });
   }
@@ -4038,6 +4206,9 @@
       ? (result.reason ? (window.HarpoonTheater?.reason(result.reason) || result.reason) : battleText('想定结束', 'Scenario complete'))
       : battleText('战斗进行中；这里只显示本方确认战果与损失。','Battle in progress; only own confirmed kills and losses are shown.');
     dom.battleResultReason.textContent = reason;
+    if (over && result.scored) dom.battleResultReason.textContent += obs.exercise
+      ? battleText('；演习目标分由终局裁判结算，击落飞机不直接增加目标分。','; objective points are adjudicated at the end; aircraft kills do not directly score.')
+      : battleText('；加权分按确认分类计算，全场实际损失可能含未确认目标。','; weighted points use confirmed classifications; actual losses may include unconfirmed targets.');
     const rows = [
       [battleText('本方战果', 'OWN KILLS'),
         fmtInt(victory.own_confirmed_kills) + kindBreakdownText(victory.own_kills_by_kind)],
@@ -4045,12 +4216,12 @@
         fmtInt(victory.own_losses) + kindBreakdownText(victory.own_losses_by_kind)],
       ...(over ? [
         ...(result.scored ? [
-          [battleText('加权比分', 'WEIGHTED SCORE'),
+          [obs.exercise ? battleText('演习目标分','OBJECTIVE SCORE') : battleText('加权比分', 'WEIGHTED SCORE'),
             `B ${fmtNum(result.blue_points)} / R ${fmtNum(result.red_points)}`],
         ] : []),
-        [battleText('击杀细分 蓝方', 'BLUE KILLS BY CLASS'), kindBreakdownText(result.blue_kills_by_kind) || '—'],
-        [battleText('击杀细分 红方', 'RED KILLS BY CLASS'), kindBreakdownText(result.red_kills_by_kind) || '—'],
-        [battleText('权威击杀', 'AUTHORITATIVE KILLS'), `B ${fmtInt(result.blue_kills)} / R ${fmtInt(result.red_kills)}`],
+        [battleText('确认战果细分 蓝方', 'BLUE CONFIRMED KILLS BY CLASS'), kindBreakdownText(result.blue_kills_by_kind) || '—'],
+        [battleText('确认战果细分 红方', 'RED CONFIRMED KILLS BY CLASS'), kindBreakdownText(result.red_kills_by_kind) || '—'],
+        [battleText('全场实际损失', 'ACTUAL LOSSES'), `B ${fmtInt(result.red_kills)} / R ${fmtInt(result.blue_kills)}`],
         [battleText('VP', 'VP'), `B ${fmtRange(result.vp_blue)} / R ${fmtRange(result.vp_red)}`],
       ] : []),
     ];
@@ -4174,6 +4345,7 @@
     }
     dom.agentReport.disabled = !configured || busy || directed || state.agent.reportBusy;
     dom.agentExecute.hidden = directed || !(side && side.autonomy !== 'execute' && Array.isArray(side.last_proposals) && side.last_proposals.length > 0);
+    dom.agentExecute.disabled = busy || !!state.agent.executeBusy;
     const memoryText = (side && side.memory && side.memory.trim()) || agentText('尚无记忆。', 'No memory yet.');
     if (dom.agentMemory.textContent !== memoryText) dom.agentMemory.textContent = memoryText;
     const reports = side && Array.isArray(side.reports) ? side.reports : [];
@@ -4351,6 +4523,9 @@
   }
 
   async function executeAgentProposals() {
+    if (state.agent.executeBusy) return;
+    state.agent.executeBusy = true;
+    renderAgentPanel();
     try {
       const result = await postJson(`/api/agent/${state.side}/execute`, {});
       showToast(`AI STAFF: ${result.queued || 0} ${agentText('条命令已排队', 'ORDERS QUEUED')}`, 'ok', 4000);
@@ -4358,6 +4533,10 @@
       void refreshAgentStatus();
     } catch (err) {
       showToast(`AI STAFF: ${errorText(err)}`, 'error', 5000);
+    } finally {
+      state.agent.executeBusy = false;
+      void refreshAgentStatus();
+      renderAgentPanel();
     }
   }
 
@@ -4454,7 +4633,18 @@
 
   // Only the already-masked client observation is exposed to the training UI.
   window.HarpoonUI = {
-    snapshot: () => ({ observation: state.observation, unit: state.selectedUnitId, contact: state.selectedContactId, speed: state.speed }),
+    snapshot: () => ({ observation: state.observation, unit: state.selectedUnitId, units:[...state.selectedUnitIds], mode:state.commandMode, multi:state.multiSelect, contact: state.selectedContactId, speed: state.speed }),
+    selectUnits,
+    focusUnit:selectUnit,
+    async previewNavigation(unit,goal) {
+      const observed=state.observation,params=new URLSearchParams({side:state.side,unit:String(unit),x:String(goal.x),y:String(goal.y)});
+      const route=await requestJson('/api/navigation/preview?'+params);
+      if(route.session_revision!==observed?.session_revision||state.observation?.session_revision!==observed?.session_revision)throw Error(battleText('战局已切换，请重新规划航路。','Game changed; plot the route again.'));
+      return route;
+    },
+    setCommandMode(mode) {state.commandMode=['browse','route','box'].includes(mode)?mode:'browse';renderSidebar();},
+    setMultiSelect(on) {state.multiSelect=!!on;renderSidebar();},
+    sendCommand(command,quiet=false) {return postCommand(command,battleText('编队命令','Group order'),{quiet});},
     async adoptTraining() {
       setSide('Blue'); resetRuntime(); await loadScenarios(); restartTransport();
       await refreshState(); await syncTime();

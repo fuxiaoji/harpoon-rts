@@ -3,6 +3,15 @@ const assert = require('node:assert/strict');
 const { firingState, ruleReport, traceZh, eventNote } = require('../web/combat-help.js');
 const { translateText } = require('../web/i18n.js');
 
+test('tactical orders have bilingual explanations and never claim execution',()=>{
+  const event={domain:'tactical_ai',rule:'strike_ingress',detail:JSON.stringify({zh:'50米超低空突防',en:'50m VLow ingress'})};
+  assert.match(ruleReport(event).title,/AI.*行动与复核/);
+  assert.match(ruleReport(event).meaning,/50米/);
+  assert.match(ruleReport(event).detail,/命令.*实际/);
+  assert.match(ruleReport(event,'en').meaning,/50m VLow/);
+  assert.doesNotThrow(()=>ruleReport({...event,detail:'broken'}));
+});
+
 test('assigned targets still auto-engage with free selection off, including contact zero', () => {
   assert.match(firingState({assigned:0,fire_on:false}), /C0.*持续自动交战/);
   assert.doesNotMatch(firingState({assigned:7,fire_on:false}), /人工攻击/);
@@ -62,4 +71,12 @@ test('terminal reports explain the actual roll and decoy outcome in Chinese',()=
   const decoy=ruleReport({rule:'decoy_expired',detail:'Seduced missile reached its false aim point; original target not hit'});
   assert.equal(decoy.known,true);
   assert.match(decoy.detail,/原目标未被命中/);
+});
+
+test('structured public LLM briefs retain choices, tradeoffs and legacy free text',()=>{
+  const event={domain:'llm_ai',detail:JSON.stringify({choice:'2机返航',evidence:'燃油900秒',options:'继续或撤回',risk:'覆盖减少',check:'检查回收'})};
+  const report=ruleReport(event,'zh-CN');
+  assert.match(report.meaning,/选择：2机返航.*依据：燃油900秒.*权衡：继续或撤回.*风险：覆盖减少.*下窗检查：检查回收/);
+  assert.equal(ruleReport({domain:'llm_ai',detail:'hold current station'}).meaning,'hold current station');
+  assert.equal(ruleReport({domain:'llm_ai',detail:'{broken JSON'}).meaning,'{broken JSON');
 });

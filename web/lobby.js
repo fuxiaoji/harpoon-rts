@@ -37,11 +37,12 @@
   }
   async function load(){
     if(state.loading)return;state.loading=true;$('refresh-lobby').disabled=true;
-    const data=await Promise.allSettled([currentData(),request('/api/scenarios'),request('/api/tutorial/catalog'),request('lobby-catalog.json'),request('replays/catalog.json'),request('lobby-local.json')]);
+    const data=await Promise.allSettled([currentData(),request('/api/scenarios'),request('/api/tutorial/catalog'),request('lobby-catalog.json'),request('replays/catalog.json'),request('lobby-local.json'),request('/api/saves')]);
     if(data[1].status==='fulfilled'&&Array.isArray(data[1].value))state.scenarios=data[1].value.filter(s=>typeof s.id==='string'&&typeof s.name==='string');
     if(data[2].status==='fulfilled'&&Array.isArray(data[2].value.courses))state.courses=data[2].value.courses;
     if(data[3].status==='fulfilled')state.metadata=data[3].value.scenarios||{};
     if(data[4].status==='fulfilled')state.recordings=(data[4].value.replays||[]).filter(M.safeRecording);
+    if(data[6].status==='fulfilled')state.recordings.push(...(data[6].value.saves||[]).filter(s=>s.over&&!s.invalid).map(s=>({id:'save_'+s.id,save_id:s.id,title:s.label||s.scenario})));
     if(data[5].status==='fulfilled'){
       try{const url=new URL(data[5].value.tutorial_video?.url);if(url.protocol==='http:'&&['127.0.0.1','localhost'].includes(url.hostname)){$('tutorial-video').href=url.href;$('tutorial-video').hidden=false;}}catch{}
     }
@@ -95,7 +96,7 @@
   function renderReplays(){
     const box=$('recording-list');box.replaceChildren();
     if(!state.recordings.length){box.innerHTML=`<p class="empty-panel">${esc(t('尚未发现本地复盘档案。点击“导入 / 管理复盘”即可导入已有文件。','No local replay recording found. Choose Import / manage replays to open an existing file.'))}</p>`;return;}
-    for(const entry of state.recordings){const row=document.createElement('article');row.className='replay-entry';row.innerHTML=`<div><span class="section-label">${esc(t('已归档的对局','Archived battle'))}</span><h2>${esc(text(entry.title))}</h2><p>${esc(t('蓝方 / 红方 / 上帝视角 · 播放与事件定位','Blue / Red / God view · Playback and event navigation'))}</p><small>${esc(t('按原始观察采样回放；精度在复盘页标注。','Replays original observation samples; precision is shown in the viewer.'))}</small></div><a class="primary" href="replay.html?replay=${encodeURIComponent(entry.id)}">${esc(t('打开复盘','Open replay'))}</a>`;box.append(row);}
+    for(const entry of state.recordings){const row=document.createElement('article');row.className='replay-entry';row.innerHTML=`<div><span class="section-label">${esc(t('已归档的对局','Archived battle'))}</span><h2>${esc(text(entry.title))}</h2><p>${esc(t('蓝方 / 红方 / 上帝视角 · 播放与事件定位','Blue / Red / God view · Playback and event navigation'))}</p><small>${esc(t('按原始观察采样回放；精度在复盘页标注。','Replays original observation samples; precision is shown in the viewer.'))}</small></div><a class="primary" href="replay.html?${entry.save_id?'save='+encodeURIComponent(entry.save_id):'replay='+encodeURIComponent(entry.id)}">${esc(t('打开复盘','Open replay'))}</a>`;box.append(row);}
   }
   function render(){renderCurrent();renderOperations();renderAcademy();renderReplays();}
   function localize(){

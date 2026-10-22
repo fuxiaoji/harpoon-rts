@@ -1,0 +1,17 @@
+{
+  "provider": "EOX IT Services GmbH",
+  "dataset": "EOxCloudless Sentinel-2 2016 global mosaic",
+  "layer": "s2cloudless",
+  "matrix_set": "WGS84",
+  "license": "CC BY 4.0",
+  "capabilities_url": "https://tiles.maps.eox.at/wmts/1.0.0/WMTSCapabilities.xml",
+  "license_url": "https://cloudless.eox.at/license-non-commercial",
+  "attribution": "EOxCloudless https://cloudless.eox.at by EOX IT Services GmbH (Contains modified Copernicus Sentinel data 2016 & 2017)",
+  "source_version": "2016 mosaic; capabilities checked 2026-10-21",
+  "purpose": "Display-only online global imagery with adaptive zoom; NASA offline fallback. Not live military intelligence, coast collision geometry, bathymetry or elevation.",
+  "restrictions": "2018-2025 non-commercial layers are not enabled. This imagery is not relicensed under the repository code license. No bulk tile download or real facility layout annotation.",
+  "tile_size": 256,
+  "tile_levels_requested": [0, 13],
+  "matrix_levels_advertised": [0, 17],
+  "grid": "EPSG:4326, span=180/2^level degrees; row from north, column from west"
+}

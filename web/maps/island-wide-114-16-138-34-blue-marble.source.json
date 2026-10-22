@@ -1,0 +1,16 @@
+{
+  "source_url": "https://gibs.earthdata.nasa.gov/wms/epsg4326/best/wms.cgi?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&LAYERS=BlueMarble_NextGeneration&STYLES=&SRS=EPSG:4326&BBOX=114,16,138,34&WIDTH=3840&HEIGHT=2880&FORMAT=image/jpeg",
+  "provider": "NASA GIBS",
+  "layer": "BlueMarble_NextGeneration",
+  "imagery_date": "2004",
+  "bbox": [
+    114,
+    16,
+    138,
+    34
+  ],
+  "width": 3840,
+  "height": 2880,
+  "sha256": "045faec1fb98e442dde3504c3d5f9e98f135f06eee5dcaaba315856ec0e53c7a",
+  "purpose": "Offline display fallback; not increased native sensor resolution"
+}

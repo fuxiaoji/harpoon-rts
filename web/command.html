@@ -6,9 +6,11 @@
   <meta name="color-scheme" content="dark">
   <meta name="theme-color" content="#050d16">
   <title>HARPOON // Fleet Command</title>
-  <link rel="stylesheet" href="style.css?v=tactical-20261020-2">
-  <link rel="stylesheet" href="theater.css?v=tactical-20261020-2">
+  <link rel="stylesheet" href="style.css?v=coast-20261020-3">
+  <link rel="stylesheet" href="theater.css?v=joint-ai-20261021-1">
   <link rel="stylesheet" href="training.css?v=combat-20261018-1">
+  <link rel="stylesheet" href="fleet-command.css?v=fleet-20261022-2">
+  <script defer src="saves.js?v=20261020-2"></script>
 </head>
 <body data-side="Blue">
   <div id="app">
@@ -37,7 +39,8 @@
         <span class="field-label">TRAINING</span>
         <button id="btn-tutorial" type="button" class="pill-button" title="Start the guided tutorial" aria-label="Start the guided tutorial">TUTORIAL</button>
         <button id="btn-operator-help" type="button" class="pill-button" title="Pause and explain firing, detection and automatic actions">HOW TO PLAY</button>
-        <a id="open-replay" class="pill-button" href="replay.html" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;display:inline-flex;align-items:center">BATTLE REPLAY</a>
+        <button id="manage-saves" class="pill-button" type="button">SAVE / LOAD</button>
+        <a id="open-replay" class="pill-button" href="replay.html?current=1" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;display:inline-flex;align-items:center">BATTLE REPLAY</a>
       </div>
       <div class="topbar-block language-block" data-i18n-native>
         <label class="field-label" for="language-select">中文 / English</label>
@@ -84,7 +87,7 @@
 
     <main class="workspace">
       <section class="map-shell" id="map-shell" aria-label="Tactical map">
-        <canvas id="map-canvas" tabindex="0" aria-label="Operational map. Select a unit or contact; click open water to append a waypoint."></canvas>
+        <canvas id="map-canvas" tabindex="0" aria-label="海图：浏览默认不下令；先指定航路，再确认。Chart: browsing issues no orders; plot and confirm a route."></canvas>
 
         <div class="map-brief hud-panel">
           <div class="field-label">ACTIVE SCENARIO</div>
@@ -208,6 +211,7 @@
           </section>
           <section class="panel" id="missions-panel" aria-label="AIR MISSIONS">
             <div class="panel-head"><span class="field-label">AIR MISSIONS</span><span class="panel-tag" id="missions-count" data-i18n-native>0</span></div>
+            <details id="ai-task-health" class="ai-task-health" hidden><summary>AI任务复核</summary><div data-ai-health-body></div></details>
             <div id="missions-list" class="selection-list" aria-label="Own airborne missions"></div>
             <div class="panel-head" style="margin-top:8px"><span class="field-label">MISSION FEEDBACK</span></div>
             <div id="mission-feedback" class="selection-list" aria-label="Launch order feedback"></div>
@@ -223,6 +227,10 @@
                 <label>ALTITUDE <input id="nav-altitude" type="number" min="15" step="1" value="1000"><button type="button" data-nav="altitude">Apply</button></label>
               </div>
               <div class="nav-sonar"><span>Active sonar</span><button type="button" data-nav="sonar-on">On</button><button type="button" data-nav="sonar-off">Off</button></div>
+              <div class="nav-sonar"><span>雷达 / Radar</span><button type="button" data-nav="radar-on">On</button><button type="button" data-nav="radar-off">Off</button></div>
+              <div class="nav-sonar"><label for="nav-throttle">油门 / Throttle</label><select id="nav-throttle"><option value="cruise">巡航 / Cruise</option><option value="fmp">军推 / FMP</option><option value="reheat">加力 / Reheat</option><option value="loiter">定点留空 / Loiter</option></select><button type="button" data-nav="throttle">设定 / Set</button></div>
+              <div class="nav-sonar"><label for="nav-jamming">干扰 / Jamming</label><select id="nav-jamming"><option value="off">关 / Off</option><option value="standoff">支援 / Standoff</option><option value="escort">护航 / Escort</option><option value="spot">选中接触 / Spot selected contact</option></select><button type="button" data-nav="jamming">设定 / Set</button></div>
+              <div class="nav-sonar"><span>航空任务 / Flight task</span><button type="button" data-nav="manual-flight">手动 / Manual</button><button type="button" data-nav="asw-relocate">反潜移区 / ASW at X/Y</button></div>
               <div class="nav-point"><label>X (NM)<input id="nav-x" type="number" step="0.1" value="1"></label><label>Y (NM)<input id="nav-y" type="number" step="0.1" value="0"></label><button type="button" data-nav="goto">Go to point</button></div>
             </div>
             <div id="contact-list" class="selection-list" aria-label="CONTACT"></div>
@@ -423,6 +431,7 @@
             <button type="button" data-log-filter="all">ALL</button>
             <button type="button" data-log-filter="combat">COMBAT</button>
             <button type="button" data-log-filter="detection">DETECTION</button>
+            <button type="button" data-log-filter="tactical">AI ORDERS</button>
           </div>
           <button type="button" id="btn-results" class="log-results">RESULTS</button>
           <div class="log-meta" id="log-meta">NEWEST FIRST · 0 EVENTS</div>
@@ -451,12 +460,20 @@
       <button type="button" id="battle-result-close">CLOSE</button>
     </div>
   </dialog>
-  <script src="i18n.js?v=lobby-20261019-1" defer></script>
-  <script src="theater.js?v=rts-20261019-4" defer></script>
+  <script src="i18n.js?v=fleet-20261022-2" defer></script>
+  <script src="localized-names.js?v=fleet-20261022-2" defer></script>
+  <script defer src="basemap-index.js?v=coast-20261020-1"></script>
+  <script src="satellite-tiles.js?v=island-hot-20261021-2" defer></script>
+  <script src="theater.js?v=fleet-20261022-2" defer></script>
+  <script src="ai-supervision.js?v=ai-closure-20261021-1" defer></script>
+  <script src="coastlines.js?v=joint-ai-20261021-1" defer></script>
   <script src="aircraft-roles.js?v=theater-20261019-1" defer></script>
-  <script src="combat-help.js?v=combat-20261018-1" defer></script>
+  <script src="combat-help.js?v=fleet-20261022-2" defer></script>
   <script src="contact-track.js?v=missiles-20261019-1" defer></script>
-  <script src="app.js?v=tactical-20261020-2" defer></script>
+  <script src="navigation.js?v=20261020-2"></script>
+  <script src="app.js?v=fleet-20261022-2" defer></script>
+  <script src="fleet-command.js?v=fleet-20261022-2" defer></script>
+  <script src="fleet-watch.js?v=fleet-20261022-2" defer></script>
   <script src="training-guide.js?v=rts-20261019-2" defer></script>
   <script src="tutorial.js?v=guided-20261018-3" defer></script>
 </body>

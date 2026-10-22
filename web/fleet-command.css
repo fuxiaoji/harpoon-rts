@@ -1,0 +1,70 @@
+/* Desktop/tablet command hierarchy; phones intentionally deferred. */
+@media(min-width:768px){
+  body{overflow:hidden;font-family:"Microsoft YaHei UI","Microsoft YaHei","Segoe UI",sans-serif}
+  #app{display:grid;height:100dvh;min-height:0;grid-template-rows:auto minmax(0,1fr) 120px;overflow:hidden}
+  .workspace{display:grid;grid-template-columns:minmax(0,1fr) 350px;min-height:0}
+  .sidebar,.sidebar-scroll{min-height:0;height:100%;max-height:100%;overflow:hidden}
+  .sidebar-scroll{display:flex;flex-direction:column;overflow-y:auto;padding:10px;gap:10px}
+  .sidebar-scroll>.panel,.sidebar-scroll>.fleet-fold{flex:none;min-height:0}
+  .sidebar-scroll>.panel:first-child,.sidebar-scroll>#target-panel{min-height:0}
+  .topbar{flex-wrap:wrap;min-height:66px;padding:7px 12px;gap:7px 12px}
+  .topbar-block .field-label{font-size:10px;letter-spacing:0}
+  .panel .field-label,.panel .kicker{font-size:12px;letter-spacing:0}
+  .panel button,.panel select,.panel input,.fleet-fold>summary{min-height:40px;font-size:13px}
+  #fleet-panel{order:-100;padding:12px;background:#0a1c2b;border-color:#3d667a}
+  .fleet-heading{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+  .fleet-heading h2{font-size:17px;margin:0}.fleet-heading>span{color:#a4beca;font-size:12px}
+  .fleet-modes,.fleet-filter,.fleet-selection,.fleet-actions,.fleet-orders,.fleet-slot{display:flex;gap:6px;align-items:center;margin:7px 0}
+  .fleet-modes>button,.fleet-actions>button,.fleet-selection>button,.fleet-orders>button,.fleet-slot>button{flex:1;min-width:0;padding:5px 8px;border:1px solid #3d667a;background:#102b3b;color:#dcecf3;font-size:13px;min-height:44px;line-height:1.3}
+  .fleet-modes [aria-pressed="true"]{background:#24536a;border-color:#4bcaff;color:#fff}
+  .fleet-filter input{width:0;flex:1}.fleet-filter select{width:96px}
+  .fleet-filter input,.fleet-filter select,.fleet-slot input,.fleet-slot select{border:1px solid #3d667a;background:#071521;color:#dcecf3;padding:6px;font-family:inherit;min-height:44px}
+  #fleet-roster #friendly-list{display:grid;grid-template-columns:1fr 1fr;max-height:160px;overflow:auto;gap:5px}
+  #fleet-roster #friendly-list button{display:block;width:100%;min-height:44px;padding:7px;font:13px/1.35 "Microsoft YaHei",sans-serif;text-align:left;border:1px solid #2e4e60;background:#102635;white-space:normal;overflow-wrap:anywhere}
+  #fleet-roster [aria-pressed="true"]{border-color:#4bcaff!important;background:#205069!important;color:#fff}
+  #fleet-selection{font-size:13px;flex:1;min-width:110px;line-height:1.4}.fleet-selection>button{flex:0 1 auto}
+  .fleet-orders{flex-wrap:wrap}.fleet-orders label{display:flex;align-items:center;gap:5px;font-size:12px}.fleet-orders input{min-height:0}
+  #fleet-plot,#fleet-confirm{background:#70552e;border-color:#d5b477;color:#fff}
+  #fleet-draft{padding:9px;border:1px solid #d5b477;background:#312a1e;font-size:13px;line-height:1.6}#fleet-draft p{margin:0}
+  .fleet-groups>summary,.fleet-fold>summary{padding:11px 8px;color:#dcecf3;font-size:14px;cursor:pointer;list-style-position:inside;background:#102635;border:1px solid #345467}
+  .fleet-groups>div>button{margin:4px;padding:7px;border:1px solid #345467;min-height:44px;font-size:12px}
+  .fleet-slot{flex-wrap:wrap}.fleet-slot input{min-width:70px;width:0;flex:1}.fleet-slot select{width:48px}.fleet-slot>button{flex:0 1 auto}
+  .fleet-saved-row{display:flex;gap:5px;margin-top:5px}.fleet-saved-row button{min-height:44px;padding:7px;min-width:44px;flex:none}.fleet-saved-row button:first-child{flex:1;min-width:0;text-align:left}
+  #fleet-feedback,#fleet-control-note{color:#b6cdd8;font-size:12px;line-height:1.55;margin:8px 0 0}
+  .fleet-speed{display:flex;align-items:center;gap:6px;font-size:12px;margin:7px 0}.fleet-speed input{width:62px;background:#071521;border:1px solid #3d667a;color:#dcecf3;min-height:44px;padding:5px}.fleet-speed button{flex:1;min-height:44px}
+  .fleet-fold>.panel{margin:0;border-top:0}.fleet-fold{flex:none}
+  #fleet-watch h2{font-size:14px;margin:0 0 9px}#fleet-watch p{font-size:12px;line-height:1.6;margin:7px 0}#fleet-watch button,#fleet-watch summary{min-height:44px;padding:7px;font-size:13px;line-height:1.5}#fleet-watch details{border-top:1px solid #345467;padding-top:5px}#fleet-watch button{width:100%;text-align:left}.fleet-attention button{color:#ffcc9d;background:#35261e;border:1px solid #b17b4a}
+  #fleet-map-mode{position:absolute;left:14px;bottom:38px;max-width:calc(100% - 28px);padding:8px 12px;border:1px solid #345467;background:#071521ee;color:#c7dce7;font-size:12px;pointer-events:none;z-index:7}
+  #fleet-map-mode[data-mode="route"],#fleet-map-mode[data-mode="box"]{border-color:#d5b477;color:#ffe0a8;background:#342b1eeb}
+  #fleet-unit-choices{position:absolute;z-index:12;width:250px;max-height:70%;overflow:auto;background:#0a1c2bf5;padding:9px;border:1px solid #4bcaff;font-size:13px}#fleet-unit-choices strong{display:block;padding:5px}#fleet-unit-choices button{display:block;width:100%;padding:8px;min-height:44px;text-align:left;margin-top:4px;color:#dcecf3;background:#17384a;border:1px solid #345467}
+  .map-help{display:none}.sidebar-quick{display:none!important}
+  #contact-list{max-height:150px;overflow:auto}
+  .weapon-name small{display:none}
+  .topbar .brand{min-width:115px}.topbar .brand-copy strong{font-size:14px}
+  .speed-group button{min-height:44px}.log-dock{height:auto}
+  #mission-objective,#mission-ai{display:none}
+  .geographic-theater .map-brief{max-width:280px}.map-attribution{bottom:73px}
+  .map-tools button{min-width:44px;min-height:44px}
+}
+@media(min-width:768px) and (max-width:1100px){
+  .workspace{grid-template-columns:minmax(0,1fr) 310px}
+  #app{grid-template-rows:auto minmax(0,1fr) 100px}
+  #fleet-panel{padding:9px}.fleet-modes>button{padding:4px;font-size:12px}
+  #fleet-roster #friendly-list{max-height:130px}
+  .map-brief{max-width:245px}.map-desc{display:none}.map-legend{display:none}
+  .topbar .topbar-block:has(#btn-tutorial){display:none}.topbar .language-block{margin-left:auto}
+  .speed-group button{min-height:44px;min-width:44px}.clock-block{min-width:90px}
+}
+@media(min-width:768px) and (max-width:940px) and (orientation:portrait){
+  .workspace{grid-template-columns:1fr;grid-template-rows:minmax(220px,1fr) 36vh}
+  .map-shell{height:auto;min-height:0}.sidebar{border-top:1px solid #345467}
+  .sidebar-scroll{display:flex;height:100%;max-height:100%;overflow-y:auto;padding:9px}
+  #fleet-panel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:4px 12px}
+  .fleet-heading,.fleet-modes,.fleet-filter,#fleet-roster{grid-column:1}
+  .fleet-heading{grid-row:1}.fleet-modes{grid-row:2}.fleet-filter{grid-row:3}#fleet-roster{grid-row:4/8}
+  .fleet-selection,.fleet-actions,.fleet-orders,.fleet-speed,#fleet-draft,.fleet-groups,#fleet-feedback,#fleet-control-note{grid-column:2}
+  .fleet-selection{grid-row:1/3}.fleet-actions{grid-row:3}.fleet-orders{grid-row:4}.fleet-speed{grid-row:5}#fleet-draft{grid-row:6}#fleet-control-note{grid-row:7}.fleet-groups{grid-row:8}#fleet-feedback{grid-row:9}
+  #fleet-roster #friendly-list{max-height:140px}.fleet-selection{flex-wrap:wrap;align-content:center}
+  #fleet-selection{flex-basis:100%}.topbar{gap:5px 8px}.scenario-block{max-width:230px}
+  .split-grid{display:flex;flex-direction:column}.log-dock{height:100%;min-height:0}
+}

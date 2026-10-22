@@ -13,6 +13,7 @@ TRAINING|训练
 TUTORIAL|训练中心
 HOW TO PLAY|怎么玩
 BATTLE REPLAY|战局复盘
+SAVE / LOAD|存档 / 读档
 RETURN TO LOBBY|返回大厅
 Return to lobby|返回大厅
 Pause and explain firing, detection and automatic actions|暂停并查看开火、探测与自主行动说明
@@ -98,6 +99,8 @@ CHAFF|箔条
 STOP|停止
 ALL STOP|停止航行
 RECOVER AIRCRAFT|召回舰载机
+RETURN TO BASE|单机返航
+AI ORDERS|AI行动
 ASSIGN TARGET|指派目标
 TARGET ASSIGNED|已指派目标
 CLEAR TARGET|取消目标指派
@@ -476,6 +479,9 @@ BDA ESTIMATE|BDA 估损
   const original = new WeakMap();
   const originalAttributes = new WeakMap();
   const scenarios = {
+    csg_littoral:{title:{zh:'近岸航母编队战：菲律宾海',en:'Coastal CSG Battle: Philippine Sea'},summary:{zh:'三小时虚构近岸舰队演习，舰艇10分、潜艇5分、航空器1分。卫星影像为地理参考，海岸矢量负责避陆。',en:'Three-hour fictional coastal fleet exercise. Ships score 10, submarines 5, aircraft 1. Satellite imagery is a reference; coast vectors govern land avoidance.'}},
+    csg_grand_battle:{title:{zh:'航母编队对战',en:'CSG Grand Battle'},summary:{zh:'三小时双航母编队虚构演习，联合运用舰载机、舰艇与潜艇；按本局公开计分规则裁决。',en:'Three-hour fictional dual-carrier exercise with air, surface and submarine forces; the published scenario scoring rules apply.'}},
+    taiwan_island_exercise: {title:{zh:'台海题材·东岛警报（虚构设施演习）',en:'Island Alert: fictional Taiwan-region exercise'},summary:{zh:'真实地域底图、虚构机场港口与部署。蓝方舰队获浙沪等方向6个虚构航空站、144架岸基飞机（含30架H-6J代理）、192枚岸射巡航弹，另有多方向分遣队和8艘核潜艇支援；红方双航母编队起始停泊，日常巡逻继续，发现来袭后解锁主动指挥。六小时，以航母/设施损伤、保存力量与反击成果决胜。',en:'Real regional basemap with fictional facilities/deployment. Blue has fleet, six fictional air stations including Zhejiang/Shanghai sectors,144 shore aircraft (30 H-6J proxies),192 cruise rounds, independent naval groups and eight nuclear submarines. Red carriers start stationary; routine patrols continue and active orders unlock after an observed attack. Six-hour objective damage versus preservation/counterstrike.'}},
     dual_carrier_hotseat: { title:{zh:'双盾行动：六小时双边手操',en:'Twin Shields: six-hour hotseat'},summary:{zh:'双方自动参谋关闭，四艘航母起始停航，由玩家切换指挥。六小时虚构演习，胜负条件与区域拒止版相同。',en:'Both automated staffs off. Four carriers hold until commanded. A six-hour fictional hotseat exercise with the same denial conditions.'} },
     carrier_duel_3h: { title:{zh:'双盾行动：三小时航母决战',en:'Twin Shields: three-hour carrier decisive duel'},summary:{zh:'轻护航航母决战：四艘航母、潜艇与舰载机在前沿位置直接交战，适合观察航母受损与击沉。到期按击毁平台数决胜；大厅可配置 AI 对手与助手。',en:'Light-escort carrier duel: four carriers, submarines and air wings start close enough for a decisive engagement. Designed to show carrier damage and sinking; kill count decides at the deadline.'} },
     fleet_decisive_3h: { title:{zh:'双盾行动：三小时舰队决战',en:'Twin Shields: three-hour fleet decisive battle'},summary:{zh:'三小时纯舰队决战：不守区域，寻找并击毁敌方编队。到期按击毁平台数决胜；大厅可配置 AI 对手与半自动/全自动助手，严格双盲固定规划窗。',en:'Three-hour fleet decisive battle: no area to hold, find and destroy the enemy formation. Kills decide at the deadline; the lobby can configure an AI opponent and semi/full-auto assistant with strict double-blind fixed planning windows.'} },

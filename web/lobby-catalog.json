@@ -146,7 +146,7 @@
     },
     "carrier_duel_3h": {
       "file": "carrier_duel_3h.json",
-      "source_sha256": "8ceec3afc13a57a9f1c8a683eb394a4bcf2a0b115f2ff7db03fa53dd2ae52e00",
+      "source_sha256": "c0b94f091ecd862b7681a6d8361dd63e0cb1cd8b4bac0fc05471fe64ec764724",
       "duration_s": 10800,
       "seed": 20261019,
       "initial_units": 20,
@@ -159,7 +159,7 @@
     },
     "carrier_duel_dawn_strike": {
       "file": "carrier_duel_dawn_strike.json",
-      "source_sha256": "73b0c50b7cdb6369d7b4dfef881d519ba2272ae9d652cbbdacb8062687b74ae0",
+      "source_sha256": "2c58aece23e15c6ae1d31b4cd396a4d69d20f847a38bcc5dcb0beca1a60f972c",
       "duration_s": 18000,
       "seed": 19820614,
       "initial_units": 10,
@@ -172,7 +172,7 @@
     },
     "carrier_duel_philippine_sea": {
       "file": "carrier_duel_philippine_sea.json",
-      "source_sha256": "6cf5a4dbd5714cb6b29b8f7535166882dc66c40bd4bb2d40fd29704085aafb9f",
+      "source_sha256": "6beac39cfea69670148372eabd939933f5c0cd0c5f04c27f3903d4d1f0a7ae5b",
       "duration_s": 21600,
       "seed": 19440619,
       "initial_units": 27,
@@ -185,7 +185,7 @@
     },
     "carrier_duel_ryukyu_night": {
       "file": "carrier_duel_ryukyu_night.json",
-      "source_sha256": "2a33754fbf006bda8ea19ad6eec716cb50c9a02f00455beae626851f5d9159f2",
+      "source_sha256": "e9dd7ec7dd239d05e25e84ae252b9a3d67aefcb467a178626764c32c3fd4752e",
       "duration_s": 14400,
       "seed": 19961207,
       "initial_units": 9,
@@ -211,7 +211,20 @@
     },
     "csg_grand_battle": {
       "file": "csg_grand_battle.json",
-      "source_sha256": "6ba7a553a5c66249844900250af341b55b7ca39ad34f7835d246d0b466909d22",
+      "source_sha256": "b08900a39e4930e734f30053511429cf82c7844b9a8ab2205a5a48da2a283d74",
+      "duration_s": 10800,
+      "seed": 20261020,
+      "initial_units": 28,
+      "sides": {
+        "Blue": 15,
+        "Red": 13
+      },
+      "automated_side": null,
+      "satellite": true
+    },
+    "csg_littoral": {
+      "file": "csg_littoral.json",
+      "source_sha256": "0328b4146406cf497ab0d66361f2f4b112cd3683a65c333e4498183d66db7450",
       "duration_s": 10800,
       "seed": 20261020,
       "initial_units": 28,
@@ -224,7 +237,7 @@
     },
     "dual_carrier_denial": {
       "file": "dual_carrier_denial.json",
-      "source_sha256": "e0950d86e39f1c69cc3be13243fba4e772fddf0003a61628296e4a90f25ada08",
+      "source_sha256": "cb70c5a06eade934c7d5343e3a6d6f2ad7ba40e4d62e1b4ec20e50a7c62f0949",
       "duration_s": 7200,
       "seed": 20261019,
       "initial_units": 34,
@@ -237,7 +250,7 @@
     },
     "dual_carrier_duel": {
       "file": "dual_carrier_duel.json",
-      "source_sha256": "354feb346c34338b25ee4873ff77dc32bb873e7dea86ddd29bb1bf92139264d2",
+      "source_sha256": "a3e49338d9bd1b75ff157d810d6313312fa063749bffe3f8a37fe3dc7aae1e3f",
       "duration_s": 300,
       "seed": 20261019,
       "initial_units": 34,
@@ -250,7 +263,7 @@
     },
     "dual_carrier_hotseat": {
       "file": "dual_carrier_hotseat.json",
-      "source_sha256": "9c321a486d44a5e22470a8ff72a685678c869bdf83b26fc62303dfec80df2f36",
+      "source_sha256": "6f4c43505d5c9df4d86274d78657c1dcb6002d2acd2312e6abd4a54202447752",
       "duration_s": 21600,
       "seed": 20261019,
       "initial_units": 34,
@@ -263,7 +276,7 @@
     },
     "dual_carrier_kills": {
       "file": "dual_carrier_kills.json",
-      "source_sha256": "c6fb76b3570a4286457879c1ce9eb7638b7f73dc753731e00f13ba18ff47fe1e",
+      "source_sha256": "3a399bbb617ca6e904b84338f1d73bdf8851a35c69041bf4b030ab338b2de06e",
       "duration_s": 21600,
       "seed": 20261019,
       "initial_units": 34,
@@ -276,7 +289,7 @@
     },
     "fleet_decisive_3h": {
       "file": "fleet_decisive_3h.json",
-      "source_sha256": "5027e97338a13020bccec7786b533bc509ae75c2a13a4eac1606aa0f8f9c8d92",
+      "source_sha256": "e431bdca2e0c9a7bfcefd3782f2f76e575cbfd8d8e832e2d32eb24456148ad5e",
       "duration_s": 10800,
       "seed": 20261019,
       "initial_units": 34,
@@ -300,6 +313,19 @@
       "automated_side": null,
       "satellite": false
     },
+    "island_joint_exercise": {
+      "file": "island_joint_exercise.json",
+      "source_sha256": "f649cc803273db56c9acd9f7f4cc3efbfab47ece33dd3798211df02197d8680f",
+      "duration_s": 21600,
+      "seed": 20261021,
+      "initial_units": 77,
+      "sides": {
+        "Blue": 46,
+        "Red": 31
+      },
+      "automated_side": null,
+      "satellite": true
+    },
     "pacific_storm": {
       "file": "pacific_storm.json",
       "source_sha256": "08518acc3ca2e20cdacdfbba07d1b7e41f92cd3cfd25208abd6c5843cc734455",
@@ -312,6 +338,32 @@
       },
       "automated_side": null,
       "satellite": false
+    },
+    "taiwan_island_exercise": {
+      "file": "taiwan_island_exercise.json",
+      "source_sha256": "daaf544e4b4dc66694c7644b8435edc9e5559ed46beb4da332ce9ec7ecf716f9",
+      "duration_s": 21600,
+      "seed": 20261021,
+      "initial_units": 77,
+      "sides": {
+        "Blue": 46,
+        "Red": 31
+      },
+      "automated_side": null,
+      "satellite": true
+    },
+    "taiwan_island_opening": {
+      "file": "taiwan_island_opening.json",
+      "source_sha256": "2352e161af0d4e517cef7b58781653b99a3d7295be988ffff5f7b785c6f0e40b",
+      "duration_s": 21600,
+      "seed": 20261021,
+      "initial_units": 77,
+      "sides": {
+        "Blue": 46,
+        "Red": 31
+      },
+      "automated_side": null,
+      "satellite": true
     },
     "tattletail_1991": {
       "file": "tattletail.json",

@@ -1,0 +1,21 @@
+{
+  "dataset": "NASA Blue Marble Next Generation",
+  "imagery_date": "2004-08",
+  "request": "https://gibs.earthdata.nasa.gov/wms/epsg4326/best/wms.cgi?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&LAYERS=BlueMarble_NextGeneration&STYLES=&SRS=EPSG:4326&BBOX=118,18,134,32&WIDTH=2560&HEIGHT=2240&FORMAT=image/jpeg",
+  "bbox_west_south_east_north": [
+    118,
+    18,
+    134,
+    32
+  ],
+  "crs": "EPSG:4326",
+  "reference_lat": 25,
+  "width": 2560,
+  "height": 2240,
+  "sha256": "fa54b1e764743a14c4b46d3610b6355ac072e10c00a122926cd13f270fef8b7b",
+  "bytes": 181430,
+  "attribution": "NASA GIBS / MODIS / NASA Earth Observatory",
+  "purpose": "Fictional island exercise geographic background including Shanghai/Zhejiang; no intelligence",
+  "retrieved_on": "2026-10-21",
+  "media_use_guidance": "https://www.nasa.gov/nasa-brand-center/images-and-media/"
+}

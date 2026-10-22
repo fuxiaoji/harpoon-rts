@@ -2617,3 +2617,6 @@ select option {
 .event-list[data-filter="detection"] [data-category="ops"],
 .event-list[data-filter="detection"] [data-category="ordnance"],
 .event-list[data-filter="detection"] [data-category="result"] { display: none; }
+.event-list[data-filter="combat"] [data-category="tactical"],
+.event-list[data-filter="detection"] [data-category="tactical"],
+.event-list[data-filter="tactical"] [data-category]:not([data-category="tactical"]) { display: none; }

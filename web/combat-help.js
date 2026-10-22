@@ -110,6 +110,30 @@
     return null;
   }
   function ruleReport(event,lang='zh-CN') {
+    if(event.domain==='command') {
+      let message=String(event.detail||'');
+      if(lang!=='en')message=message.replace('set_unit_automation: Higher-level AI may issue orders again','已允许AI重新指挥此单位').replace('set_unit_automation: Manual command retained; current task and basic self-defence continue','已保留人工控制；当前任务与基本自卫继续').replace('goto: charted land blocks destination or no safe sea route within planner bounds','航路受阻：目的地位于陆地，或规划范围内没有安全海路').replace('retask_aircraft: recon','重设航空任务：侦察').replace('retask_aircraft: cap','重设航空任务：空中巡逻').replace('retask_aircraft: asw','重设航空任务：反潜搜索');
+      return {title:lang==='en'?'COMMAND · EXECUTION':'命令 · 实际执行',meaning:`${event.unit!=null?'#'+event.unit+' · ':''}${event.rule==='executed'?(lang==='en'?'Executed':'已执行'):(lang==='en'?'Rejected':'未执行')} · ${message}`,detail:lang==='en'?'Weapon releases and damage remain separate events.':'发射数量、命中与损伤仍以对应事件确认。',known:true};
+    }
+    if(event.domain==='navigation') return {title:lang==='en'?'NAVIGATION · LAND':'导航 · 陆地避碰',meaning:lang==='en'?'Stopped before crossing a charted coast.':'检测到航段穿越海岸，已在陆地前停止。',detail:lang==='en'?'Plot a sea route. This chart guard does not adjudicate grounding damage.':'请重新规划海上航路；当前为海岸避碰，不进行未经验证的搁浅损伤判定。',known:true};
+    if(event.domain==='llm_ai') {
+      let meaning=String(event.detail||'');
+      try {
+        const brief=JSON.parse(meaning);
+        if(brief && typeof brief.choice==='string') {
+          const fields=lang==='en'?[['choice','Choice'],['evidence','Evidence'],['options','Options'],['risk','Risk'],['check','Next check']]:[['choice','选择'],['evidence','依据'],['options','权衡'],['risk','风险'],['check','下窗检查']];
+          meaning=fields.filter(([key])=>typeof brief[key]==='string').map(([key,label])=>`${label}：${brief[key]}`).join('；');
+        }
+      } catch { /* Legacy free text remains readable. */ }
+      return {title:lang==='en'?'LLM · COMMAND INTENT':'大模型 · 指挥意图',meaning,
+        detail:lang==='en'?'Intent is recorded before execution; consult launch, release and damage events for results.':'这是执行前的作战意图；实际效果以放飞、发射和判伤事件为准。',known:true};
+    }
+    if(event.domain==='tactical_ai') {
+      let note; try { note=JSON.parse(event.detail); } catch { note={}; }
+      return { title:lang==='en'?'AI · ORDERS / REVIEW':'AI · 行动与复核',
+        meaning:String(lang==='en'?note.en||event.rule:note.zh||event.rule),
+        detail:lang==='en'?'AI orders and shared execution reviews are recorded here; launch, weapons and recovery events confirm execution.':'本条记录AI命令或共享执行器复核；实际放飞、发射、回收以对应执行事件为准。', known:true };
+    }
     const known=!!rules[event.rule];
     return {title:pick(rules[event.rule]||pair('规则处理记录','Rules processing record'),lang),
       meaning:pick(meanings[event.rule]||pair('当前引擎记录了一次规则处理；这条记录暂未提供专门的中文含义。','The engine recorded a rules operation; a dedicated explanation is not yet available.'),lang),
@@ -150,7 +174,7 @@
       <tr><td>${b('自动选敌开火','Automatic target selection and fire')}</td><td>${b('原“自由开火”：没有有效指派时，引擎自动寻找接触交战；不是完整作战参谋。','Previously Weapons free: when no assigned target resolves, the engine selects a contact. This is not a full command staff.')}</td></tr></tbody></table>
       <p>${b('要停止主动自动交战：先取消指派，再关闭自动选敌。已发射武器不会因此撤回；点防御等自卫机制仍可能自主反应。别靠连点射击维持火力。','To stop active automatic engagement, clear the assigned target and turn off automatic selection. Existing projectiles are not recalled; point defence may still react independently. Repeated clicking is not a continuous-fire mode.')}</p>
       <h2>${b('探测：先发现，再判断能不能打','Detection: discovery precedes a firing decision')}</h2><ol><li>${b('时间运行时传感器自动扫描；当前RTS基础扫描周期为4个模拟秒。暂停时不会刷新探测。','Sensors scan as time advances; the current RTS base interval is four simulated seconds. Pausing stops detection updates.')}</li><li>${b('雷达/目视受目标高度、视距、环境与目标特征影响。数据库最大距离不等于任何目标都能在那个距离被发现。','Radar and lookouts depend on height, horizon, conditions and target characteristics. Database maximum range is not guaranteed detection range.')}</li><li>${b('电子支援听雷达等辐射，通常先有方位；被动声纳听噪声。主动声纳会发声探测，也可能暴露自己，需在机动面板单独开启。','ESM listens for emissions and often starts with a bearing; passive sonar listens for noise. Active sonar transmits and may reveal you; enable it separately in MANOEUVRE.')}</li><li>${b('C编号是己方接触，位置有误差。质量表示情报可靠程度，不是命中概率；“已识别型号”也不代表位置无误差。陈旧接触要重新获取。','C labels are friendly contact records with uncertain positions. Quality is intelligence reliability, not hit probability. An identified class does not imply exact position; stale tracks need reacquisition.')}</li></ol>
-      <h2>${b('太平洋风暴为什么双方会自己动','Why both sides act in Pacific Storm')}</h2><p>${b('该想定启动时就有航速、航线、护航跟随关系和自由开火姿态。预设命令会持续执行，武器会自动选敌；任务执行、自卫与缠斗也有底层自动机制。它是机制验证大想定，直接开局容易信息过载。','The scenario starts with speed, routes, escort stations and weapons-free posture. Standing orders continue and weapons select contacts automatically. Mission execution, defence and dogfights also have automatic subsystems. This large integration scenario is demanding for a first game.')}</p><p>${b('仓库有启发式脚本参谋与可配置大模型接口，但普通实时对局没有持续调度它们。脚本参谋用于自对弈/单步AI接口；这轮教学仅有受控的防御课对手。看到双方自主移动，不代表大模型在连续指挥。','The repository includes heuristic staff and a configurable LLM interface, but normal real-time games do not continuously schedule them. Staff are used by self-play and the one-step AI endpoint; training adds a controlled defence opponent. Autonomous movement is not evidence of continuous LLM command.')}</p>
+      <h2>${b('太平洋风暴为什么双方会自己动','Why both sides act in Pacific Storm')}</h2><p>${b('该想定启动时就有航速、航线、护航跟随关系和自由开火姿态。预设命令会持续执行，武器会自动选敌；任务执行、自卫与缠斗也有底层自动机制。它是机制验证大想定，直接开局容易信息过载。','The scenario starts with speed, routes, escort stations and weapons-free posture. Standing orders continue and weapons select contacts automatically. Mission execution, defence and dogfights also have automatic subsystems. This large integration scenario is demanding for a first game.')}</p><p>${b('本局可在辅助设置里开启内建程序托管，或配置LLM参谋只提建议、允许下令。手动命令会接管该单位，直到你明确允许AI辅助；当前航路、巡逻与基本自卫继续。开启托管与推进时间是两项独立操作。','Enable the built-in seat controller or configure the LLM staff to advise or issue orders. Human orders reserve that unit until you explicitly allow AI again; standing routes, patrols and basic self-defence continue. Control permission and advancing time are separate settings.')}</p>
       <h2>${b('战报怎么看','Reading the reports')}</h2><p>${b('先看：发现了什么 → 是否已发射 → 是否被拦截 → 是否命中 → 造成多少损伤。规则事件会给出中文含义和关键数值。D20是20面骰；概率是判定条件，不是保证结果；能力比例1.00表示完整系统能力。数据链共享不是攻击记录。','Read: detection → launch → interception → impact → damage. Rule records provide an explanation and key values. D20 means a 20-sided die. Probability is not a guaranteed outcome; system ratio 1.00 means full capability. Data-sharing records are not attacks.')}</p><p class="operator-source">${b('说明基于当前RTS代码与已声明改编；探测概念来源：Harpoon V 2026英文版5.1–5.4（5-1页等）。详细桌面规则尚未全部实现。','This describes the current RTS code and declared adaptations. Detection concepts: Harpoon V 2026 English rules §§5.1–5.4 (including p. 5-1). Full tabletop procedures are not all implemented.')}</p><footer><button data-help-close>${b('明白了，返回暂停的战局','Return to the paused game')}</button></footer></section>`;
     if(languageSelect)overlay.querySelector('[data-help-language]').replaceWith(languageSelect);
     overlay.querySelector('[data-help-language]').value=I.language;

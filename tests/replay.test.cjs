@@ -57,3 +57,21 @@ test('import/export round trip preserves exact frames and event visibility',()=>
   assert.ok(!('ticks' in encoded));assert.ok(!('end' in encoded));
   const reopened=M.normalize(encoded);assert.deepEqual(M.project(reopened,8,'God'),M.project(r,8,'God'));
 });
+
+
+test('submitted orders remain side-private and disappear when seeking backward',()=>{
+  const input=fixture();
+  input.orders=[{tick:1,side:'Blue',command:{cmd:'stop',unit:1}},{tick:2,side:'Red',command:{cmd:'stop',unit:2}}];
+  const r=M.normalize(input);
+  assert.equal(M.project(r,2,'Blue').orders.length,1);
+  assert.equal(M.project(r,2,'God').orders.length,2);
+  assert.equal(M.project(r,0,'God').orders.length,0);
+});
+
+test('long dual-FSM archives accept six-hour command volumes with a bounded ceiling',()=>{
+  const input=fixture(),order={tick:1,side:'Blue',command:{cmd:'stop',unit:1}};
+  input.orders=Array(313570).fill(order);
+  const r=M.normalize(input);assert.equal(M.project(r,2,'Blue').orders.length,313570);
+  assert.equal(M.project(r,0,'Blue').orders.length,0);
+  input.orders=Array(500001).fill(order);assert.throws(()=>M.normalize(input),/INVALID_REPLAY/);
+});

@@ -3,10 +3,15 @@
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="color-scheme" content="dark"><title>鱼叉 · 战局复盘</title>
-  <link rel="stylesheet" href="replay.css?v=20261019-1">
-  <script defer src="replay-model.js?v=20261019-1"></script>
-  <script defer src="combat-help.js?v=replay-20261019-1"></script>
-  <script defer src="replay.js?v=20261019-1"></script>
+  <link rel="stylesheet" href="replay.css?v=island-hot-20261021-3">
+  <script defer src="basemap-index.js?v=coast-20261020-1"></script>
+  <script defer src="satellite-tiles.js?v=island-hot-20261021-2"></script>
+  <script defer src="coastlines.js?v=joint-ai-20261021-1"></script>
+  <script defer src="replay-model.js?v=island-20261021-3"></script>
+  <script defer src="combat-help.js?v=ai-closure-20261021-1"></script>
+  <script defer src="navigation.js?v=20261020-2"></script>
+  <script defer src="localized-names.js?v=fleet-20261022-2"></script>
+  <script defer src="replay.js?v=fleet-20261022-2"></script>
 </head>
 <body>
   <header class="replay-header">
@@ -42,7 +47,7 @@
     </section>
     <aside class="review-pane">
       <section class="selection-pane"><div class="section-heading"><h3 data-zh="态势与单位" data-en="Picture and units">态势与单位</h3><span id="picture-count"></span></div><select id="unit-select" aria-label="选择单位或接触 / Select unit or contact"><option value="" data-zh="点击海图或选择单位" data-en="Click map or choose unit">点击海图或选择单位</option></select><div id="unit-detail" class="detail"><p data-zh="选择单位查看当时的航速、舰体、弹药与任务。" data-en="Select a unit for its recorded speed, hull, ammunition and mission.">选择单位查看当时的航速、舰体、弹药与任务。</p></div></section>
-      <section class="events-pane"><div class="section-heading"><h3 data-zh="当时的作战记录" data-en="Events at this time">当时的作战记录</h3><span id="event-count"></span></div><div class="event-tools"><select id="event-filter" aria-label="战报类型 / Event type"><option value="key" data-zh="关键战报" data-en="Key events">关键战报</option><option value="all" data-zh="全部战报" data-en="All events">全部战报</option><option value="impact" data-zh="命中与损失" data-en="Hits and losses">命中与损失</option><option value="air" data-zh="航空活动" data-en="Air operations">航空活动</option><option value="detection" data-zh="探测与失联" data-en="Detection and lost tracks">探测与失联</option></select><input id="event-search" type="search" aria-label="搜索战报 / Search events" placeholder="搜索战报"></div><div id="events" role="list"></div></section>
+      <section class="events-pane"><div class="section-heading"><h3 data-zh="当时的作战记录" data-en="Events at this time">当时的作战记录</h3><span id="event-count"></span></div><div class="event-tools"><select id="event-filter" aria-label="战报类型 / Event type"><option value="key" data-zh="关键战报" data-en="Key events">关键战报</option><option value="all" data-zh="全部战报" data-en="All events">全部战报</option><option value="impact" data-zh="命中与损失" data-en="Hits and losses">命中与损失</option><option value="orders" data-zh="下达命令" data-en="Submitted orders">下达命令</option><option value="ai" data-zh="AI指挥意图" data-en="AI orders">AI指挥意图</option><option value="air" data-zh="航空活动" data-en="Air operations">航空活动</option><option value="detection" data-zh="探测与失联" data-en="Detection and lost tracks">探测与失联</option></select><input id="event-search" type="search" aria-label="搜索战报 / Search events" placeholder="搜索战报"></div><div id="events" role="list"></div></section>
     </aside>
   </main>
   <footer class="replay-controls">
@@ -51,6 +56,6 @@
     <nav id="bookmarks" aria-label="关键时刻 / Bookmarks"></nav>
     <div class="footer-line"><span id="outcome"></span><button id="source-info" data-zh="记录来源与精度" data-en="Recording and precision">记录来源与精度</button><span id="map-credit">NASA Blue Marble · 2004-08</span></div>
   </footer>
-  <dialog id="source-dialog"><h2 data-zh="记录来源与精度" data-en="Recording and precision">记录来源与精度</h2><p data-zh="这是已完成对局的离散观察回放。双方视角仅显示该方当时收到的己方状态、接触估计和可见战报；上帝视角合并双方各自记录的己方真态。" data-en="This replays sampled observations from a completed battle. Side views show only that side’s units, estimated contacts and visible events. God view combines each side’s recorded own-unit truth.">这是已完成对局的离散观察回放。双方视角仅显示该方当时收到的己方状态、接触估计和可见战报；上帝视角合并双方各自记录的己方真态。</p><p data-zh="时间轴可以定位每条事件的精确模拟秒；地图保持不晚于当前时刻的最近样本，不推算两次记录之间的运动，也不读取未来帧。双方采样稍有时差，海图下方会分别显示记录时间。" data-en="Events retain exact simulated seconds. The map holds the latest sample at or before the cursor, without interpolating movement or reading future samples. Each side’s sample time is shown below the map.">时间轴可以定位每条事件的精确模拟秒；地图保持不晚于当前时刻的最近样本，不推算两次记录之间的运动，也不读取未来帧。双方采样稍有时差，海图下方会分别显示记录时间。</p><pre id="source-json"></pre><form method="dialog"><button data-zh="关闭" data-en="Close">关闭</button></form></dialog>
+  <dialog id="source-dialog"><h2 data-zh="记录来源与精度" data-en="Recording and precision">记录来源与精度</h2><p data-zh="这是已完成对局的观察回放。双方视角仅显示该方当时收到的己方状态、接触估计和可见战报；上帝视角合并双方各自记录的己方真态。" data-en="This replays sampled observations from a completed battle. Side views show only that side’s units, estimated contacts and visible events. God view combines each side’s recorded own-unit truth.">这是已完成对局的观察回放。双方视角仅显示该方当时收到的己方状态、接触估计和可见战报；上帝视角合并双方各自记录的己方真态。</p><p data-zh="时间轴可以定位每条事件的精确模拟秒；地图保持不晚于当前时刻的最近样本，不推算两次记录之间的运动，也不读取未来帧。双方采样稍有时差，海图下方会分别显示记录时间。" data-en="Events retain exact simulated seconds. The map holds the latest sample at or before the cursor, without interpolating movement or reading future samples. Each side’s sample time is shown below the map.">时间轴可以定位每条事件的精确模拟秒；地图保持不晚于当前时刻的最近样本，不推算两次记录之间的运动，也不读取未来帧。双方采样稍有时差，海图下方会分别显示记录时间。</p><pre id="source-json"></pre><form method="dialog"><button data-zh="关闭" data-en="Close">关闭</button></form></dialog>
 </body>
 </html>

@@ -40,6 +40,7 @@
     out.events = [...events.values()].sort((a,b)=>a.tick-b.tick || a.seq-b.seq);
     out.end = Math.max(...SIDES.map(s=>out.frames[s].at(-1).tick));
     if (out.events.some(e=>e.tick>out.end)) fail();
+    if(input.orders!=null && (!Array.isArray(input.orders)||input.orders.length>500000||input.orders.some(o=>!validTick(o.tick)||o.tick>out.end||!SIDES.includes(o.side)||!o.command||typeof o.command.cmd!=='string'||!finite(o.command.unit))))fail();
     out.ticks = [...new Set(SIDES.flatMap(s=>out.frames[s].map(f=>f.tick)))].sort((a,b)=>a-b);
     return out;
   }
@@ -57,6 +58,7 @@
     return {tick:at, view, snapshots:{Blue:blue?.tick??null,Red:red?.tick??null},
       units:selected.flatMap(f=>f.units), contacts:view==='God'?[]:(selected[0]?.contacts||[]),
       events:replay.events.filter(e=>e.tick<=at && allowed(e,view)),
+      orders:(replay.orders||[]).filter(o=>o.tick<=at&&(view==='God'||o.side===view)),
       mission:selected[0]?.mission||null,
       result:selected.find(f=>f.over)?.result||null};
   }

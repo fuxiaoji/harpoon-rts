@@ -3,7 +3,8 @@
 #mission-objective { margin:5px 0; font:12px/1.7 "Microsoft YaHei",sans-serif; color:#e4edf1; max-width:340px; }
 #mission-ai { color:#9ab8c8; font-size:10px; }
 #mission-open { pointer-events:auto; margin-top:7px; padding:5px 9px; border:1px solid #9a793e; color:#f4d698; background:#26313a; cursor:pointer; font-family:inherit; }
-.map-attribution { position:absolute; left:14px; bottom:58px; max-width:calc(100% - 30px); padding:4px 7px; color:#c9d7dd; background:#071420dc; font:10px/1.5 "Microsoft YaHei",sans-serif; pointer-events:none; }
+.map-attribution { position:absolute; left:14px; bottom:58px; max-width:calc(100% - 30px); padding:4px 7px; color:#c9d7dd; background:#071420dc; font:10px/1.5 "Microsoft YaHei",sans-serif; cursor:pointer; }
+.ai-task-health{margin:8px 10px;padding:8px;border:1px solid #375768;color:#bdd8e5;font:11px/1.6 "Microsoft YaHei",sans-serif;overflow-wrap:anywhere}.ai-task-health summary{cursor:pointer;color:#e8c681}.ai-task-health p{margin:7px 0}.ai-task-health p:last-child{color:#92a9b4}
 .map-imagery-status { color:#91adbb; font-size:10px; margin-top:3px; }
 .geographic-theater .map-brief { max-width:350px; }
 .geographic-theater .map-desc { display:none; }
@@ -13,13 +14,15 @@
 .geographic-theater .map-tools { align-items:flex-end; }
 #mission-dialog { width:min(700px,calc(100vw - 40px)); max-height:calc(100vh - 50px); padding:24px 28px; color:#d9e8ef; background:#102635; border:1px solid #607b88; font:14px/1.8 "Microsoft YaHei",sans-serif; }
 #mission-dialog::backdrop { background:#020a12bb; }
+#mission-dialog[open] { display:flex; flex-direction:column; overflow:hidden; }
+#mission-briefing-content { min-height:0; overflow:auto; padding-right:8px; }
 #mission-dialog h2 { margin:0 0 12px; color:#f2d29a; font-size:23px; }
 #mission-dialog h3 { margin:18px 0 6px; color:#c8dce7; font-size:16px; }
 #mission-dialog p { margin:7px 0; }
 #mission-dialog ol { padding-left:22px; }
 #mission-dialog li { margin-bottom:9px; }
 #mission-dialog .mission-note { color:#9fb7c5; font-size:12px; border-top:1px solid #3d5664; padding-top:10px; }
-#mission-close { position:sticky; bottom:0; width:100%; padding:10px; color:#102536; background:#f0cb86; border:0; font:600 14px "Microsoft YaHei",sans-serif; cursor:pointer; }
+#mission-close { flex:none; margin-top:14px; width:100%; padding:10px; color:#102536; background:#f0cb86; border:0; font:600 14px "Microsoft YaHei",sans-serif; cursor:pointer; }
 #friendly-list { max-height:170px; overflow-y:auto; }
 .sidebar-quick { display:none; }
 .geographic-theater .sidebar-quick { position:sticky; top:-11px; z-index:8; display:flex; flex-wrap:wrap; gap:5px; padding:7px 0; background:#091b29; flex:none; }
