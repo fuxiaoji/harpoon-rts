@@ -63,6 +63,10 @@ pub fn trace(w:&mut World,id:EntityId,rule:&str,detail:Value) {
     w.emit(EventKind::RulesEvent{domain:"operations".into(),rule:rule.into(),side,unit:Some(id),contact:None,detail:detail.to_string()},side.map(Visibility::Side).unwrap_or(Visibility::Referee));
 }
 fn aircraft(class:&str)->Result<&'static Value,String> {tables()["aviation"]["aircraft"].get(class).ok_or_else(||format!("4.6: missing verified aircraft size/launch data: {class}"))}
+/// Scripted scenarios fly generic wing classes ("fighter", "helo_asw", …)
+/// that have no verified operations-v3 row. Recovery must fall back to the
+/// legacy deck cycle for those instead of silently never landing.
+pub fn has_aircraft_data(class:&str)->bool {tables()["aviation"]["aircraft"].get(class).is_some()}
 fn deck(e:&Entity)->Result<&'static Value,String> {tables()["aviation"]["decks"].get(&e.class).ok_or_else(||format!("4.6: missing verified deck/runway/spot data: {}",e.class))}
 pub fn reserved(w:&World,id:EntityId,class:&str)->usize {w.rules.operations.as_ref().map_or(0,|s|s.launches.iter().filter(|j|j.carrier==id&&j.class==class).count())}
 

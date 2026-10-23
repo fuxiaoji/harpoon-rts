@@ -15,3 +15,11 @@ This is an additional loadout variant, not a new independently verified airframe
 2×AIM-9X + 2×AIM-120 保持不变。当前仅 csg_littoral 剧本使用该构型；
 `us_f18e_asm` 及其他 10 个引用剧本不变。数据库平台总数 408 → 409。
 动机：近岸航母编队战平衡校准（用户要求美军使用更先进的武器）。
+
+## 2026-10-23 新增：us_f35c_lracm（F-35C LRASM 打击构型）
+
+克隆 `us_f35c` 全部机体字段（含 VerySmall RCS、4 内埋 AIM-120），
+将 2 × GBU-31 替换为 1 × `us_agm158c` LRASM。F-35C 外挂 LRASM 为
+公开报道过的测试构型；弹药定义沿用既有 `us_aircraft.json` 卷，未新增
+弹体。数据库平台总数 409 → 410。动机：近岸航母编队战平衡——
+非隐身的超级大黄蜂打击波在饱和的 HQ-9B 防空墙前 0 释放。

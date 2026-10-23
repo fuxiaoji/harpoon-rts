@@ -10,7 +10,7 @@
     us_ford:'福特级核动力航母',us_nimitz:'尼米兹级核动力航母',us_reagan:'里根号航空母舰',
     us_burke:'阿利·伯克级驱逐舰',us_burke_1:'阿利·伯克级驱逐舰（I/II型）',us_burke_2a:'阿利·伯克级驱逐舰（IIA型）',us_burke_3:'阿利·伯克级驱逐舰（III型）',us_ticonderoga:'提康德罗加级巡洋舰',us_ticonderoga_cmp:'提康德罗加级巡洋舰（CMP改装）',us_virginia:'弗吉尼亚级攻击核潜艇',us_seawolf:'海狼级攻击核潜艇',
     us_america_lha:'美国级两栖攻击舰',us_wasp_lhd:'黄蜂级两栖攻击舰',
-    us_f18e:'F/A-18E/F“超级大黄蜂”战斗机',us_f18e_b:'F/A-18E/F“超级大黄蜂”Block III（AIM-174B构型）',us_f18e_asm:'F/A-18E/F“超级大黄蜂”（反舰挂载）',us_f18e_lracm:'F/A-18E/F“超级大黄蜂”（LRASM打击挂载）',us_f35c:'F-35C舰载战斗机',
+    us_f18e:'F/A-18E/F“超级大黄蜂”战斗机',us_f18e_b:'F/A-18E/F“超级大黄蜂”Block III（AIM-174B构型）',us_f18e_asm:'F/A-18E/F“超级大黄蜂”（反舰挂载）',us_f18e_lracm:'F/A-18E/F“超级大黄蜂”（LRASM打击挂载）',us_f35c:'F-35C舰载战斗机',us_f35c_lracm:'F-35C“闪电”II（LRASM打击挂载）',
     us_e2d:'E-2D“先进鹰眼”预警机',us_mh60r:'MH-60R“海鹰”反潜直升机',
   };
   const weapons={

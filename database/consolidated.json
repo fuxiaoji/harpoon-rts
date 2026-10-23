@@ -18825,6 +18825,79 @@
       "chaff": 30,
       "decoys": 15,
       "endurance_s": 7004
+    },
+    "us_f35c_lracm": {
+      "id": "us_f35c_lracm",
+      "name": "F-35C Lightning II (LRASM strike fit)",
+      "kind": "Aircraft",
+      "hp": 25,
+      "max_speed_kts": 920,
+      "cruise_speed_kts": 580,
+      "turn_rate_deg_s": 15,
+      "rcs": "VerySmall",
+      "vp_value": 20,
+      "sensors": [
+        "radar_air_med",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "us_aim9x",
+          "mounts": 2,
+          "ammo": 1
+        },
+        {
+          "weapon": "us_aim120",
+          "mounts": 2,
+          "ammo": 2
+        },
+        {
+          "weapon": "us_agm158c",
+          "mounts": 1,
+          "ammo": 1
+        }
+      ],
+      "chaff": 30,
+      "decoys": 15,
+      "endurance_s": 6331
+    },
+    "cn_j15_yj12": {
+      "id": "cn_j15_yj12",
+      "name": "J-15 Feisha Fighter (YJ-12 standoff strike fit)",
+      "kind": "Aircraft",
+      "hp": 35,
+      "max_speed_kts": 1240,
+      "cruise_speed_kts": 485,
+      "turn_rate_deg_s": 12,
+      "rcs": "Medium",
+      "noise_db": 50,
+      "vp_value": 18,
+      "sensors": [
+        "cn_klj4",
+        "radar_nav",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "cn_pl12",
+          "mounts": 1,
+          "ammo": 2
+        },
+        {
+          "weapon": "cn_pl8",
+          "mounts": 1,
+          "ammo": 2
+        },
+        {
+          "weapon": "cn_yj12_air",
+          "mounts": 1,
+          "ammo": 1
+        }
+      ],
+      "chaff": 12,
+      "endurance_s": 8425
     }
   },
   "weapons": {
@@ -24897,6 +24970,29 @@
       "reload_s": 12.0,
       "damage": 52.0,
       "guidance": "AswBallistic",
+      "ir": false,
+      "directors": 0
+    },
+    "cn_yj12_air": {
+      "id": "cn_yj12_air",
+      "name": "YJ-12A Air-Launched Supersonic ASM",
+      "kind": "Ascm",
+      "targets": {
+        "air": false,
+        "surface": true,
+        "sub": false,
+        "missile": false,
+        "land": false
+      },
+      "range_nm": 216.0,
+      "min_range_nm": 21.6,
+      "speed_kts": 1719.0,
+      "enable_range_nm": 0.0,
+      "pk": 0.5,
+      "salvo": 1,
+      "reload_s": 60.0,
+      "damage": 48.0,
+      "guidance": "SeaSkimmer",
       "ir": false,
       "directors": 0
     }

@@ -488,7 +488,12 @@ fn try_recover(world: &mut World, id: EntityId) {
         .map(|d| d.cycle_s)
         .unwrap_or(120.0);
     let now = world.tick;
-    let ready_at = if crate::rules::operations::active(world) {
+    let ready_at = if crate::rules::operations::active(world)
+        && crate::rules::operations::has_aircraft_data(&class)
+    {
+        // Generic wing classes (crimson_tide's "fighter"/"helo_asw") have no
+        // verified operations-v3 row; recovery_ready would fail forever, so
+        // they land on the legacy deck cycle instead.
         let Some(ready)=crate::rules::operations::recovery_ready(world,id,carrier_id) else {return};
         ready
     }else{now + (cycle_s as i64)};

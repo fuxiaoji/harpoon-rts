@@ -885,8 +885,12 @@ impl TacticalStaff {
         let ready = cohort
             .iter()
             .all(|a| a.altitude_m <= altitude+60.0 && a.pos.range_to(mind.assembly) < 20.0);
+        // Standoff fits (>=200nm) must not burn a full assembly window and a
+        // descent to wave-top inside the enemy engagement envelope: release
+        // geometry works from cruise altitude.
+        let assembly_wait = if range>=200.0 {60} else {self.params.strike_assembly_s};
         if mind.phase == Phase::Assemble {
-            if obs.tick - mind.born >= self.params.strike_assembly_s && (ready || obs.tick-mind.born>=self.params.strike_assembly_s+180) {
+            if obs.tick - mind.born >= assembly_wait && (ready || obs.tick-mind.born>=assembly_wait+180) {
                 mind.phase = Phase::Ingress;
             } else {
                 Self::orbit(cmds, u, mind.assembly, 4.0);
@@ -997,7 +1001,10 @@ impl TacticalStaff {
             let release = predicted.advanced(predicted.bearing_to(u.pos), range * 0.85);
             Self::nav(cmds, u, release);
             let release_floor=u.weapons.iter().filter(|w|w.operational&&w.ammo>0&&self.kind_of(&w.weapon)==Some(WeaponKind::Ascm)).map(|w|w.min_launch_altitude_m).fold(0.0_f64,f64::max);
-            let release_altitude=terminal_altitude.max(if release_floor>0.0{release_floor+20.0}else{terminal_altitude});
+            // Standoff releases happen from cruise altitude — LRASM-class
+            // weapons have no ceiling in the engine, and forcing a descent to
+            // wave-top just parks the flight inside the SAM envelope.
+            let release_altitude=if range>=200.0 {u.altitude_m.max(release_floor+20.0)} else if release_floor>0.0{release_floor+20.0}else{terminal_altitude};
             cmds.push(Command::SetAltitude{unit:u.id,altitude_m:release_altitude});
             let since=*mind.attack_since.get_or_insert(obs.tick);
             let all_in_range = cohort.iter().all(|a| {

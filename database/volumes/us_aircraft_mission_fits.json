@@ -71,6 +71,42 @@
       "chaff": 30,
       "decoys": 15,
       "endurance_s": 7004
+    },
+    "us_f35c_lracm": {
+      "id": "us_f35c_lracm",
+      "name": "F-35C Lightning II (LRASM strike fit)",
+      "kind": "Aircraft",
+      "hp": 25,
+      "max_speed_kts": 920,
+      "cruise_speed_kts": 580,
+      "turn_rate_deg_s": 15,
+      "rcs": "VerySmall",
+      "vp_value": 20,
+      "sensors": [
+        "radar_air_med",
+        "esm_std",
+        "visual"
+      ],
+      "weapons": [
+        {
+          "weapon": "us_aim9x",
+          "mounts": 2,
+          "ammo": 1
+        },
+        {
+          "weapon": "us_aim120",
+          "mounts": 2,
+          "ammo": 2
+        },
+        {
+          "weapon": "us_agm158c",
+          "mounts": 1,
+          "ammo": 1
+        }
+      ],
+      "chaff": 30,
+      "decoys": 15,
+      "endurance_s": 6331
     }
   },
   "weapons": {},

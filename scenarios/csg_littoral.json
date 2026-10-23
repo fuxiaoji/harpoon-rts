@@ -19,7 +19,11 @@
       "CV-16 LIAONING": [
         {
           "class": "cn_j15",
-          "count": 22
+          "count": 14
+        },
+        {
+          "class": "cn_j15_yj12",
+          "count": 8
         },
         {
           "class": "cn_z18f",
@@ -37,11 +41,15 @@
       "CV-17 SHANDONG": [
         {
           "class": "cn_j15",
-          "count": 22
+          "count": 14
         },
         {
           "class": "cn_j15d",
           "count": 2
+        },
+        {
+          "class": "cn_j15_yj12",
+          "count": 8
         },
         {
           "class": "cn_z18f",
@@ -59,15 +67,15 @@
       "CVN-78 FORD": [
         {
           "class": "us_f18e_b",
-          "count": 22
+          "count": 10
         },
         {
-          "class": "us_f18e_lracm",
+          "class": "us_f35c_lracm",
           "count": 8
         },
         {
           "class": "us_f35c",
-          "count": 10
+          "count": 20
         },
         {
           "class": "us_e2d",
@@ -85,15 +93,15 @@
       "CVN-68 NIMITZ": [
         {
           "class": "us_f18e_b",
-          "count": 14
+          "count": 8
         },
         {
-          "class": "us_f18e_lracm",
+          "class": "us_f35c_lracm",
           "count": 8
         },
         {
           "class": "us_f35c",
-          "count": 10
+          "count": 16
         },
         {
           "class": "us_e2d",
@@ -27977,6 +27985,28 @@
     },
     {
       "side": "Red",
+      "class": "us_burke_1",
+      "name": "DDG-51 ARLEIGH BURKE",
+      "pos": [
+        376.7,
+        314.0
+      ],
+      "course_deg": 270,
+      "speed_kts": 18
+    },
+    {
+      "side": "Red",
+      "class": "us_ticonderoga",
+      "name": "CG-64 GETTYSBURG",
+      "pos": [
+        398.7,
+        342.0
+      ],
+      "course_deg": 270,
+      "speed_kts": 18
+    },
+    {
+      "side": "Red",
       "class": "us_burke_2a",
       "name": "DDG-54 CURTIS WILBUR",
       "pos": [
@@ -28058,7 +28088,7 @@
     },
     {
       "side": "Red",
-      "class": "us_f18e_b",
+      "class": "us_f35c",
       "name": "RED CAP-1",
       "pos": [
         410.7,
@@ -28067,7 +28097,7 @@
     },
     {
       "side": "Red",
-      "class": "us_f18e_b",
+      "class": "us_f35c",
       "name": "RED CAP-2",
       "pos": [
         410.7,
