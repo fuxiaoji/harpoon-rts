@@ -71,7 +71,7 @@ impl Default for Params {
             strike_min_q: 0.4,
             screen_standoff_nm: 16.0,
             retreat_hp_frac: 0.3,
-            sub_attack_range_nm: 9.0,
+            sub_attack_range_nm: 22.0,
             sub_patrol_speed_kts: 4.0,
             salvo_min_interval_s: 20,
             surface_salvo_rounds: 8,
@@ -779,8 +779,13 @@ impl CommandStaff for TacticalStaff {
                             });
                             cmds.push(Command::SetSpeed {
                                 unit: u.id,
-                                speed_kts: if dist > 25.0 {
-                                    12.0
+                                // 093A sustains ~18kt submerged. Close at
+                                // attack speed until inside the firing
+                                // basket; the old 25nm patrol-speed limbo
+                                // left subs creeping at 4kt a few miles
+                                // short of torpedo release all battle.
+                                speed_kts: if dist > self.params.sub_attack_range_nm {
+                                    18.0
                                 } else {
                                     self.params.sub_patrol_speed_kts
                                 },

@@ -570,9 +570,14 @@ impl TacticalStaff {
                         unit: u.id,
                         altitude_m: if danger {150.0}else{3000.0},
                     });
+                    // Patrol ON the threat axis, not astern: the AEW radar's
+                    // 60nm surface reach is the fleet's only persistent ship
+                    // track toward the opponent, and an astern orbit covers
+                    // exactly the wrong half. The danger branch still drops
+                    // the machine 40nm astern until the threat passes.
                     let desired = home_pos.advanced(
-                        self.threat_axis_deg + 180.0,
-                        if danger { 40.0 } else { 25.0 },
+                        if danger { self.threat_axis_deg + 180.0 } else { self.threat_axis_deg },
+                        if danger { 40.0 } else { 50.0 },
                     );
                     let station=self.db.as_ref().map(|db|self.supervision.support_station(obs,db,home,desired)).unwrap_or(desired);
                     Self::orbit(cmds, u, station, 6.0);
@@ -592,7 +597,7 @@ impl TacticalStaff {
                             if danger {
                                 "向舰队后方避让敌机"
                             } else {
-                                "后方预警巡逻"
+                                "威胁轴前出预警巡逻"
                             }
                         ),
                         format!(
@@ -601,7 +606,7 @@ impl TacticalStaff {
                             if danger {
                                 "evade astern"
                             } else {
-                                "rearward AEW patrol"
+                                "forward AEW patrol on the threat axis"
                             }
                         ),
                     );
