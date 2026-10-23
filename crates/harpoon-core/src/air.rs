@@ -524,7 +524,11 @@ pub fn compatible_recovery(world: &World, aircraft: EntityId, carrier: EntityId)
     let caps=CAPS.get_or_init(||serde_json::from_str(include_str!("../../../data/rules/deck-capabilities.json")).unwrap());
     let listed=|key:&str,class:&str|caps[key].as_array().is_some_and(|v|v.iter().any(|s|s.as_str()==Some(class)));
     let rotary=listed("rotary_wing",&a.class)||a.class_def(&world.db).is_some_and(|a|a.dipping_sonar);
-    if c.kind!=PlatformKind::Base && !rotary && !listed("vtol",&a.class) && !listed("arresting_gear",&c.class) {return false;}
+    // Scripted scenarios fly generic classes ("cvn" carrier, "fighter"
+    // wing) that the capabilities list does not name; a DB deck whose wing
+    // actually carries this class is arresting-capable by construction.
+    let wing_fits_deck = c.class_def(&world.db).and_then(|d|d.deck.as_ref()).is_some_and(|d|d.wing.iter().any(|f|f.class==a.class));
+    if c.kind!=PlatformKind::Base && !rotary && !listed("vtol",&a.class) && !listed("arresting_gear",&c.class) && !wing_fits_deck {return false;}
     let fits = world.context.air_wings.get(&c.name).map(|w|w.iter().any(|f|f.class==a.class))
         .unwrap_or_else(|| c.class_def(&world.db).and_then(|d|d.deck.as_ref()).is_some_and(|d|d.wing.iter().any(|f|f.class==a.class)));
     let stored: u32 = c.deck.as_ref().map(|d|d.ready.iter().map(|(_,n)|*n as u32).sum::<u32>() + d.cycling.iter().map(|(_,n,_)|*n as u32).sum::<u32>()).unwrap_or(u32::MAX);
