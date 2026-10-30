@@ -1,0 +1,50 @@
+{
+  "source": {
+    "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+    "version": "2026-01-01",
+    "sha256": "8196ffc715bbcccd862d8597c607de7816dac5baee31fa659f89dfaf4323700c",
+    "pdf_pages": [119],
+    "printed_pages": ["12-1"],
+    "section": "12.4",
+    "visual_verified_on": "2026-10-27",
+    "visual_evidence": "artifacts/rules-book-wide-20261026/aviation-remaining/floating-tow-next/en-p119.png",
+    "core_crosscheck": ["core_rules_cn:p119:c01", "core_rules_cn:p119:c02", "core_rules_cn:p119:c03"],
+    "revision": "2026-10-27-floating-radar-raft-tow-1",
+    "status": "implemented_explicit_geometry_subset_pending_combined_tests"
+  },
+  "source_rule": {
+    "object_kind": "floating_asm",
+    "description": "Floating rubber raft with radar reflector; distraction decoy, distinct from acoustic towed torpedo countermeasure",
+    "max_towing_speed_kts": 10,
+    "exact_boundary_legal": true,
+    "overspeed_consequence": "cable_breaks",
+    "overspeed_destroys_or_sinks_raft": false,
+    "overspeed_rejects_or_clamps_ship_navigation_order": false,
+    "cable_length_nm": null,
+    "cable_dynamics": null,
+    "manual_release_procedure": null,
+    "retow_procedure": null,
+    "owner_loss_cable_fate": null,
+    "unchanged_parent_rules": ["one-minute local ship deployment", "selectable Small/Medium radar echo", "original up-to-three-hour raft expiry", "sea state above4 swamps and sinks", "free half-wind drift", "source command to sink own raft early"]
+  },
+  "explicit_author_model": {
+    "model": "rigid_stern_offset",
+    "source_required": true,
+    "fit_must_match_owned_deployed_raft": true,
+    "length_nm_requires_explicit_finite_positive_value": true,
+    "capture_tolerance_nm_requires_explicit_finite_nonnegative_value": true,
+    "default_cable_length_nm": null,
+    "attachment_relocates_raft": false,
+    "attachment_geometry": "Real current raft must already be within the explicit author numerical tolerance of actual ship stern offset; no teleport, pickup radius or payout time inferred",
+    "attached_motion": "Actual post-movement owner position and course at explicit rigid stern offset; no additional wind step",
+    "overspeed_time_mapping": "Observe actual post-movement ship speed; above ceiling preserve previous raft point, persist one break, then parent applies its one ordinary free-drift interval",
+    "manual_release": "Explicit author RTS release from this model; does not pretend Book prints a cut/payout procedure",
+    "owner_loss_supported_explicit_policy": "detach_and_drift",
+    "owner_loss_without_policy": "specific_pending: retain last authoritative point; do not borrow acoustic-decoy destruction or invent wreck attachment",
+    "retow": "specific_pending; original active identical attachment is idempotent, terminal history cannot implicitly reconnect",
+    "continuation": "Same object id, original ready/expiry, source echo, finite stock debit and serialized cable history; no replacement, refund, dice, life extension or new combat entity",
+    "annex_fit_verified_by_this_model": false,
+    "physical_cable_simulation_verified": false,
+    "full_missile_distraction_chain_verified": false
+  }
+}

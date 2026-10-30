@@ -1,0 +1,45 @@
+{
+  "source_scope": "exact battery fields only; no depth, chemistry, snorkel or nonmax output inference",
+  "platforms": {
+    "se_ss_a17s": {
+      "source_verified": true,
+      "runtime_fit": "source_bound_exact_row",
+      "battery_fit": {
+        "rating_charge_units": 150,
+        "technology_as_printed": "new",
+        "aip_fit": true,
+        "aip_potential_units_as_printed": 2400,
+        "source": "Naval SITREP 63 Oct2022 PDF3 p2 Type A17 battery row and A17S named refit remarks",
+        "chemistry": "TBD_not_marked_lithium_ion",
+        "nonmax_aip_output": "TBD",
+        "aip_potential_runtime_policy": "English2026 PDF29 2000 maximum; Annex 2400 conflict unresolved; >2000 source_pending rejected"
+      }
+    },
+    "au_collins": {
+      "source_verified": true,
+      "runtime_fit": "source_bound_exact_row",
+      "battery_fit": {
+        "rating_charge_units": 240,
+        "technology_as_printed": "new",
+        "aip_fit": false,
+        "aip_potential_units_as_printed": null,
+        "source": "Commonwealth Navies 2025-12-01 PDF8 A-4 Collins SS",
+        "chemistry": "TBD_not_marked_lithium_ion",
+        "nonmax_aip_output": "TBD"
+      }
+    },
+    "ca_victoria": {
+      "source_verified": true,
+      "runtime_fit": "source_bound_exact_row",
+      "battery_fit": {
+        "rating_charge_units": 150,
+        "technology_as_printed": "new",
+        "aip_fit": false,
+        "aip_potential_units_as_printed": null,
+        "source": "Commonwealth Navies 2025-12-01 PDF20 A-16 Canada Ex-UK Upholder SS Victoria",
+        "chemistry": "TBD_not_marked_lithium_ion",
+        "nonmax_aip_output": "TBD"
+      }
+    }
+  }
+}

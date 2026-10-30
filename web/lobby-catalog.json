@@ -224,13 +224,13 @@
     },
     "csg_littoral": {
       "file": "csg_littoral.json",
-      "source_sha256": "0328b4146406cf497ab0d66361f2f4b112cd3683a65c333e4498183d66db7450",
+      "source_sha256": "8078ab355d835eab92130897db5735580cf224c7e07427af152c57acb52c8c5f",
       "duration_s": 10800,
       "seed": 20261020,
-      "initial_units": 28,
+      "initial_units": 32,
       "sides": {
-        "Blue": 15,
-        "Red": 13
+        "Blue": 16,
+        "Red": 16
       },
       "automated_side": null,
       "satellite": true

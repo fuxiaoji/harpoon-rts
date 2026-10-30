@@ -1,4 +1,8 @@
-//! Fire control & data links — §6.3 of the Harpoon V rules.
+//! Historical RTS fire control and contact shadows.
+//!
+//! The 60/300-second cadence, fractional quality rewards and sensor-name
+//! link inference below are historical adaptations, not Harpoon V source
+//! adjudication. Full/v4 uses native per-observer source rules instead.
 //!
 //! Implemented here:
 //! - §6.3.3 passive cross-fix (multi-unit passive-sonar bearing convergence);
@@ -48,6 +52,9 @@ const TDL_BUCKET_PREFIX: &str = "firectl.tdl.last_bucket.";
 
 /// Per-tick fire-control/data-link behavior.
 pub fn step(world: &mut World) {
+    if world.rules.profile == super::damage_runtime::RuleProfile::Rts2026Full {
+        return;
+    }
     cross_fix(world);
     tdl_sync(world);
 }

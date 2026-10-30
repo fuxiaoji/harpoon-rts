@@ -1,0 +1,83 @@
+{
+  "revision": "2026-10-26-unmanned-wide-source-C1",
+  "authority": {
+    "file": "14-2.HpnV_Rules_1_Jan_26.pdf",
+    "sha256": "8196ffc715bbcccd862d8597c607de7816dac5baee31fa659f89dfaf4323700c",
+    "pdf_pages": [
+      21,
+      22
+    ],
+    "printed_pages": [
+      "2-5",
+      "2-6"
+    ],
+    "sections": [
+      "2.5",
+      "2.5.1",
+      "2.5.2"
+    ]
+  },
+  "source_values": {
+    "tactical_seconds": 180,
+    "intermediate_seconds": 1800,
+    "switch_tactical_turns": 1,
+    "hitl_capacity": 1,
+    "autonomous_capacity": 3,
+    "acoustic_modem_range_nm": 4,
+    "overt_command_range_nm": 20,
+    "overt_command_lmf_base50_nm": 5,
+    "radio_establishment_tactical_turns": 1
+  },
+  "source_procedure": {
+    "game_modes": [
+      "hitl",
+      "autonomous"
+    ],
+    "semi_autonomous": "background concept; no separate game mode",
+    "hitl": "Tactical movement/detection/combat, no Reaction Fire",
+    "autonomous": "Intermediate movement/detection only",
+    "switch_autonomous_to_hitl": "one Tactical Turn",
+    "switch_controlled_vehicle": "one Tactical Turn, within fitted link range",
+    "one_link_at_a_time": true,
+    "satellite": "explicit receiver hardware and scenario bandwidth availability",
+    "uuv_modem": "steering and UUV position/bearing/possibly range to one contact per Tactical Turn; no bulk history/video",
+    "uuv_radio": "actual periscope depth, raised mast and at least one Tactical Turn to establish",
+    "overt_recall": "up to20nm;LMF active-sonar detectability at5nm base range;2D6 TacticalTurns after reception",
+    "loss": "HITL auto-capable -> autonomous recovery/return; control+navigation jam or HITL-only -> aimless until fuel exhaustion",
+    "payload": "sensor/weapon options selected before launch and cannot change after launch"
+  },
+  "rts_policy": {
+    "id": "RTS-UNMANNED-20261025-B1",
+    "physical_motion": "continuous integration; autonomous mission updates commit at next Intermediate boundary",
+    "switch_to_autonomous": "immediate Plotting policy; source only gives delay for switching to HITL",
+    "controller_switch": "at commit release old controlled vehicle into its own autonomous program or uncontrolled aimless state; unbind old control slot",
+    "mixed_element_modes": "one HITL occupies whole element; up to three bound autonomous vehicles; reassignment releases previous HITL at transition completion",
+    "wandering": "one deterministic independent seeded heading per Intermediate window; no invented combat probability, actual fuel only",
+    "uuv_radio_completion": "later of2D6 receipt delay and actual PD/mast dwell of one Tactical Turn, plus actual fitted radio route",
+    "basic_exchange": "one explicit exchange per UUV per Tac, at most one real onboard contact; no fabricated triangulation or shared FCS",
+    "onboard": "store native local reports; only LOS/SAT valid control link allows ordinary Side projection; acoustic modem requires explicit single report exchange",
+    "fit_scope": "only explicit scenario_assumption fits until exact real Annex inputs are verified"
+  },
+  "pending_source": [
+    "real platform control-link range and satellite receivers",
+    "exact real UAV/UUV hardware autonomy and payload fits",
+    "unspecified jammer bearing cannot produce a guessed evasive heading",
+    "no fuel data means no invented endurance"
+  ],
+  "wide_source_policy": {
+    "source": "English2026 PDF22 sections2.5/2.5.1; exact physical mast producer and independently sourced interference",
+    "radio_ready": "actual detection.masts count and raised_since plus declared PD and one uninterrupted TacticalTurn; private mast_since alone is never sufficient",
+    "recall_mast": "at declared PD a pending recall uses the real DetectionAction::Masts producer; an absent source mast fit remains pending",
+    "interference": "independent source causes OR control/navigation; clearing one cause does not repair another; disagreeing jammer-away bearings remain unresolved",
+    "overt_signal": "existing source LMF/base50=5nm; until=at+180 is the explicit RTS one-Tactical-window pulse representation, not a printed continuous transmission duration",
+    "launch_registration": "explicit launch_classes by exact source-authored class; queue/actual completion preflight, actual physical new id registered before sensor/weapon phases; original HP/ammunition untouched",
+    "recall_privacy": "source-known sender broadcast admitted independently from hidden recipient survival/range/fuel/completion; actual20nm reception and2D6 stay referee-only; one admitted broadcast per vehicle/Tactical window is explicit RTS rate policy; an old pending recall never rerolls",
+    "uuv_physical_inventory": "scenario_assumption launchers name exact already declared own underwater bodies; one stock-order body is reserved and transferred with the same EntityId, HP, physical payload and remaining endurance; no real Annex launcher numbers inferred",
+    "uuv_handling_geometry": "all handling durations, host speed/depth/sea envelopes, launch depth and private recovery geometry are explicit scenario mechanical policy; launch depth is bounded by the original hull and available water/navigation fit; continuous private physical acquisition is required for recovery",
+    "uuv_stow_lifecycle": "transaction pauses and rebases battery/AIP partial work, removes old observer native work, mast/radio/array/control/mission continuity, retains original physical damage, energy, ordnance and historical received messages; unresolved fire/flood/repair/depth/propulsion work cannot be hidden in warehouse; deployment epoch prevents old reports becoming live on relaunch",
+    "uuv_scope": "experimental exact-body lifecycle only; ARS600/RT2500/OZZ/DeepSeafox/REMUS real vehicle, capacity, endurance, payload and mother-ship launch mechanics remain source-blocked"
+  },
+  "integration_status": "implemented_unified_integration_pending",
+  "whole_section_complete": false,
+  "whole_book_complete": false
+}

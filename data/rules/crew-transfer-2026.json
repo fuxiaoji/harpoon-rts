@@ -1,0 +1,1 @@
+{"rule_id":"HV2026-14.2.5","source":"English2026 PDF132 printed14-6","approach_max_yards":50,"approach_d6_impulse_seconds":30,"moving_chances":{"1_to_5":75,"6_to_10":5},"collision_chance_percent":50,"boat_capacity_factors":12,"injured_per_stationary_impulse":1}

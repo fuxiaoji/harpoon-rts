@@ -1,0 +1,137 @@
+{
+  "rule_id": "HV-5.4.2.1-TA-OPTIONAL-2026",
+  "status": "implementation_candidate_not_accepted",
+  "authority": {
+    "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+    "edition": "2026-01-01 English Digital Update",
+    "sha256": "8196ffc715bbcccd862d8597c607de7816dac5baee31fa659f89dfaf4323700c",
+    "pdf_page": 48,
+    "printed_page": "5-9",
+    "section": "5.4.2.1 Bearing Ambiguity and Towed Array Stabilization (optional rule)"
+  },
+  "tactical_turn_seconds": {
+    "value": 180,
+    "authority": {
+      "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+      "sha256": "8196ffc715bbcccd862d8597c607de7816dac5baee31fa659f89dfaf4323700c",
+      "pdf_page": 21,
+      "printed_page": "3-3",
+      "section": "3.1.1 Tactical Turns"
+    }
+  },
+  "resolution": {
+    "initial_passive_towed_detection": "bearing_ambiguous_left_or_right_cone; target_track_not_yet_established",
+    "ambiguity_resolution": {
+      "maneuver_course_change_degrees": { "minimum": 45, "maximum": 135, "either_direction": true },
+      "sequence": ["maneuver_to_radically_different_beam", "complete_course_change", "reacquire_contact", "identify_correct_left_or_right_bearing", "establish_target_track"],
+      "fire_control_prerequisite": "target_track_must_be_established_before_fire_control_solution_process_starts"
+    },
+    "stabilization": {
+      "cause": "course_change_kinks_towed_array; bearing information worthless during maneuver and unreliable until array straightens",
+      "length_categories": ["short", "long"],
+      "speed_columns_kts": [5, 10, "15+"],
+      "turns": {
+        "short": [2, 1, 1],
+        "long": [3, 2, 1]
+      },
+      "classification_rolls_during_stabilization": true,
+      "unprovided_interpolation_or_speed_bands": "no source rule; code requires explicit table-column selection and never interpolates"
+    },
+    "maneuver_exceptions": {
+      "passive_generation_7": "resolves bearing ambiguity without maneuver",
+      "active_towed_array": "resolves bearing ambiguity without maneuver"
+    }
+  },
+  "annex_k1_fit_candidates": [
+    {
+      "platform_id": "us_virginia",
+      "platform_variant": "Virginia (ii) SSN",
+      "fit_source": { "document": "5-4.Americas_Navy_1_Dec_25.pdf", "sha256": "189416d65b92d5e2fa50c59c99e309ca5715a5db287e5323295152034e61c5c8", "pdf_page": 16, "printed_page": "A-13" },
+      "sensor": "TB-29A",
+      "annex_source": { "pdf_page": 93, "printed_page": "K-3" },
+      "kind": "passive_towed",
+      "generation": 6,
+      "length_category": "long",
+      "annex_speed_category": "slow",
+      "platform_category": "sub",
+      "physical_length_m": null,
+      "fit_status": "exact_named_fit"
+    },
+    {
+      "platform_id": "us_virginia",
+      "platform_variant": "Virginia (ii) SSN",
+      "fit_source": { "document": "5-4.Americas_Navy_1_Dec_25.pdf", "sha256": "189416d65b92d5e2fa50c59c99e309ca5715a5db287e5323295152034e61c5c8", "pdf_page": 16, "printed_page": "A-13" },
+      "sensor": "TB-16G",
+      "annex_source": { "pdf_page": 93, "printed_page": "K-3" },
+      "kind": "passive_towed",
+      "generation": 6,
+      "length_category": "short",
+      "annex_speed_category": "high",
+      "platform_category": "sub",
+      "physical_length_m": null,
+      "fit_status": "exact_named_fit"
+    },
+    {
+      "platform_id": "us_burke_2a",
+      "platform_variant": "Arleigh Burke Flight IIA DDG",
+      "fit_source": { "document": "5-4.Americas_Navy_1_Dec_25.pdf", "sha256": "189416d65b92d5e2fa50c59c99e309ca5715a5db287e5323295152034e61c5c8", "pdf_page": 34, "printed_page": "A-31" },
+      "sensor": "SQR-19(V)3",
+      "annex_source": { "pdf_page": 92, "printed_page": "K-2" },
+      "kind": "passive_towed",
+      "generation": 6,
+      "length_category": "long",
+      "annex_speed_category": "high",
+      "platform_category": "surface",
+      "physical_length_m": null,
+      "fit_status": "exact_named_fit; Annex K1 groups SQR-19(V)2 and (V)3"
+    },
+    {
+      "platform_id": "cn_052d",
+      "platform_variant": "Type 052D [Luyang III] DDG",
+      "fit_source": { "document": "6-3.（数据库）2025版Chinas_Navy_1_Dec_25.pdf", "sha256": "9ff46ff0c91f323d48c37e9917df6d87583fbe0df337a6dd0bb40bc488d98b2c", "pdf_page": 16, "printed_page": "A-9" },
+      "sensor": "SJG-311",
+      "annex_source": { "pdf_page": 94, "printed_page": "K-1" },
+      "kind": "passive_towed",
+      "generation": 7,
+      "length_category": "long",
+      "annex_speed_category": "slow",
+      "platform_category": "surface",
+      "physical_length_m": null,
+      "fit_status": "exact_named_fit"
+    },
+    {
+      "platform_id": "cn_055",
+      "platform_variant": "Type 055 [Renhai] CG",
+      "fit_source": { "document": "6-3.（数据库）2025版Chinas_Navy_1_Dec_25.pdf", "sha256": "9ff46ff0c91f323d48c37e9917df6d87583fbe0df337a6dd0bb40bc488d98b2c", "pdf_page": 15, "printed_page": "A-8" },
+      "sensor": "SJG-311",
+      "annex_source": { "pdf_page": 94, "printed_page": "K-1" },
+      "kind": "passive_towed",
+      "generation": 7,
+      "length_category": "long",
+      "annex_speed_category": "slow",
+      "platform_category": "surface",
+      "physical_length_m": null,
+      "fit_status": "candidate_needs_adjudication; Type 055 sensor line lists SJG-311 alongside possible SJD-11; K1 remark F only calls SJD-11 a possible Type 055 designation"
+    },
+    {
+      "platform_id": "cn_093",
+      "platform_variant": "Type 093/09III [Shang] SSN (base, not 093A or Mod)",
+      "fit_source": { "document": "6-3.（数据库）2025版Chinas_Navy_1_Dec_25.pdf", "sha256": "9ff46ff0c91f323d48c37e9917df6d87583fbe0df337a6dd0bb40bc488d98b2c", "pdf_page": 11, "printed_page": "A-4" },
+      "sensor": "TBD",
+      "annex_source": { "pdf_page": 94, "printed_page": "K-1" },
+      "kind": null,
+      "generation": null,
+      "length_category": null,
+      "annex_speed_category": null,
+      "platform_category": "sub",
+      "physical_length_m": null,
+      "fit_status": "no base-variant towed-array fit evidenced; the distinct 093A row says SQZ-265A bow and towed array and may not transfer to cn_093"
+    }
+  ],
+  "policy_notes": {
+    "optional_disabled": "No ambiguity or stabilization state is imposed when the scenario does not opt in.",
+    "unknown_fit": "No type or generation inferred from platform names, combat-system generation, physical length, or adjacent variant.",
+    "speed_column": "The source labels columns 5, 10, and 15+ kt but provides no explicit interpolation or inclusive band boundaries. Caller must select a printed column explicitly; no nearest/floor/ceiling policy is hidden in the engine.",
+    "source_only_gaps": ["No physical array lengths are supplied by K1", "No time granularity rounding rule beyond Tactical Turn length is stated", "No stabilization speed interpolation rule is stated", "The source does not state whether a bearing becomes usable at the exact tick of the final stabilization turn; implementation uses inclusive `now_tick >= ready_at_tick` as an explicit RTS boundary convention"]
+  }
+}

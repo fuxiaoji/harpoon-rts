@@ -1,0 +1,148 @@
+{
+  "schema": 1,
+  "date": "2026-10-25",
+  "profile": "hv2026-rts-v4",
+  "status": "tested_declared_subsets_only",
+  "final_signoff": true,
+  "whole_book_complete": false,
+  "whole_chapter_complete": false,
+  "all_mechanisms_complete": false,
+  "evidence_root": "artifacts/rules-communications-runtime-20261025",
+  "rows": [
+    {
+      "rule_id": "HV2026-6.3.10-A",
+      "branch_id": "native-report-provenance",
+      "source": "English2026 §6.3.10 PDF75/6-7 (PDF74/6-6 §6.3.9 context); original SHA8196ffc715bbcccd862d8597c607de7816dac5baee31fa659f89dfaf4323700c",
+      "data": "communications-2026.json revision2026-10-25-voice-native-report-A1; RTS-COMMS-20261025-A1; exact scenario_assumption voice and directed peer matrix only",
+      "execution": "sensors::update_sensors_v4 passes actual successful scan report and pre-fusion raw known_category into typed State; unknown remains unknown; actor/sensor/own CID/static source fingerprint required",
+      "tests": "16 A native command source cases; real HTTP native report seed selection, no authored Contacts/FCS/rolls",
+      "status": "tested_declared_branch"
+    },
+    {
+      "rule_id": "HV2026-6.3.10-A",
+      "branch_id": "plotting-detection-same-phase",
+      "source": "English2026 §6.3.10 PDF75/6-7 (PDF74/6-6 §6.3.9 context); original SHA8196ffc715bbcccd862d8597c607de7816dac5baee31fa659f89dfaf4323700c",
+      "data": "communications-2026.json revision2026-10-25-voice-native-report-A1; RTS-COMMS-20261025-A1; exact scenario_assumption voice and directed peer matrix only",
+      "execution": "Command queues fixed report; detection_open before native scans terminalizes all selected recipients or none; paused wall time does not advance; actual execution tick determines Tacfloor180",
+      "tests": "A cases + phase-boundary original12; actual HTTP T3 and actual179/180; actual MCP T4",
+      "status": "tested_declared_branch"
+    },
+    {
+      "rule_id": "HV2026-6.3.10-A",
+      "branch_id": "fixed-warning-not-track",
+      "source": "English2026 §6.3.10 PDF75/6-7 (PDF74/6-6 §6.3.9 context); original SHA8196ffc715bbcccd862d8597c607de7816dac5baee31fa659f89dfaf4323700c",
+      "data": "communications-2026.json revision2026-10-25-voice-native-report-A1; RTS-COMMS-20261025-A1; exact scenario_assumption voice and directed peer matrix only",
+      "execution": "Fixed observation geometry/category/time, historical sender CID only; received message does not write Contact/FCS/track, add range, extrapolate truth, or create search bonus",
+      "tests": "real HTTP full World source proof and physics checks; MCP own projection; UI historical unknown/bearing-only and no receiver native report",
+      "status": "tested_declared_branch"
+    },
+    {
+      "rule_id": "HV2026-6.3.10-A",
+      "branch_id": "route-and-batch-atomicity",
+      "source": "English2026 §6.3.10 PDF75/6-7 (PDF74/6-6 §6.3.9 context); original SHA8196ffc715bbcccd862d8597c607de7816dac5baee31fa659f89dfaf4323700c",
+      "data": "communications-2026.json revision2026-10-25-voice-native-report-A1; RTS-COMMS-20261025-A1; exact scenario_assumption voice and directed peer matrix only",
+      "execution": "Explicit scenario assumption units/fits/source/protocol/send/receive/operational/directed peer checks before queue; mixed foreign/unknown CID/sensor/fit refused read-only; delivery failure terminal and idempotent",
+      "tests": "A source cases + phase cases; HTTP five invalid requests complete payload/inbox unchanged; core delivery failure explicit own receiver removal, not natural comms casualty",
+      "status": "tested_declared_branch"
+    },
+    {
+      "rule_id": "HV2026-6.3.10-A",
+      "branch_id": "source-and-double-blind",
+      "source": "English2026 §6.3.10 PDF75/6-7 (PDF74/6-6 §6.3.9 context); original SHA8196ffc715bbcccd862d8597c607de7816dac5baee31fa659f89dfaf4323700c",
+      "data": "communications-2026.json revision2026-10-25-voice-native-report-A1; RTS-COMMS-20261025-A1; exact scenario_assumption voice and directed peer matrix only",
+      "execution": "Delivery validity never checks enemy existence/alive/kind/position/HP; public reports/messages whitelist no private target, fingerprint, rolls, FCS; sender-local sequence",
+      "tests": "phase privacy native reports + explicit referee enemy-truth perturbations; actual HTTP/MCP enemy observations and events; UI enemy view",
+      "status": "tested_declared_branch"
+    },
+    {
+      "rule_id": "HV2026-6.3.10-A",
+      "branch_id": "manual-and-delayed-navigation",
+      "source": "English2026 §6.3.10 PDF75/6-7 (PDF74/6-6 §6.3.9 context); original SHA8196ffc715bbcccd862d8597c607de7816dac5baee31fa659f89dfaf4323700c",
+      "data": "communications-2026.json revision2026-10-25-voice-native-report-A1; RTS-COMMS-20261025-A1; exact scenario_assumption voice and directed peer matrix only",
+      "execution": "Public clients cannot set internal retain_manual; HTTP/MCP attach it only after shared source preflight; successful core apply alone commits persistent sender manual; receiver orders/ownership untouched; already-manual pending navigation retained",
+      "tests": "P13 real-red→green uses explicitly adjudicated DelayedOrder, not a natural Bridge hit; actual HTTP/MCP/browser only sender manual after apply; existing all-command manual gate",
+      "status": "tested_declared_branch"
+    },
+    {
+      "rule_id": "HV2026-6.3.10-A",
+      "branch_id": "shared-http-mcp-llm",
+      "source": "English2026 §6.3.10 PDF75/6-7 (PDF74/6-6 §6.3.9 context); original SHA8196ffc715bbcccd862d8597c607de7816dac5baee31fa659f89dfaf4323700c",
+      "data": "communications-2026.json revision2026-10-25-voice-native-report-A1; RTS-COMMS-20261025-A1; exact scenario_assumption voice and directed peer matrix only",
+      "execution": "Shared typed Action/command schema38, shared source validation and owner observation; LLM receives native reports/receipts and cannot forge player authority or substitute a received warning for own report",
+      "tests": "MCP22 and server156+1originalignored; two new AI tests use explicit observation-policy fixtures, not native physics; actual stdio discovery + native warning, no new LLM match",
+      "status": "tested_declared_branch"
+    },
+    {
+      "rule_id": "HV2026-6.3.10-A",
+      "branch_id": "legacy-shadow-isolation",
+      "source": "English2026 §6.3.10 PDF75/6-7 (PDF74/6-6 §6.3.9 context); original SHA8196ffc715bbcccd862d8597c607de7816dac5baee31fa659f89dfaf4323700c",
+      "data": "communications-2026.json revision2026-10-25-voice-native-report-A1; RTS-COMMS-20261025-A1; exact scenario_assumption voice and directed peer matrix only",
+      "execution": "Full firectl::step no longer applies legacy60/300-second .9/.5 cross-fix shadow or radar-name inferred data link; prior profiles keep exact historical behavior",
+      "tests": "seven legacy/source tests:4 actual rule-red→green and3 historical controls; original v3/Sol full replay unchanged",
+      "status": "tested_declared_branch"
+    },
+    {
+      "rule_id": "HV2026-6.3.10-A",
+      "branch_id": "persistence-and-replay",
+      "source": "English2026 §6.3.10 PDF75/6-7 (PDF74/6-6 §6.3.9 context); original SHA8196ffc715bbcccd862d8597c607de7816dac5baee31fa659f89dfaf4323700c",
+      "data": "communications-2026.json revision2026-10-25-voice-native-report-A1; RTS-COMMS-20261025-A1; exact scenario_assumption voice and directed peer matrix only",
+      "execution": "Native source, queued internal player intent, fixed receipts and terminal guards serialized; new table fingerprint only Full; old empty fields skipped",
+      "tests": "nine separate-PID complete World/inbox checkpoints incl real179/180; real full command replay; five old v4 loads refused atomically; original v3 T299/329 and Sol10800",
+      "status": "tested_declared_branch"
+    },
+    {
+      "rule_id": "HV2026-6.3.10-A",
+      "branch_id": "player-interface",
+      "source": "English2026 §6.3.10 PDF75/6-7 (PDF74/6-6 §6.3.9 context); original SHA8196ffc715bbcccd862d8597c607de7816dac5baee31fa659f89dfaf4323700c",
+      "data": "communications-2026.json revision2026-10-25-voice-native-report-A1; RTS-COMMS-20261025-A1; exact scenario_assumption voice and directed peer matrix only",
+      "execution": "Own unit original-report selector, explicit unchecked recipients, stable poll focus/drafts, one explicit send, bilingual receipts and event explanation",
+      "tests": "real owned Edge8 screenshots1600x1000/1024x768;30s exploration; exactly1 actual send,0 pageerrors; paused/native delivery; Node70; no physical tablet claim",
+      "status": "tested_declared_branch"
+    },
+    {
+      "rule_id": "HV2026-6.3.10-A",
+      "branch_id": "remaining-full-communications",
+      "source": "English2026 §6.3.10 PDF75/6-7 (PDF74/6-6 §6.3.9 context); original SHA8196ffc715bbcccd862d8597c607de7816dac5baee31fa659f89dfaf4323700c",
+      "data": "communications-2026.json revision2026-10-25-voice-native-report-A1; RTS-COMMS-20261025-A1; exact scenario_assumption voice and directed peer matrix only",
+      "execution": "TL+15, NRT/RT cue and remote FCS, multi-source NA/Poor, real Annex fits/LOS/SATCOM/comm-critical effects and other optional rules remain open",
+      "tests": "This A contract is not full6.3.9/10 or whole-book acceptance",
+      "status": "open_not_implemented_or_not_fully_accepted"
+    }
+  ],
+  "workspace": {
+    "passed": 1394,
+    "failed": 0,
+    "ignored": 5,
+    "nonempty_harnesses": 88,
+    "total_harnesses": 108,
+    "cargo_exit": 0,
+    "input_snapshot": "production-before-final-second.json",
+    "log": "workspace-final-second.log",
+    "whole_book_complete": false
+  },
+  "node": {
+    "passed": 70,
+    "failed": 0
+  },
+  "registered_new_independent_cases": 38,
+  "cases_are_not_rule_count": true,
+  "production_inputs": 301,
+  "cross_process_checkpoints": 9,
+  "protocol_evidence": {
+    "http-final": {
+      "path": "artifacts/rules-communications-runtime-20261025/protocol-execution/protocol/runs/http-final/validation.json",
+      "sha256": "ac2ce47caf7447644168cee23ef1381bde8a798eb4b9bd2fb72f2d857027aa0e"
+    },
+    "cross-final": {
+      "path": "artifacts/rules-communications-runtime-20261025/protocol-execution/protocol/runs/cross-final/validation.json",
+      "sha256": "2fbd68d391b4dd503eb40a35328495de3aedad8a1fe758788b4576623b78242c"
+    },
+    "mcp-final": {
+      "path": "artifacts/rules-communications-runtime-20261025/protocol-execution/protocol/runs/mcp-final/validation.json",
+      "sha256": "c3a93eb7a6b5f63aa90513efc6e50aa70cd5ece95c588a9e5fe0cb1e2431d6a6"
+    }
+  },
+  "ui": "ui-final/validation.json",
+  "no_new_llm_match": true,
+  "complete_real_equipment_fits_claimed": false
+}

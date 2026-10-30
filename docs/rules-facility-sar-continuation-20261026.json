@@ -1,0 +1,1177 @@
+{
+  "schema": 1,
+  "started_date": "2026-10-26",
+  "closure_date": "2026-10-26",
+  "status": "tested_declared_subsets",
+  "profile": "hv2026-rts-v4",
+  "final_signoff": true,
+  "whole_book_complete": false,
+  "whole_chapter_complete": false,
+  "all_optional_rules_complete": false,
+  "all_real_annex_fits_complete": false,
+  "atomic_rule_denominator": null,
+  "coverage_percentage": null,
+  "evidence_root": "artifacts/rules-facility-sar-next-20261026",
+  "authority": {
+    "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+    "version": "2026-01-01",
+    "sha256": "8196ffc715bbcccd862d8597c607de7816dac5baee31fa659f89dfaf4323700c",
+    "method": "three Chinese core RAG first, original English page visual inspection; English prevails",
+    "visual_pages": [
+      63,
+      64,
+      104,
+      116,
+      117,
+      118,
+      137
+    ]
+  },
+  "interpretation": "Final signoff covers only the nine declared Source/Data/Execution/Tests subsets supported by the frozen final run and actual protocol/UI evidence. Historical failures and unsupported branches remain. Guards/pure helpers never complete an unimplemented physical mechanism; test counts are not rule counts.",
+  "validation": {
+    "frozen_inputs": {
+      "count": 358,
+      "path": "artifacts/rules-facility-sar-next-20261026/final-candidate-2-inputs.json",
+      "sha256": "c29aa12ae8338444e6ba1dbaac9846aa5eef138c08b73eec843aa5df1ee06eba",
+      "after_acceptance_equal": true,
+      "changed_since_candidate_1": [
+        "harpoon-rts/crates/harpoon-mcp/src/contract_tests.rs"
+      ],
+      "after_acceptance_path": "artifacts/rules-facility-sar-next-20261026/after-acceptance-inputs.json"
+    },
+    "rust": {
+      "status": "passed",
+      "path": "artifacts/rules-facility-sar-next-20261026/final-workspace-2.log",
+      "targets": 126,
+      "passed": 1596,
+      "failed": 0,
+      "ignored": 5,
+      "exit_code": 0
+    },
+    "node": {
+      "status": "passed",
+      "path": "artifacts/rules-facility-sar-next-20261026/final-node-2.log",
+      "passed": 86,
+      "failed": 0,
+      "skipped": 0,
+      "previous_run": {
+        "path": "artifacts/rules-facility-sar-next-20261026/final-node-1.log",
+        "passed": 86,
+        "failed": 0
+      }
+    },
+    "registered_new_targets": [
+      {
+        "path": "harpoon-rts/crates/harpoon-core/tests/berth_service_native_20261026.rs",
+        "cases": 21,
+        "actual_passed": 21,
+        "actual_failed": 0,
+        "evidence": "artifacts/rules-facility-sar-next-20261026/final-workspace-2.log"
+      },
+      {
+        "path": "harpoon-rts/crates/harpoon-core/tests/sar_continuation_20261026.rs",
+        "cases": 10,
+        "actual_passed": 10,
+        "actual_failed": 0,
+        "evidence": "artifacts/rules-facility-sar-next-20261026/final-workspace-2.log"
+      },
+      {
+        "path": "harpoon-rts/crates/harpoon-core/tests/sar_recovery_guards_20261026.rs",
+        "cases": 4,
+        "actual_passed": 4,
+        "actual_failed": 0,
+        "evidence": "artifacts/rules-facility-sar-next-20261026/final-workspace-2.log"
+      },
+      {
+        "path": "harpoon-rts/crates/harpoon-core/tests/sar_marker_persistence_20261026.rs",
+        "cases": 1,
+        "actual_passed": 1,
+        "actual_failed": 0,
+        "evidence": "artifacts/rules-facility-sar-next-20261026/final-workspace-2.log"
+      }
+    ],
+    "http": {
+      "status": "passed_declared_berth_transport_only",
+      "path": "artifacts/rules-facility-sar-next-20261026/protocol/http-runs/http-final-3/validation.json",
+      "actual_run_label": "http-final-3",
+      "first_run_passed": false,
+      "rejections": 7,
+      "each_rejection_full_payload_equal": true,
+      "two_player_requests_four_legal_commands": true,
+      "per_fresh_player_request": [
+        "set_unit_automation(false)",
+        "ground"
+      ],
+      "reverse_arrival_stable_winner": "SHIP/lab",
+      "reservation_tick": 1,
+      "due_tick": 7,
+      "final_tick": 20,
+      "stock_before": 3,
+      "stock_after": 1,
+      "recipient_ammunition_before": 2,
+      "recipient_ammunition_after": 4,
+      "other_recipient_ammunition": 2,
+      "processes": [
+        {
+          "pid": 47248,
+          "sha256": "fba1312cc36e4b168ddc26055f2e28c1a138bfc5f5363dcfb03e15bd51094e70"
+        },
+        {
+          "pid": 48568,
+          "sha256": "fba1312cc36e4b168ddc26055f2e28c1a138bfc5f5363dcfb03e15bd51094e70"
+        }
+      ],
+      "replay": {
+        "command_batches": 1,
+        "events_verified": 16,
+        "tick": 20,
+        "verified": true,
+        "world_fnv64": "a09f0be9f6af1352"
+      },
+      "no_sar_protocol_claim": true
+    },
+    "mcp": {
+      "status": "passed_declared_berth_transport_only",
+      "path": "artifacts/rules-facility-sar-next-20261026/protocol/mcp-runs/mcp-final-2/validation.json",
+      "process_closure_path": "artifacts/rules-facility-sar-next-20261026/protocol/mcp-runs/mcp-final-2/protocol-and-process-closure.json",
+      "post_audit_path": "artifacts/rules-facility-sar-next-20261026/protocol/mcp-final-2-post-audit.json",
+      "requests": 108,
+      "responses": 108,
+      "jsonrpc_errors": 0,
+      "expected_tool_errors": 8,
+      "notifications": 1,
+      "pid": 22076,
+      "executable_sha256": "83dd57b8240a747638c9e9a87015126edc886dcaf32fe77333f9078dc8105e92",
+      "exit_code": 0,
+      "reverse_arrival_winner": "SHIP/lab",
+      "reserved_at": 1,
+      "due": 7,
+      "source_stock": [
+        3,
+        1
+      ],
+      "recipient_ammunition": [
+        2,
+        4
+      ],
+      "other_recipient_ammunition": 2,
+      "main_final_tick": 20,
+      "cancel_restart_completion_tick": 9,
+      "no_repeated_transfer": true,
+      "manual_control": {
+        "SHIP": false,
+        "SHIP2": false
+      },
+      "scope": "Actual independent-stock berth transfer/reservation/cancel/restart only; no actual SAR loss/discovery/recovery in stdio",
+      "first_run_passed": false
+    },
+    "cross_process": {
+      "status": "passed",
+      "path": "artifacts/rules-facility-sar-next-20261026/protocol/http-runs/http-final-3/validation.json",
+      "source_pid": 47248,
+      "restored_pid": 48568,
+      "same_frozen_sha256": true,
+      "actual_checkpoint_tick": 0,
+      "checkpoint_contains_queued_commands": true,
+      "queued_world_and_inbox_equal": true,
+      "final_tick": 20,
+      "complete_final_world_and_inbox_equal": true,
+      "replay": {
+        "command_batches": 1,
+        "events_verified": 16,
+        "tick": 20,
+        "verified": true,
+        "world_fnv64": "a09f0be9f6af1352"
+      },
+      "mid_job_cross_process_checkpoint_claimed": false,
+      "native_core_mid_job_world_restore": "B07"
+    },
+    "ui": {
+      "status": "passed_actual_cua_declared_scope",
+      "path": "artifacts/rules-facility-sar-next-20261026/protocol/ui/validation.json",
+      "browser_id": "2",
+      "tab_id": "3",
+      "url": "http://127.0.0.1:8876/command.html",
+      "before_tick": 20,
+      "completed_tick": 24,
+      "actual_user_clicks": 1,
+      "actual_queued_ground_commands": 1,
+      "manual_already_true_before_click": true,
+      "manual_retained_after_application": true,
+      "single_ground_acquired_manual_claim": false,
+      "selection_draft_full_payload_unchanged": true,
+      "queued_non_inbox_payload_unchanged": true,
+      "reserved_tick": 21,
+      "due_tick": 24,
+      "stock": [
+        1,
+        0
+      ],
+      "recipient_ship2_ammunition": [
+        2,
+        3
+      ],
+      "all_reservations_released": true,
+      "replay": {
+        "verified": true,
+        "tick": 24,
+        "command_batches": 2,
+        "events_verified": 19,
+        "world_fnv64": "c66eb7e1cd7f6176"
+      },
+      "layout": [
+        {
+          "language": "zh-CN",
+          "width": 1600,
+          "height": 1000,
+          "horizontal_overflow": false,
+          "map_present": true
+        },
+        {
+          "language": "en",
+          "width": 1600,
+          "height": 1000,
+          "horizontal_overflow": false,
+          "map_present": true
+        },
+        {
+          "language": "en",
+          "width": 1024,
+          "height": 768,
+          "horizontal_overflow": false,
+          "map_present": true
+        },
+        {
+          "language": "zh-CN",
+          "width": 1024,
+          "height": 768,
+          "horizontal_overflow": false,
+          "map_present": true
+        }
+      ],
+      "button_and_number_input_height_px": 44.000003814697266,
+      "select_height_px": 40,
+      "all_controls_44px_claimed": false,
+      "browser_captured_error_logs": [],
+      "viewport_override_reset": true,
+      "deliverable_tab_retained": true,
+      "final_language": "zh-CN",
+      "screenshots": "displayed through CUA during conversation; no local screenshot file claim",
+      "physical_tablet_test": false,
+      "sar_ui_discovery_or_recovery_claim": false,
+      "harness_corrections": "wrong expected2commands then duplicate advance plan_id409, both before advancement; same single UI submission continued without resending",
+      "default_rounds": 1,
+      "quantity_typed": false,
+      "selection_and_draft_scope": "selected SHIP2 and its own service; retained default one round; no quantity typing"
+    },
+    "frozen_binary_results": [
+      {
+        "name": "harpoon-server.exe",
+        "path": "artifacts/rules-facility-sar-next-20261026/bin-final-1/harpoon-server.exe",
+        "sha256": "fba1312cc36e4b168ddc26055f2e28c1a138bfc5f5363dcfb03e15bd51094e70",
+        "bytes": 41916928
+      },
+      {
+        "name": "harpoon-mcp.exe",
+        "path": "artifacts/rules-facility-sar-next-20261026/bin-final-1/harpoon-mcp.exe",
+        "sha256": "83dd57b8240a747638c9e9a87015126edc886dcaf32fe77333f9078dc8105e92",
+        "bytes": 20823040
+      }
+    ],
+    "previous_frozen_candidate": {
+      "count": 358,
+      "path": "artifacts/rules-facility-sar-next-20261026/final-candidate-1-inputs.json",
+      "sha256": "9ef023b1b99373da2c4bd05ffa8f5de9c575094159881dca31344600a22ff4a6",
+      "after_acceptance_equal": null
+    },
+    "previous_rust_runs": [
+      {
+        "path": "artifacts/rules-facility-sar-next-20261026/final-workspace-1.log",
+        "targets": 126,
+        "passed": 1595,
+        "failed": 1,
+        "ignored": 5,
+        "only_failure": "Legacy MCP shape fixture expected source-backed berth commands to enqueue without Full config; production rejection correct"
+      }
+    ],
+    "build": {
+      "status": "passed",
+      "path": "artifacts/rules-facility-sar-next-20261026/final-build-1.log",
+      "existing_warnings_retained": [
+        "unused_mut"
+      ],
+      "zero_warnings_claimed": false
+    }
+  },
+  "observed_failures": [
+    {
+      "log": "facility-source-red-1.log",
+      "kind": "harness_not_tested",
+      "observed": "wrong relative candidate-copy path left target absent; no compilation/execution"
+    },
+    {
+      "log": "facility-source-red-2.log",
+      "kind": "normally_compiled_schema_red",
+      "passed": 0,
+      "failed": 10,
+      "observed": "all earliest depot config preservation Null vs3; downstream stock/clock not reached"
+    },
+    {
+      "log": "sar-source-red-1.log",
+      "kind": "normally_compiled_source_run",
+      "passed": 3,
+      "failed": 6,
+      "observed": [
+        "c01 actual count10 discovery missing",
+        "c02 actual30 endpoint wrongly chose class",
+        "c04/c06 earliest native discovery prerequisite, not recovery assertions",
+        "c07 old measured_at21599 instead of real moved-point21660",
+        "c09 actual arrival after200s remote order immediately rescued9, expected0"
+      ]
+    },
+    {
+      "log": "sar-guards-red-1.log",
+      "kind": "normally_compiled_native_consumer_red",
+      "passed": 1,
+      "failed": 3,
+      "observed": "actual dead wreck, Base and Sub each recovered7; true Ship control green"
+    },
+    {
+      "log": "combined-1.log",
+      "kind": "intermediate_combined_run",
+      "observed": "facility18 green/SAR9 green; r05 real report lost after native observer cleanup; later4 guard target not reached after Cargo failure"
+    },
+    {
+      "log": "boundary-red-1.log",
+      "kind": "normally_compiled_no_fail_fast",
+      "facility": {
+        "passed": 18,
+        "failed": 2
+      },
+      "sar": {
+        "passed": 9,
+        "failed": 1
+      },
+      "observed": [
+        "B19 special Magazine accepted as independent depot",
+        "B20 original Blue lab/rounds2 cancellation actual Event.vis Side(Red)",
+        "c10 initialized current at exact21600 too early"
+      ]
+    },
+    {
+      "log": "cancel-owner-red-1.log",
+      "kind": "normally_compiled_filtered_source_red",
+      "passed": 0,
+      "failed": 1,
+      "filtered_out": 20,
+      "observed": "B21 changed-side actor original private Cancel returned Ok through shared preflight"
+    },
+    {
+      "log": "harness-notes.md",
+      "kind": "auxiliary_only",
+      "observed": "GBK printing and relative Python syntax-check path errors preserved; never treated as production rule reds"
+    },
+    {
+      "log": "final-workspace-1.log",
+      "kind": "full_workspace_fixture_applicability_failure",
+      "targets": 126,
+      "passed": 1595,
+      "failed": 1,
+      "ignored": 5,
+      "only_failure": "MCP each_published_command_and_nested_action_deserializes_as_a_real_engine_order",
+      "actual": "Legacy fixture received correct source error:11.berth requires explicit hv2026-rts-v4",
+      "fix": "only contract_tests.rs: two actions join parse-only/Legacy-must-reject group26->28; no production source gate changed; Full positive path remains core and actual-protocol scope"
+    },
+    {
+      "log": "protocol/mcp-runs/mcp-final-1/",
+      "kind": "actual_protocol_harness_public_field_misclassification",
+      "observed": "Main berth chain completed toT20 before helper wrongly classified public scenario_description as private logistics; original actual data and exited-child receipt preserved",
+      "fix": "auxiliary checker explicitly retains public description, continues checking all other own/foreign logistics fields; new run label final2 passed; production358 and fixture16 unchanged"
+    },
+    {
+      "log": "protocol/http-runs/http-final-1/",
+      "kind": "actual_protocol_harness_parse_error",
+      "observed": "pure-text400 private-field rejection was forced through JSON decoding; legitimate transfer not reached",
+      "production_changed": false
+    },
+    {
+      "log": "protocol/http-runs/http-final-2/",
+      "kind": "actual_protocol_harness_wrong_command_count",
+      "observed": "expected2 but two fresh player requests each actually queued automation-off+Ground,4 legal commands; failed before advance; original queued save preserved",
+      "production_changed": false
+    },
+    {
+      "log": "protocol/harness-corrections.md",
+      "kind": "ui_auxiliary_only_before_advance",
+      "observed": "UI initially expected2 but prior manual state caused actual1Ground; then restored duplicate advance plan_id returned409 without advancing; same single actual UI request continued after helper corrections",
+      "ui_legal_clicks": 1,
+      "ui_legal_requests_resent": false,
+      "production_changed": false
+    }
+  ],
+  "records": [
+    {
+      "id": "HV2026-11-BERTH-EXPLICIT-STOCK",
+      "title": "独立Depot与严格服务指派",
+      "status": "tested_declared_subset",
+      "source": {
+        "status": "verified_source_for_declared_subset",
+        "authority": "English2026-01-01",
+        "reference": "PDF116/11-1 §11.1; PDF118/11-3 Generic Land Targets Ship Berth; new independent stock/time/capacity is explicit scenario contract"
+      },
+      "data": {
+        "status": "structured_declared_subset",
+        "details": [
+          "ground_2026.berth_depots: one initial weapon stock per actual unique depot",
+          "ground_2026.berth_services: exact depot/berth/recipient/mount/weapon and declared capacity/geometry/time",
+          "source templates retain Ship Berth B/400DP/0; no logistics numbers inferred"
+        ]
+      },
+      "execution": {
+        "status": "executed_declared_subset",
+        "details": [
+          "ground2026::initialize -> berth::initialize",
+          "actual same-side stationary Base depot/berth and surface Ship recipient",
+          "strict ServiceConfig/DepotConfig; first domain rejects all Ground-target depot identities, special physical loading, unknown configuration and moving services"
+        ]
+      },
+      "tests": {
+        "status": "passed_declared_subset",
+        "target": "harpoon-rts/crates/harpoon-core/tests/berth_service_native_20261026.rs",
+        "cases": [
+          "b01",
+          "b09",
+          "b10",
+          "b15",
+          "b16",
+          "b19"
+        ],
+        "final_result": {
+          "passed": 21,
+          "failed": 0,
+          "path": "artifacts/rules-facility-sar-next-20261026/final-workspace-2.log",
+          "same_shared_target_counts_not_additive": true
+        }
+      },
+      "limits": [
+        "B19 rejection is a capability guard, not Magazine Bunker service implementation",
+        "real Annex logistics fit and physical loading remain open"
+      ]
+    },
+    {
+      "id": "RTS20261026-BERTH-SIMULTANEOUS-LEDGER",
+      "title": "统一phase预约与一次原子转库",
+      "status": "tested_declared_subset",
+      "source": {
+        "status": "verified_source_for_declared_subset",
+        "authority": "English2026-01-01",
+        "reference": "Explicit real-time adaptation preserving simultaneous command collection and the source berth restriction; not a printed transfer-rate table"
+      },
+      "data": {
+        "status": "structured_declared_subset",
+        "details": [
+          "serialized requests/jobs; reservations derived from one shared depot/weapon ledger and recipient/mount capacity",
+          "author experiment: stock3, initial destination2, capacity4, radius0.01nm, speed0, 3seconds/round"
+        ]
+      },
+      "execution": {
+        "status": "executed_declared_subset",
+        "details": [
+          "Ground apply gathers only; root sim calls berth::step once after movement/committed damage/fire update",
+          "cancel and invalidation first; existing due commits; stable(unit,service) new reservations",
+          "exact duplicates coalesce, conflicting quantities reject group, cancellation wins same phase",
+          "completion rechecks and debits source/credits selected aggregate mount atomically once"
+        ]
+      },
+      "tests": {
+        "status": "passed_declared_subset",
+        "target": "harpoon-rts/crates/harpoon-core/tests/berth_service_native_20261026.rs",
+        "cases": [
+          "b02",
+          "b05",
+          "b06",
+          "b11",
+          "b12",
+          "b17",
+          "b18"
+        ],
+        "final_result": {
+          "passed": 21,
+          "failed": 0,
+          "path": "artifacts/rules-facility-sar-next-20261026/final-workspace-2.log",
+          "same_shared_target_counts_not_additive": true
+        }
+      },
+      "limits": [
+        "queued command receipt is not guaranteed service admission or completion",
+        "reverse-order tests compare inventory/winner, not intentionally different submitted-order command receipts"
+      ]
+    },
+    {
+      "id": "HV2026-11-BERTH-NATIVE-LOSS-CONSUMER",
+      "title": "精确泊位失效、离位与存取",
+      "status": "tested_declared_subset",
+      "source": {
+        "status": "verified_source_for_declared_subset",
+        "authority": "English2026-01-01",
+        "reference": "PDF116/11-1 function lost at halfDP or critical; PDF118/11-3 Ship Berth cannot resupply alongside"
+      },
+      "data": {
+        "status": "structured_declared_subset",
+        "details": [
+          "exact service berth identity independent from shared parent",
+          "persistent job started/due/rounds plus independent stock"
+        ]
+      },
+      "execution": {
+        "status": "executed_declared_subset",
+        "details": [
+          "berth::live consumes exact source berth disabled/destroyed state",
+          "unknown/missing/dead/changed-side source or destination, lost mount, insufficient capacity/stock, departure or movement cancels and releases reservations",
+          "old due cannot bank interrupted work or grant free ammunition; full World persists pending jobs"
+        ]
+      },
+      "tests": {
+        "status": "passed_declared_subset",
+        "target": "harpoon-rts/crates/harpoon-core/tests/berth_service_native_20261026.rs",
+        "cases": [
+          "b03",
+          "b04",
+          "b07",
+          "b08",
+          "b13",
+          "b14"
+        ],
+        "final_result": {
+          "passed": 21,
+          "failed": 0,
+          "path": "artifacts/rules-facility-sar-next-20261026/final-workspace-2.log",
+          "same_shared_target_counts_not_additive": true
+        },
+        "actual_queued_cross_process": "artifacts/rules-facility-sar-next-20261026/protocol/http-runs/http-final-3/validation.json"
+      },
+      "limits": [
+        "200DP facility damage and native sink are explicitly adjudicated consumer inputs",
+        "not a complete natural weapon/penetration/berth-loss engagement",
+        "legacy ground::resupply_allowed helper is not the producer; it remains unused"
+      ]
+    },
+    {
+      "id": "RTS20261026-BERTH-ACL-TRANSPORT-UI",
+      "title": "共同预检、原侧事件与双语服务控件",
+      "status": "tested_declared_subset",
+      "source": {
+        "status": "verified_source_for_declared_subset",
+        "authority": "English2026-01-01",
+        "reference": "Explicit service ACL, fixed original owner and existing player-control contract; source Ship Berth restriction"
+      },
+      "data": {
+        "status": "structured_declared_subset",
+        "details": [
+          "nested Ground alongside_resupply and cancel_alongside_resupply actions with strict private-field rejection",
+          "recipient-only ground.berth_resupply.services map and original Service.owner",
+          "public schema excludes any authoritative stock/time/private result injection"
+        ]
+      },
+      "execution": {
+        "status": "executed_declared_subset",
+        "details": [
+          "Command::validate_source and actual apply recheck; common owner/alive/exercise/control gates",
+          "changed-side Cancel matches unknown/foreign-service denial",
+          "all service events retain original owner; missing identity is Referee-only even after entity cleanup",
+          "shared server/MCP transport and bilingual own-data UI implemented"
+        ]
+      },
+      "tests": {
+        "status": "passed_declared_subset",
+        "target": "harpoon-rts/crates/harpoon-core/tests/berth_service_native_20261026.rs",
+        "cases": [
+          "b09",
+          "b20",
+          "b21",
+          "final-node-1.log:86 passed"
+        ],
+        "final_result": {
+          "passed": 21,
+          "failed": 0,
+          "path": "artifacts/rules-facility-sar-next-20261026/final-workspace-2.log",
+          "same_shared_target_counts_not_additive": true
+        },
+        "observed_actual_protocol": {
+          "mcp": "artifacts/rules-facility-sar-next-20261026/protocol/mcp-runs/mcp-final-2/validation.json",
+          "result": "MCP108 pairs/0 protocol errors/8 expected rejects; manual_control false; berth only"
+        },
+        "actual_http": "artifacts/rules-facility-sar-next-20261026/protocol/http-runs/http-final-3/validation.json",
+        "actual_ui": "artifacts/rules-facility-sar-next-20261026/protocol/ui/validation.json",
+        "node": {
+          "passed": 86,
+          "failed": 0,
+          "path": "artifacts/rules-facility-sar-next-20261026/final-node-2.log"
+        }
+      },
+      "limits": [
+        "B21 signs Cancel permission and uniform denial only, not uniform errors for all service-name probing",
+        "Actual protocols cover berth only, not SAR loss/discovery/recovery",
+        "Fresh HTTP requests each explicitly queued automation-off+Ground, total4 for2requests",
+        "This actual UI began already manual and queued only1Ground; it preserved prior manual rather than acquiring it"
+      ]
+    },
+    {
+      "id": "HV2026-14.8-NATIVE-SURFACE-VISUAL-CONTINUATION",
+      "title": "SAR人数内部的真实Visual发现",
+      "status": "tested_declared_subset",
+      "source": {
+        "status": "verified_source_for_declared_subset",
+        "authority": "English2026-01-01",
+        "reference": "PDF137/14-11 §14.8 people classes; PDF63/5-24 surface Visual; PDF64/5-25 probability/under0.3kyd note"
+      },
+      "data": {
+        "status": "structured_declared_subset",
+        "details": [
+          "expanded-damage-2026.json sar.sighting_profiles:1-9 G/Stealthy,10-29 E/VSmall,31-99 D/Small,101+ C/Small",
+          "source30/100 overlap intentionally absent, no automatic row precedence",
+          "no_wake multiplier0.5 consumed once"
+        ]
+      },
+      "execution": {
+        "status": "executed_declared_subset",
+        "details": [
+          "actual installed live Ship Visual lookout, native shared receiver/Tac D100 and measured geometry",
+          "sar_native::scan_world/commit records source profile category and own opaque label",
+          "no combat Entity/Contact/FCS generated; no fallback to current private point"
+        ]
+      },
+      "tests": {
+        "status": "passed_declared_subset",
+        "target": "harpoon-rts/crates/harpoon-core/tests/sar_continuation_20261026.rs",
+        "cases": [
+          "c01 actual9/10/29/31/99/101",
+          "c02 exact30/100 pending"
+        ],
+        "final_result": {
+          "passed": 10,
+          "failed": 0,
+          "path": "artifacts/rules-facility-sar-next-20261026/final-workspace-2.log",
+          "same_shared_target_counts_not_additive": true
+        }
+      },
+      "limits": [
+        "daylight open water/no cloud or ice only",
+        "FLIR helper size adjustment is not a native FLIR search implementation",
+        "earlier c04/c06 failure stopped at discovery prerequisite, not downstream recovery"
+      ]
+    },
+    {
+      "id": "HV2026-14.8-NATIVE-SHIP-RECOVERY-CONTINUITY",
+      "title": "实际舰船救起工量、海况与容量",
+      "status": "tested_declared_subset",
+      "source": {
+        "status": "verified_source_for_declared_subset",
+        "authority": "English2026-01-01",
+        "reference": "PDF137/14-11: stationary/upwind ship; each Tactical Turn D6/2 groups of10; subtract one per sea state above2; own crew or passenger complement"
+      },
+      "data": {
+        "status": "structured_declared_subset",
+        "details": [
+          "persisted optional RescueWork and table tactical_turn_seconds180",
+          "explicit RTS continuous eligible180-second interval; invalid time resets, no banking",
+          "half group retained as5persons; attempt consumes interval even if sea subtraction yields0"
+        ]
+      },
+      "execution": {
+        "status": "executed_declared_subset",
+        "details": [
+          "public JSON Begin/RecoverDue and automatic recovery use common station/platform source gates",
+          "settle_ship_rescue_work counts real eligible intervals, not remote order age",
+          "same platform/Tac no extra die; actual quantity capped at group remainder and declared crew/fit space",
+          "successful recovery clears prior pending reason; own work view exposes only continuous/required/eligible"
+        ]
+      },
+      "tests": {
+        "status": "passed_declared_subset",
+        "target": "harpoon-rts/crates/harpoon-core/tests/sar_continuation_20261026.rs",
+        "cases": [
+          "c03",
+          "c04",
+          "c05",
+          "c06",
+          "c09"
+        ],
+        "final_result": {
+          "passed": 10,
+          "failed": 0,
+          "path": "artifacts/rules-facility-sar-next-20261026/final-workspace-2.log",
+          "same_shared_target_counts_not_additive": true
+        }
+      },
+      "limits": [
+        "continuous second-by-second work/reset is explicit RTS policy, not verbatim book text",
+        "passengers0 in signed fixtures; no general crew+passengers addition claim",
+        "500m station and experimental complements are author inputs",
+        "loss setup uses native sink_by adjudicated consumer boundary, not full natural weapon loss chain"
+      ]
+    },
+    {
+      "id": "HV2026-14.8-ACTUAL-SHIP-RECOVERY-GUARDS",
+      "title": "SAR自动消费者核真实alive与kind",
+      "status": "tested_declared_subset",
+      "source": {
+        "status": "verified_source_for_declared_subset",
+        "authority": "English2026-01-01",
+        "reference": "PDF137/14-11 actual ship recovery requirements; helicopter/flying-boat procedures are separate"
+      },
+      "data": {
+        "status": "structured_declared_subset",
+        "details": [
+          "physical PlatformKind and author RescueFit are distinct",
+          "source optional search_and_rescue remains explicitly selected"
+        ]
+      },
+      "execution": {
+        "status": "executed_declared_subset",
+        "details": [
+          "rescue_platform is consumed in validation and actual recover, including automatic path",
+          "dead wreck cannot continue recovery; actual Base/Sub cannot become a Ship through an author fit"
+        ]
+      },
+      "tests": {
+        "status": "passed_declared_subset",
+        "target": "harpoon-rts/crates/harpoon-core/tests/sar_recovery_guards_20261026.rs",
+        "cases": [
+          "r01 live Ship positive control",
+          "r02 dead wreck native sink T359->T360",
+          "r03 Base",
+          "r04 Sub"
+        ],
+        "final_result": {
+          "passed": 4,
+          "failed": 0,
+          "path": "artifacts/rules-facility-sar-next-20261026/final-workspace-2.log",
+          "same_shared_target_counts_not_additive": true
+        }
+      },
+      "limits": [
+        "initial log actually recovered7 for each forbidden actor; not merely static hypothesis",
+        "other two rescue platform full fuel/altitude/landing/recovery chains remain open"
+      ]
+    },
+    {
+      "id": "HV2026-14.8-STRICT-SIX-HOUR-DRIFT",
+      "title": "严格超过六小时的漂流与重发现",
+      "status": "tested_declared_subset",
+      "source": {
+        "status": "verified_source_for_declared_subset",
+        "authority": "English2026-01-01",
+        "reference": "PDF137/14-11: more than six hours, nativeD6 speed in knots and random direction consistent with local geography"
+      },
+      "data": {
+        "status": "structured_declared_subset",
+        "details": [
+          "strict elapsed>21600 guard, saved native currentD6/direction",
+          "explicit author admissible heading list; no guessed geographic current",
+          "unknown current makes position source pending"
+        ]
+      },
+      "execution": {
+        "status": "executed_declared_subset",
+        "details": [
+          "exact21600 stationary point remains measurable, current starts only afterwards",
+          "known physically drifted point is eligible for fresh native Visual geometry",
+          "unknown current retains exact last measured snapshot and never refreshes a fake stationary point"
+        ]
+      },
+      "tests": {
+        "status": "passed_declared_subset",
+        "target": "harpoon-rts/crates/harpoon-core/tests/sar_continuation_20261026.rs",
+        "cases": [
+          "c07",
+          "c08",
+          "c10 strict21600/21601"
+        ],
+        "final_result": {
+          "passed": 10,
+          "failed": 0,
+          "path": "artifacts/rules-facility-sar-next-20261026/final-workspace-2.log",
+          "same_shared_target_counts_not_additive": true
+        }
+      },
+      "limits": [
+        "c10 actual boundary red preceded change; c08 last legal snapshot updated21599->21600 accordingly",
+        "not a global coastal/current/wind drift model",
+        "direction90degree in experiment is an author admissible direction, not measured local geography"
+      ]
+    },
+    {
+      "id": "RTS20261026-SAR-DURABLE-MEASUREMENT-OWNER",
+      "title": "观察者死亡清理后保真实旧测量",
+      "status": "tested_declared_subset",
+      "source": {
+        "status": "verified_source_for_declared_subset",
+        "authority": "English2026-01-01",
+        "reference": "PDF137/14-11 found survivor marker plus explicit durable-information ownership contract"
+      },
+      "data": {
+        "status": "structured_declared_subset",
+        "details": [
+          "SurvivorReport.side optional original observing side, defaultNone/skipNone",
+          "historical None only falls back to still-present same-side observer, never private truth backfill"
+        ]
+      },
+      "execution": {
+        "status": "executed_declared_subset",
+        "details": [
+          "actual successful scan records original side",
+          "survivor_view uses original side and latest actual measured report after observer death/cleanup",
+          "position/time/category stay old snapshot until actual new scan; report_is_live_track=false"
+        ]
+      },
+      "tests": {
+        "status": "passed_declared_subset",
+        "target": "harpoon-rts/crates/harpoon-core/tests/sar_marker_persistence_20261026.rs",
+        "cases": [
+          "r05 native LOOK scan T2, original report survives T121/T122 cleanup and full World restoration"
+        ],
+        "final_result": {
+          "passed": 1,
+          "failed": 0,
+          "path": "artifacts/rules-facility-sar-next-20261026/final-workspace-2.log",
+          "same_shared_target_counts_not_additive": true
+        }
+      },
+      "limits": [
+        "combined-1 actually lost last report at T122; not a predicted schema failure",
+        "not witnessed-loss automatic marker, live trajectory, exact survivor count disclosure or victory scoring"
+      ]
+    }
+  ],
+  "remaining_open": [
+    "GCI native surprise/control producer",
+    "Magazine Bunker full gun-only D10-turn service",
+    "all physical launcher/torpedo/RBU pattern loading and real Annex logistics",
+    "underway supply, fuel and AIP refill",
+    "SAR FLIR/cue/night/cloud/ice and all other platform domains",
+    "exact30/100 people overlap",
+    "both crew and passengers nonzero capacity interpretation",
+    "upwind dot-product-zero/no-wind interpretation",
+    "complete natural weapon/loss/explosion/aircraft survival chain",
+    "witnessed-loss automatic marker",
+    "complete geographic drift and victory scoring"
+  ],
+  "pending_followup_order": [
+    "finish whole-book actual rule/Annex/optional acceptance",
+    "headless parallel training engine",
+    "Lua TCP AI interaction",
+    "Monte Carlo analysis",
+    "interactive standalone simulation",
+    "plain XML scenario export",
+    "DIS interfacing (AFSIM/STK actual compatibility only when observed)",
+    "comprehensive csg_littoral-derived high-end scenario",
+    "shared expected-utility/recon/ASW/saturation/flanking/EW/escort multi-unit FSM"
+  ],
+  "integrity": {
+    "source_pdfs_and_prior_packages_not_written_by_report_owner": true,
+    "previous_accepted_353_input_1014_evidence_package": "1014 evidence SHA verified unchanged by prior-accepted-package-preserved-final-1.json",
+    "new_llm_match": false,
+    "git_commit_or_push": false,
+    "old_long_history_replay_repeated_this_batch": false,
+    "evidence": [
+      {
+        "path": "artifacts/rules-facility-sar-next-20261026/scope.md",
+        "sha256": "8f146b19772cabdf555867ccba966e3cc2928a7d707f7848185f9a647697cba2"
+      },
+      {
+        "path": "artifacts/rules-facility-sar-next-20261026/harness-notes.md",
+        "sha256": "d66d41502fab8a356516a409e09742cb0064e384f56777e770a98439b102d6de"
+      },
+      {
+        "path": "artifacts/rules-facility-sar-next-20261026/facilities/source-contract.md",
+        "sha256": "4de40f200ca596045c1d97c823cd164df6573f92078594e2666b7e9c9deca6a5"
+      },
+      {
+        "path": "artifacts/rules-facility-sar-next-20261026/facilities/simultaneity-correction.md",
+        "sha256": "e8cec13f04b79b6c6b81d5ed9b9c469bc701195461174ec4d59f921a2bc85ff7"
+      },
+      {
+        "path": "artifacts/rules-facility-sar-next-20261026/facilities/candidate-registration.json",
+        "sha256": "c2f6968f062bb9494affbc6eb09423080aac4ff3a8bb7c7c709e69fa6dfb825f"
+      },
+      {
+        "path": "artifacts/rules-facility-sar-next-20261026/facilities/implementation-candidate-1.json",
+        "sha256": "c9a77f141b87abfea60fb5cf50ec41360d75618a015b3b8cd6c3790d422eb6d6"
+      },
+      {
+        "path": "artifacts/rules-facility-sar-next-20261026/facilities/implementation-candidate-2.json",
+        "sha256": "559ab0bbea4bbd7f137aa9604ef5428bbc6b70cdcc75bffbb91dee4e7bb5ca0d"
+      },
+      {
+        "path": "artifacts/rules-facility-sar-next-20261026/facilities/implementation-candidate-3.json",
+        "sha256": "bdadc01ddf98c3caceff8b127891a7e2db673fb5a2ecea4287fe10ab5824c360"
+      },
+      {
+        "path": "artifacts/rules-facility-sar-next-20261026/sar/source-contract.md",
+        "sha256": "a310344ed857ee73632d02d4d1eb109c4d0be7889e684b096c1730e76e5dab70"
+      },
+      {
+        "path": "artifacts/rules-facility-sar-next-20261026/sar/implementation-candidate-1.json",
+        "sha256": "3cf5d0e1474b1f4b8da2e0e24870ad68844627e2672f6247a231d855ced032b6"
+      },
+      {
+        "path": "artifacts/rules-facility-sar-next-20261026/sar/implementation-candidate-2.json",
+        "sha256": "cf0b3968ebfdfb9f3c696a3703f9a08a068cd4d7127a6cabac438cd364fa29cc"
+      },
+      {
+        "path": "artifacts/rules-facility-sar-next-20261026/independent-review/review.md",
+        "sha256": "c7bfb1f078e75e9bbb66b9e3d2aea5560c38544d8e0060a7a33d6e869137f410"
+      },
+      {
+        "path": "artifacts/rules-facility-sar-next-20261026/independent-review/review-addendum-combined-1.md",
+        "sha256": "0df53ec743fae7c9c1eadc572b281968992c7a9c734120a2826ace0731d5458c"
+      },
+      {
+        "path": "artifacts/rules-facility-sar-next-20261026/independent-review/candidate-1-review.md",
+        "sha256": "2671a5ff4c04a0e784b618c02ddb80f7789b089bc52a93628633b2d09e8451bb"
+      },
+      {
+        "path": "artifacts/rules-facility-sar-next-20261026/independent-review/source-references.json",
+        "sha256": "1b15b05e339f9f7d6da23fa5ccafb60e58de2f48b60d06c86599aa12b85a9a39"
+      },
+      {
+        "path": "artifacts/rules-facility-sar-next-20261026/final-candidate-1-inputs.json",
+        "sha256": "9ef023b1b99373da2c4bd05ffa8f5de9c575094159881dca31344600a22ff4a6"
+      },
+      {
+        "path": "artifacts/rules-facility-sar-next-20261026/source-snapshot-final-1/manifest.json",
+        "sha256": "9ef023b1b99373da2c4bd05ffa8f5de9c575094159881dca31344600a22ff4a6"
+      },
+      {
+        "path": "artifacts/rules-facility-sar-next-20261026/final-node-1.log",
+        "sha256": "ec445de62dd89b418536bec76c64c368e6f21fd417ee094cdae33bb20edeca64"
+      },
+      {
+        "path": "artifacts/rules-facility-sar-next-20261026/facility-source-red-1.log",
+        "sha256": "7cc891593eee8a9e75810b81c65290df49c6f4aa3ef5723fb5ca19f271a53755"
+      },
+      {
+        "path": "artifacts/rules-facility-sar-next-20261026/facility-source-red-2.log",
+        "sha256": "56d3340a48fe6efd883bd7f4379437d7e8e3b21e2794ffafd621be2c46e01eeb"
+      },
+      {
+        "path": "artifacts/rules-facility-sar-next-20261026/sar-source-red-1.log",
+        "sha256": "d1b9d0df83d446bdec71784c4d0426a8e1f99c6ca50a3e1542fd6db04afcfead"
+      },
+      {
+        "path": "artifacts/rules-facility-sar-next-20261026/sar-guards-red-1.log",
+        "sha256": "2b7366c8e02d4bab6d1159a5a5ebfc2db4fa4f9a4c4c2469cba5b11027590e4e"
+      },
+      {
+        "path": "artifacts/rules-facility-sar-next-20261026/combined-1.log",
+        "sha256": "812b8e88130245d38d94243a4292fe3a4468cfb97dd3a339cc82ec65c425c71f"
+      },
+      {
+        "path": "artifacts/rules-facility-sar-next-20261026/boundary-red-1.log",
+        "sha256": "e4ea20986861246b917dff356e3fc730ef4510be5e66ffe6b5ad0984dc7aaff3"
+      },
+      {
+        "path": "artifacts/rules-facility-sar-next-20261026/cancel-owner-red-1.log",
+        "sha256": "f87b1eb439cc3a4521f706c9e26566cc8089cbbd226450e2fc1c2340aea8e170"
+      },
+      {
+        "path": "artifacts/rules-facility-sar-next-20261026/final-candidate-2-inputs.json",
+        "sha256": "c29aa12ae8338444e6ba1dbaac9846aa5eef138c08b73eec843aa5df1ee06eba"
+      },
+      {
+        "path": "artifacts/rules-facility-sar-next-20261026/source-snapshot-final-2/manifest.json",
+        "sha256": "c29aa12ae8338444e6ba1dbaac9846aa5eef138c08b73eec843aa5df1ee06eba"
+      },
+      {
+        "path": "artifacts/rules-facility-sar-next-20261026/final-node-2.log",
+        "sha256": "4c484d3a29216cb513b8baf04ad340906da961db7360b8853e5f78cc60e92d1d"
+      },
+      {
+        "path": "artifacts/rules-facility-sar-next-20261026/final-workspace-1.log",
+        "sha256": "0cc58b3b41b3294786637c09953a7496c508bfdaad2b9912b4a20462b7219322"
+      },
+      {
+        "path": "artifacts/rules-facility-sar-next-20261026/protocol/mcp-actual-review-20261026.md",
+        "sha256": "d5b850f481f0c55fbda50d127901c15e8c634e6b6155515b6591a2f92ffdd403"
+      },
+      {
+        "path": "artifacts/rules-facility-sar-next-20261026/protocol/mcp-runs/mcp-final-2/validation.json",
+        "sha256": "80d347662c1a0844460d674f21457726681c9d30e5476303fae9ce6979b84de6"
+      },
+      {
+        "path": "artifacts/rules-facility-sar-next-20261026/protocol/mcp-runs/mcp-final-2/protocol-and-process-closure.json",
+        "sha256": "c93a5f2a3b99c1c913b4217a85343b0f8f3bbb32dc2c19aa2314c10499065aa8"
+      },
+      {
+        "path": "artifacts/rules-facility-sar-next-20261026/protocol/mcp-runs/mcp-final-2/evidence-manifest.json",
+        "sha256": "998dad6081904246df5cfb98b9a816676f358c3beda8767011d3c6126acc244b"
+      },
+      {
+        "path": "artifacts/rules-facility-sar-next-20261026/protocol/mcp-final-2-post-audit.json",
+        "sha256": "0ff244094ad35f42b118816f819f8dcfe53b950d1643f91c46bd1fc762195777"
+      },
+      {
+        "path": "artifacts/rules-facility-sar-next-20261026/protocol/mcp-final-1-failure-preservation.json",
+        "sha256": "7990e988323dbf44395250dfeb16123bfdca9c3e2f0c1d83c0cfca03b21efd48"
+      },
+      {
+        "path": "artifacts/rules-facility-sar-next-20261026/final-workspace-2.log",
+        "sha256": "83c4675110d6c02443e7265390dbd6305d9b25b568ffc41f61c7b07043ac20cb"
+      },
+      {
+        "path": "artifacts/rules-facility-sar-next-20261026/final-build-1.log",
+        "sha256": "ce5d092ac01e3610dd5624c38c5595055f4c287abb865abe4f2d6e4729e9f1f6"
+      },
+      {
+        "path": "artifacts/rules-facility-sar-next-20261026/frozen-binaries-final-1.json",
+        "sha256": "88076775aea4d571f73e0e6be19a1ddae868e4828d0d9c2447f58f706a9416dd"
+      },
+      {
+        "path": "artifacts/rules-facility-sar-next-20261026/after-acceptance-inputs.json",
+        "sha256": "c29aa12ae8338444e6ba1dbaac9846aa5eef138c08b73eec843aa5df1ee06eba"
+      },
+      {
+        "path": "artifacts/rules-facility-sar-next-20261026/protected-originals-final-1.json",
+        "sha256": "c007f75fb35b7474251fdbdb680f93879bffaa3e22ca060e4812b45fa4513c7e"
+      },
+      {
+        "path": "artifacts/rules-facility-sar-next-20261026/prior-accepted-package-preserved-final-1.json",
+        "sha256": "f9787342f39857e0647a51c985dd8a46bb584764d83106e535108d10f529e022"
+      },
+      {
+        "path": "artifacts/rules-facility-sar-next-20261026/protocol/http-runs/http-final-3/validation.json",
+        "sha256": "ea690cebc66c8848115dec22cb1dc715336ebbd75f2d467e45889c1bdc388e86"
+      },
+      {
+        "path": "artifacts/rules-facility-sar-next-20261026/protocol/ui/validation.json",
+        "sha256": "bd1b4815aa602dc01ba6a820df39f0b62da05732d74d20fec815f4065185a71a"
+      },
+      {
+        "path": "artifacts/rules-facility-sar-next-20261026/protocol/harness-corrections.md",
+        "sha256": "c39310f625a2471f5b4d47b141e61b66e345ed69678a067decb55d2162d2e2ad"
+      },
+      {
+        "path": "artifacts/rules-facility-sar-next-20261026/protocol/ui/before.json",
+        "sha256": "5520d9325b33a638c357508ef0522e28f46a1981aa2a50dec71d19de9f8ee3ee"
+      },
+      {
+        "path": "artifacts/rules-facility-sar-next-20261026/protocol/ui/draft.json",
+        "sha256": "6ab7989f6e92a45d086d1a30bd9c6b3a82f80c3b557670589d657ce2b635ca7f"
+      },
+      {
+        "path": "artifacts/rules-facility-sar-next-20261026/protocol/ui/queued.json",
+        "sha256": "3e9d1bad2c4a89d7a2c0bf3b86a0ef3802247c1350563df70fa983ddf009425e"
+      },
+      {
+        "path": "artifacts/rules-facility-sar-next-20261026/protocol/ui/reserved.json",
+        "sha256": "04574a07de59a0aeb97fb198dc11ee7af37abacf0274ad4fabd49a2d949129f4"
+      },
+      {
+        "path": "artifacts/rules-facility-sar-next-20261026/protocol/ui/complete.json",
+        "sha256": "adac575f7c18373e924f872788529ad00089a700f9fc075b33a3c4f0fd0a1907"
+      },
+      {
+        "path": "artifacts/rules-facility-sar-next-20261026/protocol/ui/unchanged.json",
+        "sha256": "8c0dbcb54d50e6db50e249ae9be699e45f45b8416b88ed402a965a2a8d9c250f"
+      },
+      {
+        "path": "artifacts/rules-facility-sar-next-20261026/protocol/ui/replay.json",
+        "sha256": "8adc1b7c921d82f01a914c9e5337bcfaf26207db7ce89d1d5242a14846583d4b"
+      },
+      {
+        "path": "artifacts/rules-facility-sar-next-20261026/independent-review/final-code-audit-1.json",
+        "sha256": "98f5849d24e2ab51decb4bcec9fe3a8e687aa2cb8e8aaf3b2e950f51a2d6fbf4"
+      },
+      {
+        "path": "artifacts/rules-facility-sar-next-20261026/bin-final-1/harpoon-server.exe",
+        "sha256": "fba1312cc36e4b168ddc26055f2e28c1a138bfc5f5363dcfb03e15bd51094e70"
+      },
+      {
+        "path": "artifacts/rules-facility-sar-next-20261026/bin-final-1/harpoon-mcp.exe",
+        "sha256": "83dd57b8240a747638c9e9a87015126edc886dcaf32fe77333f9078dc8105e92"
+      },
+      {
+        "path": "artifacts/rules-facility-sar-next-20261026/independent-review/final-runtime-audit-2.json",
+        "sha256": "eb8fd2b29a860f07d41f87d1879b085960bc2078344c6ab0769521635bb661f0"
+      },
+      {
+        "path": "artifacts/rules-facility-sar-next-20261026/service-release.json",
+        "sha256": "d92bf1e566b26240e9bfbc3b89c3fdfae120b44cab5900c9bb5483d74cdd0825"
+      },
+      {
+        "path": "artifacts/rules-facility-sar-next-20261026/protocol/frozen-server-startup-logs/server-8875.stdout.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "artifacts/rules-facility-sar-next-20261026/protocol/frozen-server-startup-logs/server-8875.stderr.log",
+        "sha256": "06ed68b856f9fd394ced6ed1ce713624084841ce32b2de5651f5980cdd7a7f17"
+      },
+      {
+        "path": "artifacts/rules-facility-sar-next-20261026/protocol/frozen-server-startup-logs/server-8876.stdout.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "artifacts/rules-facility-sar-next-20261026/protocol/frozen-server-startup-logs/server-8876.stderr.log",
+        "sha256": "0ece6e34a19b2ead8bbc14d38e8de2a527e34ee4610943cff4f6cf4ea783a50d"
+      }
+    ],
+    "active_358_live_input_hashes_verified": true,
+    "active_358_after_acceptance_byte_equal": true,
+    "original_protected_files": 16,
+    "original_protected_all_sha_equal": true,
+    "prior_accepted_evidence_files": 1014,
+    "prior_accepted_all_sha_equal": true,
+    "physical_tablet_test": false,
+    "full_source_name_oracle_claimed": false,
+    "static_review_version": {
+      "path": "artifacts/rules-facility-sar-next-20261026/independent-review/final-code-audit-1.json",
+      "manifest_path": "artifacts/rules-facility-sar-next-20261026/final-candidate-1-inputs.json",
+      "manifest_sha256": "9ef023b1b99373da2c4bd05ffa8f5de9c575094159881dca31344600a22ff4a6",
+      "scope": "review-time code snapshot; final2 later changes only MCP contract test applicability; actual final2 is audited separately"
+    },
+    "independent_final_runtime_audit": {
+      "path": "artifacts/rules-facility-sar-next-20261026/independent-review/final-runtime-audit-2.json",
+      "ok": true,
+      "inputs": 358,
+      "input_manifest_sha256": "c29aa12ae8338444e6ba1dbaac9846aa5eef138c08b73eec843aa5df1ee06eba",
+      "scope": "read-only final2 live/snapshot hashes, actual saved payload pairs, raw JSONRPC, recorded UI and original16/prior1014 integrity; no new Cargo by reviewer"
+    },
+    "service_state": {
+      "path": "artifacts/rules-facility-sar-next-20261026/service-release.json",
+      "stopped_owned_server": {
+        "port": 8875,
+        "pid": 47248,
+        "exact_path_and_listener_verified": true
+      },
+      "retained_review_server": {
+        "port": 8876,
+        "pid": 48568,
+        "paused_tick": 24,
+        "url": "http://127.0.0.1:8876/command.html"
+      },
+      "unrelated_services_changed": false,
+      "live_8876_streams_excluded_from_frozen_manifest": true,
+      "immutable_startup_copies": [
+        {
+          "path": "protocol/frozen-server-startup-logs/server-8875.stdout.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "protocol/frozen-server-startup-logs/server-8875.stderr.log",
+          "sha256": "06ed68b856f9fd394ced6ed1ce713624084841ce32b2de5651f5980cdd7a7f17"
+        },
+        {
+          "path": "protocol/frozen-server-startup-logs/server-8876.stdout.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "protocol/frozen-server-startup-logs/server-8876.stderr.log",
+          "sha256": "0ece6e34a19b2ead8bbc14d38e8de2a527e34ee4610943cff4f6cf4ea783a50d"
+        }
+      ]
+    }
+  },
+  "last_validation_date": "2026-10-26",
+  "completed_on": "2026-10-26"
+}

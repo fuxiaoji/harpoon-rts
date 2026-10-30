@@ -156,6 +156,11 @@ fn is_wire_guided_torpedo(def: &WeaponDef) -> bool {
 /// Per-tick torpedo guidance pass: dual-speed cruising, wire updates, and
 /// wake-band reporting.
 pub fn step(world: &mut World) {
+    // Explicit v4 owns guidance, speed and referee-only wake evidence.
+    // Unbound source weapons must stay pending instead of using legacy hints.
+    if super::torpedo2026::active(world) {
+        return;
+    }
     apply_dual_speed(world);
     update_wire_guidance(world);
     emit_wake_detections(world);

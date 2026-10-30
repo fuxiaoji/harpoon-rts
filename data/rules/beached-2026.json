@@ -1,0 +1,19 @@
+{
+  "rule_id": "HV2026-14.2.4-BEACHED",
+  "source": {
+    "document": "Harpoon V 2026-01-01",
+    "pdf_page": 132,
+    "printed_page": "14-6",
+    "section": "14.2.4"
+  },
+  "destroy_original_dp_multiple": 2,
+  "flood_severity_d6_modifier": -2,
+  "refloat": "prohibited_when_damage_strictly_exceeds_original_dp",
+  "scope": "Explicit scenario-author exposed surface beaching, plus qualified source3.4 surface grounding; submerged bottom grounding not inferred.",
+  "execution_policy": {
+    "id": "RTS-BEACHED-20261030-01",
+    "capacity": "Retain immutable listed hp_max as original DP for percentage casualties; add one original-DP destruction reserve to actual remaining hp while beached, so all shared DP sinks see the same2x capacity. Refloat removes the reserve, does not heal actual damage.",
+    "small_craft": "The explicit beached destruction reserve is consumed by committed DP; do not allow the ordinary F/G tactical damage window to delete that reserve. Critical catastrophes remain separate from DP exhaustion.",
+    "movement": "Exposed grounded/beached vessel held at actual position. Source3.4 freeing timer remains; strict damage>listed forbids actual refloat. Intentional refloat command requires declared author completion authorization, no universal zero-duration work implied."
+  }
+}

@@ -1,0 +1,264 @@
+{
+  "profile": "hv2026-rts-v4",
+  "whole_chapter_complete": false,
+  "rows": [
+    {
+      "rule_id": "HV2026-11.1",
+      "mechanism": "设施尺寸/DP/功能损伤",
+      "status": "tested_subset",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          116,
+          117,
+          118
+        ]
+      },
+      "data": "data/rules/ground-2026.json",
+      "execution": "initialize/apply_damage",
+      "tests": "crates/harpoon-core/tests/ground_2026.rs::source_facility_damage_disables_at_half_and_persists_cuts",
+      "scope": "来源模板与显式场景设施；50%失能100%残骸，非整基地HP代理"
+    },
+    {
+      "rule_id": "HV2026-11.1.1",
+      "mechanism": "防护/轨迹",
+      "status": "partial",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          116,
+          117,
+          118
+        ]
+      },
+      "data": "data/rules/ground-2026.json",
+      "execution": "surface2026::land_terminal",
+      "tests": "crates/harpoon-core/tests/land_weapons_2026.rs::actual_lacm_uses_guidance_and_size_table_and_destroys_radar_without_sinking_it",
+      "scope": "仅已核常规HE和明确水平/垂直剖面；其他弹头待裁"
+    },
+    {
+      "rule_id": "HV2026-11.1.2",
+      "mechanism": "陆上比率关键",
+      "status": "tested_subset",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          116,
+          117,
+          118,
+          127,
+          129
+        ]
+      },
+      "data": [
+        "data/rules/ground-2026.json",
+        "data/rules/damage-runtime-v2.json"
+      ],
+      "execution": "damage_runtime::land_ratio_criticals",
+      "tests": "crates/harpoon-core/tests/ground_2026.rs::land_ratio_uses_remaining_dp_for_f_size_building_without_ship_sinking_side_effect",
+      "scope": "F/G建筑按剩余DP，不套小艇，不产生沉没副作用；导弹附加关键范围待裁"
+    },
+    {
+      "rule_id": "HV2026-11.2",
+      "mechanism": "弹道/巡航命中表",
+      "status": "partial",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          116,
+          117,
+          118
+        ]
+      },
+      "data": "data/rules/ground-2026.json",
+      "execution": "missile_probability/surface2026::land_terminal",
+      "tests": "crates/harpoon-core/tests/ground_2026.rs::all_128_source_missile_cells_and_satnav_rows",
+      "scope": "128格及卫星修正已结构/映射，真实终端仅显式配置常规LACM子集；完整弹道运动/BMD未完"
+    },
+    {
+      "rule_id": "HV2026-11.3",
+      "mechanism": "飞机攻击地面",
+      "status": "not_implemented",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          116,
+          117,
+          118
+        ]
+      },
+      "data": "data/rules/ground-2026.json",
+      "execution": null,
+      "tests": null,
+      "scope": "完整9.6投放/目标修正与各种航空武器需继续接实际执行"
+    },
+    {
+      "rule_id": "HV2026-11.4",
+      "mechanism": "舰炮炮击",
+      "status": "partial",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          116,
+          117,
+          118
+        ]
+      },
+      "data": "data/rules/ground-2026.json",
+      "execution": "apply/source_spotting",
+      "tests": null,
+      "scope": "观察员与弹着修正有状态；v4舰炮旧近似被阻断，完整8.3表/射程/倍率尚未接入；观察员状态尚未独立来源验收"
+    },
+    {
+      "rule_id": "HV2026-11.5.1.runway",
+      "mechanism": "跑道60格",
+      "status": "tested_subset",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          116,
+          117,
+          118
+        ]
+      },
+      "data": "data/rules/ground-2026.json",
+      "execution": "runway_capacity/runway_gate",
+      "tests": "crates/harpoon-core/tests/ground_2026.rs::all_runway_and_reverse_hit_boundaries",
+      "scope": "全60源格边界；中间长度和超10cuts不插值"
+    },
+    {
+      "rule_id": "HV2026-11.5.1.repair",
+      "mechanism": "跑道修理",
+      "status": "partial",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          116,
+          117,
+          118
+        ]
+      },
+      "data": "data/rules/ground-2026.json",
+      "execution": "apply/step",
+      "tests": "crates/harpoon-core/tests/ground_2026.rs::real_sim_runway_repair_uses_explicit_resources_and_cannot_repair_rubble",
+      "scope": "情景指定工时/队数，tick修cut不恢复结构HP，残骸不可修；R-047累计DP与cut优先级待核，不将该项记严格全机制完成"
+    },
+    {
+      "rule_id": "HV2026-11.5.1.bombs",
+      "mechanism": "跑道攻击武器限制",
+      "status": "partial",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          116,
+          117,
+          118
+        ]
+      },
+      "data": "data/rules/ground-2026.json",
+      "execution": "runway_salvo",
+      "tests": "crates/harpoon-core/tests/ground_2026.rs::all_runway_and_reverse_hit_boundaries",
+      "scope": "高阻弹拒绝和5000m以上1/4下取整函数；完整航空投放未连"
+    },
+    {
+      "rule_id": "HV2026-11.5.2",
+      "mechanism": "机场组件",
+      "status": "partial",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          116,
+          117,
+          118
+        ]
+      },
+      "data": "data/rules/ground-2026.json",
+      "execution": "apply_damage/flight_rate_factor/gci_available",
+      "tests": "crates/harpoon-core/tests/ground_2026.rs::source_facility_damage_disables_at_half_and_persists_cuts",
+      "scope": "塔台/雷达/机库/库房/停机储存等结构已录，全部下游功能需继续验收"
+    },
+    {
+      "rule_id": "HV2026-11.air_service",
+      "mechanism": "岸基航空作业",
+      "status": "partial",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          116,
+          117,
+          118
+        ]
+      },
+      "data": "data/rules/ground-2026.json",
+      "execution": "queue_launch/recovery_ready/air.rs",
+      "tests": "crates/harpoon-core/tests/ground_2026.rs::real_sim_explicit_land_air_service_launches_and_cuts_gate_actual_aircraft",
+      "scope": "滑跑/回收吞吐和包线为显式场景RTS参数，来源跑道可用性强制执行；完整回收真实飞行未完；跑道关闭/恢复后单lane实际起飞间隔及完整World保存续演已验"
+    },
+    {
+      "rule_id": "HV2026-11.6",
+      "mechanism": "机场反向组件",
+      "status": "partial",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          116,
+          117,
+          118
+        ]
+      },
+      "data": "data/rules/ground-2026.json",
+      "execution": "reverse_component/bombardment_target",
+      "tests": "crates/harpoon-core/tests/ground_2026.rs::all_runway_and_reverse_hit_boundaries",
+      "scope": "D100组件与空地映射，完整舰炮实际交战仍阻断"
+    },
+    {
+      "rule_id": "HV2026-11.7",
+      "mechanism": "港口反向组件",
+      "status": "partial",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          116,
+          117,
+          118
+        ]
+      },
+      "data": "data/rules/ground-2026.json",
+      "execution": "reverse_component/bombardment_target",
+      "tests": "crates/harpoon-core/tests/ground_2026.rs::all_runway_and_reverse_hit_boundaries",
+      "scope": "完整码头补给/船坞修理等流程尚未完成"
+    },
+    {
+      "rule_id": "HV2026-11.save",
+      "mechanism": "保存与本方投影",
+      "status": "tested_subset",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          116,
+          117,
+          118
+        ]
+      },
+      "data": "data/rules/ground-2026.json",
+      "execution": "Runtime.ground/observe::observe",
+      "tests": "crates/harpoon-core/tests/ground_2026.rs::facility_runtime_fingerprint_and_observation_are_own_side_only",
+      "scope": "表指纹/状态要求/本方设施数据，目标entity id改为本方contact"
+    }
+  ],
+  "validation": "continuation-workspace-final.log: all respective tests passed; only declared subsets accepted"
+}

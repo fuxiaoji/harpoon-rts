@@ -1,0 +1,270 @@
+{
+  "profile": "hv2026-rts-v4",
+  "whole_chapter_complete": false,
+  "source": {
+    "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+    "version": "2026-01-01",
+    "visual_verified_pdf_pages": [
+      17,
+      28,
+      79,
+      80,
+      110,
+      111,
+      112,
+      113,
+      114,
+      115
+    ],
+    "annex_document": "5-4.Americas_Navy_1_Dec_25.pdf",
+    "annex_visual_pdf_pages": [
+      84
+    ],
+    "additional_annex_sources": [
+      {
+        "document": "9-4.Russias_Navy_1_Dec_25.pdf",
+        "version": "2025-12-01",
+        "visual_pdf_pages": [
+          90,
+          91
+        ],
+        "scope": "Exact65-76A Kit row/F-1 and remarkE/F-2. Historical source weapon, not full platform fit."
+      }
+    ]
+  },
+  "data": "data/rules/torpedo-2026.json",
+  "table_cells": {
+    "homing": 64,
+    "nonhoming": 672,
+    "hardkill": 8
+  },
+  "validation": "Historical next-package evidence: artifacts/rules-next-20261023/validation/workspace-final.log,53 targets823/0/5 and torpedo28. Current overlays below do not rewrite that frozen validation.",
+  "rows": [
+    {
+      "rule_id": "HV2026-10.1",
+      "status": "executable",
+      "execution": "torpedo2026::fire_at/apply/step",
+      "tests": "torpedo_2026::source_reload_requires_real_180_seconds_and_preserves_inventory",
+      "scope": "Explicit physical tube initial loads/reserves/reload channels, shared mine-tube locks and source own tube view tested in following40. Full real platform/VLS deployment coverage remains incomplete."
+    },
+    {
+      "rule_id": "HV2026-10.2",
+      "status": "executable",
+      "execution": "weapons::manual_fire/fire_control_scan -> torpedo2026::fire_at_contact; compatibility fire_at requires exactly one eligible report",
+      "tests": "torpedo_2026::no_source_solution_never_promotes_contact_quality_to_good_or_spends_ammo",
+      "scope": "Own current classified located selected ContactId/FCS/environment admit release without true alive/depth/class predicates; exact selected report drives aim and launch ledger. Actual target domain/depth/immunity/acoustics remain post-release referee adjudication. ASW18 green; water-entry placement/immediate attack subset accepted in closure8; full search/reacquisition remains R-054."
+    },
+    {
+      "rule_id": "HV2026-10.2.1",
+      "status": "partial",
+      "execution": "torpedo2026::fire_at_contact",
+      "tests": null,
+      "scope": "Printed offsets and actual loaded-tube checks. Source table has no Wake offset: exact explicit source/scenario binding required; no default inferred."
+    },
+    {
+      "rule_id": "HV2026-10.2.2",
+      "status": "partial",
+      "execution": "weapons::advance_torpedo / torpedo2026::advance / straight::advance_inner",
+      "tests": [
+        "real_straight_four_round_salvo_uses_one_seeded_table_roll_and_source_damage",
+        "real_straight_spread_can_hit_an_intervening_friendly_not_the_designated_target",
+        "real_straight_partial_hit_splits_survivors_but_total_miss_preserves_the_spread",
+        "real_straight_in_flight_save_restore_preserves_salvo_and_referee_dice",
+        "real_straight_collision_uses_relative_swept_paths_when_both_endpoints_miss"
+      ],
+      "scope": "Gyro1/2 real pipeline source cases passed in final28-case suite:stable-salvo one die,ordinary1DP to damage queue,friendly/intervening ships,swept relative motion,full/partial-miss grouping,range/danger boundaries,unknown-intervening whole-spread pending/evidence,and save restore. Optional variable Danger Zone and nonhoming wire remain disabled.",
+      "validated_subset": true
+    },
+    {
+      "rule_id": "HV2026-10.2.3",
+      "status": "partial",
+      "execution": "weapons::advance_torpedo / torpedo2026::advance / straight::advance_inner",
+      "tests": [
+        "real_straight_four_round_salvo_uses_one_seeded_table_roll_and_source_damage",
+        "real_straight_spread_can_hit_an_intervening_friendly_not_the_designated_target",
+        "real_straight_partial_hit_splits_survivors_but_total_miss_preserves_the_spread",
+        "real_straight_in_flight_save_restore_preserves_salvo_and_referee_dice",
+        "real_straight_collision_uses_relative_swept_paths_when_both_endpoints_miss"
+      ],
+      "scope": "Gyro1/2 real pipeline source cases passed in final28-case suite:stable-salvo one die,ordinary1DP to damage queue,friendly/intervening ships,swept relative motion,full/partial-miss grouping,range/danger boundaries,unknown-intervening whole-spread pending/evidence,and save restore. Optional variable Danger Zone and nonhoming wire remain disabled.",
+      "validated_subset": true
+    },
+    {
+      "rule_id": "HV2026-10.2.4",
+      "status": "partial",
+      "execution": "weapons::advance_torpedo/torpedo2026::advance",
+      "tests": "torpedo_2026::real_fire_consumes_loaded_tube_and_source_placement_then_source_homing_pk",
+      "scope": "per-weapon placement, source acquisition/layer/noise/reverberation; exact vertical helical search and opportunity target acquisition remain incomplete"
+    },
+    {
+      "rule_id": "HV2026-10.2.5",
+      "status": "executable",
+      "execution": "torpedo2026::advance_flight/homing_probability",
+      "tests": "torpedo_2026::official_homing_example_and_every_countermeasure_generation",
+      "scope": "source acoustic probability/evasion/EW ACM columns in real terminal; mixed ECM tactics not silently multiplied"
+    },
+    {
+      "rule_id": "HV2026-10.2.6",
+      "status": "partial",
+      "execution": "torpedo2026/wake.rs::advance_flight/follow/terminal; real weapons::advance_torpedo",
+      "tests": "torpedo_wake_2026 eighteen passed in current59-target workspace; scope remains partial.",
+      "scope": "Single-weapon source subset: actual swept wake crossing/contiguous following at75percent, half-distance placement timing, Gen3 .70 or detected25kt+90deg evasion .61, independent Gen3/4 towed ACM-only and terminal dice, real consume_towed/damage. Multi-source-tube same-Turn grouping, early-before-half crossing, actual other-vessel junction, multiple eligible towed objects and missing geometry remain referee pending; no guessed dice or direct-target shortcut."
+    },
+    {
+      "rule_id": "HV2026-10.2.7",
+      "status": "partial",
+      "execution": "torpedo2026::advance_flight and torpedo2026/wake.rs::advance_flight/terminal",
+      "tests": "torpedo_wake_2026::towed_resistance_then_independent_miss_has_a_real500yard_right_reverse_and_saved_dice",
+      "scope": "Acoustic1000yd overshoot/right circle and Wake500yd/right180 return retain source dice and saved pass state. Poor-floor/NoAttack conflict, opportunity targets, mobile simulators and complete source reacquisition remain unresolved."
+    },
+    {
+      "rule_id": "HV2026-10.3",
+      "status": "executable",
+      "execution": "torpedo2026::submerged_launch_gate / weapons::manual_fire, fire_control_scan, launch",
+      "tests": [
+        "torpedo_2026::source_submerged_launch_depth_and_speed_edges",
+        "torpedo_2026::real_submerged_standoff_manual_and_auto_reject_without_spending_rounds",
+        "torpedo_2026::low_level_submerged_missile_launch_cannot_bypass_source_envelope"
+      ],
+      "scope": "Necessary Periscope/Shallow and 3–10kt envelope; zero runtime depth denotes surfaced and has no bound launch procedure. Real missile/VLS installation and loaded tube inventories remain incomplete; no annex completion claimed."
+    },
+    {
+      "rule_id": "HV2026-10.4",
+      "status": "indexed",
+      "execution": null,
+      "tests": null,
+      "scope": "Shkval nuclear/timed burst/noise effects not implemented"
+    },
+    {
+      "rule_id": "HV2026-10.5",
+      "status": "executable",
+      "execution": "torpedo2026::apply/Hardkill",
+      "tests": "torpedo_2026::source_acquisition_and_wire_boundaries",
+      "scope": "explicit known torpedo and source hardkill fit/range/stock/cooldown; real platform deployment test still pending"
+    },
+    {
+      "rule_id": "HV2026-7.5.4",
+      "status": "partial",
+      "execution": "torpedo2026::fire_at/advance_flight/apply",
+      "tests": "torpedo_2026::source_acquisition_and_wire_boundaries",
+      "scope": "Source wire launch/check/controls, channel/tube occupancy and known declarations tested; historical missing declaration does not guess original ContactId. Exact DualWire report precision/timing, nonhoming wire after-zig and complete observed feedback remain incomplete."
+    },
+    {
+      "rule_id": "HV2026-7.5.7",
+      "status": "executable",
+      "execution": "torpedo2026::advance_flight/WireOrder",
+      "tests": null,
+      "scope": "source setting range-fraction consumption and acquisition fastest speed; separate speed-ratio source execution test pending"
+    }
+  ],
+  "information_boundary": {
+    "referee_only": [
+      "placement",
+      "acquisition",
+      "terminal",
+      "runout",
+      "reattack raw result",
+      "hardkill raw result",
+      "pending reason/evidence"
+    ],
+    "v4_flash": "disabled; actual detection consumes stable-ID-bound release events",
+    "remaining_boundary": "Full observed BDA/sinking confirmation/other event paths and exact DualWire reports remain incomplete. Following40 removed raw own torpedo UnitObs/true-alive in-flight counts: own declaration and physical survival are distinct, unknown count stays null.",
+    "hidden_admission": "Prior depth/foil source cases retained. After-following ASW18 additionally verifies manual/assigned/free hidden alive/depth/class, exact selected ContactId eligibility/aim/ledger, and secret other air-torpedo survival cannot change immediate own release events. Physical mutual-interference evidence is Referee.",
+    "bda_automatic_projection": "R049 bda_to_shooter automatic exactHP/DP/hits projection closed in this package;4 source boundary cases and existing BDA regression passed in workspace-final.log."
+  },
+  "unit_correction": {
+    "fault": "production yards*914.4/1852 and mirrored expectations inflated acquisition/geometry1000x",
+    "red_anchors_nm": {
+      "4000yd": 1.9749460043196543,
+      "1000yd": 0.49373650107991357
+    },
+    "fix": "acquisition,air/reattack radii,1000yd overshoot consume constants.yards_to_nm",
+    "status": "both independent numeric anchors passed in third-core.log"
+  },
+  "physical_size_correction": {
+    "source": "HV2026 PDF17/2-1 section2.1 and PDF111/10-2 Target Aspects",
+    "fault": "physicalD wrongly mappedVSmall on broad shot;bothC/D areSmall",
+    "red": "third-core.log source_class_d_is_small_for_straight_runner_broad_aspect",
+    "fix": "structured target_aspects consumed by effective_size",
+    "status": "passed in fourth-core.log"
+  },
+  "inclusive_d100_correction": {
+    "red_log": "artifacts/rules-next-20261023/validation/torpedo-percent-red.log",
+    "source_examples": [
+      "Large3/4nm Ph29% includes29,excludes30",
+      "Gen4/ACM2/evasion Ph58% includes actual seeded58,excludes59"
+    ],
+    "fix": "D100/100<=sourcePh",
+    "data_revision": "execution_revision/2026-10-23-source-d100-inclusive-v2",
+    "status": "passed;29/30 pure source and58/59 real seeded terminal boundaries green in final28-case suite"
+  },
+  "following_validation": {
+    "log": "artifacts/rules-following-20261023/validation/workspace.log",
+    "workspace_targets": 56,
+    "workspace_passed": 877,
+    "workspace_failed": 0,
+    "workspace_ignored": 5,
+    "torpedo_2026": 40,
+    "scope": "Stable own release declarations, unknown physical survival/count, source tube/reserve/reload state and shared mine tubes; frozen batch remains independent."
+  },
+  "after_following_validation": {
+    "status": "declared_subsets_workspace_and_replay_green",
+    "log": "artifacts/rules-after-following-20261023/validation/contact-mine-green-wake-group-red-20261024.log",
+    "torpedo_2026": {
+      "passed": 40,
+      "failed": 0
+    },
+    "mk54_external_fit_2026": {
+      "passed": 18,
+      "failed": 0
+    },
+    "wake": {
+      "registered": 18,
+      "last_completed_log_passed": 18,
+      "last_completed_log_failed": 0,
+      "current_log": "artifacts/rules-after-following-20261023/validation/workspace.log",
+      "historical_red": "workspace-source-wake-feedback-red-20261024.log preserves legacy Side wake hint leak; isolated v4 legacy pass and final rerun green."
+    },
+    "meaning": "Engineering executions only. Full workspace green; incomplete Wake branches remain referee pending. HTTP directly covers NAV and authored mine search, not Wake terminal.",
+    "latest_workspace_log": "artifacts/rules-after-following-20261023/validation/workspace.log",
+    "latest_workspace": {
+      "targets": 59,
+      "passed": 933,
+      "failed": 0,
+      "ignored": 5
+    }
+  },
+  "current_wake_scope": "See docs/torpedo-wake-20261024.md. Full shared placement grouping is not resolved by the safe multi-weapon guard; other-vessel ACM1/2/3 retarget, multiple-junction/towed priorities, VSmall, loss/reacquisition, Poor conflict,53-65K launch/run depth separation and full Oscar/source attachment coverage remain incomplete.",
+  "latest_packet_validation": {
+    "date": "2026-10-24",
+    "status": "tested_declared_subsets_only",
+    "report": "docs/all-rules-submarine-annex-20261024.md",
+    "log": "artifacts/rules-submarine-annex-20261024/workspace-final.log",
+    "workspace": {
+      "targets": 76,
+      "passed": 1240,
+      "failed": 0,
+      "ignored": 5
+    },
+    "whole_chapter_complete": false
+  },
+  "airdrop_entry_overlay": {
+    "rule_id": "HV2026-9.7.1",
+    "status": "tested_subset",
+    "tests": "airdrop_placement_2026 eight tests",
+    "scope": "Previous immediate-placement attack retained; H1 initial empty-water helical descent/first upward traversal added, potential interaction pending. Full acquisition/opportunity/interference/reattack/next cycle incomplete."
+  },
+  "latest_plan_subset_validation": {
+    "report": "docs/all-rules-torpedo-plan-20261024.md",
+    "ledger": "docs/torpedo-plan-all-mechanisms-20261024.json",
+    "whole_chapter_complete": false,
+    "scope": "Own explicit source plan, exact CID, no author Good inheritance, seven-field public DTO and narrow Virginia acoustic generation; complete R054 search remains partial."
+  },
+  "latest_search_subset_validation": {
+    "report": "docs/all-rules-search-navigation-20261024.md",
+    "ledger": "docs/search-navigation-all-mechanisms-20261024.json",
+    "whole_chapter_complete": false,
+    "scope": "H1 initial empty-water physics11 and wire privacy2; original dice, full World/replay and real HTTP; full R054 remains incomplete."
+  },
+  "latest_declared_subset_ledger": "docs/submarine-annex-a1-all-mechanisms-20261024.json"
+}

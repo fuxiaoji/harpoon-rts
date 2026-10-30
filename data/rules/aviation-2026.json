@@ -1,0 +1,949 @@
+{
+  "source": {
+    "book": "14-2.HpnV_Rules_1_Jan_26.pdf",
+    "version": "2026-01-01",
+    "pdf_pages": [
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39
+    ],
+    "visually_verified_tables": [
+      35,
+      36,
+      37,
+      38
+    ],
+    "evidence": "artifacts/rules-all-20261023/aviation"
+  },
+  "respot": {
+    "base_minutes": 14,
+    "die_sides": 6,
+    "aircraft_per_batch": 12
+  },
+  "ready": {
+    "alert5_s": 300,
+    "max_alert5_s": 3600,
+    "day_s": 86400,
+    "small_medium_sorties": 2,
+    "large_sorties": 1,
+    "two_sortie_max_duration_s": 28800
+  },
+  "fuel": {
+    "jet_low": 2.0,
+    "jet_fmp": 3.0,
+    "prop_fmp": 1.5,
+    "reheat": 10.0,
+    "loiter": 0.8,
+    "heavy_fraction": 0.5,
+    "heavy_remaining_range": 0.75
+  },
+  "refuel": {
+    "tactical_turn_s": 180,
+    "hookup_turns": [
+      1,
+      1,
+      1,
+      2
+    ],
+    "boom_turns": [
+      1,
+      1,
+      1,
+      6
+    ],
+    "probe_turns": [
+      2,
+      2,
+      2,
+      8
+    ],
+    "buddy_turns": [
+      3,
+      3,
+      3,
+      null
+    ],
+    "hifr_s": 900
+  },
+  "refuel_time_limitations": "Printed table groups Small and Medium; VSmall is not printed and is not automatically assigned that row.",
+  "offload": {
+    "source": "English2026 PDF37/4-5 Sample Fuel Offload Values",
+    "ka6d": {
+      "f14a": 1.2,
+      "f14d": 1.3,
+      "fa18abcd": 1.0,
+      "a4e": 1.9,
+      "a6e": 1.0,
+      "a7e": 1.7,
+      "s3": 2.0
+    },
+    "a7e_buddy": {
+      "f14a": 0.6,
+      "f14d": 0.6,
+      "fa18abcd": 0.5,
+      "a4e": 0.9,
+      "a6e": 0.5,
+      "a7e": 1.0,
+      "s3": 1.0
+    },
+    "us_kc130j": {
+      "us_f35b": 1.4,
+      "source": "America Aircraft2025-12-01 PDF91/B-82 Annex Ba KC130J/R/T row and F35B column; visually verified 2026-10-26; use printed1.4, not reconstructed rounding"
+    }
+  },
+  "low_flight": {
+    "sskim_max_kts": 450,
+    "vlow_max_kts": 650,
+    "minimum_fmp_fraction": 0.2,
+    "external_fraction_for_mach_limit": 0.6,
+    "mach_caps_kts": [
+      650,
+      640,
+      570
+    ],
+    "crash_speed_maxima_kts": [
+      150,
+      250,
+      350,
+      450,
+      550,
+      650
+    ],
+    "crash_probability": [
+      0.0,
+      0.01,
+      0.02,
+      0.03,
+      0.05,
+      0.08
+    ],
+    "crash_per_turn": 0.01,
+    "crash_turn_cap": 0.05,
+    "crash_turning": 0.02,
+    "crash_attacked": 0.02
+  },
+  "climb": {
+    "prop": [
+      900,
+      1800,
+      1.33
+    ],
+    "jet_low_maneuver": [
+      1500,
+      2400,
+      1.5
+    ],
+    "jet_high_maneuver": [
+      3000,
+      4500,
+      1.5
+    ],
+    "helicopter": [
+      200,
+      300,
+      1.1
+    ],
+    "rocket": [
+      5000,
+      7500,
+      1.5
+    ],
+    "tactical_turn_s": 180
+  },
+  "swamp": {
+    "safe_sea_state": 3,
+    "chance_per_excess": 0.1,
+    "period_s": 180
+  },
+  "aircraft": {
+    "cn_j15": {
+      "engine": "TF",
+      "size": 2,
+      "cruise_kts": 485,
+      "cruise_range_nm": 1135,
+      "fuel_kg": 9500,
+      "max_payload_kg": 6500,
+      "source": "China Navy2025-12-01 PDF51/B-11 J-15 first range",
+      "receive": "SovietProbe",
+      "tanker_slots": 0,
+      "centerline": false
+    },
+    "cn_j15d": {
+      "engine": "TF",
+      "size": 2,
+      "cruise_kts": 485,
+      "cruise_range_nm": 880,
+      "fuel_kg": 9500,
+      "max_payload_kg": 6500,
+      "source": "China Navy2025-12-01 PDF51/B-11 J-15D second range; source-estimated",
+      "receive": "SovietProbe",
+      "tanker_slots": 0,
+      "centerline": false
+    },
+    "us_f18e": {
+      "engine": "TF",
+      "size": 1,
+      "cruise_kts": 460,
+      "cruise_range_nm": 895,
+      "fuel_kg": 6580,
+      "max_payload_kg": 7950,
+      "source": "America Aircraft2025-12-01 PDF49/B-44 F/A-18E first range, single seat",
+      "receive": "WesternProbe",
+      "tanker_slots": 0,
+      "centerline": false
+    },
+    "us_f18e_asm": {
+      "engine": "TF",
+      "size": 1,
+      "cruise_kts": 460,
+      "cruise_range_nm": 895,
+      "fuel_kg": 6580,
+      "max_payload_kg": 7950,
+      "source": "America Aircraft2025-12-01 PDF49/B-44 F/A-18E first range, single seat; load mass must be supplied separately",
+      "receive": "WesternProbe",
+      "tanker_slots": 0,
+      "centerline": false
+    },
+    "us_f35c": {
+      "engine": "TF",
+      "size": 1,
+      "cruise_kts": 580,
+      "cruise_range_nm": 1020,
+      "fuel_kg": 8960,
+      "max_payload_kg": 7715,
+      "source": "America Aircraft2025-12-01 PDF51/B-46 F-35C",
+      "receive": "WesternProbe",
+      "tanker_slots": 0,
+      "centerline": false
+    },
+    "us_mh60r": {
+      "engine": "TS",
+      "size": 1,
+      "cruise_kts": 100,
+      "cruise_range_nm": 265,
+      "fuel_kg": 1835,
+      "max_payload_kg": 1480,
+      "source": "America Aircraft2025-12-01 PDF69/B-64 MH-60R",
+      "receive": null,
+      "tanker_slots": 0,
+      "centerline": false
+    },
+    "us_f18e_mk82": {
+      "engine": "TF",
+      "size": 1,
+      "cruise_kts": 460,
+      "cruise_range_nm": 895,
+      "fuel_kg": 6580,
+      "max_payload_kg": 7950,
+      "source": "America Aircraft2025-12-01 PDF49/B-44 F/A-18E first range, single seat; Mk82 configuration verified America Aircraft2025 PDF49/B44",
+      "receive": "WesternProbe",
+      "tanker_slots": 0,
+      "centerline": false
+    },
+    "us_mh60r_mk54x4": {
+      "engine": "TS",
+      "size": 1,
+      "cruise_kts": 100,
+      "cruise_range_nm": 265,
+      "fuel_kg": 1835,
+      "max_payload_kg": 1480,
+      "source": "America Aircraft2025-12-01 PDF69/B64 MH60R BlockI four Mk50/54 fit; PDF93/E1 AnnexF Mk54/Mod1 weight285/292kg noteC helicopter/fixed-wing; visual evidence artifacts/rules-following-20261023/aviation-draft/us-aircraft-p069.png and p093.png",
+      "receive": null,
+      "tanker_slots": 0,
+      "centerline": false
+    },
+    "us_kc130j": {
+      "engine": "TP",
+      "size": 3,
+      "cruise_kts": 320,
+      "cruise_range_nm": 3485,
+      "fuel_kg": 29380,
+      "max_payload_kg": 15240,
+      "source": "America Aircraft2025-12-01 PDF64/B-59, visually verified 2026-10-26; standard external tanks included; N/2P transport/tanker, no optional cabin tank or Harvest HAWK conversion inferred",
+      "receive": null,
+      "tanker_slots": 2,
+      "centerline": false
+    },
+    "us_f35b": {
+      "engine": "TF",
+      "size": 1,
+      "cruise_kts": 580,
+      "cruise_range_nm": 870,
+      "fuel_kg": 6125,
+      "max_payload_kg": 6800,
+      "source": "America Aircraft2025-12-01 PDF51/B-46, visually verified 2026-10-26; FOC source airframe flight/fuel row, P receiver; historical IOC restrictions not inferred from class alone",
+      "receive": "WesternProbe",
+      "tanker_slots": 0,
+      "centerline": false
+    },
+    "us_f35c_gbu31_mk84x2": {
+      "engine": "TF",
+      "size": 1,
+      "cruise_kts": 580,
+      "cruise_range_nm": 1020,
+      "fuel_kg": 8960,
+      "max_payload_kg": 7715,
+      "source": "America Aircraft2025-12-01 PDF51/B46 same F35C airframe, exact internal2 AIM120D+2 GBU31(Mk84) 2192kg; no optional external stores; weapon sources PDF102/H2-4 and106/H4-2",
+      "receive": "WesternProbe",
+      "tanker_slots": 0,
+      "centerline": false
+    },
+    "lab_mh60r_he_rocket12": {
+      "engine": "TS",
+      "size": 1,
+      "cruise_kts": 100,
+      "cruise_range_nm": 265,
+      "fuel_kg": 1835,
+      "max_payload_kg": 1480,
+      "source": "America Aircraft2025-12-01 PDF69/B-64 MH-60R; scenario_assumption: verified airframe only; author laboratory rocket fit, sight and empty racks are not Annex values",
+      "receive": null,
+      "tanker_slots": 0,
+      "centerline": false
+    },
+    "lab_f18e_cluster200x2": {
+      "engine": "TF",
+      "size": 1,
+      "cruise_kts": 460,
+      "cruise_range_nm": 895,
+      "fuel_kg": 6580,
+      "max_payload_kg": 7950,
+      "source": "America Aircraft2025-12-01 PDF49/B-44 F/A-18E first range, single seat; scenario_assumption: airframe only, author two200kg cluster bombs and80kg empty racks, not an Annex fit",
+      "receive": "WesternProbe",
+      "tanker_slots": 0,
+      "centerline": false
+    }
+  },
+  "adaptations": {
+    "RTS-04-21": "Ready inventory initializes explicit individual airframes at Alert+5 at scenario time zero. An expired Alert+5 aircraft remains fueled and armed but must repeat its printed alert/preflight stage. This is a conservative procedural RTS reset, not a guessed crew-rest duration.",
+    "RTS-04-22": "Sortie days are consecutive 86400-second scenario days. Completion/launch identities are stable and saved; no physical airframe is duplicated by inventory cycling. This day epoch is an RTS bookkeeping convention.",
+    "RTS-04-23": "Fuel is stored as unloaded cruise-equivalent nautical miles. Fully-loaded operations spend 1/0.75 of the normal budget, so a continuously loaded aircraft has exactly the printed 25% range reduction. Mass and tanks require a cited explicit scenario loadout; ordnance counts do not imply mass.",
+    "RTS-04-24": "Refueling uses a declared rendezvous with same location/course/speed and a full printed hookup+refuel duration. Transfer settles atomically only when those conditions held throughout; an interrupted job cancels without transferring unobserved fractional fuel.",
+    "RTS-04-25": "Respot is only required for explicitly declared deck-parked aircraft. Counts not divisible by twelve are blocked pending a declared procedural treatment, because the book does not specify the partial-batch timing. A completed respot clears that declared parking and never assumes every stored aircraft was parked on deck.",
+    "RTS-04-26": "External store placement must be explicitly declared in a cited scenario loadout. The initial schema declares every fitted round of an exact weapon variant external; it cannot represent mixed internal/external mounts of the same variant. Only source-verified hang weights are deducted on a real release or jettison. Remaining payload, maneuver and fuel cost then consume the same saved mass ledger. Jettison produces no attack or damage. Drop tank jettison and unverified store masses remain blocked.",
+    "RTS-04-27": "US Aircraft2025 PDF93/E1 AnnexF noteC distinguishes Mk54 helicopter285kg and fixed-wing292kg. Only explicit us_mh60r_mk54x4 source four-round external fit binds285kg per successful physical release/jettison and initialization. Generic two-round host, internal fixed-wing carriage, Mod2/HAAWC and other unverified fits inherit no mass. This revises only independent v4 tables."
+  },
+  "offload_fuel_rates": {
+    "source": "America Aircraft2025-12-01 PDF92/B-83, visually verified 2026-10-23; note explicitly divides source fuel rates for buddy pairs not printed; retain quotient with no invented rounding step; Mk82 exact load variant uses the same F/A-18E/F receiver airframe row, not a new buddy capability",
+    "us_f18e": 5.2,
+    "us_f18e_asm": 5.2,
+    "us_f35c": 6.1,
+    "us_f18e_mk82": 5.2,
+    "us_f35b": 5.0,
+    "us_kc130j": 7.2,
+    "us_f35c_gbu31_mk84x2": 6.1
+  },
+  "tank_data": {
+    "us_f18e": [
+      [
+        1485,
+        290
+      ],
+      [
+        920,
+        180
+      ],
+      [
+        1000,
+        195
+      ]
+    ],
+    "us_f18e_asm": [
+      [
+        1485,
+        290
+      ],
+      [
+        920,
+        180
+      ],
+      [
+        1000,
+        195
+      ]
+    ],
+    "us_mh60r": [
+      [
+        370,
+        75
+      ]
+    ],
+    "cn_j15": [],
+    "cn_j15d": [],
+    "us_f35c": [],
+    "us_f18e_mk82": [
+      [
+        1485,
+        290
+      ],
+      [
+        920,
+        180
+      ],
+      [
+        1000,
+        195
+      ]
+    ],
+    "us_mh60r_mk54x4": [],
+    "us_kc130j": [],
+    "us_f35b": [],
+    "us_f35c_gbu31_mk84x2": [],
+    "lab_mh60r_he_rocket12": [
+      [
+        370,
+        75
+      ]
+    ],
+    "lab_f18e_cluster200x2": [
+      [
+        1485,
+        290
+      ],
+      [
+        920,
+        180
+      ],
+      [
+        1000,
+        195
+      ]
+    ]
+  },
+  "tank_data_source": "America Aircraft2025-12-01 PDF49/B-44 and PDF69/B-64. F-35C future/uncertain tank clearance is blocked, not treated as current fit.",
+  "speed_rows": {
+    "cn_j15": [
+      [
+        430,
+        600,
+        700
+      ],
+      [
+        485,
+        680,
+        860
+      ],
+      [
+        485,
+        760,
+        1240
+      ],
+      [
+        null,
+        null,
+        1240
+      ]
+    ],
+    "cn_j15d": [
+      [
+        430,
+        600,
+        700
+      ],
+      [
+        485,
+        680,
+        860
+      ],
+      [
+        485,
+        760,
+        1240
+      ],
+      [
+        null,
+        null,
+        1240
+      ]
+    ],
+    "us_f18e": [
+      [
+        460,
+        585,
+        710
+      ],
+      [
+        460,
+        615,
+        815
+      ],
+      [
+        460,
+        650,
+        920
+      ]
+    ],
+    "us_f18e_asm": [
+      [
+        460,
+        585,
+        710
+      ],
+      [
+        460,
+        615,
+        815
+      ],
+      [
+        460,
+        650,
+        920
+      ]
+    ],
+    "us_f35c": [
+      [
+        460,
+        590,
+        630
+      ],
+      [
+        520,
+        640,
+        830
+      ],
+      [
+        580,
+        690,
+        920
+      ]
+    ],
+    "us_mh60r": [
+      [
+        100,
+        140,
+        null
+      ],
+      [
+        100,
+        125,
+        null
+      ],
+      [
+        null,
+        null,
+        null
+      ]
+    ],
+    "us_f18e_mk82": [
+      [
+        460,
+        585,
+        710
+      ],
+      [
+        460,
+        615,
+        815
+      ],
+      [
+        460,
+        650,
+        920
+      ]
+    ],
+    "us_mh60r_mk54x4": [
+      [
+        100,
+        140,
+        null
+      ],
+      [
+        100,
+        125,
+        null
+      ],
+      [
+        null,
+        null,
+        null
+      ]
+    ],
+    "us_kc130j": [
+      [
+        320,
+        355,
+        null
+      ],
+      [
+        320,
+        355,
+        null
+      ],
+      [
+        320,
+        355,
+        null
+      ],
+      [
+        null,
+        null,
+        null
+      ]
+    ],
+    "us_f35b": [
+      [
+        460,
+        590,
+        630
+      ],
+      [
+        520,
+        640,
+        775
+      ],
+      [
+        580,
+        690,
+        920
+      ],
+      [
+        null,
+        null,
+        null
+      ]
+    ],
+    "us_f35c_gbu31_mk84x2": [
+      [
+        460,
+        590,
+        630
+      ],
+      [
+        520,
+        640,
+        830
+      ],
+      [
+        580,
+        690,
+        920
+      ]
+    ],
+    "lab_mh60r_he_rocket12": [
+      [
+        100,
+        140,
+        null
+      ],
+      [
+        100,
+        125,
+        null
+      ],
+      [
+        null,
+        null,
+        null
+      ]
+    ],
+    "lab_f18e_cluster200x2": [
+      [
+        460,
+        585,
+        710
+      ],
+      [
+        460,
+        615,
+        815
+      ],
+      [
+        460,
+        650,
+        920
+      ]
+    ]
+  },
+  "ceilings_m": {
+    "cn_j15": 17000,
+    "cn_j15d": 17000,
+    "us_f18e": 15240,
+    "us_f18e_asm": 15240,
+    "us_f35c": 15240,
+    "us_mh60r": 4525,
+    "us_f18e_mk82": 15240,
+    "us_mh60r_mk54x4": 4525,
+    "us_kc130j": 10060,
+    "us_f35b": 15240,
+    "us_f35c_gbu31_mk84x2": 15240,
+    "lab_mh60r_he_rocket12": 4525,
+    "lab_f18e_cluster200x2": 15240
+  },
+  "maneuver": {
+    "cn_j15": [
+      4.5,
+      3.0
+    ],
+    "cn_j15d": [
+      4.5,
+      3.0
+    ],
+    "us_f18e": [
+      4.5,
+      1.5
+    ],
+    "us_f18e_asm": [
+      4.5,
+      1.5
+    ],
+    "us_f35c": [
+      4.5,
+      3.5
+    ],
+    "us_mh60r": [
+      2.0,
+      1.5
+    ],
+    "us_f18e_mk82": [
+      4.5,
+      1.5
+    ],
+    "us_mh60r_mk54x4": [
+      2.0,
+      1.5
+    ],
+    "us_kc130j": [
+      1.0,
+      0.5
+    ],
+    "us_f35b": [
+      4.5,
+      3.0
+    ],
+    "us_f35c_gbu31_mk84x2": [
+      4.5,
+      3.5
+    ],
+    "lab_mh60r_he_rocket12": [
+      2.0,
+      1.5
+    ],
+    "lab_f18e_cluster200x2": [
+      4.5,
+      1.5
+    ]
+  },
+  "weapon_hang_weights_kg": {
+    "us_aim120d": 162,
+    "us_aim9x2": 85,
+    "cn_pl8b": 115,
+    "us_mk82": 241
+  },
+  "weapon_hang_weight_sources": "America Aircraft2025 H4-2 PDF106 for AIM120D/AIM9X2; H1-3 PDF98 for Mk82 standard 241kg (not H4-2); China Navy2025 H-5 PDF83 for PL8B. Source pages visually verified; Mk82 evidence artifacts/rules-closure-20261024/external-stores. This map does not infer unlisted weapon/store weights.",
+  "clarification": "Publisher 2026-07-28 errata for Dec2025 printing p2 clarifies 4.7.1 normal payload<50%, consistent with explicit 4.7.5 heavy>=50%; Jan2026 source B37 and 9.1 already use50%. No performance cells silently updated.",
+  "operation_aircraft_variants": {
+    "us_f18e_mk82": {
+      "size": 1,
+      "rotary": false,
+      "catapult": true,
+      "fmp_low_kts": 585,
+      "signature": 3,
+      "front_signature": 2,
+      "front_half_deg": 60,
+      "external_ordnance": true,
+      "service_load": "unguided",
+      "source": "US Aircraft2025 PDF49/B44: F/A-18E six-Mk82 strike variant; same size/performance/signature row as source base, extra external ordnance signature floor unchanged"
+    },
+    "us_mh60r_mk54x4": {
+      "size": 1,
+      "rotary": true,
+      "catapult": false,
+      "fmp_low_kts": 140,
+      "signature": 2,
+      "source": "America Aircraft2025-12-01 PDF69/B64 MH60R BlockI four Mk50/54 fit; PDF93/E1 AnnexF Mk54/Mod1 weight285/292kg noteC helicopter/fixed-wing; visual evidence artifacts/rules-following-20261023/aviation-draft/us-aircraft-p069.png and p093.png; unchanged source airframe size/rotary/performance/signature"
+    },
+    "us_kc130j": {
+      "size": 3,
+      "rotary": false,
+      "catapult": false,
+      "fmp_low_kts": 355,
+      "signature": 0,
+      "source": "America Aircraft2025-12-01 PDF64/B-59 Large/Large standard KC130J; flight/fuel and explicit recovery capability only, no radar or offensive fit inferred"
+    },
+    "us_f35b": {
+      "size": 1,
+      "rotary": false,
+      "catapult": false,
+      "fmp_low_kts": 590,
+      "signature": 3,
+      "front_signature": 4,
+      "front_half_deg": 45,
+      "external_ordnance": true,
+      "source": "America Aircraft2025-12-01 PDF51/B-46 Small/VSmall, front315-045 Stealthy; source base DB mounts include external AIM9X/GBU31, apply English2026 5.2.2 external-store floor; does not authorize unverified radar/AAM/PGM fit"
+    },
+    "us_f35c_gbu31_mk84x2": {
+      "size": 1,
+      "rotary": false,
+      "catapult": true,
+      "fmp_low_kts": 590,
+      "signature": 3,
+      "front_signature": 4,
+      "front_half_deg": 45,
+      "external_ordnance": false,
+      "source": "America Aircraft2025-12-01 PDF51/B46 exact internal2 AIM120D+2 GBU31(Mk84), source F35C airframe/front315-045 Stealthy/VSmall elsewhere, no external stores"
+    },
+    "lab_mh60r_he_rocket12": {
+      "size": 1,
+      "rotary": true,
+      "catapult": false,
+      "fmp_low_kts": 140,
+      "signature": 2,
+      "source": "US Aircraft2025 PDF69/B64 same verified MH60R airframe performance/rotary/signature; scenario_assumption: laboratory12-rocket external fit, not an Annex weapon claim",
+      "external_ordnance": true
+    },
+    "lab_f18e_cluster200x2": {
+      "size": 1,
+      "rotary": false,
+      "catapult": true,
+      "fmp_low_kts": 585,
+      "signature": 3,
+      "front_signature": 2,
+      "front_half_deg": 60,
+      "external_ordnance": true,
+      "service_load": "guided",
+      "source": "US Aircraft2025 PDF49/B44 same F18E airframe performance/signature; scenario_assumption: laboratory two200kg cluster stores, not a real weapon fit"
+    }
+  },
+  "operation_radar_variants": {
+    "us_f18e_mk82:radar_air_med": {
+      "generation": 6,
+      "role": "LD/SD",
+      "air": [
+        160,
+        148,
+        106,
+        42,
+        13
+      ],
+      "surface": [
+        160,
+        133,
+        76,
+        43,
+        24
+      ],
+      "arc": 120,
+      "source": "America Aircraft2025 PDF113/J3-1 APG79; selected fit2008+; v4-only exact same aircraft/radar fit with explicit Mk82 load"
+    },
+    "us_f35c_gbu31_mk84x2:radar_air_med": {
+      "generation": 6,
+      "role": "LD/SD",
+      "air": [
+        180,
+        148,
+        106,
+        42,
+        13
+      ],
+      "surface": [
+        316,
+        177,
+        101,
+        57,
+        32
+      ],
+      "arc": 120,
+      "source": "America Aircraft2025 PDF114/J3-2 APG81 uncued; same F35C APG81 on exact internal2 AIM120D+2 Mk84 GBU31 source fit (US2025 PDF51/B46)"
+    }
+  },
+  "external_store_fits": {
+    "us_mh60r_mk54x4": {
+      "base": "us_mh60r",
+      "name": "MH-60R BlockI four Mk54 source fit",
+      "weapon": "us_mk54",
+      "rounds": 4,
+      "round_weight_kg": 285,
+      "host_version": "helicopter",
+      "payload_kg": 1140,
+      "max_drop": "Low; hover permitted by9.7.1",
+      "source": "America Aircraft2025-12-01 PDF69/B64 MH60R BlockI four Mk50/54 fit; PDF93/E1 AnnexF Mk54/Mod1 weight285/292kg noteC helicopter/fixed-wing; visual evidence artifacts/rules-following-20261023/aviation-draft/us-aircraft-p069.png and p093.png",
+      "limitations": "No guessed mass for the base two-round generic fit, fixed-wing internal carriage, Mod2 or HAAWC glide kit."
+    },
+    "lab_mh60r_he_rocket12": {
+      "base": "us_mh60r",
+      "name": "LAB MH60R author12 HE rocket experiment",
+      "weapon": "lab_he_rocket20kg",
+      "rounds": 12,
+      "round_weight_kg": 20,
+      "host_version": "scenario_laboratory",
+      "payload_kg": 320,
+      "empty_rack_kg": 80,
+      "source": "scenario_assumption: author20kg/rocket plus80kg empty racks; never Hydra/LAU61 mass"
+    },
+    "lab_f18e_cluster200x2": {
+      "base": "us_f18e",
+      "name": "LAB F18E author cluster experiment",
+      "weapon": "lab_cluster200kg",
+      "rounds": 2,
+      "round_weight_kg": 200,
+      "host_version": "scenario_laboratory",
+      "payload_kg": 480,
+      "empty_rack_kg": 80,
+      "source": "scenario_assumption: author200kg per cluster bomb and80kg empty racks; no Annex weight claim"
+    }
+  },
+  "source_fit_revision": "2026-10-23-MH60R-BlockI-Mk54x4-helicopter-1",
+  "tanker_methods": {
+    "us_f18e": [
+      "BuddyWestern"
+    ],
+    "us_f18e_asm": [
+      "BuddyWestern"
+    ],
+    "us_kc130j": [
+      "WesternProbe"
+    ]
+  },
+  "tanker_methods_source": "America Aircraft2025-12-01 PDF49/B-44 F/A18 buddy store, PDF64/B-59 KC130J N/2P; English2026 PDF38/4-6 dedicated vs buddy pumping equipment; exact standard class fits only",
+  "refuel_allocation_policy": "rts_policy: same tanker and completion tick share finite return-safe fuel proportionally to capped requested tanker-range debit; deterministic receiver-ID order, no network-order priority; not an additional printed book rule",
+  "dedicated_tanker_source": {
+    "source_file": "4-4.Americas_Aircraft__1_Dec_25.pdf",
+    "version": "2025-12-01",
+    "visually_verified_pdf_pages": [
+      51,
+      64,
+      91
+    ],
+    "evidence": "artifacts/rules-book-wide-20261026/aviation-remaining/source-evidence-manifest.json",
+    "coverage": "standard KC130J two Western probe hoses and F35B receiving only; no cabin-tank, Harvest HAWK, legacy IOC, boom/BDA or other Annex aircraft inferred; optional tanks intentionally unavailable until full fit gates exist"
+  },
+  "hifr_capable_airframes": {
+    "us_mh60r": "English2026 PDF39/4-7 4.9 Western helicopter; America Aircraft2025-12-01 PDF69/B64 verified MH60R airframe",
+    "us_mh60r_mk54x4": "Same verified MH60R BlockI airframe as us_mh60r; America Aircraft2025-12-01 PDF69/B64 and AnnexF PDF93/E1 Mk54 four-round exact fit already verified in source_fit_revision RTS-04-27; ordnance variant does not change Western HIFR equipment"
+  },
+  "hifr_noncombat_scope": "English2026 4.9 noncombat throughout evolution: cancel on actual committed incoming fire, accepted combat target/dogfight or own/incoming active weapon; recheck geometry/ship capability; no free fuel or completion fatigue credit on cancellation. Same-tick actual-fire marker is a phase admission guard, not an invented fatigue duration.",
+  "internal_store_fits": {
+    "us_f35c_gbu31_mk84x2": {
+      "rounds": {
+        "us_aim120d": 2,
+        "us_gbu31_mk84_satnav1": 2
+      },
+      "round_weight_kg": {
+        "us_aim120d": 162,
+        "us_gbu31_mk84_satnav1": 934
+      },
+      "payload_kg": 2192,
+      "source": "America Aircraft2025-12-01 PDF51/B46 internal fit; PDF102/H2-4 Mk84 GBU31 934kg, PDF106/H4-2 AIM120D162kg;2*934+2*162=2192; separate internal mass ledger"
+    }
+  },
+  "airframe_aliases": {
+    "us_f35c_gbu31_mk84x2": {
+      "base": "us_f35c",
+      "source": "US Aircraft2025 PDF51/B46 same F35C aircraft with exact internal ordnance; no physical/sensor/defensive hardware changes"
+    }
+  },
+  "author_external_store_weight_references": {
+    "us_f18e": {
+      "lab_gbu12_salh2": {
+        "source": "scenario_assumption: exact4x277kg source GBU12 experimental mounting; not real Annex F18E loadout",
+        "weight_reference": "pgm-2026.json weapons.lab_gbu12_salh2.hang_weight_kg",
+        "physical_consumer": "pgm2026::external_store_weight fallback for actual mounted/declaration inventory only; no external_store_fits alias or platform mutation",
+        "rounds": 4,
+        "payload_kg": 1108
+      }
+    }
+  }
+}

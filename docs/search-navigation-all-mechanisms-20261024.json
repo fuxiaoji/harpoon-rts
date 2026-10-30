@@ -1,0 +1,112 @@
+{
+  "profile": "hv2026-rts-v4",
+  "all_mechanisms_complete": false,
+  "whole_chapter_complete": false,
+  "source_authority": "14-2.HpnV_Rules_1_Jan_26.pdf sha2568196ffc715bbcccd862d8597c607de7816dac5baee31fa659f89dfaf4323700c",
+  "latest_packet_validation": {
+    "date": "2026-10-24",
+    "status": "tested_declared_subsets_only",
+    "report": "docs/all-rules-search-navigation-20261024.md",
+    "log": "artifacts/rules-navigation-remaining-20261024/workspace-final.log",
+    "workspace": {
+      "targets": 73,
+      "passed": 1203,
+      "failed": 0,
+      "ignored": 5
+    },
+    "whole_chapter_complete": false
+  },
+  "rows": [
+    {
+      "id": "WIRE-PRIVATE",
+      "source": "HV2026 7.5.4/10.1; own declaration vs Referee physical evidence",
+      "data": "data/rules/torpedo-2026.json execution_revision",
+      "execution": "torpedo2026 source_launch/wire_check -> referee_trace",
+      "tests": "torpedo_wire_privacy_2026:2",
+      "status": "tested_subset",
+      "remaining": "Qualified DualWire reports, complete event/BDA audit"
+    },
+    {
+      "id": "H1-INITIAL-EMPTY-SEARCH",
+      "source": "English2026 PDF79/7-4 section7.5.3 and PDF28 depth bands",
+      "data": "torpedo-2026.json 150yd diameter/500yd endurance per circle/two bands",
+      "execution": "torpedo2026/helical.rs -> actual Flight movement; native Motion swept candidate guard",
+      "tests": "torpedo_helical_2026:11; actual HTTP T375->402 local/cross complete World and replay",
+      "status": "tested_subset",
+      "remaining": "Acquisition/cone/opportunity/identity-specific5000yd/multi-torpedo ordering/reattack/next cycle; possible interaction conservatively pending"
+    },
+    {
+      "id": "EMERGENCY-BLOW-MOTION",
+      "source": "English2026 PDF28/3-6 section3.2.1",
+      "data": "navigation-2026.json submarine.emergency_blow",
+      "execution": "navigation2026/submarine actual speed brackets/next-bracket rise/minimum commitment/SetDepth mode switch",
+      "tests": "emergency_blow_2026:11; HTTP/MCP actual108s, separate180s; full World local/cross/replay",
+      "status": "tested_subset",
+      "remaining": "Zero-speed/VeryDeep/full damage and maneuver combinations; real hardware/source-water fits"
+    },
+    {
+      "id": "BLOW-PASSIVE-AND-MASKING",
+      "source": "English2026 PDF28/49/53/55",
+      "data": "Existing Loud6 and independently qualified propeller cavitation4",
+      "execution": "detection2026::passive_signature shared main/masking; unresolved source propagates pending",
+      "tests": "detection_emergency_source_contract:3 native Blow cases",
+      "status": "tested_subset",
+      "remaining": "R-063 Blow-specific extra4 interaction unresolved: do not call6-only or10 complete"
+    },
+    {
+      "id": "WITHDRAW-UNSOURCED-BATTERY",
+      "source": "English2026 PDF29-30/3-7--3-8 section3.2.4/3.2.5",
+      "data": "battery-source-boundary-2026.json Full-only fingerprint",
+      "execution": "asw legacy updater bypass/observe unknown/damage no fictional100/LLM and UI unknown",
+      "tests": "core5 + damage3 + LLM projection2; Node battery3",
+      "status": "tested_boundary_withdrawal",
+      "remaining": "FullBatteryFit/capacity/current charge/whole-turn mean/charge/snorkel/AIP all not implemented; R-062"
+    },
+    {
+      "id": "COMMON-ENTRY-AND-MANUAL",
+      "source": "Source validators above; user authorized persistent manual takeover",
+      "data": "shared command_contract:37 outer/71 nested",
+      "execution": "HTTP player and AI readonly preflight before inbox/manual; MCP same gate after ownership",
+      "tests": "server HTTP/AI6 + MCP5; actual transport68 and three source refusals separately from valid execution",
+      "status": "tested_subset",
+      "remaining": "All other source rule combinations and real LLM match not proven"
+    },
+    {
+      "id": "FSM-AND-LLM-BLOW",
+      "source": "Own observation source_rules.depth_operation + explicit RTS assistance",
+      "data": "No new hidden state; existing persistent manual and mind serialization",
+      "execution": "FSM global/role/final coordination filters hold active own Blow; zh/en LLM instructions",
+      "tests": "FSM2 real output/no-command control World; existing agent tests",
+      "status": "tested_subset",
+      "remaining": "Prompt correctness is not live LLM compliance or all autonomous navigation"
+    },
+    {
+      "id": "PLAYER-UI",
+      "source": "Own observed operation and common command entry",
+      "data": "command.html/app.js/style.css/training.css/combat-help.js",
+      "execution": "Actual Playwright clicks/fills/speed controls; no evaluate business calls",
+      "tests": "ui/ui-validation.json; Chinese1600x1000/English1024x768/no horizontal overflow",
+      "status": "tested_subset",
+      "remaining": "Physical tablet/whole historic UI/real LLM match not tested"
+    }
+  ],
+  "counts_are_executions_not_rule_coverage": true,
+  "rts_adaptations": [
+    "75yd radial entry and clockwise helix with500yd endurance circle clock, not physical circumference speed equality",
+    "Continuous source-band anchor interpolation and first upward Shallow pending boundary",
+    "Actual-speed per-second Blow rise and minimum three-band noncancel commitment; 30s FSM review is policy, not source clock"
+  ],
+  "source_candidate_boundaries": [
+    "Navigation Luna whole package unqualified: Blow gate, old10kt conflict, AIP20 boundary and collision source errors explicitly corrected by parent/peer",
+    "Battery Annex qualified atoms are source-only; whole candidate old10kt context must not be consumed; no production Annex import"
+  ],
+  "full_book_remaining": [
+    "Complete torpedo acquisition/opportunity/reattack/interference and real fits",
+    "ASCM popup/W3/multi/EW/reattack and remaining MR/source fits",
+    "Hard rudder/evasive/collision/grounding/battery/AIP/Crash Dive/Very Deep",
+    "Aviation SSkim/cloud/terrain/full fits/endurance/tanker",
+    "TDL/shared FCS/naval guns/depth charges/BMD",
+    "Remaining repairs/two levels/re-hit/fire/flood/patch and functional bases/ports",
+    "Optional E00-E13 and atomic mechanism/table reconciliation"
+  ]
+}

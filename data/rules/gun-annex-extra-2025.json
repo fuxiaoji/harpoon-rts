@@ -1,0 +1,180 @@
+{
+  "source": "America’s Navy 1 Dec 2025 PDF75 printed C-1 Annex C Naval Guns; selected HE rows",
+  "guns": {
+    "cw_5in_mk45": {
+      "name": "Mk45 Mod 4 5in/62",
+      "shell": "HE",
+      "caliber_mm": 127,
+      "source": "America’s Navy 1 Dec 2025 Annex C PDF75 C-1, HE row visually reviewed",
+      "bands": [
+        {
+          "max_range_kyd": 7.8,
+          "belt_pen_cm": 2,
+          "damage": 24
+        },
+        {
+          "max_range_kyd": 15.5,
+          "belt_pen_cm": 1,
+          "damage": 20
+        },
+        {
+          "max_range_kyd": 20.7,
+          "belt_pen_cm": 1,
+          "damage": 18,
+          "deck_pen_cm": 0
+        },
+        {
+          "max_range_kyd": 25.9,
+          "belt_pen_cm": 1,
+          "damage": 16,
+          "deck_pen_cm": 1
+        }
+      ],
+      "aa_max_range_kyd": 12,
+      "aa_rating": 0.45,
+      "barrels": null,
+      "barrels_note": "scenario declaration; not printed in gun table",
+      "notes": "N; not interpreted"
+    },
+    "us_mk110": {
+      "name": "Mk110 57mm/70",
+      "shell": "HE",
+      "caliber_mm": 57,
+      "source": "America’s Navy 1 Dec 2025 Annex C PDF75 C-1, HE row visually reviewed",
+      "bands": [
+        {
+          "max_range_kyd": 3,
+          "belt_pen_cm": 1,
+          "damage": 18
+        },
+        {
+          "max_range_kyd": 7.6,
+          "belt_pen_cm": 1,
+          "damage": 16
+        },
+        {
+          "max_range_kyd": 12.1,
+          "belt_pen_cm": 1,
+          "damage": 14,
+          "deck_pen_cm": 0
+        },
+        {
+          "max_range_kyd": 15.1,
+          "belt_pen_cm": 1,
+          "damage": 13,
+          "deck_pen_cm": 1
+        }
+      ],
+      "aa_max_range_kyd": 6,
+      "aa_rating": 0.34,
+      "barrels": null,
+      "barrels_note": "scenario declaration; not printed in gun table",
+      "notes": "N; not interpreted"
+    },
+    "cn_pj26": {
+      "name": "PRC PJ-26 76mm/59",
+      "shell": "HE",
+      "caliber_mm": 76,
+      "bands": [
+        {
+          "max_range_kyd": 4.5,
+          "belt_pen_cm": 1,
+          "damage": 16
+        },
+        {
+          "max_range_kyd": 9.0,
+          "belt_pen_cm": 1,
+          "damage": 13
+        },
+        {
+          "max_range_kyd": 12.0,
+          "belt_pen_cm": 0,
+          "deck_pen_cm": 0,
+          "damage": 12
+        },
+        {
+          "max_range_kyd": 15.0,
+          "belt_pen_cm": 0,
+          "deck_pen_cm": 1,
+          "damage": 10
+        }
+      ],
+      "aa_max_range_kyd": 7.0,
+      "aa_rating": 1.69,
+      "air_alt_band": "High",
+      "pdf_page": 68,
+      "source": "China's Navy 1 Dec 2025 PDF68 printed C-1 Annex C, HE row visually reviewed 2026-10-30",
+      "note": "service fit still required by the parent before any execution; this row only supplies the printed Annex C attributes"
+    },
+    "cn_pj87": {
+      "name": "PRC PJ-87 100mm/55 (Type 210)",
+      "shell": "HE",
+      "caliber_mm": 100,
+      "bands": [
+        {
+          "max_range_kyd": 5.7,
+          "belt_pen_cm": 1,
+          "damage": 20
+        },
+        {
+          "max_range_kyd": 11.4,
+          "belt_pen_cm": 1,
+          "damage": 17
+        },
+        {
+          "max_range_kyd": 15.2,
+          "belt_pen_cm": 1,
+          "deck_pen_cm": 0,
+          "damage": 15
+        },
+        {
+          "max_range_kyd": 19.0,
+          "belt_pen_cm": 0,
+          "deck_pen_cm": 1,
+          "damage": 14
+        }
+      ],
+      "aa_max_range_kyd": 9.0,
+      "aa_rating": 1.69,
+      "air_alt_band": "Med",
+      "pdf_page": 68,
+      "source": "China's Navy 1 Dec 2025 PDF68 printed C-1 Annex C, HE row visually reviewed 2026-10-30",
+      "note": "service fit still required by the parent before any execution"
+    },
+    "cn_pj33b": {
+      "name": "PRC Type 79A/PJ-33A, PJ-33B 100mm/56",
+      "shell": "HE",
+      "caliber_mm": 100,
+      "bands": [
+        {
+          "max_range_kyd": 7.4,
+          "belt_pen_cm": 1,
+          "damage": 19
+        },
+        {
+          "max_range_kyd": 14.8,
+          "belt_pen_cm": 1,
+          "damage": 16
+        },
+        {
+          "max_range_kyd": 19.7,
+          "belt_pen_cm": 1,
+          "deck_pen_cm": 0,
+          "damage": 14
+        },
+        {
+          "max_range_kyd": 24.6,
+          "belt_pen_cm": 0,
+          "deck_pen_cm": 1,
+          "damage": 13
+        }
+      ],
+      "aa_max_range_kyd": 9.0,
+      "aa_rating": 0.35,
+      "air_alt_band": "High",
+      "pdf_page": 68,
+      "source": "China's Navy 1 Dec 2025 PDF68 printed C-1 Annex C, HE row visually reviewed 2026-10-30",
+      "note": "service fit still required by the parent before any execution"
+    }
+  }
+}

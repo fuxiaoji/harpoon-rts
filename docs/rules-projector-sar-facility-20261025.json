@@ -1,0 +1,969 @@
+{
+  "schema": 1,
+  "started_date": "2026-10-25",
+  "closure_date": "2026-10-26",
+  "status": "tested_declared_subsets",
+  "profile": "hv2026-rts-v4",
+  "final_signoff": true,
+  "whole_book_complete": false,
+  "whole_chapter_complete": false,
+  "all_optional_rules_complete": false,
+  "all_real_annex_fits_complete": false,
+  "atomic_rule_denominator": null,
+  "coverage_percentage": null,
+  "evidence_root": "artifacts/rules-book-next-projector-20261025",
+  "authority": {
+    "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+    "version": "2026-01-01 English Digital Update",
+    "sha256": "8196ffc715bbcccd862d8597c607de7816dac5baee31fa659f89dfaf4323700c",
+    "precedence": "English authority; three Chinese core manuals provide mandatory RAG and cross-check evidence; originals are read-only"
+  },
+  "interpretation": "Four-way records are independent. A pure calculation or fail-closed guard does not complete a physical mechanism. This final record signs off only the declared subsets supported by the observed test, protocol and UI evidence; no untested scope is assumed complete.",
+  "validation": {
+    "observed_workspace_2": {
+      "path": "artifacts/rules-book-next-projector-20261025/workspace-2.log",
+      "targets": 122,
+      "passed": 1555,
+      "failed": 3,
+      "ignored": 5,
+      "final_acceptance": false
+    },
+    "observed_node_1": {
+      "path": "artifacts/rules-book-next-projector-20261025/node-1.log",
+      "passed": 83,
+      "failed": 0,
+      "skipped": 0,
+      "physical_browser_test": false
+    },
+    "candidate_2": {
+      "path": "artifacts/rules-book-next-projector-20261025/candidate-2-inputs.json",
+      "files": 352,
+      "sha256": "c5606858c8a03a4813414e5f0449715562b8accd43a0cd7d4ba73fd56dcc0487",
+      "superseded_for_final": true
+    },
+    "final_candidate": {
+      "path": "artifacts/rules-book-next-projector-20261025/final-candidate-1-inputs.json",
+      "sha256": "8cff647c7247b0a11c1625ebb445ac61c2c02a296b9a60938b933a4faced7115",
+      "files": 353
+    },
+    "final_workspace": {
+      "path": "artifacts/rules-book-next-projector-20261025/final-workspace-1.log",
+      "sha256": "b7b0c38733837120812e25e82cb8cc132bc3acc353bb71d8c115a1895af245e1",
+      "targets": 122,
+      "passed": 1560,
+      "failed": 0,
+      "ignored": 5,
+      "counts_are_not_rule_coverage": true
+    },
+    "actual_http": {
+      "path": "artifacts/rules-book-next-projector-20261025/acceptance-preparation/http-runs/http-final-1/validation.json",
+      "sha256": "d75f51ffbfdad1552d1f07075b8bbb7525c169c63f41c1d40591b38ad76ddbc1",
+      "passed": true,
+      "pid": 9404,
+      "negative_cases": 13,
+      "all_invalid_paused_own_observations_unchanged": true,
+      "sar_cancel_applied_and_persistent_manual": true,
+      "actual_fire_one_pattern": true,
+      "referee_native_quality": "Good",
+      "quality_is_not_player_input": true,
+      "final_tick": 200,
+      "full_SAR_discovery_or_recovery_claim": false,
+      "actual_referee_pattern_result": {
+        "raw_d100": 98,
+        "severity": "miss",
+        "dp": null,
+        "damage_queued": false
+      },
+      "private_referee_pattern_audit": {
+        "path": "artifacts/rules-book-next-projector-20261025/acceptance-preparation/http-runs/http-final-1/private-referee-source-pattern-audit.json",
+        "sha256": "d73a463fc81995bb9e77a9846372bd0e0c216c65007701de29d7d14342f802e3"
+      },
+      "transport_hit_or_damage_positive_claim": false
+    },
+    "actual_mcp_stdio": {
+      "path": "artifacts/rules-book-next-projector-20261025/acceptance-preparation/mcp-runs/mcp-final-1/validation.json",
+      "sha256": "3cee427c9a34c2e5a520714f0f364f2a3faa0e96d9c9501350e60c5db3936b2f",
+      "protocol_closure": {
+        "path": "artifacts/rules-book-next-projector-20261025/acceptance-preparation/mcp-runs/mcp-final-1/protocol-and-process-closure.json",
+        "sha256": "80db7edf801a86e402c38a9e2ab2a249a0a29ba43d7dccf013a255f75b87c990"
+      },
+      "passed": true,
+      "pid": 15452,
+      "requests": 92,
+      "responses": 92,
+      "all_request_ids_aligned": true,
+      "jsonrpc_errors": 0,
+      "expected_tool_errors": 13,
+      "owned_child_still_running": false,
+      "sar_cancel_applied_and_persistent_manual": true,
+      "actual_fire_one_pattern": true,
+      "Good_claim": false,
+      "reason": "Good is not a public MCP field; only native source gate admission and actual own-stock changes are asserted",
+      "final_tick": 200,
+      "full_SAR_discovery_or_recovery_claim": false
+    },
+    "cross_process": {
+      "path": "artifacts/rules-book-next-projector-20261025/acceptance-preparation/cross-runs/cross-final-1/validation.json",
+      "sha256": "983fd61a2b29844175f50a2b2ec014d77ad80d4c815db2ac794c1bebdf7e0edd",
+      "passed": true,
+      "pid": 31140,
+      "reference_pid": 9404,
+      "queued_tick": 199,
+      "terminal_tick": 200,
+      "queued_complete_world_equal": true,
+      "queued_complete_inbox_equal": true,
+      "terminal_complete_world_equal": true,
+      "terminal_complete_inbox_equal": true,
+      "command_replay": {
+        "command_batches": 2,
+        "events_verified": 31,
+        "tick": 200,
+        "verified": true,
+        "world_fnv64": "e747f31f1d478787"
+      },
+      "historical_long_replay": false
+    },
+    "actual_ui": {
+      "path": "artifacts/rules-book-next-projector-20261025/acceptance-preparation/ui/validation.json",
+      "sha256": "8b589caafef69f3ff26781c2cf1f22629a32236b1cbf7639af9da7b5d7f6179d",
+      "passed": true,
+      "actual_browser": "CUA IAB",
+      "server_port": 8874,
+      "initial_tick": 195,
+      "final_tick": 196,
+      "selection_complete_payload_unchanged": true,
+      "paused_complete_non_inbox_payload_unchanged": true,
+      "actual_UI_Fire_requests": 1,
+      "transport_queued_command_count": 2,
+      "manual_contract": "one actual UI Fire request queues explicit set_unit_automation(false) plus Fire; both apply on next tick",
+      "pattern_expenditure": {
+        "aggregate_before": 8,
+        "aggregate_after": 7,
+        "actual_pattern_count": 1,
+        "selected_physical_loaded_before": 1,
+        "selected_physical_loaded_after": 0,
+        "reserve_each_before_and_after": 3,
+        "persistent_manual": true
+      },
+      "exhausted_repeat_attempt": {
+        "complete_payload_unchanged": true,
+        "backend_transport_response_not_separately_instrumented": true
+      },
+      "SAR_scope": "Own reported stock and no-report disabled rescue controls only",
+      "SAR_buttons_disabled_without_own_reports": true,
+      "SAR_native_discovery_begin_or_recovery_UI_claim": false,
+      "render_checks": [
+        {
+          "language": "zh-CN",
+          "viewport": [
+            1600,
+            1000
+          ],
+          "no_horizontal_overflow": true,
+          "map_and_header_visible": true,
+          "source_buttons_min_height_px": 44,
+          "sar_buttons_disabled_without_own_reports": true,
+          "port_loaded_patterns": 1,
+          "starboard_loaded_patterns": 0,
+          "reserve_each": 3
+        },
+        {
+          "language": "zh-CN",
+          "viewport": [
+            1024,
+            768
+          ],
+          "no_horizontal_overflow": true,
+          "map_and_header_visible": true,
+          "source_buttons_min_height_px": 44,
+          "sar_buttons_disabled_without_own_reports": true,
+          "port_loaded_patterns": 1,
+          "starboard_loaded_patterns": 0,
+          "reserve_each": 3
+        },
+        {
+          "language": "en",
+          "viewport": [
+            1600,
+            1000
+          ],
+          "no_horizontal_overflow": true,
+          "map_and_header_visible": true,
+          "source_buttons_min_height_px": 44,
+          "sar_buttons_disabled_without_own_reports": true,
+          "port_loaded_patterns": 1,
+          "starboard_loaded_patterns": 0,
+          "reserve_each": 3
+        },
+        {
+          "language": "en",
+          "viewport": [
+            1024,
+            768
+          ],
+          "no_horizontal_overflow": true,
+          "map_and_header_visible": true,
+          "source_buttons_min_height_px": 44,
+          "sar_buttons_disabled_without_own_reports": true,
+          "port_loaded_patterns": 1,
+          "starboard_loaded_patterns": 0,
+          "reserve_each": 3
+        }
+      ],
+      "browser_error_logs_observed": [],
+      "screenshot_evidence": "CUA screenshots displayed in this conversation; no local image file claimed",
+      "physical_tablet_test": false,
+      "verification": {
+        "command_batches": 1,
+        "events_verified": 31,
+        "tick": 196,
+        "verified": true,
+        "world_fnv64": "cdb8f14e7c049e11"
+      },
+      "harness_corrections": {
+        "path": "artifacts/rules-book-next-projector-20261025/acceptance-preparation/ui/harness-corrections.md",
+        "sha256": "5d8fc0f16b2d6b3b5ca59a73c2b0fb51bcea52751a136a12422ec56a8a64e69a"
+      }
+    },
+    "physical_tablet_test": false,
+    "new_llm_match": false,
+    "historical_long_replay_repeated_in_this_batch": false,
+    "observed_workspace_3": {
+      "path": "artifacts/rules-book-next-projector-20261025/workspace-3.log",
+      "targets": 122,
+      "passed": 1556,
+      "failed": 2,
+      "ignored": 5,
+      "final_acceptance": false
+    },
+    "final_node": {
+      "path": "artifacts/rules-book-next-projector-20261025/final-node-1.log",
+      "sha256": "997e575198890d57c5467d21b33c81474f52e7f9ba0056d696745d655da8e117",
+      "passed": 83,
+      "failed": 0,
+      "skipped": 0
+    },
+    "frozen_binaries": [
+      {
+        "bytes": 20359680,
+        "sha256": "41819e03da9e61cb16a0fa10fd52bcea29c45c2be0595ec4faa60b880f26fe3b",
+        "name": "harpoon-mcp.exe",
+        "path": "D:\\desktop\\鱼叉\\artifacts\\rules-book-next-projector-20261025\\bin-final-1\\harpoon-mcp.exe"
+      },
+      {
+        "bytes": 41297920,
+        "sha256": "a153ed4ce6db45d582ca88ab87a8195cd60de23d1557ad9afed4f742f7307202",
+        "name": "harpoon-server.exe",
+        "path": "D:\\desktop\\鱼叉\\artifacts\\rules-book-next-projector-20261025\\bin-final-1\\harpoon-server.exe"
+      }
+    ],
+    "after_acceptance_inputs": {
+      "path": "artifacts/rules-book-next-projector-20261025/after-acceptance-inputs.json",
+      "sha256": "8cff647c7247b0a11c1625ebb445ac61c2c02a296b9a60938b933a4faced7115",
+      "files": 353,
+      "byte_identical_to_final_candidate": true,
+      "final_candidate_sha256": "8cff647c7247b0a11c1625ebb445ac61c2c02a296b9a60938b933a4faced7115"
+    }
+  },
+  "observed_failures": [
+    {
+      "path": "artifacts/rules-book-next-projector-20261025/projector-source-red-1.log",
+      "kind": "compiled_schema_source_red",
+      "failed": 4,
+      "earliest_failure": "unknown projectors configuration",
+      "downstream_damage_assertions_reached": false
+    },
+    {
+      "path": "artifacts/rules-book-next-projector-20261025/projector-integration-2.log",
+      "kind": "native_fixture_precondition_failure",
+      "projector_passed": 1,
+      "projector_failed": 5,
+      "stand_off_passed": 8,
+      "reason": "Fixed T725 did not guarantee a successful current acoustic epoch. The source probability cap was preserved; fixture now waits for actual classified located same-receiver Good evidence."
+    },
+    {
+      "path": "artifacts/rules-book-next-projector-20261025/combined-source-1.log",
+      "kind": "compile_error_not_source_red",
+      "reason": "SAR candidate omitted observe pagination arguments."
+    },
+    {
+      "path": "artifacts/rules-book-next-projector-20261025/combined-source-2.log",
+      "kind": "compiled_preimplementation_source_red",
+      "projector": {
+        "passed": 6,
+        "failed": 0
+      },
+      "sar": {
+        "passed": 2,
+        "failed": 4,
+        "earliest_failures": [
+          "S1/S4/S5 lack native reports",
+          "S6 zero-argument action swallowed private position field"
+        ]
+      },
+      "facilities": {
+        "passed": 1,
+        "failed": 4,
+        "earliest_failure": "maintenance_provider roundtrip is null instead of SHOP",
+        "downstream_clock_assertions_reached": false
+      }
+    },
+    {
+      "path": "artifacts/rules-book-next-projector-20261025/workspace-1.log",
+      "kind": "compile_error_not_acceptance",
+      "reason": "Frozen-v2 realtime_naval_service exhaustive rejection list omitted new SearchAndRescue command; root added rejection, preserving the frozen action set."
+    },
+    {
+      "path": "artifacts/rules-book-next-projector-20261025/workspace-2.log",
+      "kind": "incomplete_unified_run",
+      "failed_tests": [
+        "surface inline: old fixed timing lacked an admitted pre-movement native FCS/located Sub window; revised real timing search preserves all source gates and is green in final run",
+        "destroyed-provider case: first final-receipt mismatch was corrected to distinguish a still-present wreck from a cleaned-up provider; subsequent complete-World comparison exposed an actual persistence bug",
+        "LLM manual-actor shared-schema assertion expected40 commands rather than41; corrected without weakening manual rejection"
+      ],
+      "pending_fix_verification": false,
+      "fixed_verified_by": "artifacts/rules-book-next-projector-20261025/final-workspace-1.log"
+    },
+    {
+      "path": "artifacts/rules-book-next-projector-20261025/workspace-3.log",
+      "kind": "incomplete_unified_run",
+      "targets": 122,
+      "passed": 1556,
+      "failed": 2,
+      "ignored": 5,
+      "failed_scopes": [
+        "surface timing fixture",
+        "actual restored dead-provider cleanup clock"
+      ],
+      "diagnosis": {
+        "path": "artifacts/rules-book-next-projector-20261025/facilities/persistence-diagnosis-20261026.json",
+        "sha256": "532e4b3fcf966c8777f21120a7a090ea078f085b1ea742ec47c05c1b439259fa"
+      }
+    },
+    {
+      "path": "artifacts/rules-book-next-projector-20261025/death-clock-source-red.log",
+      "kind": "compiled_persistence_behavior_red",
+      "failed": 1,
+      "cause": "Full cleanup used Entity.last_emit_tick as an authoritative death clock even though serde(skip) discards that cache; restored wreck cleanup occurred earlier",
+      "fixed_verified_by": "artifacts/rules-book-next-projector-20261025/final-workspace-1.log"
+    },
+    {
+      "path": "artifacts/rules-book-next-projector-20261025/acceptance-preparation/cross-final-1.log",
+      "kind": "CLI_guard_failure_before_any_HTTP_request",
+      "cause": "reference-run expected a run label, caller supplied a path",
+      "production_error": false,
+      "successful_followup_log": "artifacts/rules-book-next-projector-20261025/acceptance-preparation/cross-final-2.log"
+    },
+    {
+      "path": "artifacts/rules-book-next-projector-20261025/acceptance-preparation/ui/harness-corrections.md",
+      "kind": "acceptance_helper_errors_not_production_red",
+      "corrections": [
+        "UI helper first referenced absent payload.record and raised KeyError before stepping; fixed to compare all non-inbox payload",
+        "one temporary read-only diagnostic omitted utf-8 and failed encoding",
+        "cross CLI reference-run path rejected before any request; corrected label passed"
+      ],
+      "single_real_UI_Fire_request_preserved": true,
+      "no_legal_shot_retry": true,
+      "original_archives_rewritten": false
+    }
+  ],
+  "records": [
+    {
+      "id": "HV2026-8.5.3-RGB10-FIT",
+      "title": "Explicit source model and atomic physical allocation",
+      "source": {
+        "status": "verified_source",
+        "pages": [
+          99,
+          100
+        ],
+        "annex": "China2025 PDF75/E-1 plus PDF16/A-9 and17/A-10",
+        "facts": [
+          "H-only RGB10; six bombs per complete pattern; maximum0.5nm; IntIV",
+          "Contact Ph/DP absent; Major11%/11DP and Minor20%/6DP are absolute thresholds",
+          "No C paired-mount remark for this model"
+        ],
+        "packet": "artifacts/rules-book-next-projector-20261025/source-contract.md"
+      },
+      "data": {
+        "status": "structured",
+        "files": [
+          "harpoon-rts/data/rules/asw-weapons-2026.json"
+        ],
+        "fields": [
+          "Configuration.projectors",
+          "exact model and weapon identity",
+          "physical P/S mounts",
+          "loaded/reserve complete patterns",
+          "unresolved reload:null"
+        ],
+        "assumptions": [
+          "Original Ford hull/DP/source CS6 with original956EM mount/aggregate stock and experimental Gen5 active/passive sonar",
+          "one loaded plus three reserve patterns per mount is an explicit scenario allocation, not a real installation fact"
+        ]
+      },
+      "execution": {
+        "status": "tested_declared_subset",
+        "files": [
+          "harpoon-rts/crates/harpoon-core/src/rules/asw_weapons2026.rs",
+          "harpoon-rts/crates/harpoon-core/src/rules/asw_weapons2026/projector.rs"
+        ],
+        "entry": "initialize validates all rows before publishing runtime; no prefix on invalid late row"
+      },
+      "tests": {
+        "status": "final_scoped_pass",
+        "final_workspace": "122targets1560/0/5",
+        "inline_configuration_and_pure_table": 4,
+        "all_inline": 7,
+        "physical_native_target": 6
+      },
+      "open": [
+        "real956EM full fit and ready/reserve allocation",
+        "all other projector models"
+      ]
+    },
+    {
+      "id": "HV2026-8.5.3-OWN-FCS",
+      "title": "Native same-receiver FCS without a fictitious torpedo seeker",
+      "source": {
+        "status": "verified_source",
+        "pages": [
+          72,
+          73,
+          100
+        ],
+        "sections": [
+          "6.3.4",
+          "8.5.3.1"
+        ],
+        "facts": [
+          "Gen4+ search sonar can aim a projector",
+          "Torpedo Seeker is a distinct modifier and no such seeker is fitted to RGB10"
+        ]
+      },
+      "data": {
+        "status": "structured",
+        "file": "harpoon-rts/data/rules/firecontrol-2026.json",
+        "policy": "HV2026-8.5.3-ACTIVE-SEARCH-INITIAL",
+        "scope": "Initial active acoustic Gen4+ search subset; no passive/early dedicated attack-sonar extrapolation"
+      },
+      "execution": {
+        "status": "tested_declared_subset",
+        "entry": "firecontrol2026::own_projector_solution",
+        "gates": [
+          "actual installed active receiver",
+          "fresh native measured aim",
+          "continuous own motion",
+          "verified platform combat system",
+          "actual sonar/functional availability"
+        ],
+        "truth_speed_or_course_used_in_preflight": false
+      },
+      "tests": {
+        "status": "final_scoped_pass",
+        "target": "projector_pattern_native_next",
+        "workspace_2": "6/6 target includes explicit no-torpedo-seeker comparison",
+        "native_evidence_injected": false,
+        "native_target_final": "6/6",
+        "http_referee_native_quality": "Good",
+        "MCP_public_Good_claim": false
+      },
+      "open": [
+        "all earlier attack-sonar fits",
+        "passive projector FCS domain",
+        "remote projector FCS and real installation coverage"
+      ]
+    },
+    {
+      "id": "HV2026-8.5.3-PATTERN-COMMIT",
+      "title": "Actual full-pattern expenditure and physical mount identity",
+      "source": {
+        "status": "verified_source",
+        "pages": [
+          99,
+          100,
+          127
+        ],
+        "annex": "China2025 E3/RGB10 and P/S mount source"
+      },
+      "data": {
+        "status": "structured",
+        "policy": "RTS-PROJECTOR-PHASE-01",
+        "meaning": "Accepted Planned requests are resolved before the current tick common damage batch closes; no fictitious ballistic flight or free Reaction attack"
+      },
+      "execution": {
+        "status": "tested_declared_subset",
+        "entries": [
+          "validate_projector",
+          "commit_projector",
+          "resolve_projector_patterns",
+          "weapons manual and automatic source branch before generic aggregate cooldown"
+        ],
+        "contracts": [
+          "one Fire round means one six-charge pattern",
+          "one source D100 for a complete pattern",
+          "Fair threshold rounds once; Poor spends the pattern and automatically misses without a pattern die",
+          "per-physical Tactical epoch, no free reserve reload",
+          "non-deserializable permit and revalidation",
+          "exact expanded component ammunition plus aggregate conservation"
+        ]
+      },
+      "tests": {
+        "status": "final_scoped_pass",
+        "native_target": "projector_pattern_native_next",
+        "native_target_workspace_2": "6/6",
+        "additional_inline_workspace_2": {
+          "passed": 2,
+          "scope": "read-only permit and cloned duplicate commit; two opposite physical permits and exact component4→3/aggregate8→6"
+        },
+        "native_target_final": "6/6",
+        "all_inline_final": "7/7",
+        "actual_http": "passed actual one-pattern release and own stock",
+        "actual_mcp_stdio": "passed actual native source gate admission and one-pattern own stock",
+        "cross_process": "queued T199 and terminalT200 complete World/inbox equal"
+      },
+      "open": [
+        "unprinted reload/minimum range/flight time/depth-fuze error",
+        "all fuzes and paired/multiattack rules",
+        "natural destroyed-mount and repair/ammunition complete chain"
+      ]
+    },
+    {
+      "id": "HV2026-8.5.3-COMMON-DAMAGE",
+      "title": "Source Major/Minor reaches actual common damage columns",
+      "source": {
+        "status": "verified_source",
+        "pages": [
+          99,
+          127
+        ],
+        "expanded_chinese_pages": [
+          12,
+          13
+        ]
+      },
+      "data": {
+        "status": "structured",
+        "fields": [
+          "Hit.projector optional severity",
+          "source weapon DP",
+          "stable pattern primary-hit identity"
+        ]
+      },
+      "execution": {
+        "status": "tested_declared_subset",
+        "entry": "damage_runtime::queue_projector -> common primary/batch/Impact/critical consumers",
+        "contracts": [
+          "sub_major for actual Major",
+          "sub_minor for actual Minor",
+          "no fake Mine/Torpedo classification",
+          "no def.pk or legacy ASW body fallback",
+          "Surface H-only effect remains pending without DP"
+        ]
+      },
+      "tests": {
+        "status": "final_scoped_pass",
+        "native_target_final": "6/6",
+        "natural_major_minor": "actual11DP/6DP and distinct common columns",
+        "surface_inline_final": "passed; real SetDepth timing selected before actual same-tick Surface arrival, source-qualified Fire spends one pattern, result pending/noDP/noImpact",
+        "source_preflight_not_relaxed": true,
+        "natural_major_minor_evidence": "core native p02; actual11DP/6DP and distinct common columns",
+        "actual_http_result": "private referee audit raw_d10098, severity miss, dp null, damage_queued false; transport proves legal release/expenditure/privacy only",
+        "transport_hit_or_damage_positive_claim": false
+      },
+      "open": [
+        "unprinted speed gaps remain pending",
+        "nuclear ASW placement-specific effects",
+        "8.5.4 ordinary depth charges and250yd physical chain"
+      ]
+    },
+    {
+      "id": "HV2026-14.8-NATIVE-SURFACE-VISUAL",
+      "title": "Real lookout discovery of private survivor points",
+      "source": {
+        "status": "verified_source",
+        "pages": [
+          62,
+          63,
+          64,
+          136,
+          137
+        ],
+        "section": "14.8 plus5.8",
+        "packet": "artifacts/rules-book-next-projector-20261025/sar/source-contract.md",
+        "facts": [
+          "1–9 survivors are G/Stealthy",
+          "no-wake halves range once",
+          "actual distance under0.3kyd automatic discovery"
+        ]
+      },
+      "data": {
+        "status": "structured",
+        "scope": "Full plus explicit SAR option; actual Ship Visual; day/open water/no cloud or ice;1–9 unrescued persons; first six hours",
+        "numbers_are_not_interpolated": true
+      },
+      "execution": {
+        "status": "tested_declared_subset",
+        "entries": [
+          "sensors normal Full scan -> sar_native::scan_world -> commit",
+          "actual Visual table/held/lookout Tactical die/project_point_report",
+          "UnitObs.survivors via own survivor_view"
+        ],
+        "contracts": [
+          "no Entity/Contact/FCS synthesis",
+          "successful measured geometry only, no truth fallback",
+          "opaque label allocated only on actual own discovery",
+          "last measured snapshot, not live truth",
+          "private scan evidence stays Referee"
+        ]
+      },
+      "tests": {
+        "status": "final_scoped_pass",
+        "workspace_2_target": "sar_native_visual_next 6/6",
+        "fixture_boundary": "Native damage::sink_by is an explicit adjudicated loss-consumer input. No full naturally fired weapon or casualty chain is claimed.",
+        "cases": [
+          "near real Visual discovery and JSON Begin",
+          "radar/loss notification negative",
+          "9nm no-wake negative",
+          "unseen group alias stability",
+          "full World restore before discovery",
+          "zero-argument private fields rejected"
+        ],
+        "final_target": "sar_native_visual_next 6/6",
+        "actual_transport_SAR_discovery_claim": false
+      },
+      "open": [
+        "FLIR cue/bearing/ranging combination",
+        "night/cloud/ice/non-ship domains",
+        "30/100 exact count boundary",
+        "post-six-hour current and geography",
+        "witnessed-loss automatic marker",
+        "all weapon-loss/explosion/crash survival causes",
+        "rescue victory scoring"
+      ]
+    },
+    {
+      "id": "HV2026-14.8-SHARED-ACTION",
+      "title": "Source rescue actions and persistent manual ownership",
+      "source": {
+        "status": "verified_source",
+        "pages": [
+          136,
+          137
+        ],
+        "separation": "Transport, control-ownership and snapshot policies are explicit shared implementation contracts"
+      },
+      "data": {
+        "status": "structured",
+        "command": "search_and_rescue",
+        "actions": [
+          "begin",
+          "manual",
+          "automatic",
+          "recover_due",
+          "cancel"
+        ],
+        "private_fields_forbidden": [
+          "position",
+          "crew",
+          "d100",
+          "ready_at",
+          "picked_up"
+        ],
+        "retained_manual": "transport-owned internal flag, absent from public schema"
+      },
+      "execution": {
+        "status": "tested_declared_subset",
+        "entries": [
+          "Command::validate_source",
+          "validate_rescue/rescue_control",
+          "sim actual successful apply -> manual",
+          "command_contract schema",
+          "server validation",
+          "MCP generic dispatcher"
+        ],
+        "contracts": [
+          "own observed opaque label only",
+          "actual rescue fit required",
+          "existing task required for manual/automatic/recover_due",
+          "invalid declaration does not queue or acquire manual"
+        ]
+      },
+      "tests": {
+        "status": "final_scoped_pass",
+        "workspace_2_mcp_dispatcher": "2/2 new SAR cases; MCP target28/28",
+        "scope": [
+          "native discovery -> queued Begin -> actual step and persistent manual",
+          "foreign/private/unknown-label/no-task rejection with unchanged World/inbox"
+        ],
+        "actual_stdio": "13 expected rejections; actual Cancel apply and persistent manual",
+        "actual_http": "13 expected rejections; actual Cancel apply and persistent manual",
+        "final_mcp_dispatcher": "2/2; whole MCP target28/28",
+        "actual_transport_begin_or_recovery_claim": false
+      },
+      "open": [
+        "complete recovery/platform/casualty chain beyond tested branches"
+      ]
+    },
+    {
+      "id": "HV2026-11-BOUND-MAINTENANCE",
+      "title": "Explicit runway maintenance provider and per-tick work",
+      "source": {
+        "status": "verified_source",
+        "pages": [
+          116,
+          117,
+          118
+        ],
+        "sections": [
+          "11.1",
+          "11.5"
+        ],
+        "packet": "artifacts/rules-book-next-projector-20261025/facilities/source-contract.md",
+        "facts": [
+          "half-DP component loss and rubble limit",
+          "scenario declares runway repair resources and time",
+          "maintenance loss reduces rates without a printed multiplier"
+        ]
+      },
+      "data": {
+        "status": "structured",
+        "fields": [
+          "RepairSpec.maintenance_provider optional",
+          "RepairJob.work optional",
+          "provider/required/completed/last_tick/rate/pending"
+        ],
+        "scenario_assumptions": [
+          "one team /600 seconds per cut from existing laboratory fixture",
+          "factor0.5 is an explicit author experiment, not a book or real-base value"
+        ],
+        "implicit_parent_or_prose_binding": false
+      },
+      "execution": {
+        "status": "tested_declared_subset",
+        "entries": [
+          "provider validation",
+          "RepairRunway actual declaration",
+          "settle_bound_repairs",
+          "normal ground step",
+          "owner due projection"
+        ],
+        "contracts": [
+          "actual own uniquely named maintenance facility",
+          "unknown or destroyed provider rejects new bound full-rate work",
+          "already-running unknown work pauses without banking free elapsed time",
+          "settle prior interval before casualty, no same-tick double work",
+          "unbound old fits retain fixed due and omitted optional keys"
+        ]
+      },
+      "tests": {
+        "status": "final_scoped_pass",
+        "workspace_2_target": "facility_consumers_next_20261025 8/9",
+        "passed_scopes": [
+          "bound field preserved",
+          "unknown rate gate",
+          "unbound old baseline",
+          "author half-rate delayed completion and World restore",
+          "dynamic loss/restoration work and World restore",
+          "provider identity/ownership",
+          "old serialized shape",
+          "same-tick work idempotence"
+        ],
+        "failed_scope": "Resolved: fresh command receipt distinguished wreck-present and provider-cleaned-up gates; actual World divergence then fixed by persistent death clock",
+        "damage_boundary": "declared penetrated facility damage through production apply_damage; fixture restoration is already-adjudicated, not native building repair",
+        "final_target": "facility_consumers_next_20261025 9/9",
+        "world_restore_final": true
+      },
+      "open": [
+        "native building repair",
+        "aircraft/ship structural repair services",
+        "complete GCI producer/consumer",
+        "alongside berth transfer/debit-credit",
+        "real base layouts, stocks, rates and assignments"
+      ]
+    },
+    {
+      "id": "HV2026-PROJECTOR-SAR-OWN-UI",
+      "title": "Own projector stocks and rescue markers in bilingual controls",
+      "source": {
+        "status": "verified_source",
+        "policy": "UI shows own source state only and submits the shared command shape; no UI rule constants"
+      },
+      "data": {
+        "status": "structured",
+        "fields": [
+          "UnitObs.projectors",
+          "UnitObs.survivors",
+          "expanded_damage.rescue_fit",
+          "source control drafts"
+        ],
+        "enemy_physical_results_exposed": false
+      },
+      "execution": {
+        "status": "tested_declared_subset",
+        "entries": [
+          "observe own snapshots and stale unmanned telemetry",
+          "server LLM own projection",
+          "web source panels and explicit actions"
+        ],
+        "contracts": [
+          "loaded/reserve and unavailable status",
+          "rescue selector only from actual own reported labels",
+          "drafts do not send orders",
+          "queued request does not fabricate task, expenditure or success",
+          "existing weapon panel sends one complete pattern request"
+        ]
+      },
+      "tests": {
+        "status": "final_scoped_pass",
+        "final_node": "83/83; source-control target13/13 includes two new rescue builder cases",
+        "actual_browser": "CUA IAB actual UI request and rendered own-state checks",
+        "UI_Fire_requests": 1,
+        "queued_legal_commands": 2,
+        "UI_manual_contract": "one Fire request queues explicit set_unit_automation(false) plus Fire; no atomic single-command claim",
+        "paused_full_non_inbox_payload_unchanged": true,
+        "actual_pattern_count": 1,
+        "aggregate": "8 to7",
+        "single_physical_loaded": "1 to0",
+        "reserve_each": "3 unchanged",
+        "persistent_manual": true,
+        "exhausted_repeat": "complete payload unchanged; no separately instrumented backend response, no422 claim",
+        "SAR_UI": "zero own reports -> three buttons disabled only; no discovery/Begin/recovery claim",
+        "languages": [
+          "zh-CN",
+          "en"
+        ],
+        "viewports": [
+          [
+            1600,
+            1000
+          ],
+          [
+            1024,
+            768
+          ]
+        ],
+        "no_horizontal_overflow": true,
+        "map_and_header_visible": true,
+        "tested_source_buttons_min_height_px": 44,
+        "browser_error_logs_observed": [],
+        "screenshots": "Displayed by CUA in the conversation, no local image file claimed",
+        "replay": {
+          "command_batches": 1,
+          "events_verified": 31,
+          "tick": 196,
+          "verified": true,
+          "world_fnv64": "cdb8f14e7c049e11"
+        },
+        "physical_tablet": false,
+        "evidence": {
+          "path": "artifacts/rules-book-next-projector-20261025/acceptance-preparation/ui/validation.json",
+          "sha256": "8b589caafef69f3ff26781c2cf1f22629a32236b1cbf7639af9da7b5d7f6179d"
+        }
+      },
+      "open": [
+        "complete frontend rescue discovery/Begin/recovery workflow",
+        "physical tablet"
+      ]
+    },
+    {
+      "id": "RTS-FULL-PERSISTENT-DEATH-CLOCK-20261026",
+      "title": "Persistent native cleanup clock across Full World restore",
+      "source": {
+        "status": "explicit_engine_persistence_contract",
+        "harpoon_combat_rule": false,
+        "authority": "Preserve the existing RTS cleanup lifetime across serialization; no new Harpoon numeric rule",
+        "diagnosis": {
+          "path": "artifacts/rules-book-next-projector-20261025/facilities/persistence-diagnosis-20261026.json",
+          "sha256": "532e4b3fcf966c8777f21120a7a090ea078f085b1ea742ec47c05c1b439259fa"
+        },
+        "actual_difference": "/events/11/tick original323 versus restored204; command logs equal"
+      },
+      "data": {
+        "status": "structured",
+        "file": "harpoon-rts/data/rules/persistence-2026.json",
+        "death_clock_field": "rts.cleanup.death_tick",
+        "existing_platform_linger_seconds": 120,
+        "existing_projectile_linger_seconds": 0,
+        "scope": "Full only; absent clock recorded on first cleanup for other retired bodies; no skipped emission-cache authority"
+      },
+      "execution": {
+        "status": "tested_declared_subset",
+        "files": [
+          "harpoon-rts/crates/harpoon-core/src/damage.rs",
+          "harpoon-rts/crates/harpoon-core/src/rules/damage_runtime.rs"
+        ],
+        "entries": [
+          "Full sink_by records actual death tick in serialized ext",
+          "Full cleanup_dead consumes persistent clock",
+          "Full rule-table fingerprint includes persistence policy"
+        ],
+        "legacy_v2_v3": "original cleanup clock/lifetime and missing-field wire shape preserved"
+      },
+      "tests": {
+        "status": "final_scoped_pass",
+        "source_red": {
+          "path": "artifacts/rules-book-next-projector-20261025/death-clock-source-red.log",
+          "sha256": "b842a4be3d74e59c91d25c8eea9911303cf0b26de8ed8815b40542bcbbc90968"
+        },
+        "focused_fix": {
+          "path": "artifacts/rules-book-next-projector-20261025/fixes-focused-1.log",
+          "sha256": "2de5f4e9550c8a3c2a6c0b124a45205cd415f7031beeb442889ed7bc017bda85"
+        },
+        "new_core_tests": [
+          "full_cleanup_death_clock_survives_world_restore_at_the_actual_linger_boundary",
+          "legacy_cleanup_keeps_its_archived_emission_clock_and_wire_shape"
+        ],
+        "full_actual_boundary": "deathT200 exists through319 in original and restored Worlds; cleanupT320 equal",
+        "facility_complete_World_restore": "9/9 final target including destroyed provider and post-cleanup rejection",
+        "final_workspace": {
+          "path": "artifacts/rules-book-next-projector-20261025/final-workspace-1.log",
+          "sha256": "b7b0c38733837120812e25e82cb8cc132bc3acc353bb71d8c115a1895af245e1"
+        }
+      },
+      "open": [
+        "This technical repair is not an additional Harpoon rule or proof of every persistence subsystem"
+      ]
+    }
+  ],
+  "pending_followup_order": {
+    "prerequisite": "whole-book rules complete",
+    "interfaces": [
+      "headless engine for parallel training",
+      "Lua TCP AI interaction",
+      "Monte Carlo experimental analysis",
+      "interactive standalone simulation",
+      "scenario XML plaintext export",
+      "DIS integration with external tools"
+    ],
+    "afterward": [
+      "comprehensive high-end littoral scenario",
+      "shared expected-utility/recon/ASW/saturation/aircraft-flanking/EW-escort/cooperative FSM"
+    ],
+    "delivered_in_this_batch": false
+  },
+  "integrity": {
+    "old_resumed_batch": "artifacts/rules-book-resume-20261025 remains frozen; no old evidence writers reused",
+    "source_originals_modified": false,
+    "original_database_modified": false,
+    "git_commit_or_push": false,
+    "source_freeze_incident": "Candidate1 transitional writes and failed runs are preserved. Final353-input candidate is explicit and validated; root retains final outer evidence ownership.",
+    "ledger_ownership": "Root owns plan.md, havedone.md, inventory.csv and final outer manifests",
+    "protected_originals": {
+      "path": "artifacts/rules-book-next-projector-20261025/protected-originals-final-1.json",
+      "sha256": "077a67a165cff04b0da60f8eb2fd1d259c631f06e9ee9846ae73a3bc23fe9754",
+      "inputs": 16,
+      "all_unchanged": true
+    },
+    "prior_accepted_package": {
+      "path": "artifacts/rules-book-next-projector-20261025/prior-accepted-package-preserved-final-1.json",
+      "sha256": "870e7c312b1a50c103c64b32d4e6237427ca790768cc544b1c3bd3848d2cc4bc",
+      "files_checked": 622,
+      "all_original_sha256_unchanged": true
+    },
+    "final_inputs_unchanged_after_acceptance": true,
+    "final_signoff_scope": "Only the nine explicit four-way declared subsets and listed test/transport/UI branches; not whole chapters/book or all real fits"
+  },
+  "last_validation_date": "2026-10-26",
+  "completed_on": "2026-10-26"
+}

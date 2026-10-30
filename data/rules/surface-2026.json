@@ -1,0 +1,829 @@
+{
+  "version": "Harpoon V2026-01-01",
+  "source": {
+    "pdf_pages": [
+      76,
+      77,
+      78,
+      79,
+      80,
+      94,
+      95
+    ],
+    "visual_verified": [
+      95
+    ],
+    "printed": "7-1..7-5;8-14..8-15"
+  },
+  "antiship": {
+    "Large": [
+      [
+        1,
+        1,
+        0.65,
+        0.61,
+        0.59,
+        0.55
+      ],
+      [
+        1,
+        2,
+        0.75,
+        0.75,
+        0.69,
+        0.75
+      ],
+      [
+        1,
+        3,
+        0.8,
+        0.8,
+        0.75,
+        0.8
+      ],
+      [
+        1,
+        4,
+        0.85,
+        0.85,
+        0.82,
+        0.85
+      ],
+      [
+        2,
+        1,
+        0.65,
+        0.6,
+        0.56,
+        0.51
+      ],
+      [
+        2,
+        2,
+        0.75,
+        0.7,
+        0.67,
+        0.62
+      ],
+      [
+        2,
+        3,
+        0.8,
+        0.8,
+        0.73,
+        0.8
+      ],
+      [
+        2,
+        4,
+        0.85,
+        0.85,
+        0.8,
+        0.85
+      ],
+      [
+        3,
+        1,
+        0.65,
+        0.56,
+        0.52,
+        0.45
+      ],
+      [
+        3,
+        2,
+        0.75,
+        0.67,
+        0.63,
+        0.56
+      ],
+      [
+        3,
+        3,
+        0.8,
+        0.73,
+        0.7,
+        0.64
+      ],
+      [
+        3,
+        4,
+        0.85,
+        0.8,
+        0.78,
+        0.74
+      ],
+      [
+        4,
+        1,
+        0.65,
+        0.45,
+        0.36,
+        0.24
+      ],
+      [
+        4,
+        2,
+        0.75,
+        0.56,
+        0.48,
+        0.36
+      ],
+      [
+        4,
+        3,
+        0.8,
+        0.65,
+        0.58,
+        0.47
+      ],
+      [
+        4,
+        4,
+        0.85,
+        0.74,
+        0.7,
+        0.61
+      ]
+    ],
+    "Medium": [
+      [
+        1,
+        1,
+        0.65,
+        0.56,
+        0.52,
+        0.45
+      ],
+      [
+        1,
+        2,
+        0.75,
+        0.75,
+        0.63,
+        0.75
+      ],
+      [
+        1,
+        3,
+        0.8,
+        0.8,
+        0.7,
+        0.8
+      ],
+      [
+        1,
+        4,
+        0.85,
+        0.85,
+        0.78,
+        0.85
+      ],
+      [
+        2,
+        1,
+        0.65,
+        0.5,
+        0.44,
+        0.34
+      ],
+      [
+        2,
+        2,
+        0.75,
+        0.62,
+        0.56,
+        0.46
+      ],
+      [
+        2,
+        3,
+        0.8,
+        0.8,
+        0.65,
+        0.8
+      ],
+      [
+        2,
+        4,
+        0.85,
+        0.85,
+        0.74,
+        0.85
+      ],
+      [
+        3,
+        1,
+        0.65,
+        0.47,
+        0.39,
+        0.28
+      ],
+      [
+        3,
+        2,
+        0.75,
+        0.58,
+        0.51,
+        0.4
+      ],
+      [
+        3,
+        3,
+        0.8,
+        0.67,
+        0.61,
+        0.51
+      ],
+      [
+        3,
+        4,
+        0.85,
+        0.75,
+        0.71,
+        0.63
+      ],
+      [
+        4,
+        1,
+        0.65,
+        0.38,
+        0.26,
+        0.15
+      ],
+      [
+        4,
+        2,
+        0.75,
+        0.5,
+        0.39,
+        0.26
+      ],
+      [
+        4,
+        3,
+        0.8,
+        0.6,
+        0.51,
+        0.38
+      ],
+      [
+        4,
+        4,
+        0.85,
+        0.71,
+        0.65,
+        0.54
+      ]
+    ],
+    "Small": [
+      [
+        1,
+        1,
+        0.65,
+        0.48,
+        0.4,
+        0.3
+      ],
+      [
+        1,
+        2,
+        0.75,
+        0.75,
+        0.52,
+        0.75
+      ],
+      [
+        1,
+        3,
+        0.8,
+        0.8,
+        0.62,
+        0.8
+      ],
+      [
+        1,
+        4,
+        0.85,
+        0.85,
+        0.72,
+        0.85
+      ],
+      [
+        2,
+        1,
+        0.65,
+        0.4,
+        0.3,
+        0.19
+      ],
+      [
+        2,
+        2,
+        0.75,
+        0.52,
+        0.43,
+        0.3
+      ],
+      [
+        2,
+        3,
+        0.8,
+        0.8,
+        0.54,
+        0.8
+      ],
+      [
+        2,
+        4,
+        0.85,
+        0.85,
+        0.67,
+        0.85
+      ],
+      [
+        3,
+        1,
+        0.65,
+        0.38,
+        0.26,
+        0.15
+      ],
+      [
+        3,
+        2,
+        0.75,
+        0.5,
+        0.39,
+        0.26
+      ],
+      [
+        3,
+        3,
+        0.8,
+        0.6,
+        0.51,
+        0.38
+      ],
+      [
+        3,
+        4,
+        0.85,
+        0.71,
+        0.65,
+        0.54
+      ],
+      [
+        4,
+        1,
+        0.65,
+        0.31,
+        0.16,
+        0.08
+      ],
+      [
+        4,
+        2,
+        0.75,
+        0.44,
+        0.3,
+        0.17
+      ],
+      [
+        4,
+        3,
+        0.8,
+        0.55,
+        0.44,
+        0.3
+      ],
+      [
+        4,
+        4,
+        0.85,
+        0.67,
+        0.6,
+        0.47
+      ]
+    ],
+    "VSmall": [
+      [
+        1,
+        1,
+        0.65,
+        0.42,
+        0.33,
+        0.21
+      ],
+      [
+        1,
+        2,
+        0.75,
+        0.75,
+        0.45,
+        0.75
+      ],
+      [
+        1,
+        3,
+        0.8,
+        0.8,
+        0.56,
+        0.8
+      ],
+      [
+        1,
+        4,
+        0.85,
+        0.85,
+        0.68,
+        0.85
+      ],
+      [
+        2,
+        1,
+        0.65,
+        0.35,
+        0.23,
+        0.12
+      ],
+      [
+        2,
+        2,
+        0.75,
+        0.48,
+        0.36,
+        0.23
+      ],
+      [
+        2,
+        3,
+        0.8,
+        0.8,
+        0.49,
+        0.8
+      ],
+      [
+        2,
+        4,
+        0.85,
+        0.85,
+        0.63,
+        0.85
+      ],
+      [
+        3,
+        1,
+        0.65,
+        0.31,
+        0.16,
+        0.08
+      ],
+      [
+        3,
+        2,
+        0.75,
+        0.44,
+        0.3,
+        0.17
+      ],
+      [
+        3,
+        3,
+        0.8,
+        0.55,
+        0.44,
+        0.3
+      ],
+      [
+        3,
+        4,
+        0.85,
+        0.67,
+        0.6,
+        0.47
+      ],
+      [
+        4,
+        1,
+        0.65,
+        0.26,
+        0.1,
+        0.04
+      ],
+      [
+        4,
+        2,
+        0.75,
+        0.39,
+        0.24,
+        0.13
+      ],
+      [
+        4,
+        3,
+        0.8,
+        0.51,
+        0.39,
+        0.25
+      ],
+      [
+        4,
+        4,
+        0.85,
+        0.65,
+        0.56,
+        0.43
+      ]
+    ],
+    "Stealthy": [
+      [
+        1,
+        1,
+        0.65,
+        0.38,
+        0.26,
+        0.15
+      ],
+      [
+        1,
+        2,
+        0.75,
+        0.75,
+        0.39,
+        0.75
+      ],
+      [
+        1,
+        3,
+        0.8,
+        0.8,
+        0.51,
+        0.8
+      ],
+      [
+        1,
+        4,
+        0.85,
+        0.85,
+        0.65,
+        0.85
+      ],
+      [
+        2,
+        1,
+        0.65,
+        0.31,
+        0.16,
+        0.08
+      ],
+      [
+        2,
+        2,
+        0.75,
+        0.44,
+        0.3,
+        0.17
+      ],
+      [
+        2,
+        3,
+        0.8,
+        0.8,
+        0.44,
+        0.8
+      ],
+      [
+        2,
+        4,
+        0.85,
+        0.85,
+        0.6,
+        0.85
+      ],
+      [
+        3,
+        1,
+        0.65,
+        0.26,
+        0.1,
+        0.04
+      ],
+      [
+        3,
+        2,
+        0.75,
+        0.39,
+        0.24,
+        0.13
+      ],
+      [
+        3,
+        3,
+        0.8,
+        0.51,
+        0.39,
+        0.25
+      ],
+      [
+        3,
+        4,
+        0.85,
+        0.65,
+        0.56,
+        0.43
+      ],
+      [
+        4,
+        1,
+        0.65,
+        0.24,
+        0.07,
+        0.02
+      ],
+      [
+        4,
+        2,
+        0.75,
+        0.37,
+        0.21,
+        0.1
+      ],
+      [
+        4,
+        3,
+        0.8,
+        0.5,
+        0.37,
+        0.23
+      ],
+      [
+        4,
+        4,
+        0.85,
+        0.64,
+        0.54,
+        0.41
+      ]
+    ]
+  },
+  "acquisition_nm": {
+    "TARH": [
+      [
+        8,
+        6,
+        5,
+        3
+      ],
+      [
+        15,
+        12,
+        10,
+        5
+      ],
+      [
+        25,
+        20,
+        15,
+        8
+      ],
+      [
+        35,
+        28,
+        20,
+        10
+      ]
+    ],
+    "TIRH": [
+      [
+        5,
+        4,
+        3,
+        2
+      ],
+      [
+        10,
+        8,
+        4,
+        3
+      ],
+      [
+        15,
+        12,
+        6,
+        4
+      ],
+      [
+        20,
+        16,
+        8,
+        5
+      ]
+    ]
+  },
+  "seeker_half_angle_deg": 22.5,
+  "random_lock_weights": [
+    20,
+    10,
+    5,
+    2,
+    1
+  ],
+  "reattack_nm": 8,
+  "weapons": {
+    "us_rgm84d_ic": {
+      "variant": "RGM-84D Harpoon IC surface launch",
+      "source": "America Navy2025 PDF77/D1 exact RGM/UGM84D IC row; PDF79/D3 notesL/W3 (noM); surface-RGM scope only",
+      "guidance": "I/TARH/3",
+      "seeker": "TARH",
+      "seeker_generation": 3,
+      "range_nm": 80,
+      "min_range_nm": 3,
+      "speed_kts": 561,
+      "flight_profile": "skim",
+      "radar_signature": 3,
+      "signature_name": "VSmall",
+      "popup_selectable": true,
+      "max_waypoints": 3,
+      "reattack": false,
+      "incoming_physical_size": null,
+      "incoming_aaw_profile": null,
+      "no_popup_incoming_profile": {
+        "signature": 3,
+        "maneuver_rating": null,
+        "maneuvering": false,
+        "terminal_maneuvers": false,
+        "high_diving": false,
+        "sprint_vehicle": false,
+        "source": "America Navy2025 PDF77/D1 IC VSmall,561kt,SSkim,L/W3 and PDF79/D3 L=selectable popup,N=terminal maneuvers; actual registered Flight Plot popup=false; English2026 PDF89/8-9 missile non-maneuvering throughout PD unless terminal maneuvers including popup. MR remains unverified/null; no generic IC incoming or SAM-MR inference."
+      },
+      "missing_source_scope": "VSmall is radar signature, not physical size. Exact registered no-popup IC has independent source AA-gun inputs; MR remains null and strict SAM source adjudication stays pending. Popup or unregistered incoming profiles are not inferred.",
+      "damage": {
+        "ship_dp": 40,
+        "penetration_cm": 9,
+        "extra": "D6/2",
+        "profile": "skim",
+        "source": "America Navy2025 PDF77/D1 RGM/UGM84D HarpoonIC row; no old generic ID upgrade"
+      },
+      "registration_timing": {
+        "salvo": 1,
+        "reload_s": 0,
+        "source": "scenario_assumption: inert registration/instant physical-spawn placeholder only; not a source IC launcher firing rate. Real release requires explicit actor LauncherBinding.max_rounds_per_turn and saved source-turn expenditure cap."
+      }
+    }
+  },
+  "platforms": {
+    "us_ford": {
+      "signature": "Large",
+      "signature_index": 0,
+      "ecm_generation": 4,
+      "jamming": true,
+      "decoy": true,
+      "source": "America Navy2025 PDF7/A4 Gerald R. Ford Large/Loud and4th GenJ&D; combined ECM generation only, no invented device or stock"
+    }
+  },
+  "antiship_execution": {
+    "revision": "2026-10-24-exact-no-popup-source-executor-mr-null",
+    "status": "targeted_passed_joint_pending",
+    "scope": "exact v4 surface RGM84D IC no-popup clear-environment controlled source chain; conditional registered no-popup incoming AA-gun inputs; strict SAM MR and physical-size-dependent detection remain pending",
+    "generic_ids_inherit_no_variant": true,
+    "source_pages": [
+      74,
+      76,
+      77,
+      78,
+      89,
+      94,
+      95,
+      119
+    ],
+    "source_artifact": "artifacts/rules-closure-20261024/antiship-source and antiship-design; originals read-only",
+    "all_mechanisms_complete": false,
+    "first_red": {
+      "passed": 0,
+      "failed": 2,
+      "log": "artifacts/rules-antiship-20261024/source-red-first.log",
+      "stage": "actual Fire produced zero physical releases; typed fixture/class/context/Plot compiled and registered"
+    },
+    "targeted_validation": {
+      "log": "artifacts/rules-antiship-20261024/core-joint.log",
+      "targets": {
+        "antiship_2026": 10,
+        "antiship_entrypoints_2026": 4,
+        "aaw_2026": 25,
+        "missile_mr_2026": 6
+      },
+      "passed": 45,
+      "failed": 0,
+      "all_book_or_chapter_complete": false
+    },
+    "pending_scope": [
+      "incoming physical size/MR source binding",
+      "other-ship/multi-target/EW selection",
+      "popup/waypoint execution",
+      "non-clear seeker clutter",
+      "unbound defender awareness or damaged ECM mapping",
+      "alternate variants and reattack-capable weapons"
+    ]
+  }
+}

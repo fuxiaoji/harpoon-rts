@@ -1,0 +1,143 @@
+{
+  "source": {
+    "book": "14-2.HpnV_Rules_1_Jan_26.pdf",
+    "version": "2026-01-01",
+    "pdf_pages": [
+      17,
+      108,
+      109,
+      116,
+      118
+    ],
+    "annex": "4-4.Americas_Aircraft__1_Dec_25.pdf",
+    "annex_pages": [
+      51,
+      102,
+      106
+    ],
+    "evidence": "artifacts/rules-book-wide-20261026/aviation-remaining/pgm-source-hook-contract.md",
+    "size_mapping_evidence": "artifacts/rules-book-wide-20261026/aviation-remaining/pgm-target-size-evidence.md"
+  },
+  "fits": {
+    "us_f35c_gbu31_mk84x2": {
+      "base": "us_f35c",
+      "name": "F-35C internal 2 AIM-120D and 2 Mk84 GBU-31 source fit",
+      "bombsight": "Advanced",
+      "payload_kg": 2192,
+      "weapons": {
+        "us_aim120d": 2,
+        "us_gbu31_mk84_satnav1": 2
+      },
+      "source": "US Aircraft2025-12-01 PDF51/B46 exact internal2 AIM120+2 GBU31; no external AIM9X, optional gun pod or tanks; PDF102/H2-4 and106/H4-2 exact weapons"
+    }
+  },
+  "weapons": {
+    "us_gbu31_mk84_satnav1": {
+      "name": "GBU-31 JDAM (Mk84), SATNAV1 source",
+      "guidance": "I&Sat/1",
+      "generation": 1,
+      "min_range_nm": 2,
+      "range_nm": 13,
+      "speed_kts": 528,
+      "flight_path": "Ext. Glide",
+      "hang_weight_kg": 934,
+      "damage_points": 59,
+      "penetration_cm": 6,
+      "signature": "VSmall",
+      "source": "US Aircraft2025-12-01 PDF102/H2-4 exact Mk84 GBU31 row; no BLU117/BLU109/Quicksink substitution"
+    },
+    "lab_gbu12_salh2": {
+      "name": "GBU-12 Paveway II SALH/2 (source row; author mounting)",
+      "guidance": "SALH/2",
+      "generation": 2,
+      "min_range_nm": 0.5,
+      "range_nm": 3.5,
+      "speed_kts": 528,
+      "flight_path": "Glide",
+      "hang_weight_kg": 277,
+      "damage_points": 35,
+      "penetration_cm": 4,
+      "signature": "VSmall",
+      "min_launch_altitude_m": 20,
+      "source": "US Aircraft2025-12-01 PDF101/H2-3 exact GBU12 PavewayII:0.5-3.5nm/528kt/277kg/35DP/4-4-4cm; no named aircraft mounting claim"
+    },
+    "lab_agm65e2_maverick": {
+      "name": "AGM-65E2/L Maverick SALH/3",
+      "guidance": "SALH/3",
+      "generation": 3,
+      "ordnance_kind": "guided_missile",
+      "min_range_nm": 1.5,
+      "range_nm": 11,
+      "speed_kts": 791,
+      "flight_path": "Direct",
+      "hang_weight_kg": 300,
+      "damage_points": 34,
+      "additional_criticals": "D6/2",
+      "penetration_cm": 8,
+      "signature": "VSm",
+      "min_launch_altitude_m": 20,
+      "source": "US Aircraft 2025-12 PDF99 H2-1 AGM-65E2/L; 2014? IOC retained uncertain"
+    }
+  },
+  "physical_size_vsmall": {
+    "A": false,
+    "B": false,
+    "C": false,
+    "D": false,
+    "E": true,
+    "F": true,
+    "G": true,
+    "H": true
+  },
+  "off_axis_deg": 30,
+  "rf_placement_policy": {
+    "source": "English2026 PDF108/9-7, 6.3 RF and Weapons Placement; PDF109 SATNAV has no explicit stationary-Base exemption",
+    "requires": "native weapon-neutral RF observer solution, qualified received weapon-neutral RF solution, or explicit scenario_assumption RF quality; fixed coordinates alone are not quality",
+    "placement": "reuse firecontrol2026 cached identity/D10/deviation; failed SATNAV ground placement remains specific pending without reroll",
+    "ship_within_nm_exemption": 10,
+    "section_correlation": "3-4 aircraft section organization/correlation remains outside this single-aircraft placement scope"
+  },
+  "rts": {
+    "tick_s": 1,
+    "fixed_point_tolerance_nm": 1e-06,
+    "source": "explicit RTS integration: physical release at current actual aircraft position after common defensive phase; source528kt horizontal straight Ext.Glide, one advance per native second, linear descent to fixed aim; not a printed extra acceleration/dispersion rule"
+  },
+  "scope": "Exact SATNAV1 source fit remains unchanged. Added exact GBU12 SALH/2 weapon row with explicit author external F18E mounting, fixed source briefing and actually installed friendly designator. No global F18E weapon replacement, generic SALH/other loadout or full9.6.8 completion claim.",
+  "salh_author_external_fits": {
+    "us_f18e": {
+      "source": "scenario_assumption: author four-GBU12 experiment on actual F18E frame, not a verified Annex loadout; no automatic platform or mount replacement",
+      "weapons": {
+        "lab_gbu12_salh2": {
+          "maximum_rounds": 4,
+          "payload_kg": 1108,
+          "hang_weight_reference": "weapons.lab_gbu12_salh2.hang_weight_kg"
+        },
+        "lab_agm65e2_maverick": {
+          "maximum_rounds": 1,
+          "payload_kg": 300,
+          "hang_weight_reference": "weapons.lab_agm65e2_maverick.hang_weight_kg"
+        }
+      }
+    }
+  },
+  "salh_execution": {
+    "source": "English2026 PDF108/109 visually verified; actual ray uses source5.6 first-class device",
+    "tactical_turn_seconds": 180,
+    "aircraft_designator_half_arc_deg": 135,
+    "first_smoke_free_weapons": 2,
+    "lost_los_divisor": 4,
+    "no_source_plus_six": true,
+    "continuity": "sample only claimed physical designator rays after same-tick controls/movement/common damage/nuclear/fires; sticky loss until impact; unknown qualification persists pending",
+    "late_terminal_phase": "explicit RTS adaptation: SALH physical arrivals defer to one common batch after ordinary common/nuclear/fires and before ground logistics; no second global FCS/laser scan; SATNAV original phase unchanged",
+    "smoke": "same target/actual-impact TacticalTurn first2 smoke-exempt, third+ obscured even first weapon misses; retain physical first-explosion time and180s clearance; overlap of old rolling window into a later source TT remains specific pending",
+    "same_salvo_order": "original declared packet round order; mixed-actor simultaneous split of two free slots pending rather than ID/client winner",
+    "source_scope": "exact GBU12 row with explicit author F18E external mounting and fixed allocated target/designator; moving beam/target, lob trajectory and unqualified CM remain source pending",
+    "release_altitude": "English2026 PDF108: no Nap-of-Earth release, full range Medium/High, half range Low, quarter range VeryLow; existing engine bands Nap<=20m, VeryLow<=60m, Low<=2000m; 20m is the exclusive Nap boundary, not an Annex weapon-specific minimum"
+  },
+  "section_execution": {
+    "source": "English2026 PDF108 printed 9-7: 3–4-plane sections share RF and weapon placement",
+    "scope": "scenario_assumption exact aircraft membership and one allocated briefing; same declaration/ready phase; section leader qualified RF; source does not specify formation geometry",
+    "placement_identity": "section key and original accepted tick; one original D10 and deviation shared by all packets",
+    "limits": "unready group rejects before section placement; physical members, valid same-side owned aircraft, local budget and defense gate remain required"
+  }
+}

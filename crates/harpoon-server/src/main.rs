@@ -13,6 +13,16 @@ mod director;
 mod tutorial;
 mod doctrine;
 mod persistence;
+#[cfg(test)]
+mod player_control_contract;
+#[cfg(test)]
+mod main_emergency_blow_contract;
+#[cfg(test)]
+mod main_submarine_annex_contract;
+#[cfg(test)]
+mod main_hard_rudder_contract;
+#[cfg(test)]
+mod main_shared_extensions_resume_contract;
 
 use axum::{
     extract::{
@@ -150,6 +160,11 @@ struct Game {
 fn manual_units(world:&World,commands:&[(Side,Command)])->BTreeSet<harpoon_core::EntityId> {
     let mut locked:BTreeSet<_>=world.entities.values().filter(|e|e.ext.get("control.manual")==Some(&1.0)).map(|e|e.id).collect();
     for (side,cmd) in commands {
+        if cmd.manual_intent()==Some(true) {
+            if cmd.validate_source(world,*side).is_ok() {
+                locked.insert(cmd.unit_id());
+            }
+        }
         if let Command::SetUnitAutomation{unit,enabled}=cmd {
             if world.entity(*unit).is_some_and(|e|e.alive&&e.side==*side)&&!harpoon_core::exercise::locked(world,*side) {
                 if *enabled {locked.remove(unit);}else{locked.insert(*unit);}
@@ -157,6 +172,11 @@ fn manual_units(world:&World,commands:&[(Side,Command)])->BTreeSet<harpoon_core:
         }
     }
     locked
+}
+/// Source input checks run before a player reservation or an AI policy lease.
+/// Core owns the depth/band rules; transports only dispatch the same readonly gates.
+fn source_navigation_preflight(world:&World,side:Side,command:&Command)->Result<(),String> {
+    command.validate_source(world,side)
 }
 impl Game {
     fn preview_navigation(&self,side:Side,unit:harpoon_core::EntityId,goal:harpoon_core::Vec2)->Result<Vec<harpoon_core::Vec2>,String>{
@@ -168,12 +188,22 @@ impl Game {
         }
         Ok(vec![goal])
     }
-    fn queue_player_command(&mut self, side:Side, command:Command)->Result<(),String> {
+    fn queue_player_command(&mut self, side:Side, mut command:Command)->Result<(),String> {
         let world=self.world.as_ref().ok_or("no game running")?;
         if world.over {return Err("game has ended".into());}
+        if command.manual_intent()==Some(true) {
+            return Err("manual control intent is assigned by the player transport".into());
+        }
         let obs=observe(world,side,0,0);
-        let (_,rejected)=agent::validate_commands(&obs,side,std::slice::from_ref(&command));
+        let (_,rejected)=agent::validate_player_commands(&obs,side,std::slice::from_ref(&command));
         if !rejected.is_empty(){return Err(rejected.join("; "));}
+        source_navigation_preflight(world,side,&command)?;
+        if let Command::Antiship{unit,action}=&command {
+            harpoon_core::rules::surface2026::antiship::validate_plot(world,*unit,action)?;
+        }
+        if let Command::Torpedo{unit,action: action @ harpoon_core::rules::torpedo2026::Action::Plot{..}}=&command {
+            harpoon_core::rules::torpedo2026::validate_plot(world,side,*unit,action)?;
+        }
         if let Command::Goto{unit,waypoints}=&command {
             if let Some(t)=&world.context.terrain {
                 let e=world.entity(*unit).unwrap();
@@ -182,7 +212,10 @@ impl Game {
                 }
             }
         }
-        if !matches!(&command,Command::SetUnitAutomation{..}) {
+        if command.mark_player_intent() {
+            // Keep player authority in the same core transaction as source
+            // acceptance; a stale queued report cannot reserve a unit first.
+        } else if !matches!(&command,Command::SetUnitAutomation{..}) {
             let unit=tactical::supervision::unit_of(&command);
             if !manual_units(world,&self.inbox).contains(&unit) {
                 self.inbox.push((side,Command::SetUnitAutomation{unit,enabled:false}));
@@ -240,6 +273,15 @@ impl Game {
         }
         if let Some(r)=self.recording.as_mut() { r.before(world,&c); }
         harpoon_core::sim::tick(world,&c);
+        for (side,cmd) in external {
+            if cmd.manual_intent()==Some(true) {
+                let unit=cmd.unit_id();
+                if world.entity(unit).is_some_and(|e|e.side==*side&&e.ext.get("control.manual")==Some(&1.0)) {
+                    if let Some(p)=&mut self.ai_supervision {p[side.index()].release_manual(unit);}
+                    self.tactical[side.index()].staff.supervision.release_manual(unit);
+                }
+            }
+        }
         if let Some(r)=self.recording.as_mut() { r.after(world); }
         world.event_cap=event_cap;
         if world.events.len()>event_cap {world.events.drain(0..world.events.len()-event_cap);}
@@ -258,9 +300,20 @@ impl Game {
         let mut rejected=Vec::new();
         let commands=commands.into_iter().filter(|c|{
             let id=tactical::supervision::unit_of(c);
+            if let Err(reason)=source_navigation_preflight(world,side,c) {
+                rejected.push(format!("#{id:?}: {reason}"));
+                return false;
+            }
             let blocked=matches!(c,Command::SetUnitAutomation{..})||manual.contains(&id);
             if blocked {rejected.push(format!("#{id:?}: manual command retained; only the player can resume AI control"));}
-            !blocked
+            if blocked {return false;}
+            if let Command::Torpedo{unit,action: action @ harpoon_core::rules::torpedo2026::Action::Plot{..}}=c {
+                if let Err(reason)=harpoon_core::rules::torpedo2026::validate_plot(world,side,*unit,action) {
+                    rejected.push(format!("#{id:?}: {reason}"));
+                    return false;
+                }
+            }
+            true
         }).collect();
         let obs=observe(world,side,0,256);
         let policy=&mut self.ai_supervision.get_or_insert_with(||Default::default())[side.index()];

@@ -1,0 +1,32 @@
+{
+  "rule_id": "HV2026-8.5-ASW-CONTACT-HULL",
+  "source": "English2026-01-01 PDF100/8-20 ASW Projectile Contact Hit Hull Penetration; PDF101/8-21 hydrostatic critical and ASW cluster procedures",
+  "source_pdf_sha256": "8196ffc715bbcccd862d8597c607de7816dac5baee31fa659f89dfaf4323700c",
+  "columns": [
+    "vsmall",
+    "small",
+    "medium",
+    "large"
+  ],
+  "single": [
+    90,
+    60,
+    30,
+    15
+  ],
+  "double": [
+    75,
+    45,
+    15,
+    5
+  ],
+  "pre1955_before_year": 1955,
+  "pre1955_add_points": 30,
+  "scope": "v4 explicit exact-unit-name submarine size/design/in-service-year only; no A-H inference/default year/default single hull. Ordinary hydrostatic selected HullPen critical rolls this table; failure ignores that selected critical. RBK direct submunition contact rolls before any ordinary Minor DP; success real HullPen effect, failure Minor only.",
+  "projector_contact_execution": "PDF99-100/8.5.3: each actual contact charge always queues its listed Contact DP and exactly one independent full pressure trial. Unknown hull size/design/year leaves only that pressure consequence pending, without dropping certain Contact DP. Each Hedgehog sub-hit has its own stable physical identity. No inherited RBK success-zero/failed-Minor rule, TPS, torpedo automatic pressure chance, extra keel-break trial or duplicate selected HullPen bypass.",
+  "half_chance_pending": [
+    "Before1955 bonus versus half chance order not resolved",
+    "fractional resulting D100 percent rounding not yet source verified"
+  ],
+  "whole_book_complete": false
+}

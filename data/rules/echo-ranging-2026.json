@@ -1,0 +1,12 @@
+{
+  "source": "English 2026 PDF54 printed 5-15 5.4.6.3 IEER/AEER; PDF52 5.4.6.1 sonar probability maximum",
+  "minimum_generation": 6,
+  "maximum_generation": 7,
+  "initial_detector_maximum_distance_nm": 2,
+  "additional_probability_percent": 30,
+  "maximum_probability_percent": 90,
+  "good_threshold": "original d100 strictly less than half final modified chance",
+  "cadence": "one actual charge produces one pulse; another Tactical Turn needs another charge",
+  "scope": "source data only; actual processor/receiver Annex K2 range and fitting require source qualification or explicitly labelled authored experiment",
+  "execution_policy": "RTS: actionable at command time when actual airborne aircraft is within 2nm of own initially detecting buoy; no invented pass-through radius; authored acoustic warning radius and charge mass; single receiver per turn; closest selected qualified buoy"
+}

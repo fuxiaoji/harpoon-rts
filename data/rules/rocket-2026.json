@@ -1,0 +1,22 @@
+{
+  "source":{"book":"14-2.HpnV_Rules_1_Jan_26.pdf","version":"2026-01-01","pdf_pages":[107,108],"rule":"9.6.7","evidence":"artifacts/rules-book-wide-20261026/aviation-remaining/rocket-source-hook-contract.md"},
+  "laboratory_fits":{
+    "lab_mh60r_he_rocket12":{
+      "name":"LAB MH60R airframe, author12 HE rockets; not an Annex weapon fit",
+      "base":"us_mh60r","weapon":"lab_he_rocket20kg","rounds":12,
+      "bombsight":"Ballistic","payload_kg":320,"empty_rack_kg":80,
+      "source":"scenario_assumption: MH60R source airframe only; author rocket weapon fit, Ballistic experiment sight,12*20kg rounds+80kg empty racks; never MH60S/LAU61/Hydra source mass"
+    }
+  },
+  "laboratory_weapons":{
+    "lab_he_rocket20kg":{
+      "name":"LAB author HE rocket20kg/10DP; not Hydra",
+      "hang_weight_kg":20,"damage_points":10,"penetration_cm":0,
+      "source":"scenario_assumption: explicitly authored experiment20kg/10DP/0cm; no Annex ordnance identity or mass claim"
+    }
+  },
+  "altitude_m":{"exclusive_min":30,"inclusive_max":2000,"source":"English2026 2.4 altitude bands; 9.6.7 Low or VLow only"},
+  "maximum_pairs_for_ph":4,
+  "rts":{"source":"explicit RTS mapping: one source salvo adjudication after real defensive phase; same captured arrival-stage anchor as existing9.6 surface bombing; one hash stream(release_tick,actor,9.6.7:salvo) draws D100,2D6; instantaneous table adjudication is not a printed projectile-speed model"},
+  "scope":"General9.6.7 consumer with explicit laboratory equipment; real MH60S/LAU61/Hydra exact total and per-round mass remains unverified. No guessed rocket counts/modified2D6 interpolation or protected-target damage."
+}

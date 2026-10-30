@@ -1,0 +1,23 @@
+{
+  "source": "America’s Navy 1 Dec 2025 Annex A PDF33/A-30 and PDF34/A-31; visually verified 2026-10-30",
+  "scope": "class-exact opt-in terminal qualification; author topology and year remain separate; no universal hardware certification",
+  "platform_bindings": {
+    "us_burke_2a": {
+      "systems": [
+        "us_link_11",
+        "us_link_16",
+        "us_hawklink_arq_59"
+      ],
+      "note": "Flight IIA sensors list; CEC varies by hull and refit, excluded"
+    },
+    "us_zumwalt": {
+      "systems": [
+        "us_link_11",
+        "us_link_16",
+        "us_cec",
+        "us_hawklink_arq_59"
+      ],
+      "note": "Zumwalt class sensors list USG-2B CEC"
+    }
+  }
+}

@@ -39,6 +39,7 @@ html[lang="zh-CN"] .field-label, html[lang="zh-CN"] .panel-kicker { font-size: 1
 .nav-grid input:disabled { opacity: .4; }
 .nav-sonar { display: flex; gap: 7px; align-items: center; margin-top: 10px; font-size: 13px; }
 .nav-sonar span { flex: 1; }
+.nav-source-status { margin: 6px 0 0; color: #b9cdd8; font-size: 12px; line-height: 1.6; overflow-wrap: anywhere; }
 .nav-point { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-top: 10px; }
 .nav-point label { display: grid; gap: 4px; font-size: 12px; }
 .nav-point button { grid-column: 1 / -1; }

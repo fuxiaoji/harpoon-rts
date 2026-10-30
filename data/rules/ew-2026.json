@@ -1,0 +1,145 @@
+{
+  "source": {
+    "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+    "version": "2026-01-01",
+    "sha256": "8196ffc715bbcccd862d8597c607de7816dac5baee31fa659f89dfaf4323700c",
+    "pdf_pages": [119, 120, 121],
+    "printed_pages": ["12-1", "12-2", "12-3"],
+    "visual_verified_on": "2026-10-23",
+    "status": "executable_subset_pending_tests",
+    "execution_notice": "Explicit v4 ew2026 consumes resolved deployment/lifetime/generation data for long-range chaff, floating decoys, stationary acoustic countermeasures and maximum-speed mobile decoys. Fits, stock, reflector height and required environment must be explicit. Chaff barriers, TALD, low-speed energy and full distraction/reattack chains remain incomplete. Existing electronic-warfare.json retains the separately audited noise-jamming subset."
+  },
+  "airborne_ecm": {
+    "section": "12.1",
+    "defensive_radar_ecm_applies_to": "radar_guided_missiles",
+    "infrared_countermeasures_apply_to": "infrared_guidance",
+    "offensive_and_defensive_ecm_may_coexist": true,
+    "annex_required": ["pod_generation", "pod_weight_kg", "fitted_internal_system"]
+  },
+  "airborne_chaff_barrier": {
+    "section": "12.2",
+    "width_nm": 0.25,
+    "capacity_unit": "nautical_miles_of_flight",
+    "altitude_band_fall_interval_s": 540,
+    "wind_drift_update_s": 600,
+    "ordinary_aircraft_safe_turns_in_cloud": 2,
+    "engine_failure_chance_after_safe_turns_percent": 10,
+    "failure_trial_cadence": null,
+    "laying_aircraft_engine_exception": null,
+    "engine_exception_source_status": "not printed on authority English2026 PDF119; no laying-aircraft blanket exemption may be inferred; risk repeat cadence remains unresolved",
+    "laying_aircraft_distance_debits_capacity": true,
+    "radar_line_of_sight_blocked_at_cloud_altitude": true,
+    "low_cloud_also_covers": ["very_low", "sea_skimming_noe"],
+    "visible_to_unaided_eye": false,
+    "annex_required": ["fitted_chaff_barrier_system", "capacity_nm"],
+    "scenario_required": ["wind_speed", "wind_direction"]
+  },
+  "long_range_chaff": {
+    "section": "12.3",
+    "max_range_nm": 5,
+    "lifetime_s": 900,
+    "effective_in_same_turn_detection_phase": true,
+    "signature_distribution": [
+      {"radar_signature": "small", "chance_percent": 50},
+      {"radar_signature": "medium", "chance_percent": 50}
+    ],
+    "distracts_already_locked_missile": false,
+    "unlocked_or_deliberately_targeted_missile_may_attack": true,
+    "attack_resolution": "6.3.2 distraction decoy"
+  },
+  "floating_asm_decoy": {
+    "section": "12.4",
+    "deployment_s": 60,
+    "lifetime_max_s": 10800,
+    "max_sea_state": 4,
+    "higher_sea_state_effect": "swamped_and_sunk",
+    "radar_signature_selectable": ["small", "medium"],
+    "wind_drift_speed_fraction": 0.5,
+    "max_towing_speed_kts": 10,
+    "may_command_sink_early": true,
+    "attack_resolution": "6.3.2 distraction decoy",
+    "annex_required": ["actual_ship_fit", "inventory"]
+  },
+  "noise_jamming": {
+    "section": "12.5",
+    "victim_radar_generations": [1, 2, 3, 4, 5, 6],
+    "main_lobe_total_deg": [120, 90, 60, 45, 5, 1],
+    "sidelobe_each_side_deg": [120, 90, 30, 15, 1, 0],
+    "escort_total_arc_deg": 30,
+    "spot_pod_escort_clutter_multiplier": 0.5,
+    "sidelobe_net_effect_multiplier": 0.5,
+    "sidelobe_rounding": "down",
+    "same_radar_multiple_jammers_stack": false,
+    "spot_requires_current_sensor_detection": ["ES", "RWR"],
+    "spot_effective_in_same_turn_detection_phase": true,
+    "jammer_es_treatment": "radiating radar identified as noise",
+    "range_clutter_table": "5.2.9.4 printed5-5",
+    "annex_required": ["fitted_jammer", "clutter", "simultaneous_spot_targets"]
+  },
+  "acoustic_countermeasures": {
+    "section": "12.6.1",
+    "internal_stationary_endurance_s": 360,
+    "small_external_endurance_s": 360,
+    "large_external_endurance_max_s": 1260,
+    "large_external_endurance_requires_annex": true,
+    "torpedo_acm_affects_passive_search_sonar": false,
+    "sonar_jammer_affects_torpedo_homing": false,
+    "sonar_jammer_passive_cone_total_deg": 10,
+    "sonar_jammer_passive_noise_rating": "loud",
+    "towed_decoy_surface_ship_only": true,
+    "towed_decoy_endurance": "unlimited_until_destroyed",
+    "successful_torpedo_seduction_destroys_towed_decoy": true,
+    "torpedo_resolution": "10.2.5 and Homing Torpedo Attack Table printed10-5"
+  },
+  "mobile_submarine_decoys": {
+    "section": "12.6.2",
+    "endurance_measured_at_max_speed": true,
+    "speed_change_policy": {
+      "source": "English2026 PDF121/12-3 section12.6.2; visual source artifacts/rules-book-wide-20261026/aviation-remaining/mobile-speed-next/en-p121.png",
+      "revision": "2026-10-27-native-owned-mobile-speed-1",
+      "counter_scope": "individual deployed object lifetime, independent from course-change allowance; no Tactical Turn reset",
+      "same_value_order": "No physical change and no allowance consumed, including early generations and exhausted counters",
+      "speed_envelope": "Finite nonnegative value at or below the source generation maximum; no clipping or replacement generation",
+      "continuation": "Normal existing EW movement uses accepted speed; original maximum-speed expiry is retained unchanged. No lifetime refill or inferred lower-speed energy/endurance extension",
+      "lower_speed_energy_curve": null,
+      "ownership": "Only the actual living submarine launcher controls its own effective MobileDecoy; ordinary combat-entity SetSpeed is unchanged"
+    },
+    "launch_orders": ["speed", "course", "depth"],
+    "generations": [
+      {"generation": 1, "endurance_s": 3600, "mad": false, "max_speed_kts": 7, "active_return": false, "course_changes_max": 0, "speed_changes_max": 0},
+      {"generation": 2, "endurance_s": 5400, "mad": false, "max_speed_kts": 10, "active_return": false, "course_changes_max": 0, "speed_changes_max": 0},
+      {"generation": 3, "endurance_s": 7200, "mad": true, "max_speed_kts": 12, "active_return": true, "course_changes_max": 2, "speed_changes_max": 2},
+      {"generation": 4, "endurance_s": 7200, "mad": true, "max_speed_kts": 15, "active_return": true, "course_changes_max": 2, "speed_changes_max": 2}
+    ],
+    "classification_resolution": "5.4.6.6",
+    "torpedo_reattack_resolution": "10.2.5",
+    "annex_required": ["actual_submarine_fit", "inventory", "launched_submarine_signature"]
+  },
+  "air_launched_decoys": {
+    "section": "12.7",
+    "tald": {
+      "weight_kg": 180,
+      "unpowered": true,
+      "radar_signature": "small",
+      "speed_kts_min": 250,
+      "speed_kts_max": 500,
+      "profile_plotted_before_takeoff": true,
+      "course_changes_preprogrammed": true,
+      "ter_cluster_capacity": 3,
+      "source_glide_examples": [
+        {"release_altitude_m": 11000, "speed_kts": 250, "range_nm": 68},
+        {"release_altitude_m": 7000, "speed_kts": 400, "range_nm": 25}
+      ],
+      "low_altitude_lob_range_nm": 15,
+      "chaff_variant": {"chaff_lb": 80, "ejections": 40, "line_nm": 1},
+      "range_interpolation": null
+    },
+    "powered_decoy_waypoint_changes": ["course", "altitude"],
+    "annex_required": ["actual_aircraft_fit", "inventory", "individual_decoy_flight_data"]
+  },
+  "suter_attacks_sidebar": {
+    "section": "12-3 sidebar",
+    "scenario_specific_only": true,
+    "generic_automatic_effect": null
+  }
+}

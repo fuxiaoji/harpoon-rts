@@ -214,6 +214,11 @@ impl Entity {
     }
 
     pub fn max_speed(&self, db: &Database) -> f64 {
+        self.max_speed_with_depth_rules(db,false)
+    }
+    /// Explicit source depth fits have no generic depth>60m speed penalty.
+    /// Preserve the old cap for historical profiles and unverified hull fits.
+    pub fn max_speed_with_depth_rules(&self, db: &Database, source_depth: bool) -> f64 {
         let class = match db.platforms.get(&self.class) {
             Some(c) => c,
             None => return 0.0,
@@ -221,7 +226,7 @@ impl Entity {
         let cap = match self.kind {
             PlatformKind::Sub => {
                 // Subs are much slower deep.
-                if self.depth_m > 60.0 { class.max_speed_kts * 0.6 } else { class.max_speed_kts }
+                if !source_depth && self.depth_m > 60.0 { class.max_speed_kts * 0.6 } else { class.max_speed_kts }
             }
             _ => class.max_speed_kts,
         };
@@ -402,6 +407,15 @@ pub struct World {
 impl World {
     /// Emit an event to the log (ring buffer).
     pub fn emit(&mut self, kind: EventKind, vis: Visibility) {
+        // Loss of an unmanned control link freezes owner status telemetry.
+        // Referee casualties still settle and remain fully replayable.
+        let owner_status=match &kind {
+            EventKind::Impact{side,unit,..}|EventKind::CriticalHit{side,unit,..}|EventKind::Ditched{side,unit,..}|EventKind::AirShotDown{side,unit,..}|EventKind::Sunk{side,unit,..}=>Some((*side,*unit)),
+            EventKind::RulesEvent{domain,side:Some(side),unit:Some(unit),..} if matches!(domain.as_str(),"damage"|"expanded_damage2026"|"repairs2026")=>Some((*side,*unit)),
+            _=>None,
+        };
+        let vis=if owner_status.is_some_and(|(side,id)|vis==Visibility::Side(side)&&self.entity(id).is_some_and(|e|e.side==side)&&!crate::rules::unmanned2026::loss_disclosure_allowed(self,id)){Visibility::Referee}else{vis};
+        crate::rules::mines2026::record_combat(self,&kind);
         self.event_seq += 1;
         self.events.push_back(Event { seq: self.event_seq, tick: self.tick, kind, vis });
         if self.events.len() > self.event_cap {
@@ -508,10 +522,11 @@ impl World {
             + 0.0
     }
 
-    /// VP currently earned by each side (kills + base damage).
+    /// VP currently earned (kills, base damage and explicitly configured SAR).
     pub fn victory_points(&self) -> (f64, f64) {
         let mut vp = [0.0f64; 2];
         for e in self.entities.values() {
+            if crate::rules::detection2026::sonobuoys::is_sensor_float(self,e.id) { continue; }
             if e.alive || e.kind.is_projectile() {
                 continue;
             }
@@ -533,6 +548,7 @@ impl World {
             let attacker = e.side.other();
             vp[attacker.index()] += class.vp_value * 0.5 * frac;
         }
-        (vp[0], vp[1])
+        let rescued=crate::rules::expanded_damage2026::rescue_victory_points(self);
+        (vp[0]+rescued[0], vp[1]+rescued[1])
     }
 }

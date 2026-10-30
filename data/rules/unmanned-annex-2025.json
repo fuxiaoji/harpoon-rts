@@ -1,0 +1,81 @@
+{
+  "schema": 1,
+  "title": "Annex B printed control-field qualification rows for real unmanned platforms",
+  "authority": {
+    "file": "【20260405】鱼叉5（本体+中美俄数据库）/4-4.Americas_Aircraft__1_Dec_25.pdf",
+    "sha256": "c5f29a4bad45b875c978d3d37019655fb5afc4b4fe862fac687d13ff5c9c83b1",
+    "sha256_recomputed": "2026-10-30 unmanned continuation batch",
+    "rag_document_id": "source_8dc2d5008f81",
+    "edition": "America's Aircraft, U.S. Military Aviation 1955-Present, 1 December 2025 Digital Update",
+    "visual_review": "2026-10-30 native batch; page renders at artifacts/rules-book-wide-20261026/zcode-parallel-20261029/unmanned/source-pages/annexb-us-p70.png, annexb-us-p71.png, annexb-us-p72.png",
+    "companion_candidates": "artifacts/rules-book-wide-20261026/zcode-parallel-20261029/unmanned/source-candidates/annexb-us-unmanned-20261030.json"
+  },
+  "scope": "CONTROL fields only: control-link kinds, satellite control, printed LOS cap, printed controller platform roles, printed launch/recovery sentence. This table never certifies payload, equipment fit or endurance. Antenna geometry and endurance work assumptions remain explicitly scenario-authored; autonomous capability is not printed for either platform and cannot be claimed through an annex opt-in.",
+  "field_classes": {
+    "source_printed": "value read directly off the visually verified page",
+    "source_printed_estimated": "printed with the book's own e-/est. estimate flag; never promoted to a hard value",
+    "derived_from_printed": "computed from printed values with the formula stated; the usage pattern itself is a scenario assumption",
+    "pending_no_source": "book silent; null; not guessed"
+  },
+  "platforms": {
+    "us_mq4c": {
+      "printed_name": "MQ-4C Triton",
+      "printed_role": "Maritime Patrol",
+      "pages": { "pdf_pages": [70, 71], "printed_pages": ["B-65", "B-66"] },
+      "control": {
+        "is_uav": { "value": true, "class": "source_printed", "raw": "UAV. Operates from runways. Controlled by SATCOM." },
+        "satellite": { "value": true, "class": "source_printed", "raw": "Controlled by SATCOM." },
+        "los_range_nm": { "value": null, "class": "pending_no_source", "raw": null, "note": "page prints no LOS control-link range for this platform; silence is neither zero nor permission" },
+        "controller_platforms": { "value": null, "class": "pending_no_source", "raw": null, "note": "no 'Controlled by <platform>' sentence printed" },
+        "launch_recovery": { "value": "Operates from runways", "class": "source_printed" },
+        "antenna_height_m": { "value": null, "class": "pending_no_source" },
+        "acoustic_modem": { "value": null, "class": "pending_no_source", "note": "air vehicle; the rules §2.5 acoustic modem is UUV-only" }
+      },
+      "meta": {
+        "man_rtng": { "value": 0.0, "class": "source_printed" },
+        "damage_value": { "value": 18, "class": "source_printed" },
+        "size_signature": { "value": "Large/Large", "class": "source_printed" },
+        "sensors_printed": { "value": ["ZPY-3 radar", "4th Gen FLIR/EO", "4th Gen ES", "Link 16 data link"], "class": "source_printed", "note": "Link 16 is a tactical data link (root Annex L registry), not a rules §2.5 control link" },
+        "speeds_kts": { "value": { "bands": "Low/Med/High/VHigh", "cruise": 310, "full_mil": 345, "reheat": null }, "class": "source_printed" },
+        "ceiling_m": { "value": 18288, "class": "source_printed" },
+        "engine_type": { "value": "TF", "class": "source_printed" },
+        "cruise_range_nmi": { "value": 9750, "class": "source_printed" },
+        "int_fuel_kg": { "value": 7400, "class": "source_printed" },
+        "in_service": { "value": "Jan 20", "class": "source_printed" },
+        "endurance_s_derivation": { "value": 113226, "class": "derived_from_printed", "formula": "9750 nmi / 310 kts * 3600", "note": "data meta-information only; engine endurance_s stays an explicit author work assumption, never certified here" }
+      }
+    },
+    "us_mq25a": {
+      "printed_name": "MQ-25A Stingray",
+      "printed_role": "Tanker",
+      "pages": { "pdf_pages": [72], "printed_pages": ["B-67"] },
+      "control": {
+        "is_uav": { "value": true, "class": "source_printed", "raw": "UAV, 150 nmi LOS and SATCOM control links." },
+        "satellite": { "value": true, "class": "source_printed" },
+        "los_range_nm": { "value": 150.0, "class": "source_printed", "raw": "150 nmi LOS and SATCOM control links" },
+        "controller_platforms": { "value": ["CVN (LOS control link)", "E-2D (LOS control link)"], "class": "source_printed", "raw": "Controlled by CVN and E-2D LOS control links.", "note": "printed platform roles; the concrete CVN class, element naming and assignment remain scenario decisions" },
+        "launch_recovery": { "value": "Can operate from aircraft carriers using catapults and arresting gear", "class": "source_printed", "note": "printed sentence only; engine carrier-launch integration for a UAV is not claimed by this table" },
+        "antenna_height_m": { "value": null, "class": "pending_no_source" },
+        "acoustic_modem": { "value": null, "class": "pending_no_source", "note": "air vehicle; the rules §2.5 acoustic modem is UUV-only" }
+      },
+      "meta": {
+        "man_rtng": { "value": 0.0, "class": "source_printed" },
+        "damage_value": { "value": "e17", "class": "source_printed_estimated" },
+        "size_signature": { "value": "Small/VSmall", "class": "source_printed" },
+        "sensors_printed": { "value": ["4th Gen FLIR/EO", "2nd Gen RWR", "AAQ-25 (4th Gen FLIR, laser designator, EO)", "Link 16 data link"], "class": "source_printed", "note": "Link 16 is a tactical data link (root Annex L registry), not a rules §2.5 control link" },
+        "speeds_kts": { "value": { "bands": "Low/Med/High", "cruise": 400, "full_mil": "e450", "reheat": null }, "class": "source_printed", "note": "full-mil value carries the book's own e- estimate flag" },
+        "ceiling_m": { "value": "e15240", "class": "source_printed_estimated" },
+        "engine_type": { "value": "TF", "class": "source_printed" },
+        "cruise_range_nmi": { "value": 2550, "class": "source_printed" },
+        "int_fuel_kg": { "value": "e8000", "class": "source_printed_estimated" },
+        "payload": { "value": "est 2170 kg; 300 USG drop tank, 300 USG buddy store", "class": "source_printed_estimated", "note": "meta-information only; no payload qualification is claimed by this table" },
+        "in_service": { "value": "Jul 26", "class": "source_printed" },
+        "endurance_s_derivation": { "value": 22950, "class": "derived_from_printed", "formula": "2550 nmi / 400 kts * 3600", "note": "data meta-information only; engine endurance_s stays an explicit author work assumption, never certified here" }
+      }
+    }
+  },
+  "not_in_this_table": {
+    "au_mq4c": "not processed by the 2026-10-30 batch; next-batch pointer in companion_candidates JSON (Commonwealth Aircraft 1 Dec 25, PDF 13 / printed B-8)",
+    "annex_l_tdls": "root-verified TDL rows live in the root annex-l-candidates.json; they are not control-link facts and are intentionally absent here"
+  }
+}

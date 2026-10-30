@@ -1,0 +1,558 @@
+{
+  "revision": "2026-10-28-seven-fit-a19-battery-only",
+  "status": "source-bound-production-candidate-pending-wide-batch-tests",
+  "profile": "hv2026-rts-v4",
+  "authorities": {
+    "rules_2026": {
+      "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+      "edition": "2026-01-01 English digital update",
+      "sha256": "8196ffc715bbcccd862d8597c607de7816dac5baee31fa659f89dfaf4323700c",
+      "pdf_pages": 140,
+      "sections": {
+        "turn_durations": {
+          "pdf_pages": [
+            21,
+            22
+          ],
+          "printed_pages": [
+            "2-3",
+            "2-4"
+          ],
+          "source": "Intermediate turn = 30 minutes; Tactical turn = 3 minutes"
+        },
+        "submarine_depth_and_mast_gate": {
+          "rule_id": "HV2026-3.2.1",
+          "pdf_page": 28,
+          "printed_page": "3-6"
+        },
+        "battery_endurance_and_rate_tables": {
+          "rule_id": "HV2026-3.2.4",
+          "pdf_page": 29,
+          "printed_page": "3-7"
+        },
+        "aip": {
+          "rule_id": "HV2026-3.2.5",
+          "pdf_pages": [
+            29,
+            30
+          ],
+          "printed_pages": [
+            "3-7",
+            "3-8"
+          ]
+        },
+        "battery_critical": {
+          "rule_id": "HV2026-14.5.Battery",
+          "pdf_page": 134,
+          "printed_page": "14-8"
+        }
+      }
+    },
+    "china_navy_2025": {
+      "document": "6-3.（数据库）2025版Chinas_Navy_1_Dec_25.pdf",
+      "digital_update": "2025-12-01",
+      "sha256": "9ff46ff0c91f323d48c37e9917df6d87583fbe0df337a6dd0bb40bc488d98b2c",
+      "pdf_pages": 105,
+      "source_rows": [
+        {
+          "pdf_page": 12,
+          "printed_page": "A-5"
+        },
+        {
+          "pdf_page": 13,
+          "printed_page": "A-6"
+        }
+      ]
+    },
+    "russia_navy_2025": {
+      "document": "9-4.Russias_Navy_1_Dec_25.pdf",
+      "digital_update": "2025-12-01",
+      "sha256": "1420ac08b0db219c41ad52b1e87d7bb06cfd2b44e98d7ffb9e4dd462aea477c1",
+      "pdf_pages": 112,
+      "source_rows": [
+        {
+          "pdf_page": 22,
+          "printed_page": "A-19"
+        },
+        {
+          "pdf_page": 23,
+          "printed_page": "A-20"
+        }
+      ]
+    },
+    "expanded_damage_2026": {
+      "document": "3-2.（扩展损伤手册26版）Harpoon_V_Expanded_Critical_Hit_Tables_(Chinese_Language).pdf",
+      "sha256": "a2c3878ccfcbfcba02f714f11d5527573dee736a0deae092b9833977c52b32b5",
+      "pdf_pages": 31,
+      "source_pages": [
+        {
+          "pdf_page": 12,
+          "printed_page": "12"
+        },
+        {
+          "pdf_page": 13,
+          "printed_page": "13"
+        }
+      ],
+      "status": "independently rendered and visually checked in this batch"
+    },
+    "sweden_sitrep63_2022": {
+      "id": "sweden_sitrep63_2022",
+      "document": "27.（数据库）瑞典海军2025（NSITREP_63_13_Nov_25）.pdf",
+      "version": "Naval SITREP #63 October2022 actual printed issue; original filename retained",
+      "sha256": "1b40b60e3e349abcc9a850f2a1bfa6c87fe54be71e13ed5f1131d927c70c9a87",
+      "pdf_pages": [
+        3
+      ],
+      "printed_pages": [
+        "Naval SITREP Page2"
+      ],
+      "fields": [
+        "Btry Rtng",
+        "Propulsion",
+        "Remarks: base AIP capacity"
+      ],
+      "parent_visual_review": true
+    }
+  },
+  "turns": {
+    "tactical_seconds": 180,
+    "intermediate_seconds": 1800,
+    "source": "2026 English PDF21-22; 3-minute Tactical and 30-minute Intermediate turns",
+    "configuration_selects_discharge_table": true,
+    "charge_and_aip_settlement_seconds": 1800,
+    "do_not_apply_both_discharge_tables_to_same_interval": true,
+    "rts_mode_switch_policy": "Selected resolution uses exactly one discharge table. Electric/AIP active seconds and speed are sampled persistently; mixed power periods prorate printed source demand and supported AIP output as explicit RTS accounting. AIP credits are capped by unreserved potential, reserved at each selected discharge boundary and depleted at the 1800-second settlement even when operation has since stopped. No second discharge or end-of-window AIP refund is applied."
+  },
+  "discharge": {
+    "rule_id": "HV2026-3.2.4.discharge",
+    "units": "charge_units_per_selected_turn",
+    "speed_kts_rows": [
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25
+    ],
+    "columns": [
+      "pre_1970_units_per_intermediate_turn",
+      "1970_plus_units_per_intermediate_turn",
+      "pre_1970_units_per_tactical_turn",
+      "1970_plus_units_per_tactical_turn"
+    ],
+    "rows": [
+      [
+        2,
+        2,
+        0.2,
+        0.2
+      ],
+      [
+        3,
+        3,
+        0.3,
+        0.3
+      ],
+      [
+        4,
+        4,
+        0.4,
+        0.4
+      ],
+      [
+        5,
+        5,
+        0.5,
+        0.5
+      ],
+      [
+        6,
+        6,
+        0.6,
+        0.6
+      ],
+      [
+        8,
+        8,
+        0.8,
+        0.8
+      ],
+      [
+        15,
+        10,
+        1.5,
+        1.0
+      ],
+      [
+        24,
+        12,
+        2.4,
+        1.2
+      ],
+      [
+        32,
+        16,
+        3.2,
+        1.6
+      ],
+      [
+        38,
+        19,
+        3.8,
+        1.9
+      ],
+      [
+        48,
+        24,
+        4.8,
+        2.4
+      ],
+      [
+        60,
+        30,
+        6.0,
+        3.0
+      ],
+      [
+        76,
+        38,
+        7.6,
+        3.8
+      ],
+      [
+        94,
+        47,
+        9.4,
+        4.7
+      ],
+      [
+        122,
+        61,
+        12.2,
+        6.1
+      ],
+      [
+        144,
+        72,
+        14.4,
+        7.2
+      ],
+      [
+        168,
+        84,
+        16.8,
+        8.4
+      ],
+      [
+        196,
+        98,
+        19.6,
+        9.8
+      ],
+      [
+        240,
+        120,
+        24.0,
+        12.0
+      ],
+      [
+        294,
+        147,
+        29.4,
+        14.7
+      ],
+      [
+        328,
+        164,
+        32.8,
+        16.4
+      ],
+      [
+        384,
+        192,
+        38.4,
+        19.2
+      ]
+    ],
+    "speed_resolution": "Only printed integer average-speed rows are source facts. Noninteger turn-average speed, below 4 kt, and above 25 kt yield pending adjudication; no rounding/interpolation/extrapolation is invented.",
+    "rating_meaning": "Annex Btry Rtng is charge-unit battery endurance measured at 4 kt; it is not current charge, hours, or damage points.",
+    "period_method": "For each Intermediate or Tactical Turn, use the submarine average speed during that turn, then the selected turn's corresponding printed column. A complete table lookup is required before automatic debit.",
+    "old_technology_narrative": "At 10 kt and above old technology discharge is twice the newer-battery value.",
+    "old_technology_10kt_conflict": {
+      "status": "blocked_requires_explicit_adjudication",
+      "printed_table_pre_1970": {
+        "intermediate": 15,
+        "tactical": 1.5
+      },
+      "printed_table_1970_plus": {
+        "intermediate": 10,
+        "tactical": 1.0
+      },
+      "prose_double_implies_unprinted": {
+        "intermediate": 20,
+        "tactical": 2.0
+      },
+      "allowed_explicit_choices": [
+        "table_literal",
+        "prose_double"
+      ],
+      "default": null
+    }
+  },
+  "charging": {
+    "rule_id": "HV2026-3.2.4.charge",
+    "rate_unit": "charge_units_per_intermediate_turn",
+    "table": {
+      "columns": [
+        "0-70_percent",
+        "71_percent_plus"
+      ],
+      "rows": {
+        "pre_1970": [
+          10,
+          5
+        ],
+        "1970_plus": [
+          16,
+          8
+        ]
+      }
+    },
+    "eligible_condition": "Submarine surfaced OR at Periscope/Snorkeling depth with the snorkel mast raised; charging operation explicitly enabled.",
+    "snorkel_gate": "No mast (including snorkel) may be raised above 15 kt. To use maximum submerged speed, all masts must be retracted.",
+    "speed_gate": "At 50% or less of an explicit full-speed reference, charge at full table rate; above 50%, charge at half rate.",
+    "full_speed_reference": "No unambiguous denominator is identified in §3.2.4. Require an explicit scenario assumption value; do not derive from an unrelated Annex field.",
+    "charge_table_era": "The printed charge-rate columns are Pre-1970 and 1970+. This is a separate build-era input and must not be inferred from Annex battery technology old/new.",
+    "percentage_band_gaps": "Exactly 0..70% selects first printed band; 71%+ selects second. A continuous value strictly between 70% and 71% is unresolved. Initial/current charge is explicit input and must never default to full.",
+    "lithium_ion": "The source says lithium-ion charging is twice the printed table rate. `new` is not proof of lithium-ion. If chemistry is unknown, lithium factor must remain unresolved for charging.",
+    "combination_policy": {
+      "status": "blocked_requires_explicit_adjudication",
+      "source_separate_conditions": [
+        "state-percentage band",
+        "speed above/below half full-speed"
+      ],
+      "allowed_explicit_choice": "multiply table band by 0.5 only when above half-speed; otherwise use table band, then apply a separately confirmed lithium-ion x2 factor",
+      "default": null,
+      "source_does_not_show_combined_example": true
+    },
+    "settlement": "Use the Intermediate-turn table only at each 1800-second boundary. For a tactical-mode engine, accrue charging-eligible seconds persistently until that boundary; any partial-turn interpolation is an explicit RTS adaptation and is not a new source rate. Charging requires explicit diesel power mode; it cannot operate simultaneously with battery-powered propulsion in this RTS accounting contract.",
+    "atomic_snorkel_transition_policy": "Explicit RTS operation: raising a fitted snorkel at surface/P-S depth switches to diesel mode atomically; retracting it underwater stops charging and switches to battery mode. Intermediate invalid modes are not required as separate commands.",
+    "eligible_speed_sampling": "Explicit RTS: sample speed only during actual eligible charging seconds. Use that interval mean for half-full-speed comparison and prorate the IT charge gain by eligible seconds/1800. Noncharging motion cannot retroactively change earned charging. Older saves lacking eligible-speed history remain pending until a new complete interval.",
+    "percentage_band_transition_scope": "Existing boundary-time charge percentage selects the printed band. Source does not resolve within-turn crossing timing; 70..71 continuous gap stays pending, no piecewise rate invented."
+  },
+  "aip": {
+    "rule_id": "HV2026-3.2.5",
+    "qualifying_annex_markers": [
+      "AIP-Electric",
+      "SSP"
+    ],
+    "source_capacity_units_per_intermediate_turn_max": 3,
+    "source_total_potential_units": 2000,
+    "exhaustion_action": "Return to port to replenish fuel and oxygen tanks.",
+    "slow_speed_rule": "At 5 kt or less, AIP can meet all hotel and propulsion requirements without drawing energy from the battery.",
+    "high_speed_rule": "At 20 kt or above, AIP supplies less than 10% of propulsion power; do not treat as zero/off.",
+    "source_example_9kt": {
+      "propulsion_demand_charge_units_per_intermediate_turn": 8,
+      "aip_units": 3,
+      "battery_units": 5
+    },
+    "aip_remaining_initial_state": "Explicit 0..2000 scenario input required; never default to 2000.",
+    "speed_curve": "Source-supported outputs are 2 units/IT at 4 kt, 3 at 5 kt, and 3 at 9 kt. Other below-20 kt means need an explicit scenario output or remain pending. >=20 kt contribution cannot be converted from the printed <10% statement.",
+    "operation": "No sourced automatic snorkel/mast operation or return/refuel duration; do not automate transitions or replenish on reaching a port without an explicit extension.",
+    "source_outputs_units_per_intermediate_turn": {
+      "4_kt": 2,
+      "5_kt": 3,
+      "9_kt": 3,
+      "source": "PDF29 discharge table plus <=5 kt meets all demand; PDF30 Gotland example independently gives 2000 AIP units / 500 hours = 2 units per IT at 4 kt. The 9 kt example explicitly supplies 3."
+    },
+    "settlement_policy": "Explicit RTS: source output is prorated by actual AIP-powered seconds, capped by remaining potential minus earlier reserved output, and credited once against the selected turn demand. Reserved output settles at the Intermediate boundary even after AIP shutdown; unknown demand/state is not guessed."
+  },
+  "battery_critical": {
+    "rule_id": "HV2026-14.5.Battery",
+    "source": "English 2026 PDF134 / printed 14-8; expanded critical resolution also cross-checked on Chinese expansion handbook PDF12-13.",
+    "if_aip_installed": "25% chance AIP system is hit and no longer functional.",
+    "otherwise": "Roll D6×5% loss of submerged maximum endurance; maximum loss is 30% per battery critical.",
+    "charged_depleted_split": "Split loss proportionately between charged and depleted cells.",
+    "rts_multi_critical_policy": "Each event's D6×5% is applied against the original maximum capacity as denominator; cumulative loss is capped at 100%. This is explicit engine policy because source does not state how repeated critical percentages compound.",
+    "deduplication": "Use stable original resolved-hit identity; repeated application of the same hit must not apply capacity loss twice.",
+    "unknown_state": "Unknown starting charge remains unknown; a capacity critical must not fill it."
+  },
+  "annex_platforms": {
+    "cn_039a": {
+      "row": "Type 039A/039B/039C [Yuan] SSP",
+      "document": "china_navy_2025",
+      "pdf_page": 12,
+      "printed_page": "A-5",
+      "type_as_printed": "SSP",
+      "propulsion_as_printed": "Diesel-Electric/AIP",
+      "battery_rating_charge_units": 250,
+      "battery_technology_as_printed": "new",
+      "lithium_ion": null,
+      "aip_fit": true,
+      "aip_type_as_remarks": "Chinese Stirling Engine",
+      "undamaged_surface_kts": 13,
+      "undamaged_submerged_kts": 19,
+      "source_note": "Exact grouped Annex row covers 039A/B/C; its remarks explicitly identify Chinese Stirling Engine AIP."
+    },
+    "cn_kilo": {
+      "row": "Russian Project 636/636M [Improved Kilo] SS",
+      "document": "china_navy_2025",
+      "pdf_page": 13,
+      "printed_page": "A-6",
+      "type_as_printed": "SS",
+      "propulsion_as_printed": "Diesel-Electric",
+      "battery_rating_charge_units": 200,
+      "battery_technology_as_printed": "new",
+      "lithium_ion": null,
+      "aip_fit": false,
+      "undamaged_surface_kts": 11,
+      "undamaged_submerged_kts": 20,
+      "source_note": "Exact grouped source row; no AIP marker."
+    },
+    "ru_kilo": {
+      "row": "Project 636.3 Varshavyanka [Improved Kilo] SS",
+      "document": "russia_navy_2025",
+      "pdf_page": 23,
+      "printed_page": "A-20",
+      "type_as_printed": "SS",
+      "propulsion_as_printed": "Diesel-Electric",
+      "battery_rating_charge_units": 200,
+      "battery_technology_as_printed": "new",
+      "lithium_ion": null,
+      "aip_fit": false,
+      "undamaged_surface_kts": 11,
+      "undamaged_submerged_kts": 20,
+      "source_note": "Exact 636.3 row; do not generalize to other Project 636 entries."
+    },
+    "ru_kilo_636": {
+      "row": "Project 636 Varshavyanka [Improved Kilo] SS",
+      "document": "russia_navy_2025",
+      "pdf_page": 23,
+      "printed_page": "A-20",
+      "type_as_printed": "SS",
+      "propulsion_as_printed": "Diesel-Electric",
+      "battery_rating_charge_units": 200,
+      "battery_technology_as_printed": "new",
+      "lithium_ion": null,
+      "aip_fit": false,
+      "undamaged_surface_kts": 11,
+      "undamaged_submerged_kts": 20,
+      "source_note": "Exact 636 row distinct from 636.3 and 877EKM."
+    },
+    "cn_039g": {
+      "row": "Type 039G1 [Song Mod] SS",
+      "document": "china_navy_2025",
+      "pdf_page": 12,
+      "printed_page": "A-5; continuation A-6",
+      "type_as_printed": "SS",
+      "propulsion_as_printed": "Diesel-Electric",
+      "battery_rating_charge_units": 165,
+      "battery_technology_as_printed": "new",
+      "lithium_ion": null,
+      "aip_fit": false,
+      "undamaged_surface_kts": 12,
+      "source_note": "Exact current cn_039g stable ID is the already qualified Type039G1 alias, not neighboring Type039/039G150new; DP74 continuation only."
+    },
+    "ru_lada": {
+      "row": "Project 677 [Lada] SS generic class",
+      "document": "russia_navy_2025",
+      "pdf_page": 22,
+      "printed_page": "A-19",
+      "type_as_printed": "SS",
+      "propulsion_as_printed": "Diesel-Electric",
+      "battery_rating_charge_units": 300,
+      "battery_technology_as_printed": "new",
+      "lithium_ion": null,
+      "aip_fit": false,
+      "undamaged_surface_kts": 10,
+      "source_note": "Generic current stable ID only. Named Kronshtadt B-586 and Velikiye Luki B-587 lithium500 estimate and named B-58518kt are not imported."
+    },
+    "se_ss_a19": {
+      "row": "Type A19 SSP base row (Gotland, Uppland, Halland), named MLU excluded",
+      "document": "sweden_sitrep63_2022",
+      "pdf_page": 3,
+      "printed_page": "Naval SITREP Page2",
+      "type_as_printed": "SSP",
+      "propulsion_as_printed": "AIP-Electric",
+      "battery_rating_charge_units": 150,
+      "battery_technology_as_printed": "new",
+      "lithium_ion": null,
+      "aip_fit": true,
+      "aip_type_as_remarks": "Stirling AIP",
+      "aip_potential_units_as_printed": 2000,
+      "source_note": "Exact stable ID se_ss_a19 base TypeA19; named2015+ MLU2400-unit variant excluded; battery field only.",
+      "runtime_data": "submarine-annex-2025.json#/platforms/se_ss_a19/battery_fit",
+      "runtime_permission": "annex-applicability-2026.json#/runtime_field_registry/platforms/se_ss_a19/fields/battery_fit"
+    }
+  },
+  "excluded_or_unmapped_annex_rows": [
+    {
+      "platform_id": null,
+      "row": "Russian Project 877EKM [Kilo] SS",
+      "document": "china_navy_2025",
+      "pdf_page": 13,
+      "printed_page": "A-6",
+      "facts": {
+        "battery_rating_charge_units": 200,
+        "battery_technology_as_printed": "new",
+        "surface_kts": 10,
+        "submerged_kts": 17
+      },
+      "status": "TBD_unmapped; do not bind to ir_kilo or a Kilo family alias."
+    },
+    {
+      "platform_id": null,
+      "row": "Type 041 SSP",
+      "document": "china_navy_2025",
+      "pdf_page": 12,
+      "printed_page": "A-5",
+      "facts": {
+        "battery_rating_charge_units": 250,
+        "battery_technology_as_printed": "new",
+        "propulsion_as_printed": "Diesel-Electric/AIP",
+        "remarks": "micro-nuclear reactor"
+      },
+      "status": "No current stable ID; excluded from source map. Do not infer that this meets the §3.2.5 diesel-electric AIP procedure or transfer to cn_039a."
+    }
+  ],
+  "source_limits": [
+    "No initial/current charge or AIP potential in Annex rows.",
+    "No confirmed lithium-ion chemistry for the six mapped exact rows.",
+    "No specific snorkel fit/raised state in the source rows.",
+    "No charge speed full-speed denominator in §3.2.4.",
+    "No table values below 4 kt or above 25 kt; no fractional average speed rule.",
+    "No universal repair/refuel duration or automatic exhaust naval order. Known empty propulsion is guarded by an explicit RTS source gate, not a printed automatic speed command.",
+    "Do not treat nuclear propulsion as battery fit or nuclear weapon fit."
+  ],
+  "runtime_source_guards": {
+    "live_only": "Only alive real Sub of original exact stable class is sampled/settled; retained dead wrecks keep prior state without further energy accounting.",
+    "binding": "Each configured exact scenario name must resolve to one entity; conventional battery applicability is checked separately from depth/surface.",
+    "energy_gate": "Shared actual movement reads energy_movement_gate: known0 without valid AIP has explicit RTS propulsion ceiling0; valid AIP without battery at most5kt; unknown charge without independent active AIP returns pending. No automatic surface/snorkel/mode order or unlimited underwater Diesel.",
+    "mast": "Shared native radar/visual reads one actual raised_snorkel and original timestamp; repeated raise never resets age; untyped generic counts use minimum max(count,1), not blind addition. Old missing timestamp is unknown.",
+    "depth": "Public/shared depth validation requires actual raised snorkel be retracted before a >25m order.",
+    "source_blocked": "No new fractional discharge, unprinted AIP curve, continuous70..71 band, charge denominator, refuel duration or nuclear emergency procedure."
+  },
+  "stowage_rts_contract": {
+    "source": "Explicit scenario physical vehicle inventory policy; not a printed charging/launch performance rule",
+    "pause": "Settle only the actual selected unit to the stowage tick, retain all partial sampled work and reserved AIP, then disable charging/AIP/snorkel and suspend its accounting while absent. No sampling of other boats depends on command order.",
+    "resume": "Reinsert the same bound body and match the original private stowage timestamp, then shift discharge and intermediate clocks by inactive duration. Never refill charge/AIP, refund spent reservations or earn radio mast exposure during inventory storage.",
+    "status": "Shared producer hooks added for the ongoing UUV physical inventory implementation; full consumer test remains pending until that launcher domain is implemented."
+  }
+}

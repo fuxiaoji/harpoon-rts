@@ -12,6 +12,24 @@ use std::{
     sync::OnceLock,
 };
 
+#[cfg(test)]
+#[path = "damage_runtime_battery_source_contract.rs"]
+mod battery_source_contract_20261024;
+
+#[cfg(test)]
+#[path = "damage_runtime_asw_hull_source_20261026.rs"]
+mod asw_hull_source_20261026;
+
+pub mod asw_hull;
+pub use asw_hull::{AswSubSize,AswHullDesign,AswHullFit,BoundAswHull,AswContactScale,AswHydrostaticKind,AswImpact,AswContactOutcome,initialize_asw_hulls};
+pub(crate) use asw_hull::queue_asw_cluster_contact;
+pub(crate) use asw_hull::queue_asw_projector_contact;
+#[path="damage_runtime/cluster.rs"]
+mod cluster;
+pub use cluster::{ClusterCriticalColumn,ClusterCriticalCount,StrafingCriticalColumn,CountedCriticalOrigin};
+pub(crate) use cluster::queue_cluster_critical_count;
+pub(crate) use cluster::queue_strafing_critical_count;
+
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
 pub enum RuleProfile {
     #[default]
@@ -21,6 +39,8 @@ pub enum RuleProfile {
     Rts2026,
     #[serde(rename = "hv2026-rts-v3")]
     Rts2026Operations,
+    #[serde(rename = "hv2026-rts-v4")]
+    Rts2026Full,
 }
 impl RuleProfile {
     pub fn is_legacy(&self) -> bool {
@@ -36,11 +56,69 @@ pub struct Runtime {
     pub table_fingerprint: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub operations: Option<super::operations::State>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub aviation: Option<super::aviation2026::State>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub aaw: Option<super::aaw2026::State>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub detection: Option<super::detection2026::State>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub ew: Option<super::ew2026::State>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub torpedoes: Option<super::torpedo2026::State>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub navigation: Option<super::navigation2026::State>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub mines: Option<super::mines2026::State>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub aircombat: Option<super::aircombat2026::State>,
+    #[serde(default,skip_serializing_if="Option::is_none")]
+    pub pgm:Option<super::pgm2026::State>,
+    #[serde(default,skip_serializing_if="Option::is_none")]
+    pub rocket:Option<super::rocket2026::State>,
+    #[serde(default,skip_serializing_if="Option::is_none")]
+    pub cluster:Option<super::cluster2026::State>,
+    #[serde(default,skip_serializing_if="Option::is_none")]
+    pub strafe:Option<super::strafe2026::State>,
+    #[serde(default,skip_serializing_if="BTreeMap::is_empty")]
+    pub asw_hulls:BTreeMap<EntityId,BoundAswHull>,
+    #[serde(default,skip_serializing_if="BTreeMap::is_empty")]
+    pub asw_contact_inputs:BTreeMap<String,serde_json::Value>,
+    #[serde(default,skip_serializing_if="BTreeMap::is_empty")]
+    pub cluster_critical_counts:BTreeMap<String,ClusterCriticalCount>,
+    #[serde(default,skip_serializing_if="BTreeMap::is_empty")]
+    pub asw_contact_results:BTreeMap<String,AswContactOutcome>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub ground: Option<super::ground2026::State>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub repairs: Option<super::repairs2026::State>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub signature_damage: Option<super::signature_damage2026::State>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub communications: Option<super::communications2026::State>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub expanded_damage: Option<super::expanded_damage2026::State>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub battery: Option<super::battery2026::State>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub unmanned: Option<super::unmanned2026::State>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub nuclear: Option<super::nuclear2026::State>,
+    #[serde(default,skip_serializing_if="Option::is_none")]
+    pub asw_weapons:Option<super::asw_weapons2026::State>,
+    #[serde(default,skip_serializing_if="BTreeMap::is_empty")]
+    pub expanded_dice:BTreeMap<EntityId,Vec<serde_json::Value>>,
+    /// Actual hidden mine origins and their victim-local opaque cause IDs.
+    /// Never projected as a registry or used to alter physical RNG identities.
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub private_hit_aliases: BTreeMap<EntityId, BTreeMap<String, String>>,
     pub manual_sequences: BTreeMap<EntityId, u64>,
     pub in_batch: bool,
     pub pending: Vec<Hit>,
     pub resolved_hits: BTreeSet<String>,
     pub casualties: BTreeMap<EntityId, Vec<Casualty>>,
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub hard_rudder_casualties: BTreeMap<EntityId, BTreeMap<String, HardRudderCasualty>>,
     pub control_clocks: BTreeMap<EntityId, [i64; 2]>,
     pub delayed_orders: Vec<DelayedOrder>,
     pub event_sequences: BTreeMap<String, u64>,
@@ -55,6 +133,9 @@ pub struct PendingAdjudication {
     pub rule: String,
     pub target: EntityId,
     pub projectile: Entity,
+    /// Original dice and rule traces must outlive the bounded display ring.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub evidence: Vec<crate::Event>,
 }
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct DelayedOrder {
@@ -69,16 +150,96 @@ pub struct Casualty {
     pub severity: f64,
     pub next_damage: i64,
 }
+/// A source3.1.4 hard-rudder jam cause. Independent of the ordinary weapon
+/// Rudder critical: clearing it never touches rudder_hit, the ordinary
+/// jam/disabled flags, bridge damage, or their repair clocks.
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct HardRudderCasualty {
+    pub identity: String,
+    pub jammed_at: i64,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub freed_at: Option<i64>,
+}
+/// Register an actual hard-rudder jam episode as its own steering cause.
+/// The ext mirror lets generic steering/evasion consumers recognize the jam
+/// without reading navigation state.
+pub fn register_hard_rudder_jam(w: &mut World, id: EntityId, identity: &str) -> Result<(), String> {
+    let tick = w.tick;
+    let e = w
+        .entity_mut(id)
+        .filter(|e| e.alive)
+        .ok_or_else(|| "3.1.4 hard-rudder unit unavailable".to_string())?;
+    e.ext.insert("damage.hard_rudder_jammed".into(), 1.0);
+    w.rules
+        .hard_rudder_casualties
+        .entry(id)
+        .or_default()
+        .entry(identity.to_string())
+        .or_insert_with(|| HardRudderCasualty {
+            identity: identity.to_string(),
+            jammed_at: tick,
+            freed_at: None,
+        });
+    Ok(())
+}
+/// Clear exactly one hard-rudder jam identity. Ordinary Rudder/Bridge causes
+/// and their repair clocks are untouched.
+pub fn clear_hard_rudder_jam(w: &mut World, id: EntityId, identity: &str) -> Result<(), String> {
+    let tick = w.tick;
+    let Some(causes) = w.rules.hard_rudder_casualties.get_mut(&id) else {
+        return Ok(());
+    };
+    let Some(cause) = causes.get_mut(identity) else {
+        return Ok(());
+    };
+    cause.freed_at = Some(tick);
+    let still_jammed = causes
+        .values()
+        .any(|cause| cause.freed_at.is_none() && cause.identity != identity);
+    if !still_jammed {
+        if let Some(e) = w.entity_mut(id) {
+            e.ext.remove("damage.hard_rudder_jammed");
+        }
+    }
+    Ok(())
+}
 impl Runtime {
     pub fn legacy_untouched(&self) -> bool {
         self.profile == RuleProfile::Legacy
             && self.operations.is_none()
+            && self.aviation.is_none()
+            && self.aaw.is_none()
+            && self.detection.is_none()
+            && self.ew.is_none()
+            && self.torpedoes.is_none()
+            && self.navigation.is_none()
+            && self.mines.is_none()
+            && self.aircombat.is_none()
+            && self.pgm.is_none()
+            && self.rocket.is_none()
+            && self.cluster.is_none()
+            && self.strafe.is_none()
+            && self.asw_hulls.is_empty()
+            && self.asw_contact_inputs.is_empty()
+            && self.cluster_critical_counts.is_empty()
+            && self.asw_contact_results.is_empty()
+            && self.ground.is_none()
+            && self.repairs.is_none()
+            && self.signature_damage.is_none()
+            && self.communications.is_none()
+            && self.expanded_damage.is_none()
+            && self.battery.is_none()
+            && self.unmanned.is_none()
+            && self.nuclear.is_none()
+            && self.expanded_dice.is_empty()
+            && self.private_hit_aliases.is_empty()
             && self.table_fingerprint.is_none()
             && self.manual_sequences.is_empty()
             && !self.in_batch
             && self.pending.is_empty()
             && self.resolved_hits.is_empty()
             && self.casualties.is_empty()
+            && self.hard_rudder_casualties.is_empty()
             && self.control_clocks.is_empty()
             && self.delayed_orders.is_empty()
             && self.event_sequences.is_empty()
@@ -90,7 +251,26 @@ impl Runtime {
             return Ok(());
         }
         if self.table_fingerprint.as_deref() == Some(fingerprint_for(self.profile).as_str())
-            && (self.profile != RuleProfile::Rts2026Operations || self.operations.is_some()) {
+            && (!matches!(
+                self.profile,
+                RuleProfile::Rts2026Operations | RuleProfile::Rts2026Full
+            ) || self.operations.is_some())
+            && (self.profile != RuleProfile::Rts2026Full
+                || self.aviation.is_some()
+                    && self.aaw.is_some()
+                    && self.detection.is_some()
+                    && self.ew.is_some()
+                    && self.torpedoes.is_some()
+                    && self.navigation.is_some()
+                    && self.mines.is_some()
+                    && self.aircombat.is_some()
+                    && self.pgm.is_some()
+                    && self.rocket.is_some()
+                    && self.cluster.is_some()
+                    && self.strafe.is_some()
+                    && self.ground.is_some()
+                    && self.repairs.is_some())
+        {
             Ok(())
         } else {
             Err("damage rule table revision differs or is missing; use the matching engine instead of re-adjudicating this saved game".into())
@@ -98,9 +278,78 @@ impl Runtime {
     }
 }
 pub fn fingerprint_for(profile: RuleProfile) -> String {
+    if profile == RuleProfile::Rts2026Full {
+        let bytes = serde_json::to_vec(&serde_json::json!([
+            super::operations::fingerprint(&table_fingerprint()),
+            super::aviation2026::tables(),
+            super::aviation2026::waterborne::tables(),
+            super::aviation2026::micro_uav::tables(),
+            super::aaw2026::tables(),
+            super::detection2026::tables(),
+            super::detection2026::squalls::tables(),
+            super::detection2026::sonobuoys::tables(),
+            super::detection2026::visual_id::tables(),
+            super::detection2026::visual_signaling::tables(),
+            super::mines2026::tables(),
+            super::aircombat2026::tables(),
+            super::pgm2026::tables(),
+            super::pgm2026::controlled::tables(),
+            include_str!("../../../../data/rules/pgm-remaining-2026.json"),
+            super::rocket2026::tables(),
+            super::cluster2026::tables(),
+            super::strafe2026::tables(),
+            asw_hull::tables(),
+            super::aam2026::tables(),
+            super::firecontrol2026::tables(),
+            super::surface2026::tables(),
+            super::surface2026::gunnery::tables(),
+            include_str!("../../../../data/rules/gun-annex-extra-2025.json"),
+            super::expanded_damage2026::gun_deck::tables(),
+            super::ground2026::tables(),
+            super::ground2026::ngfs::tables(),
+            super::ground2026::parking::tables(),
+            super::ew2026::tables(),
+            super::ew2026::airborne_chaff::tables(),
+            super::ew2026::floating_tow::tables(),
+            super::torpedo2026::tables(),
+            super::navigation2026::tables(),
+            super::repairs2026::tables(),
+            crate::damage::bda_tables(),
+            crate::damage::persistence_policy(),
+            super::asw::battery_source_boundary_revision(),
+            super::submarine_annex::tables(),
+            super::submarine_annex::applicability_tables(),
+            super::signature_damage2026::tables(),
+            super::communications2026::tables(),
+            super::communications2026::hf_es::tables(),
+            super::communications2026::annex::tables(),
+            super::communications2026::annex::extra_tables(),
+            super::communications2026::relay::tables(),
+            super::expanded_damage2026::tables(),
+            include_str!("../../../../data/rules/crew-transfer-2026.json"),
+            super::expanded_damage2026::cas_communications::tables(),
+            super::unmanned2026::tables(),
+            super::unmanned2026::annex::tables(),
+            super::battery2026::tables(),
+            super::beached2026::tables(),
+            super::battery2026::annex_extra::tables(),
+            super::battery2026::replenishment::tables(),
+            super::nuclear2026::tables(),
+            super::nuclear2026::asw_remaining::tables(),
+            super::asw_weapons2026::tables(),
+            include_str!("../../../../data/rules/towed-array-optional-2026.json")
+        ]))
+        .unwrap();
+        let h = bytes.iter().fold(0xcbf29ce484222325u64, |h, b| {
+            (h ^ *b as u64).wrapping_mul(0x100000001b3)
+        });
+        return format!("fnv64:{h:016x}");
+    }
     if profile == RuleProfile::Rts2026Operations {
         super::operations::fingerprint(&table_fingerprint())
-    } else { table_fingerprint() }
+    } else {
+        table_fingerprint()
+    }
 }
 pub fn table_fingerprint() -> String {
     let value: serde_json::Value = serde_json::from_str(include_str!(
@@ -133,7 +382,31 @@ pub struct Hit {
     pub impact_area: Option<u8>,
     #[serde(default)]
     pub targeted_sensor: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub mine: Option<super::mines2026::Impact>,
+    /// Trusted physical projector result; never accepted in a player command.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub projector: Option<ProjectorSeverity>,
+    /// Physical navigation cause. It is never a weapon, mine or projector.
+    #[serde(default,skip_serializing_if="Option::is_none")]
+    pub navigation: Option<NavigationImpactCause>,
+    /// True ASW pressure/contact provenance, never mine/torpedo flags.
+    #[serde(default,skip_serializing_if="Option::is_none")]
+    pub asw:Option<AswImpact>,
 }
+#[derive(Clone,Copy,Debug,Serialize,Deserialize)]
+pub enum NavigationImpactCause {
+    Collision {other:EntityId,rammer:Option<EntityId>},
+    Grounding,
+}
+#[derive(Clone,Debug)]
+pub struct NavigationImpact {
+    pub target:EntityId,pub identity:String,pub direct_dp:f64,pub cause:NavigationImpactCause,
+}
+
+#[derive(Clone, Copy, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum ProjectorSeverity { Major, Minor }
 
 #[derive(Clone, Debug, Default, Serialize, Deserialize)]
 pub struct PlatformDamage {
@@ -254,10 +527,10 @@ pub fn event_identity(w: &mut World, actor: EntityId, purpose: &str) -> String {
     *sequence += 1;
     format!("{}:{key}:{}", w.tick, *sequence)
 }
-fn tt() -> i64 {
+pub(super) fn tt() -> i64 {
     data().time.tactical_s
 }
-fn it() -> i64 {
+pub(super) fn it() -> i64 {
     data().time.intermediate_s
 }
 pub fn surface_seconds() -> i64 {
@@ -266,7 +539,7 @@ pub fn surface_seconds() -> i64 {
 pub fn platform(class: &str) -> Option<&'static PlatformDamage> {
     data().platforms.get(class)
 }
-fn platform_of(e: &Entity) -> Option<&PlatformDamage> {
+pub(super) fn platform_of(e: &Entity) -> Option<&PlatformDamage> {
     e.rule_data.as_ref().or_else(|| platform(&e.class))
 }
 pub fn weapon(id: &str) -> Option<&'static WeaponDamage> {
@@ -288,6 +561,7 @@ pub fn defer_prh_shutdown(w: &mut World, projectile: EntityId, target: EntityId)
         w.rules.pending_adjudications.insert(
             projectile,
             PendingAdjudication {
+                evidence: vec![],
                 tick: w.tick,
                 rule: "7.4.2.prh_generation3_shutdown".into(),
                 target,
@@ -420,7 +694,7 @@ fn weapon_spec(def: &WeaponDef) -> WeaponDamage {
 pub fn marker(e: &Entity) -> bool {
     e.ext.get("rules.v2") == Some(&1.0)
 }
-fn val(e: &Entity, k: &str) -> f64 {
+pub(super) fn val(e: &Entity, k: &str) -> f64 {
     e.ext.get(k).copied().unwrap_or(0.0)
 }
 /// An RTS navigation order includes its route or station. The whole order is
@@ -526,6 +800,12 @@ pub fn forced_depth(e: &Entity) -> Option<f64> {
     }
 }
 pub fn configure_control(w: &mut World, id: EntityId, action: &str) -> Result<(), String> {
+    if let Some(result) = super::expanded_damage2026::control(w, id, action) {
+        return result;
+    }
+    if let Some(result) = super::repairs2026::control(w, id, action) {
+        return result;
+    }
     if !active(w) {
         return Err("damage-control commands require the v2 rule profile".into());
     }
@@ -577,7 +857,7 @@ pub fn configure_control(w: &mut World, id: EntityId, action: &str) -> Result<()
     );
     Ok(())
 }
-fn sync_casualties(w: &mut World, id: EntityId) {
+pub(super) fn sync_casualties(w: &mut World, id: EntityId) {
     let (fire, flood) = w
         .rules
         .casualties
@@ -610,7 +890,7 @@ fn sync_casualties(w: &mut World, id: EntityId) {
         }
     }
 }
-fn role(e: &Entity) -> &str {
+pub(super) fn role(e: &Entity) -> &str {
     if let Some(p) = platform_of(e) {
         if !p.role.is_empty() {
             return &p.role;
@@ -624,7 +904,7 @@ fn role(e: &Entity) -> &str {
         _ => "surface",
     }
 }
-fn size(e: &Entity) -> &str {
+pub(super) fn size(e: &Entity) -> &str {
     platform_of(e)
         .map(|p| p.size.as_str())
         .filter(|s| !s.is_empty())
@@ -674,14 +954,14 @@ fn major(e: &Entity, flood: bool) -> bool {
     ) > severity_limits(e)[0]
 }
 pub fn massive(e: &Entity) -> bool {
-    marker(e) && matches!(e.kind, PlatformKind::Ship | PlatformKind::Sub) && e.hp <= e.hp_max * 0.25
+    marker(e) && matches!(e.kind, PlatformKind::Ship | PlatformKind::Sub) && super::beached2026::listed_remaining(e) <= e.hp_max * 0.25
 }
 
 pub fn speed_factor(e: &Entity) -> f64 {
     if !marker(e) || !matches!(e.kind, PlatformKind::Ship | PlatformKind::Sub) {
         return 1.0;
     }
-    let lost = (e.hp_max - e.hp).max(0.0);
+    let lost = (e.hp_max - super::beached2026::listed_remaining(e)).max(0.0);
     let step = if let Some(p) = platform_of(e).filter(|p| p.dp_breaks.len() == 6) {
         p.dp_breaks
             .iter()
@@ -749,8 +1029,9 @@ pub fn flight_operational(e: &Entity, launch: bool, now: i64) -> bool {
         && !major(e, false)
         && val(e, "damage.power_lost") == 0.0
 }
-fn trace(w: &mut World, id: EntityId, rule: &str, detail: serde_json::Value) {
+pub(super) fn trace(w: &mut World, id: EntityId, rule: &str, detail: serde_json::Value) {
     let side = w.entity(id).map(|e| e.side);
+    let hidden_source = public_cause_detail(w, id, &detail) != detail;
     w.emit(
         EventKind::RulesEvent {
             domain: "damage".into(),
@@ -760,8 +1041,76 @@ fn trace(w: &mut World, id: EntityId, rule: &str, detail: serde_json::Value) {
             contact: None,
             detail: detail.to_string(),
         },
-        side.map(Visibility::Side).unwrap_or(Visibility::Referee),
+        if hidden_source {
+            Visibility::Referee
+        } else {
+            side.map(Visibility::Side).unwrap_or(Visibility::Referee)
+        },
     );
+}
+
+pub(crate) fn register_private_hit(w: &mut World, id: EntityId, identity: &str) {
+    if w.rules.profile != RuleProfile::Rts2026Full {
+        return;
+    }
+    let aliases = w.rules.private_hit_aliases.entry(id).or_default();
+    if !aliases.contains_key(identity) {
+        let ordinal = aliases.len() + 1;
+        aliases.insert(
+            identity.into(),
+            format!("own-underwater-casualty-{}-{ordinal}", id.0),
+        );
+    }
+}
+/// Opaque cause for the new Full-profile equipment/repair ledger. Unlike the
+/// original mine-specific alias, this makes no underwater/source-type claim.
+pub(crate) fn register_source_cause(w:&mut World,id:EntityId,identity:&str){
+    if w.rules.profile!=RuleProfile::Rts2026Full{return;}let aliases=w.rules.private_hit_aliases.entry(id).or_default();if !aliases.contains_key(identity){let ordinal=aliases.len()+1;aliases.insert(identity.into(),format!("own-damage-cause-{}-{ordinal}",id.0));}
+}
+/// Owner-facing repair cause IDs are opaque. Original source IDs/dice remain
+/// unchanged in referee runtime, damage traces, dedup and replay.
+pub(crate) fn public_cause_detail(
+    w: &World,
+    id: EntityId,
+    value: &serde_json::Value,
+) -> serde_json::Value {
+    if w.rules.profile != RuleProfile::Rts2026Full {
+        return value.clone();
+    }
+    let Some(aliases) = w.rules.private_hit_aliases.get(&id) else {
+        return value.clone();
+    };
+    fn string(s: &str, aliases: &BTreeMap<String, String>) -> String {
+        let mut projected = s.to_string();
+        // Longest first prevents one source identity swallowing another's
+        // longer suffix. Whole strings with shortened compound mine origins
+        // are withheld rather than exposing a source prefix.
+        let mut keys: Vec<_> = aliases.iter().collect();
+        keys.sort_by_key(|(key, _)| std::cmp::Reverse(key.len()));
+        for (source, alias) in keys {
+            projected = projected.replace(source, alias);
+        }
+        if projected.contains("mine:") {
+            "unidentified underwater casualty".into()
+        } else {
+            projected
+        }
+    }
+    fn project(v: &serde_json::Value, aliases: &BTreeMap<String, String>) -> serde_json::Value {
+        match v {
+            serde_json::Value::String(s) => serde_json::Value::String(string(s, aliases)),
+            serde_json::Value::Array(a) => {
+                serde_json::Value::Array(a.iter().map(|v| project(v, aliases)).collect())
+            }
+            serde_json::Value::Object(o) => serde_json::Value::Object(
+                o.iter()
+                    .map(|(k, v)| (string(k, aliases), project(v, aliases)))
+                    .collect(),
+            ),
+            _ => v.clone(),
+        }
+    }
+    project(value, aliases)
 }
 
 /// Bound adjudication identity strings. Saturation salvos and multi-generation
@@ -785,17 +1134,24 @@ fn short_tag(s: &str) -> String {
     }
     format!("{}#{h:016x}", &s[..cut])
 }
-fn die(w: &mut World, id: EntityId, r: &mut Rng, sides: u8, identity: &str, label: &str) -> u8 {
+pub(super) fn die(
+    w: &mut World,
+    id: EntityId,
+    r: &mut Rng,
+    sides: u8,
+    identity: &str,
+    label: &str,
+) -> u8 {
     let roll = (r.next_f64() * sides as f64) as u8 + 1;
     trace(
         w,
         id,
         "damage_roll",
-        serde_json::json!({"profile":"hv2026-rts-v2","hit":identity,"purpose":label,"die":sides,"roll":roll}),
+        serde_json::json!({"profile":w.rules.profile,"hit":identity,"purpose":label,"die":sides,"roll":roll}),
     );
     roll
 }
-fn choose_index(
+pub(super) fn choose_index(
     w: &mut World,
     id: EntityId,
     r: &mut Rng,
@@ -808,7 +1164,7 @@ fn choose_index(
         w,
         id,
         "damage_roll",
-        serde_json::json!({"profile":"hv2026-rts-v2","hit":identity,"purpose":label,"die":n,"roll":roll+1}),
+        serde_json::json!({"profile":w.rules.profile,"hit":identity,"purpose":label,"die":n,"roll":roll+1}),
     );
     roll
 }
@@ -845,9 +1201,18 @@ pub fn finish(w: &mut World) {
         return;
     }
     w.rules.in_batch = true;
-    while !w.rules.pending.is_empty() {
-        let hits = std::mem::take(&mut w.rules.pending);
-        resolve(w, hits);
+    loop {
+        while !w.rules.pending.is_empty() {
+            let hits = std::mem::take(&mut w.rules.pending);
+            resolve(w, hits);
+        }
+        let closed=super::expanded_damage2026::gun_deck::resolve_turn(w);
+        if closed.is_empty(){break}
+        for decision in closed.into_iter().filter(|d|d.applied) {
+            let Some(t)=w.entity(decision.window.target).filter(|e|e.alive&&e.hp>0.).cloned()else{continue};
+            let h=Resolved{hit:decision.window.hit,dp:decision.window.dp,penetrated:true,airburst:false,auto_flood:false,flood_half:false};
+            critical(w,&t,&h,&decision.identity,Some("flight_deck"));
+        }
     }
     w.rules.in_batch = false;
 }
@@ -900,6 +1265,10 @@ pub fn queue_with_parameters(
         torpedo_deep,
         impact_area,
         targeted_sensor,
+        mine: None,
+        navigation: None,
+        projector: None,
+        asw: None,
     });
     if !w.rules.in_batch {
         finish(w);
@@ -937,8 +1306,225 @@ pub fn configure_torpedo(
     );
     Ok(())
 }
-fn queue_secondary(w: &mut World, t: &Entity, dp: f64, flood: bool, identity: String) {
+/// A source-adjudicated complete pattern joins the same primary damage batch
+/// as other weapons. Its severity selects the real submarine critical column.
+/// Only the projector executor calls this; no command supplies DP or severity.
+pub(crate) fn queue_projector(
+    w: &mut World,
+    shooter: EntityId,
+    target: EntityId,
+    weapon: &str,
+    dp: f64,
+    major: bool,
+    attack_id: &str,
+) -> Result<(), String> {
+    queue_hydrostatic_pattern(w,shooter,target,weapon,dp,major,attack_id,
+        "HV2026 8.5.3 / source H-only projector pattern; source Major/Minor retained",AswHydrostaticKind::Projector)
+}
+/// A physically committed §8.5.4 pattern uses the same real Major/Minor
+/// submarine critical columns. Its trace must never impersonate RGB10.
+pub(crate) fn queue_depth_charge(w:&mut World,shooter:EntityId,target:EntityId,weapon:&str,dp:f64,major:bool,attack_id:&str)->Result<(),String>{
+    queue_hydrostatic_pattern(w,shooter,target,weapon,dp,major,attack_id,
+        "HV2026 8.5.4 / actual declared depth-charge pattern; source Major/Minor retained",AswHydrostaticKind::DepthCharge)
+}
+/// The source8.5.4.3 penalty is one already-adjudicated charge's Major DP.
+/// It is an own underwater blast, not another torpedo or target attack roll.
+pub(crate) fn queue_depth_charge_self_blast(w:&mut World,unit:EntityId,weapon:&str,dp:f64,attackid:&str,reason:&str)->Result<(),String>{
+    if w.rules.profile!=RuleProfile::Rts2026Full || !dp.is_finite() || dp<=0. || attackid.trim().is_empty()
+        || !matches!(reason,"low_speed"|"following_ship") {
+        return Err("8.5.4.3 finite actual single-charge Major damage and source reason required".into());
+    }
+    if !w.entity(unit).is_some_and(|e|e.alive&&e.kind==PlatformKind::Ship) {
+        return Err("8.5.4.3 actual surviving depth-charge ship required".into());
+    }
+    let mut def=w.db.weapons.get(weapon).cloned().ok_or("8.5.4.3 original physical charge definition missing")?;
+    def.damage=dp;
+    def.rule_data=Some(WeaponDamage{ship_dp:Some(dp),sub_dp:Some(dp),fuze:"depth_charge_self_blast".into(),source:"English2026 PDF101/8-21 section8.5.4.3; fixed one-charge Major DP, criticals on Underwater column".into(),..Default::default()});
+    let identity=short_tag(attackid);
+    if !w.rules.resolved_hits.insert(format!("{}:{identity}",unit.0)){return Ok(());}
+    register_private_hit(w,unit,&identity);register_source_cause(w,unit,&identity);
+    w.rules.pending.push(Hit{target:unit,weapon:def,underwater:true,bearing:None,shooter:None,identity,tick:w.tick,secondary:false,torpedo_deep:false,impact_area:None,targeted_sensor:None,mine:None,projector:None,navigation:None,asw:Some(AswImpact::DepthChargeSelfBlast{reason:reason.into()})});
+    if !w.rules.in_batch{finish(w);}
+    Ok(())
+}
+fn queue_hydrostatic_pattern(w:&mut World,shooter:EntityId,target:EntityId,weapon:&str,dp:f64,major:bool,attack_id:&str,source:&str,cause:AswHydrostaticKind)->Result<(),String>{
+    if w.rules.profile != RuleProfile::Rts2026Full || !dp.is_finite() || dp <= 0. {
+        return Err("8.5 physical hydrostatic pattern damage unavailable".into());
+    }
+    let side = w.entity(shooter).ok_or("8.5.3 launcher absent")?.side;
+    // Physical validation follows expenditure and is never a hidden preflight.
+    if !w.entity(target).is_some_and(|e|e.alive && e.kind==PlatformKind::Sub && e.depth_m>0.) {
+        return Ok(());
+    }
+    let mut def = w.db.weapons.get(weapon).ok_or("8.5.3 source weapon absent")?.clone();
+    def.damage = dp;
+    def.rule_data = Some(WeaponDamage {
+        ship_dp: Some(dp), sub_dp: Some(dp), fuze: "hydrostatic".into(),
+        source: source.into(),
+        ..Default::default()
+    });
+    let identity = short_tag(attack_id);
+    if !w.rules.resolved_hits.insert(format!("{}:{identity}",target.0)) {
+        return Ok(());
+    }
+    register_source_cause(w,target,&identity);
+    register_private_hit(w,target,&identity);
+    w.rules.pending.push(Hit {
+        target, weapon:def, underwater:true, bearing:None, shooter:Some(side),
+        identity, tick:w.tick, secondary:false, torpedo_deep:false,
+        impact_area:None, targeted_sensor:None, mine:None,
+        navigation: None,
+        projector: Some(if major {ProjectorSeverity::Major}else{ProjectorSeverity::Minor}),
+        asw: Some(AswImpact::Hydrostatic{kind:cause}),
+    });
+    if !w.rules.in_batch {finish(w);}
+    Ok(())
+}
+/// §3.3/3.4 already adjudicated physical DP joins this tick's common batch.
+/// A metadata carrier satisfies the historical Hit layout; its typed cause
+/// bypasses every weapon penetration/caliber/keel-break/signature rule.
+pub(crate) fn queue_navigation_impact(w:&mut World,impact:NavigationImpact)->Result<(),String>{
+    if w.rules.profile!=RuleProfile::Rts2026Full||!w.rules.in_batch {
+        return Err("3.3/3.4 navigation impacts require the active common damage phase".into());
+    }
+    if impact.identity.trim().is_empty()||!impact.direct_dp.is_finite()||impact.direct_dp<0. {
+        return Err("3.3/3.4 finite source-adjusted direct DP and identity required".into());
+    }
+    if !w.entity(impact.target).is_some_and(|e|e.alive&&matches!(e.kind,PlatformKind::Ship|PlatformKind::Sub)) {
+        return Err("3.3/3.4 actual live hull required".into());
+    }
+    if let NavigationImpactCause::Collision{other,rammer}=impact.cause {
+        if other==impact.target||!w.entity(other).is_some_and(|e|e.alive&&matches!(e.kind,PlatformKind::Ship|PlatformKind::Sub))
+            ||rammer.is_some_and(|id|id!=impact.target&&id!=other){return Err("3.3 actual distinct colliding hull pair required".into());}
+    }
+    if impact.direct_dp==0. {return Ok(());}
+    let identity=short_tag(&impact.identity);
+    if !w.rules.resolved_hits.insert(format!("{}:{identity}",impact.target.0)){return Ok(());}
+    register_private_hit(w,impact.target,&identity);
+    register_source_cause(w,impact.target,&identity);
+    let (key,name)=match impact.cause {NavigationImpactCause::Collision{..}=>("rule_navigation_collision","Collision"),NavigationImpactCause::Grounding=>("rule_navigation_grounding","Grounding")};
+    let weapon=WeaponDef{id:key.into(),name:name.into(),kind:WeaponKind::Gun,
+        targets:crate::db::Targets{air:false,surface:false,sub:false,missile:false,land:false},
+        range_nm:0.,min_range_nm:0.,speed_kts:0.,enable_range_nm:0.,pk:0.,salvo:0,reload_s:0.,damage:impact.direct_dp,
+        guidance:crate::db::Guidance::BallisticGun,ir:false,directors:0,
+        rule_data:Some(WeaponDamage{ship_dp:Some(impact.direct_dp),sub_dp:Some(impact.direct_dp),fuze:"non_weapon".into(),source:"English2026 sections3.3/3.4; direct physical DP already adjusted for collision geometry/armor once".into(),..Default::default()})};
+    w.rules.pending.push(Hit{target:impact.target,weapon,underwater:true,bearing:None,shooter:None,identity,tick:w.tick,secondary:false,torpedo_deep:false,impact_area:None,targeted_sensor:None,mine:None,projector:None,asw:None,navigation:Some(impact.cause)});
+    Ok(())
+}
+/// Mine identity and type remain referee knowledge. The victim sees only the
+/// underwater explosion; no enemy player receives battle-damage truth.
+pub fn queue_mine(
+    w: &mut World,
+    target: EntityId,
+    dp: f64,
+    impact: super::mines2026::Impact,
+    bearing: Option<f64>,
+    origin: &str,
+) {
+    if w.rules.profile != RuleProfile::Rts2026Full || !w.entity(target).is_some_and(|e| e.alive) {
+        return;
+    }
+    let identity = short_tag(origin);
+    let key = format!("{}:{identity}", target.0);
+    if !w.rules.resolved_hits.insert(key) {
+        return;
+    }
+    register_private_hit(w, target, &identity);
+    let bearing = if impact.moored
+        && w.entity(target)
+            .is_some_and(|t| t.kind == PlatformKind::Ship || t.depth_m == 0.)
+    {
+        let mut r = w.rng.derive(Rng::hash_tag(
+            w.tick,
+            target.0,
+            &format!("mine_aspect:{identity}"),
+        ));
+        let roll = die(
+            w,
+            target,
+            &mut r,
+            100,
+            &identity,
+            "14.1.7.moored_mine_aspect",
+        );
+        Some(
+            if roll as f64
+                <= super::mines2026::tables()["attack"]["moored_narrow_percent"]
+                    .as_f64()
+                    .unwrap()
+            {
+                0.
+            } else {
+                90.
+            },
+        )
+    } else {
+        bearing
+    };
+    let def = WeaponDef {
+        id: "unidentified_underwater_explosion".into(),
+        name: "水下爆炸（来源未明）".into(),
+        kind: WeaponKind::AswRocket,
+        targets: crate::db::Targets {
+            surface: true,
+            sub: true,
+            ..Default::default()
+        },
+        range_nm: 0.,
+        min_range_nm: 0.,
+        speed_kts: 0.,
+        enable_range_nm: 0.,
+        pk: 1.,
+        salvo: 1,
+        reload_s: 0.,
+        damage: dp,
+        guidance: crate::db::Guidance::AswBallistic,
+        ir: false,
+        directors: 0,
+        rule_data: Some(WeaponDamage {
+            ship_dp: Some(dp),
+            sub_dp: Some(dp),
+            fuze: if impact.contact {
+                "contact"
+            } else {
+                "influence"
+            }
+            .into(),
+            source: "HV2026§13.6; source mine retained in referee trace".into(),
+            ..Default::default()
+        }),
+    };
+    w.rules.pending.push(Hit {
+        target,
+        weapon: def,
+        underwater: true,
+        bearing,
+        shooter: None,
+        identity,
+        tick: w.tick,
+        secondary: false,
+        torpedo_deep: true,
+        impact_area: None,
+        targeted_sensor: None,
+        mine: Some(impact),
+        navigation: None,
+        projector: None,
+        asw: None,
+    });
+    if !w.rules.in_batch {
+        finish(w);
+    }
+}
+pub(super) fn queue_secondary(w: &mut World, t: &Entity, dp: f64, flood: bool, identity: String) {
     if dp <= 0.0 {
+        return;
+    }
+    // §14.1: zero DP is a lost hull. Its remaining sinking animation does
+    // not create an endless functional-damage chain. Earlier rule versions
+    // retain the exact historical cutoff for saved-game replay.
+    if w.rules.profile == RuleProfile::Rts2026Full
+        && !w.entity(t.id).is_some_and(|e| e.alive && e.hp > 0.)
+    {
         return;
     }
     let identity = short_tag(&identity);
@@ -971,12 +1557,16 @@ fn queue_secondary(w: &mut World, t: &Entity, dp: f64, flood: bool, identity: St
         torpedo_deep: false,
         impact_area: None,
         targeted_sensor: None,
+        mine: None,
+        navigation: None,
+        projector: None,
+        asw: None,
     });
     if !w.rules.in_batch {
         finish(w);
     }
 }
-fn caliber(def: &WeaponDef) -> f64 {
+pub(super) fn caliber(def: &WeaponDef) -> f64 {
     if !def.kind.is_gun_like() {
         return 1000.0;
     }
@@ -1001,16 +1591,38 @@ fn caliber(def: &WeaponDef) -> f64 {
 }
 
 #[derive(Clone)]
-struct Resolved {
-    hit: Hit,
-    dp: f64,
-    penetrated: bool,
-    airburst: bool,
-    auto_flood: bool,
-    flood_half: bool,
+pub(super) struct Resolved {
+    pub(super) hit: Hit,
+    pub(super) dp: f64,
+    pub(super) penetrated: bool,
+    pub(super) airburst: bool,
+    pub(super) auto_flood: bool,
+    pub(super) flood_half: bool,
 }
 fn primary(w: &mut World, h: Hit, t: &Entity) -> Resolved {
+    if let Some(c)=cluster::get(w,&h) {
+        let airburst=c.column==ClusterCriticalColumn::Airburst;
+        let penetrated=!airburst||platform_of(t).is_some_and(|p|p.deck_cm<1.&&p.belt_cm<1.);
+        return Resolved{dp:0.,hit:h,penetrated,airburst,auto_flood:false,flood_half:false};
+    }
+    if matches!(h.asw,Some(AswImpact::ProjectorContact{..})) {
+        return Resolved{dp:h.weapon.damage,hit:h,penetrated:true,airburst:false,auto_flood:false,flood_half:false};
+    }
+    if matches!(h.asw,Some(AswImpact::DepthChargeSelfBlast{..})) {
+        return Resolved{dp:h.weapon.damage,hit:h,penetrated:true,airburst:false,auto_flood:false,flood_half:false};
+    }
+    if h.torpedo_deep && matches!(h.weapon.kind,WeaponKind::Torpedo|WeaponKind::Lwt) && super::navigation2026::hazards::grounded(w,t.id){
+        trace(w,t.id,"3.4.grounded_deep_torpedo_immunity",serde_json::json!({"hit":h.identity,"source":"English2026 section3.4; spent attack adjudicated at actual impact"}));
+        return Resolved{dp:0.,hit:h,penetrated:false,airburst:false,auto_flood:false,flood_half:false};
+    }
+    if h.navigation.is_some(){
+        return Resolved{dp:h.weapon.damage,hit:h,penetrated:true,airburst:false,auto_flood:false,flood_half:false};
+    }
     let spec = weapon_spec(&h.weapon);
+    if let Some(AswImpact::ClusterContact{penetrated,..})=h.asw.as_ref(){
+        let dp=if *penetrated{0.}else{spec.sub_dp.unwrap_or(h.weapon.damage)};
+        return Resolved{dp,hit:h,penetrated:true,airburst:false,auto_flood:false,flood_half:false};
+    }
     let airburst = !spec.airburst.is_empty();
     let mut dp = if t.kind == PlatformKind::Sub {
         spec.sub_dp.unwrap_or(h.weapon.damage)
@@ -1037,10 +1649,12 @@ fn primary(w: &mut World, h: Hit, t: &Entity) -> Resolved {
         // Influence under-keel attacks bypass both belt armor and TPS.
         if spec.fuze == "contact" {
             let a = h.bearing.unwrap_or(90.0).abs();
-            let narrow = a <= data().narrow_aspect_deg || a >= 180.0 - data().narrow_aspect_deg;
+            let narrow = (h.mine.is_none() || h.mine.as_ref().is_some_and(|m| m.moored))
+                && (a <= data().narrow_aspect_deg || a >= 180.0 - data().narrow_aspect_deg);
             if narrow {
                 dp *= 0.5;
             } else if h.torpedo_deep
+                && h.mine.is_none()
                 && t.kind == PlatformKind::Ship
                 && !matches!(size(t), "A" | "B")
             {
@@ -1053,7 +1667,7 @@ fn primary(w: &mut World, h: Hit, t: &Entity) -> Resolved {
                     serde_json::json!({"hit":h.identity,"size":size(t)}),
                 );
             } else if let Some(p) = platform_of(&t) {
-                if !h.torpedo_deep {
+                if !h.torpedo_deep || h.mine.as_ref().is_some_and(|m| m.contact) {
                     let reduction = data()
                         .tps_belt_reduction
                         .iter()
@@ -1106,7 +1720,10 @@ fn primary(w: &mut World, h: Hit, t: &Entity) -> Resolved {
                     );
                 }
             }
-            auto_flood = pen;
+            auto_flood = pen
+                && (w.rules.profile != RuleProfile::Rts2026Full
+                    || t.kind == PlatformKind::Ship
+                    || t.kind == PlatformKind::Sub && t.depth_m == 0.0);
         }
     } else if let Some(p) = platform_of(&t) {
         let skim = spec.profile == "skim"
@@ -1128,11 +1745,22 @@ fn primary(w: &mut World, h: Hit, t: &Entity) -> Resolved {
     }
 }
 
-fn column(t: &Entity, h: &Resolved) -> &'static str {
+pub(super) fn column(t: &Entity, h: &Resolved) -> &'static str {
     if h.airburst {
         return "airburst";
     }
     if t.kind == PlatformKind::Sub && t.depth_m > 0.0 {
+        if matches!(h.hit.asw,Some(AswImpact::ClusterContact{..})){return "sub_minor";}
+        if let Some(severity) = h.hit.projector {
+            return match severity {ProjectorSeverity::Major=>"sub_major", ProjectorSeverity::Minor=>"sub_minor"};
+        }
+        if let Some(m) = &h.hit.mine {
+            return if m.submarine_column == "sub_minor" {
+                "sub_minor"
+            } else {
+                "sub_major"
+            };
+        }
         return "sub_major";
     }
     if h.hit.underwater {
@@ -1167,10 +1795,40 @@ fn ratio_count(w: &mut World, t: &Entity, dp: f64, identity: &str) -> u8 {
         (t.hp - dp).max(0.01)
     };
     let ratio = dp / denominator;
-    let mut r = w
-        .rng
-        .derive(Rng::hash_tag(w.tick, t.id.0, &format!("ratio:{identity}")));
-    let d = die(w, t.id, &mut r, 6, identity, "14.1.2.damage_ratio");
+    let count = ratio_table_count(w, t.id, dp, denominator, identity);
+    if ratio >= 3.0 {
+        if let Some(e) = w.entity_mut(t.id) {
+            e.hp = e.hp.min(t.hp_max * 0.1);
+        }
+    }
+    count
+}
+/// §11.1.2 uses the ordinary damage ratio, including for F/G structures.
+/// A building never uses the small-boat denominator or the sinking side effect.
+pub fn land_ratio_criticals(w: &mut World, target: EntityId, dp: f64, identity: &str) -> u8 {
+    let Some(t) = w.entity(target) else {
+        return 0;
+    };
+    if !dp.is_finite() || dp <= 0.0 || dp >= t.hp || dp < t.hp_max * 0.01 {
+        return 0;
+    }
+    let denominator = (t.hp - dp).max(0.01);
+    ratio_table_count(w, target, dp, denominator, identity)
+}
+fn ratio_table_count(
+    w: &mut World,
+    target: EntityId,
+    dp: f64,
+    denominator: f64,
+    identity: &str,
+) -> u8 {
+    let ratio = dp / denominator;
+    let mut r = w.rng.derive(Rng::hash_tag(
+        w.tick,
+        target.0,
+        &format!("ratio:{identity}"),
+    ));
+    let d = die(w, target, &mut r, 6, identity, "14.1.2.damage_ratio");
     // Express thresholds as DP comparisons rather than subtracting recurring
     // binary fractions (e.g. (1.4-1.0)/0.2 is just below2 in f64).
     let row = (0..=10)
@@ -1188,18 +1846,13 @@ fn ratio_count(w: &mut World, t: &Entity, dp: f64, identity: &str) -> u8 {
     let count = data().critical_ratio[row.min(10)][d as usize - 1].saturating_add(extra);
     trace(
         w,
-        t.id,
+        target,
         "critical_ratio",
         serde_json::json!({"hit":identity,"damage":dp,"remaining":denominator,"ratio":ratio,"criticals":count}),
     );
-    if ratio >= 3.0 {
-        if let Some(e) = w.entity_mut(t.id) {
-            e.hp = e.hp.min(t.hp_max * 0.1);
-        }
-    }
     count
 }
-fn threshold_met(value: f64, threshold: f64) -> bool {
+pub(super) fn threshold_met(value: f64, threshold: f64) -> bool {
     value >= threshold
         || (threshold - value) <= f64::EPSILON * 8.0 * value.abs().max(threshold.abs())
 }
@@ -1223,10 +1876,15 @@ fn resolve(w: &mut World, mut hits: Vec<Hit>) {
     let mut groups: BTreeMap<EntityId, (Entity, Vec<Resolved>)> = BTreeMap::new();
     for h in hits {
         let Some(t) = w.entity(h.target).cloned() else {
+            let _=super::surface2026::gunnery::take_impact(w,h.target,&h.identity);
             continue;
         };
         if !t.alive {
+            let _=super::surface2026::gunnery::take_impact(w,h.target,&h.identity);
             continue;
+        }
+        if h.mine.is_some() {
+            register_private_hit(w, t.id, &h.identity);
         }
         let result = primary(w, h, &t);
         groups
@@ -1244,21 +1902,34 @@ fn resolve(w: &mut World, mut hits: Vec<Hit>) {
         } else {
             0.0
         };
+        let mut optional_aircraft = false;
+        if t.kind == PlatformKind::Aircraft && total > 0. {
+            for h in hs.iter().filter(|h| h.dp > 0.) {
+                optional_aircraft |=
+                    super::expanded_damage2026::aircraft_hit(w, *id, &h.hit.identity);
+            }
+        }
+        let beached=super::beached2026::active(w,*id);
         if let Some(e) = w.entity_mut(*id) {
-            e.hp = t.hp - total;
-            if matches!(size(t), "F" | "G") {
+            if !optional_aircraft {
+                e.hp = t.hp - total;
+            }
+            if matches!(size(t), "F" | "G") && !beached {
                 e.hp = if small_total >= t.hp_max * 2.0 {
                     0.0
                 } else {
                     t.hp
                 };
             }
-            if t.kind == PlatformKind::Aircraft && total > 0.0 {
+            if t.kind == PlatformKind::Aircraft && total > 0.0 && !optional_aircraft {
                 e.hp = 0.0;
             }
             e.ext.insert("damage.last_hit".into(), now as f64);
         }
         for h in hs {
+            if h.hit.secondary {
+                super::expanded_damage2026::committed_secondary(w, *id, h.dp, h.hit.underwater);
+            }
             let hp = w.entity(*id).map(|e| e.hp.max(0.0)).unwrap_or(0.0);
             w.emit(
                 EventKind::Impact {
@@ -1272,6 +1943,15 @@ fn resolve(w: &mut World, mut hits: Vec<Hit>) {
                 Visibility::Side(t.side),
             );
             crate::damage::bda_to_shooter(w, *id, &h.hit.weapon, h.dp, hp, h.hit.shooter);
+            super::signature_damage2026::commit(
+                w,
+                t,
+                platform_of(t)
+                    .filter(|p| !p.source.trim().is_empty())
+                    .map(|p| p.size.as_str()),
+                &h.hit,
+                h.dp,
+            );
             trace(
                 w,
                 *id,
@@ -1281,6 +1961,20 @@ fn resolve(w: &mut World, mut hits: Vec<Hit>) {
         }
     }
     for (id, (t, hs)) in &groups {
+        if t.kind == PlatformKind::Base {
+            for h in hs {
+                let Some(c) = cluster::get(w, &h.hit).cloned().filter(|c| {
+                    c.origin == CountedCriticalOrigin::AircraftGun
+                        && c.column == ClusterCriticalColumn::Ground
+                }) else { continue; };
+                trace(w,*id,"9.6.9.common_strafing_count",serde_json::json!({"hit":h.hit.identity,"critical_count":c.count,"column":c.column,"source":"resolved source count; no reroll, ordinary DP or added critical ratio"}));
+                match super::ground2026::apply_damage(w,*id,0.,c.count as u8,&format!("{}:ground_gun_criticals",h.hit.identity)) {
+                    Ok(())=>w.emit(EventKind::CriticalHit{side:t.side,unit:*id,system:"ground function disabled by source gun critical".into()},Visibility::Side(t.side)),
+                    Err(reason)=>trace(w,*id,"9.6.9.ground_critical_pending",serde_json::json!({"hit":h.hit.identity,"reason":reason})),
+                };
+            }
+            continue;
+        }
         if matches!(t.kind, PlatformKind::Aircraft | PlatformKind::Base) {
             continue;
         }
@@ -1299,6 +1993,42 @@ fn resolve(w: &mut World, mut hits: Vec<Hit>) {
                 id.0,
                 &format!("automatic:{}", h.hit.identity),
             ));
+            if t.kind == PlatformKind::Sub && t.depth_m > 0.0 {
+                if matches!(h.hit.asw,Some(AswImpact::ClusterContact{penetrated:true,..})){
+                    effect(w,t,h,"hull_penetration",&mut r,&format!("{}:asw_contact_hull",h.hit.identity));
+                    suppress.insert(h.hit.identity.clone());
+                }
+                if matches!(h.hit.asw,Some(AswImpact::ProjectorContact{penetrated:Some(true)})){
+                    effect(w,t,h,"hull_penetration",&mut r,&format!("{}:asw_projector_contact_hull",h.hit.identity));
+                    suppress.insert(h.hit.identity.clone());
+                }
+                if let Some(m) = &h.hit.mine {
+                    if let Some(chance) = m.pressure_percent {
+                        let roll = die(w, *id, &mut r, 100, &h.hit.identity, "13.6.pressure_hull");
+                        let penetrated = roll as f64 <= chance;
+                        trace(
+                            w,
+                            *id,
+                            "13.6.pressure_hull_result",
+                            serde_json::json!({"hit":h.hit.identity,"roll":roll,"chance":chance,"penetrated":penetrated}),
+                        );
+                        if penetrated || !m.contact {
+                            effect(
+                                w,
+                                t,
+                                h,
+                                if penetrated {
+                                    "hull_penetration"
+                                } else {
+                                    "hull_deformation"
+                                },
+                                &mut r,
+                                &format!("{}:mine_hull", h.hit.identity),
+                            );
+                        }
+                    }
+                }
+            }
             if !h.hit.secondary
                 && t.kind == PlatformKind::Sub
                 && t.depth_m > 0.0
@@ -1350,7 +2080,9 @@ fn resolve(w: &mut World, mut hits: Vec<Hit>) {
                     suppress.insert(h.hit.identity.clone());
                 }
             }
-            let threshold = if matches!(h.hit.weapon.kind, WeaponKind::Torpedo | WeaponKind::Lwt) {
+            let threshold = if h.hit.navigation.is_some()||matches!(h.hit.asw,Some(AswImpact::DepthChargeSelfBlast{..}|AswImpact::ProjectorContact{..})){0} else if h.hit.mine.is_some()
+                || matches!(h.hit.weapon.kind, WeaponKind::Torpedo | WeaponKind::Lwt)
+            {
                 8
             } else if matches!(
                 h.hit.weapon.kind,
@@ -1413,7 +2145,9 @@ fn resolve(w: &mut World, mut hits: Vec<Hit>) {
                     .bearing
                     .is_some_and(|a| a.abs() >= 180.0 - data().narrow_aspect_deg);
             let wake = h.hit.weapon.guidance == crate::db::Guidance::WakeHome;
-            let forced = if h.hit.underwater
+            let forced = if matches!(h.hit.navigation,Some(NavigationImpactCause::Collision{..})) && *ordinal==1 {
+                Some("flooding")
+            } else if h.hit.underwater && !matches!(h.hit.asw,Some(AswImpact::DepthChargeSelfBlast{..}))
                 && (t.kind == PlatformKind::Ship || t.depth_m == 0.0)
                 && *ordinal <= 2
             {
@@ -1444,6 +2178,16 @@ fn resolve(w: &mut World, mut hits: Vec<Hit>) {
                 id.0,
                 &format!("extras:{}", h.hit.identity),
             ));
+            automatic_carrier_bomb_deck(w, t, h);
+            automatic_carrier_gun_record(w,t,h);
+            if let Some(c)=cluster::get(w,&h.hit).cloned() {
+                let rule=if c.origin==CountedCriticalOrigin::ClusterBomb {"9.6.6.common_cluster_count"}else{"9.6.9.common_strafing_count"};
+                trace(w,*id,rule,serde_json::json!({"hit":h.hit.identity,"critical_count":c.count,"column":c.column,"source":"resolved source count; no reroll, ordinary DP or added critical ratio"}));
+                for i in 0..c.count {
+                    critical(w,t,h,&format!("{}:cluster:{i}",h.hit.identity),None);
+                }
+                continue;
+            }
             if h.auto_flood {
                 effect(
                     w,
@@ -1517,21 +2261,259 @@ fn resolve(w: &mut World, mut hits: Vec<Hit>) {
     }
 }
 
+/// Consume native source-gun range proof only after the shared resolver has
+/// established the actual carrier hit, penetration and deck armor result.
+fn automatic_carrier_gun_record(w:&mut World,t:&Entity,h:&Resolved){
+    let Some(proof)=super::surface2026::gunnery::take_impact(w,t.id,&h.hit.identity)else{return};
+    if w.rules.profile!=RuleProfile::Rts2026Full||h.hit.secondary||h.hit.underwater||h.airburst||!h.penetrated||h.hit.weapon.kind!=WeaponKind::Gun{return}
+    let Some(p)=platform_of(t).filter(|p|!p.source.trim().is_empty()&&p.role==super::expanded_damage2026::gun_deck::tables()["carrier_role"].as_str().unwrap())else{return};
+    if p.critical_armor.get("flight_deck").is_some_and(|armor|!weapon_spec(&h.hit.weapon).penetration_cm.is_some_and(|pen|pen>*armor)){return}
+    super::expanded_damage2026::gun_deck::record_actual_gunfire(w,&h.hit,h.dp,proof);
+}
+/// Source14.1.2 automatic bomb casualty, additional to ordinary ratio criticals.
+/// Its independent identity preserves the original damage/extra/terminal dice.
+fn automatic_carrier_bomb_deck(w: &mut World, t: &Entity, h: &Resolved) {
+    if w.rules.profile != RuleProfile::Rts2026Full
+        || h.hit.secondary || h.hit.underwater || h.airburst
+        || h.hit.weapon.kind != WeaponKind::Bomb
+    { return; }
+    let policy = &super::expanded_damage2026::tables()["automatic_carrier_bomb_deck"];
+    if role(t) != policy["carrier_role"].as_str().unwrap() { return; }
+    let id = &h.hit.weapon.id;
+    let weight = super::aircombat2026::tables()["surface_bombs"][id]["hang_weight_kg"]
+        .as_f64().or_else(|| super::pgm2026::tables()["weapons"][id]["hang_weight_kg"].as_f64())
+        .filter(|v| v.is_finite() && *v > 0.);
+    let identity = format!("{}:automatic_flight_deck", h.hit.identity);
+    let Some(weight) = weight else {
+        super::expanded_damage2026::source_pending(w,t.id,&identity,"automatic_flight_deck",
+            "14.1.2 exact bomb hang weight not qualified; automatic carrier deck casualty pending");
+        return;
+    };
+    if weight < policy["minimum_hang_weight_kg"].as_f64().unwrap() { return; }
+    let partial = platform_of(t).and_then(|p| p.critical_armor.get("flight_deck"));
+    let penetrated = h.penetrated && partial.is_none_or(|armor|
+        weapon_spec(&h.hit.weapon).penetration_cm.is_some_and(|p| p > *armor));
+    trace(w,t.id,"14.1.2.automatic_flight_deck",serde_json::json!({
+        "hit":h.hit.identity,"identity":identity,"weapon":id,"hang_weight_kg":weight,
+        "applied":penetrated,"source":policy["source"],"occurrence_roll":null
+    }));
+    if penetrated { critical(w,t,h,&identity,Some("flight_deck")); }
+}
+
 /// §8.1.5: half the source airframe critical count; no ordinary DP, no automatic fire.
-pub fn intercept_fragments(w:&mut World,target:EntityId,missile:&WeaponDef,identity:String)->Result<(),String> {
+pub fn intercept_fragments(
+    w: &mut World,
+    target: EntityId,
+    missile: &WeaponDef,
+    identity: String,
+) -> Result<(), String> {
     let identity = short_tag(&identity);
-    let Some(spec)=missile.rule_data.clone().or_else(||weapon(&missile.id).cloned()) else {
+    let Some(spec) = missile
+        .rule_data
+        .clone()
+        .or_else(|| weapon(&missile.id).cloned())
+    else {
         return Err("8.1.5: missile airframe critical notation not verified".into());
     };
-    let t=w.entity(target).filter(|e|e.alive).cloned().ok_or("fragment target absent")?;
-    if !w.rules.resolved_hits.insert(format!("{}:{identity}",target.0)){return Ok(());}
-    let mut r=w.rng.derive(Rng::hash_tag(w.tick,target.0,&identity));
-    let count=dice(w,target,&mut r,&spec.extra,&identity,"8.1.5.airframe_critical_count")/2;
-    let h=Resolved{hit:Hit{target,weapon:missile.clone(),underwater:false,bearing:None,shooter:None,identity:identity.clone(),tick:w.tick,
-        secondary:false,torpedo_deep:false,impact_area:None,targeted_sensor:None},dp:0.0,
-        penetrated:platform_of(&t).is_none_or(|p|p.deck_cm<1.0&&p.belt_cm<1.0),airburst:true,auto_flood:false,flood_half:false};
-    trace(w,target,"8.1.5.fragment_count",serde_json::json!({"identity":identity,"count":count,"primary_dp":0,"automatic_fire":false}));
-    for i in 0..count {critical(w,&t,&h,&format!("{identity}:fragment:{i}"),None);}
+    let t = w
+        .entity(target)
+        .filter(|e| e.alive)
+        .cloned()
+        .ok_or("fragment target absent")?;
+    let hull = platform_of(&t).ok_or("8.1.5: target size and fragment armor not verified")?;
+    if !w
+        .rules
+        .resolved_hits
+        .insert(format!("{}:{identity}", target.0))
+    {
+        return Ok(());
+    }
+    // Source §14.1.4: fragments cannot penetrate this armor. Rounding the
+    // number of blocked criticals cannot affect the result.
+    let small_craft = matches!(hull.size.as_str(), "F" | "G");
+    if !small_craft && (hull.deck_cm >= 1.0 || hull.belt_cm >= 1.0) {
+        trace(
+            w,
+            target,
+            "airburst_fragments_blocked_by_armor",
+            serde_json::json!({"hit":identity,"source":"English2026 14-2 note5 /14.1.4"}),
+        );
+        return Ok(());
+    }
+    let mut r = w.rng.derive(Rng::hash_tag(w.tick, target.0, &identity));
+    let divisor = match spec.extra.as_str() {
+        "" => 0,
+        "D6" => 2,
+        "D6/2" => 4,
+        "D6/3" => 6,
+        _ => return Err("8.1.5: airframe notation requires verification".into()),
+    };
+    let raw = if divisor == 0 {
+        0
+    } else {
+        die(
+            w,
+            target,
+            &mut r,
+            6,
+            &identity,
+            "8.1.5.airframe_critical_count",
+        )
+    };
+    if divisor > 0 && raw % divisor != 0 {
+        trace(
+            w,
+            target,
+            "8.1.5.fragment_rounding_blocked",
+            serde_json::json!({"identity":identity,"raw_d6":raw,"divisor":divisor,"notation":spec.extra,"reason":"No verified rounding instruction for fractional airframe criticals; preserve this roll"}),
+        );
+        return Err("8.1.5: fractional airframe critical count; rounding rule not verified".into());
+    }
+    let count = if divisor == 0 { 0 } else { raw / divisor };
+    let h = Resolved {
+        hit: Hit {
+            target,
+            weapon: missile.clone(),
+            underwater: false,
+            bearing: None,
+            shooter: None,
+            identity: identity.clone(),
+            tick: w.tick,
+            secondary: false,
+            torpedo_deep: false,
+            impact_area: None,
+            targeted_sensor: None,
+            mine: None,
+            navigation: None,
+            projector: None,
+        asw: None,
+        },
+        dp: 0.0,
+        penetrated: true,
+        airburst: !small_craft,
+        auto_flood: false,
+        flood_half: false,
+    };
+    trace(
+        w,
+        target,
+        "8.1.5.fragment_count",
+        serde_json::json!({"identity":identity,"count":count,"primary_dp":0,"automatic_fire":false}),
+    );
+    for i in 0..count {
+        critical(w, &t, &h, &format!("{identity}:fragment:{i}"), None);
+    }
+    Ok(())
+}
+
+/// §3.1.3 explicitly awards an Engineering critical for a fouled cable.
+/// There is no ordinary weapon hit, penetration check, impact DP or BDA.
+pub fn astern_cable_engineering(
+    w: &mut World,
+    target: EntityId,
+    identity: &str,
+) -> Result<(), String> {
+    maneuver_engineering(w, target, identity, false)
+}
+pub fn crash_back_engineering(
+    w: &mut World,
+    target: EntityId,
+    identity: &str,
+) -> Result<(), String> {
+    maneuver_engineering(w, target, identity, true)
+}
+fn maneuver_engineering(
+    w: &mut World,
+    target: EntityId,
+    identity: &str,
+    ignore_fire: bool,
+) -> Result<(), String> {
+    if w.rules.profile != RuleProfile::Rts2026Full || identity.trim().is_empty() {
+        return Err("3.1.3 cable casualty requires explicit v4 identity".into());
+    }
+    let t = w
+        .entity(target)
+        .filter(|e| e.alive && matches!(e.kind, PlatformKind::Ship | PlatformKind::Sub))
+        .cloned()
+        .ok_or("3.1.3 cable casualty requires a surviving ship/submarine")?;
+    if platform_of(&t).is_none() {
+        return Err(
+            "3.1.3 Engineering critical requires verified propulsion/damage metadata".into(),
+        );
+    }
+    let identity = short_tag(identity);
+    if !w
+        .rules
+        .resolved_hits
+        .insert(format!("{}:{identity}", target.0))
+    {
+        return Ok(());
+    }
+    // A zero-DP internal carrier enters only the existing named critical;
+    // these transport fields are never registered as a weapon definition.
+    let carrier = WeaponDef {
+        id: "internal_cable_casualty".into(),
+        name: "Cable fouling".into(),
+        kind: WeaponKind::Rocket,
+        targets: crate::db::Targets::default(),
+        range_nm: 0.,
+        min_range_nm: 0.,
+        speed_kts: 0.,
+        enable_range_nm: 0.,
+        pk: 0.,
+        salvo: 0,
+        reload_s: 0.,
+        damage: 0.,
+        guidance: crate::db::Guidance::BallisticGun,
+        ir: false,
+        directors: 0,
+        rule_data: None,
+    };
+    let h = Resolved {
+        hit: Hit {
+            target,
+            weapon: carrier,
+            underwater: false,
+            bearing: None,
+            shooter: None,
+            identity: identity.clone(),
+            tick: w.tick,
+            secondary: false,
+            torpedo_deep: false,
+            impact_area: None,
+            targeted_sensor: None,
+            mine: None,
+            navigation: None,
+            projector: None,
+        asw: None,
+        },
+        dp: 0.,
+        penetrated: true,
+        airburst: false,
+        auto_flood: false,
+        flood_half: false,
+    };
+    trace(
+        w,
+        target,
+        if ignore_fire {
+            "3.1.2.engineering_casualty"
+        } else {
+            "3.1.3.engineering_casualty"
+        },
+        serde_json::json!({"identity":identity,"ordinary_dp":0,"ignore_fire":ignore_fire,"source":if ignore_fire{"English2026 PDF23/3-1 section3.1.2"}else{"English2026 PDF25/3-3 section3.1.3"}}),
+    );
+    critical(
+        w,
+        &t,
+        &h,
+        &identity,
+        Some(if ignore_fire {
+            "engineering_no_fire"
+        } else {
+            "engineering"
+        }),
+    );
     Ok(())
 }
 
@@ -1550,14 +2532,24 @@ fn critical(w: &mut World, t: &Entity, h: &Resolved, identity: &str, forced: Opt
         effect(w, t, h, f, &mut r, identity);
         return;
     }
-    let c = column(t, h);
+    let ordinary = column(t, h);
+    let c = if w.rules.profile == RuleProfile::Rts2026Full {
+        super::expanded_damage2026::column(w, t, ordinary)
+    } else {
+        ordinary.to_string()
+    };
     let d = die(w, t.id, &mut r, 100, identity, "critical_type");
-    let row = data().critical_columns[c]
-        .iter()
-        .find(|row| d <= row.through)
-        .expect("complete D100 column");
-    let mut kind = row.effect.as_str();
-    if row.armored && !h.penetrated {
+    let (effect_name, armored) = if w.rules.profile == RuleProfile::Rts2026Full {
+        super::expanded_damage2026::row(&c, d).expect("complete verified expanded D100 column")
+    } else {
+        let row = data().critical_columns[c.as_str()]
+            .iter()
+            .find(|row| d <= row.through)
+            .expect("complete D100 column");
+        (row.effect.clone(), row.armored)
+    };
+    let mut kind = effect_name.as_str();
+    if armored && !h.penetrated {
         trace(
             w,
             t.id,
@@ -1566,14 +2558,35 @@ fn critical(w: &mut World, t: &Entity, h: &Resolved, identity: &str, forced: Opt
         );
         return;
     }
+    if w.rules.profile == RuleProfile::Rts2026Full && kind == "weapon_flightdeck" {
+        kind = if aviation(t) { "flight_deck" } else { "weapon" };
+    }
+    if w.rules.profile == RuleProfile::Rts2026Full && kind == "bridge_airplot" {
+        kind = if aviation(t) && die(w, t.id, &mut r, 6, identity, "bridge_or_airplot") >= 4 {
+            "airplot"
+        } else {
+            "bridge"
+        };
+    }
     let cal = caliber(&h.hit.weapon);
-    if cal <= 65.0 && !matches!(size(t), "F" | "G") {
+    if h.hit.navigation.is_none() && !matches!(h.hit.asw,Some(AswImpact::DepthChargeSelfBlast{..})) && cal <= 65.0 && !matches!(size(t), "F" | "G") {
+        if w.rules.profile == RuleProfile::Rts2026Full && cal > 60.0 {
+            super::expanded_damage2026::source_pending(
+                w,
+                t.id,
+                identity,
+                "light_caliber",
+                "English2026 light weapons table ends at60mm; no61–65mm row",
+            );
+            return;
+        }
         if !h.penetrated {
             return;
         }
         let allowed = match kind {
             "weapon" | "bridge" => true,
             "sensor" => cal >= 12.7,
+            "cargo" | "weapon_cargo" => cal >= 12.7 && w.rules.profile == RuleProfile::Rts2026Full,
             "fire" => cal >= 30.0,
             "cic" | "flooding" => cal >= 57.0,
             _ => false,
@@ -1582,17 +2595,16 @@ fn critical(w: &mut World, t: &Entity, h: &Resolved, identity: &str, forced: Opt
             return;
         }
     }
-    if kind == "weapon_flightdeck" {
+    if kind=="hull_penetration"&&!asw_hull::allow_critical(w,t,h,&mut r,identity){return;}
+    if w.rules.profile != RuleProfile::Rts2026Full && kind == "weapon_flightdeck" {
         kind = if aviation(t) { "flight_deck" } else { "weapon" };
     }
-    if kind == "bridge_airplot" {
+    if w.rules.profile != RuleProfile::Rts2026Full && kind == "bridge_airplot" {
         kind = if aviation(t) && die(w, t.id, &mut r, 6, identity, "bridge_or_airplot") >= 4 {
             "airplot"
-        } else {
-            "bridge"
-        };
+        } else { "bridge" };
     }
-    if let Some(thickness) = platform_of(t).and_then(|p| p.critical_armor.get(kind)) {
+    if let Some(thickness) = platform_of(t).and_then(|p| p.critical_armor.get(kind)).filter(|_|h.hit.navigation.is_none()) {
         if h.airburst
             || !weapon_spec(&h.hit.weapon)
                 .penetration_cm
@@ -1607,10 +2619,95 @@ fn critical(w: &mut World, t: &Entity, h: &Resolved, identity: &str, forced: Opt
             return;
         }
     }
+    if expanded_extra_with_receipt(w,t,h,kind,Some(d),&mut r,identity) {
+        return;
+    }
     effect(w, t, h, kind, &mut r, identity);
 }
 
-fn fire(
+/// Exact already-rolled casualty input for expanded source results. The caller
+/// owns the original source dice; this helper neither re-rolls nor sets HP.
+pub(super) fn add_source_casualty(
+    w: &mut World,
+    id: EntityId,
+    identity: &str,
+    flood: bool,
+    severity: f64,
+    delay: i64,
+) {
+    if !severity.is_finite() || severity <= 0. || !w.entity(id).is_some_and(|e| e.alive) {
+        return;
+    }
+    if w.rules
+        .casualties
+        .get(&id)
+        .is_some_and(|cs| cs.iter().any(|c| c.identity == identity))
+    {
+        return;
+    }
+    let due = w.tick + delay;
+    w.rules.casualties.entry(id).or_default().push(Casualty {
+        identity: identity.into(),
+        flood,
+        severity,
+        next_damage: due,
+    });
+    let c = &mut w.rules.control_clocks.entry(id).or_default()[usize::from(flood)];
+    *c = if *c == 0 { due } else { (*c).min(due) };
+    if !flood {
+        super::expanded_damage2026::record_fire(w, id, identity);
+    }
+    sync_casualties(w, id);
+}
+pub(super) fn queue_armed_aircraft_explosion(w: &mut World, t: &Entity, dp: f64, identity: String) {
+    if dp <= 0. || !dp.is_finite() {
+        return;
+    }
+    let Some(mut def) = w.db.weapons.values().next().cloned() else {
+        return;
+    };
+    def.id = "armed_aircraft_explosion".into();
+    def.name = "Armed aircraft explosion".into();
+    def.kind = WeaponKind::Rocket;
+    def.damage = dp;
+    def.rule_data = Some(WeaponDamage {
+        source: "English2026 PDF134 14.5 Armed or Fueled Aircraft".into(),
+        ship_dp: Some(dp),
+        sub_dp: Some(dp),
+        penetration_cm: Some(0.0),
+        ..Default::default()
+    });
+    // This is an armor-tested source explosion, not ordinary secondary fire.
+    let identity = short_tag(&identity);
+    if !w
+        .rules
+        .resolved_hits
+        .insert(format!("{}:{identity}", t.id.0))
+    {
+        return;
+    }
+    w.rules.pending.push(Hit {
+        target: t.id,
+        weapon: def,
+        underwater: false,
+        bearing: None,
+        shooter: None,
+        identity,
+        tick: w.tick,
+        secondary: false,
+        torpedo_deep: false,
+        impact_area: None,
+        targeted_sensor: None,
+        mine: None,
+        navigation: None,
+        projector: None,
+        asw: None,
+    });
+    if !w.rules.in_batch {
+        finish(w);
+    }
+}
+pub(super) fn fire(
     w: &mut World,
     t: &Entity,
     h: &Resolved,
@@ -1638,7 +2735,9 @@ fn fire(
     } else {
         0
     };
-    let mut severity = raw.saturating_sub(minus + light_flood) as f64;
+    let beached_flood=if flood {super::beached2026::flood_modifier(w,t.id)}else{0};
+    let mut severity = raw.saturating_sub(minus + light_flood + beached_flood) as f64;
+    if beached_flood>0 {trace(w,t.id,"14.2.4.flood_modifier",serde_json::json!({"raw_d6":raw,"beached_modifier":-(i32::from(beached_flood)),"modified_severity":severity,"other_modifiers":minus+light_flood}));}
     if !h.penetrated {
         severity *= 0.5;
     }
@@ -1650,6 +2749,11 @@ fn fire(
     }
     if severity <= 0.0 {
         return;
+    }
+    if !flood {
+        super::expanded_damage2026::record_fire(w, t.id, identity);
+    } else {
+        super::expanded_damage2026::record_flood_severity(w, t.id, severity);
     }
     let immediate = flood && h.hit.underwater || matches!(size(t), "F" | "G");
     let now = w.tick;
@@ -1687,12 +2791,10 @@ fn fire(
     } else {
         (*clock).min(now + 3 * tt())
     };
-    // Immediate secondary explosions chain only from the initiating hit.
-    // A secondary that rolls another fire/flood still burns via the casualty
-    // clock, but must not spawn a further immediate secondary: saturation
-    // salvos otherwise branch (criticals × P(fire) ≥ 1) into exponential
-    // cascade depth that never finishes adjudicating on high-endurance hulls.
-    if immediate && !h.hit.secondary {
+    // v4 preserves immediate follow-on effects until the hull reaches zero
+    // DP. Each positive secondary reduces the finite DP budget; identities
+    // stay bounded in size. v1-v3 retain their recorded one-generation rule.
+    if immediate && (!h.hit.secondary || w.rules.profile == RuleProfile::Rts2026Full) {
         queue_secondary(
             w,
             t,
@@ -1702,25 +2804,51 @@ fn fire(
         );
     }
 }
-fn effect(w: &mut World, t: &Entity, h: &Resolved, kind: &str, r: &mut Rng, identity: &str) {
-    if !w.entity(t.id).is_some_and(|e| e.alive) {
-        return;
+fn expanded_extra_with_receipt(w:&mut World,t:&Entity,h:&Resolved,kind:&str,d100:Option<u8>,r:&mut Rng,identity:&str)->bool {
+    let previous_sequence=w.rules.expanded_damage.as_ref().and_then(|s|s.units.get(&t.id))
+        .map_or(0,|u|u.sequence);
+    if super::expanded_damage2026::resolve_extra(w,t,h,kind,d100,r,identity) {
+        // Expanded physical consumers used to return before the common
+        // defender-facing casualty receipt. Emit it only for a newly resolved
+        // real effect; a pending or absent component is not reported as hit.
+        let resolved=w.rules.expanded_damage.as_ref().and_then(|s|s.units.get(&t.id))
+            .filter(|u|u.sequence>previous_sequence)
+            .and_then(|u|u.records.values().find(|r|r.source_identity==identity&&r.status=="resolved"))
+            .map(|r|r.effect.clone());
+        if let Some(system)=resolved {
+            w.emit(EventKind::CriticalHit{side:t.side,unit:t.id,system},Visibility::Side(t.side));
+        }
+        return true;
     }
+    false
+}
+pub(super) fn effect(
+    w: &mut World,
+    t: &Entity,
+    h: &Resolved,
+    kind: &str,
+    r: &mut Rng,
+    identity: &str,
+) {
+    if !w.entity(t.id).is_some_and(|e| e.alive) {return;}
+    if expanded_extra_with_receipt(w,t,h,kind,None,r,identity) {return;}
     let now = w.tick;
+    let full_profile = w.rules.profile == RuleProfile::Rts2026Full;
     let mut label = kind.to_string();
     match kind {
         "fire" | "half_fire" => fire(w, t, h, r, identity, false, 0, kind == "half_fire"),
         "flooding" | "half_flooding" => {
             fire(w, t, h, r, identity, true, 0, kind == "half_flooding")
         }
-        "engineering" => {
+        "engineering" | "engineering_no_fire" => {
+            label = "engineering".into();
             let n =
                 if t.kind == PlatformKind::Sub || platform_of(t).is_some_and(|p| p.single_engine) {
                     2.0
                 } else {
                     1.0
                 };
-            let count = val(w.entity(t.id).unwrap(), "damage.engine_hits") as u8 + 1;
+            let count = (val(w.entity(t.id).unwrap(), "damage.engine_hits") as u64).saturating_add(1);
             let power = die(w, t.id, r, 6, identity, "engineering_electrical")
                 <= match count {
                     1 => 1,
@@ -1740,7 +2868,10 @@ fn effect(w: &mut World, t: &Entity, h: &Resolved, kind: &str, r: &mut Rng, iden
                         .insert("damage.power_lost".into(), (now + duration) as f64);
                 }
             }
-            fire(w, t, h, r, identity, false, 2, false);
+            super::repairs2026::record_engineering(w, t.id, identity, n as u8);
+            if kind != "engineering_no_fire" {
+                fire(w, t, h, r, identity, false, 2, false);
+            }
         }
         "flight_deck" => {
             if !aviation(t) {
@@ -1768,6 +2899,7 @@ fn effect(w: &mut World, t: &Entity, h: &Resolved, kind: &str, r: &mut Rng, iden
                 "flight_deck_location",
                 serde_json::json!({"hit":identity,"location_die":location,"launch_blocked":location<=2,"recovery_blocked":location>=5}),
             );
+            super::expanded_damage2026::deck_critical(w, t, h, location, r, identity);
             let deck_armor = platform_of(t).map(|p| p.deck_cm).unwrap_or(0.0);
             let can_reach_hangar = h.penetrated
                 && (deck_armor == 0.0
@@ -1817,9 +2949,11 @@ fn effect(w: &mut World, t: &Entity, h: &Resolved, kind: &str, r: &mut Rng, iden
                     e.station = None;
                     e.ordered_course_deg = e.course_deg;
                     e.ordered_speed_kts = e.speed_kts;
-                    for s in &t.sensors {
-                        if s.sensor.contains("nav") {
-                            e.ext.insert(format!("damage.sensor.{}", s.sensor), 1.0);
+                    if !full_profile {
+                        for s in &t.sensors {
+                            if s.sensor.contains("nav") {
+                                e.ext.insert(format!("damage.sensor.{}", s.sensor), 1.0);
+                            }
                         }
                     }
                     if e.kind == PlatformKind::Sub {
@@ -1828,7 +2962,18 @@ fn effect(w: &mut World, t: &Entity, h: &Resolved, kind: &str, r: &mut Rng, iden
                     }
                 }
             }
+            if kind == "bridge" && full_profile {
+                super::expanded_damage2026::bridge_navigation_loss(w, t.id, identity);
+            }
             if kind == "bridge" && t.kind == PlatformKind::Sub {
+                if full_profile {
+                    if let Some(state) = w.rules.torpedoes.as_mut() {
+                        state
+                            .placements
+                            .tracks
+                            .retain(|_, track| track.observer != t.id);
+                    }
+                }
                 if let Some(e) = w.entity_mut(t.id) {
                     for key in e
                         .ext
@@ -1864,6 +3009,9 @@ fn effect(w: &mut World, t: &Entity, h: &Resolved, kind: &str, r: &mut Rng, iden
                     .unwrap_or(0.0);
             if let Some(e) = w.entity_mut(t.id) {
                 e.ext.insert("rudder_hit".into(), 1.0);
+                if full_profile && t.kind == PlatformKind::Sub {
+                    e.ext.insert("damage.depth_control_lost".into(), 1.);
+                }
                 e.ext.insert(
                     if disabled {
                         "damage.rudder_disabled"
@@ -2026,9 +3174,7 @@ fn effect(w: &mut World, t: &Entity, h: &Resolved, kind: &str, r: &mut Rng, iden
                     serde_json::json!({"hit":identity,"weapon":mount.weapon,"missing":"topside/belowdecks magazine location","automatic_explosion_dp_blocked":true}),
                 );
             }
-            // Mount-cook-off chains stop at one generation like fire/flood
-            // secondaries; see the queue_secondary guard in the severity path.
-            if burst_dp > 0.0 && !h.hit.secondary {
+            if burst_dp > 0.0 && (!h.hit.secondary || w.rules.profile == RuleProfile::Rts2026Full) {
                 queue_secondary(w, t, burst_dp, false, format!("{identity}:mount_explosion"));
             }
             label = if explosion {
@@ -2132,6 +3278,7 @@ fn effect(w: &mut World, t: &Entity, h: &Resolved, kind: &str, r: &mut Rng, iden
         "personnel" | "flotation" => {
             let key = format!("damage.{kind}");
             let n = val(w.entity(t.id).unwrap(), &key) + 1.0;
+            let escape_speed = t.max_speed(&w.db);
             if let Some(e) = w.entity_mut(t.id) {
                 e.ext.insert(key, n);
                 if kind == "flotation" {
@@ -2141,12 +3288,27 @@ fn effect(w: &mut World, t: &Entity, h: &Resolved, kind: &str, r: &mut Rng, iden
                     }
                 } else if n >= 4.0 {
                     e.fire_on = false;
+                    if full_profile && n == 4. {
+                        e.ordered_speed_kts = escape_speed;
+                    }
                 }
             }
         }
         "hull_penetration" => {
-            let surface = t.depth_m <= 100.0
-                && die(w, t.id, r, 10, identity, "pressure_hull_surface_escape") <= 5;
+            let surface = if let Some(m) = &h.hit.mine {
+                super::mines2026::depth_band(t.depth_m).is_ok_and(|b| b <= m.rescue_max_band)
+                    && die(
+                        w,
+                        t.id,
+                        r,
+                        100,
+                        identity,
+                        "13.6.pressure_hull_surface_escape",
+                    ) <= m.rescue_percent
+            } else {
+                t.depth_m <= 100.0
+                    && die(w, t.id, r, 10, identity, "pressure_hull_surface_escape") <= 5
+            };
             let delay = if surface {
                 die(w, t.id, r, 10, identity, "pressure_hull_sink_delay") as i64 * 2 * tt()
             } else {
@@ -2181,6 +3343,41 @@ fn effect(w: &mut World, t: &Entity, h: &Resolved, kind: &str, r: &mut Rng, iden
             if platform_of(t).is_some_and(|p| p.nuclear) {
                 return;
             }
+            let battery_runtime=w.rules.battery.as_ref().is_some_and(|s|s.units.contains_key(&t.id));
+            if full_profile&&!battery_runtime {
+                let declared_capacity=w.entity(t.id).and_then(|e|e.ext.get("damage.battery_capacity")).is_some_and(|c|c.is_finite()&&*c>=0.);
+                let declared_non_aip=platform_of(t).is_some_and(|p|!p.aip&&!p.nuclear&&!p.source.trim().is_empty());
+                if !(declared_capacity&&declared_non_aip){
+                    super::expanded_damage2026::source_pending(w,t.id,identity,"battery","source battery/AIP fit absent; no normalized100 capacity fallback");return;
+                }
+            }
+            if full_profile&&battery_runtime {
+                let Some(fitted) = super::battery2026::aip_fitted(w, t.id) else {
+                    super::expanded_damage2026::source_pending(
+                        w,
+                        t.id,
+                        identity,
+                        "battery",
+                        "source battery/AIP fit absent; no normalized100 capacity fallback",
+                    );
+                    return;
+                };
+                let aip = fitted && die(w, t.id, r, 100, identity, "aip_hit") <= 25;
+                let result = if aip {
+                    super::battery2026::critical_aip_disable(w, t.id, identity)
+                } else {
+                    let loss = die(w, t.id, r, 6, identity, "battery_capacity_loss") as f64 * 0.05;
+                    super::battery2026::critical_capacity_loss(w, t.id, identity, loss)
+                };
+                if let Err(reason) = result {
+                    super::expanded_damage2026::source_pending(
+                        w, t.id, identity, "battery", &reason,
+                    );
+                } else {
+                    super::expanded_damage2026::record_builtin(w, t.id, identity, kind);
+                }
+                return;
+            }
             let aip = platform_of(t).is_some_and(|p| p.aip)
                 && die(w, t.id, r, 100, identity, "aip_hit") <= 25;
             if aip {
@@ -2190,18 +3387,25 @@ fn effect(w: &mut World, t: &Entity, h: &Resolved, kind: &str, r: &mut Rng, iden
                     .insert("damage.aip".into(), 1.0);
             } else {
                 let loss = die(w, t.id, r, 6, identity, "battery_capacity_loss") as f64 * 0.05;
+                let legacy_charge_default = w.rules.profile != RuleProfile::Rts2026Full;
                 if let Some(e) = w.entity_mut(t.id) {
                     let capacity = e
                         .ext
                         .get("damage.battery_capacity")
                         .copied()
                         .unwrap_or(100.0);
-                    let charge = e.ext.get("battery").copied().unwrap_or(capacity);
+                    let charge = e
+                        .ext
+                        .get("battery")
+                        .copied()
+                        .or_else(|| legacy_charge_default.then_some(capacity));
                     let remaining = capacity * (1.0 - loss);
                     e.ext.insert("damage.battery_capacity".into(), remaining);
                     e.ext
                         .insert("damage.battery_loss".into(), 1.0 - remaining / 100.0);
-                    e.ext.insert("battery".into(), charge * (1.0 - loss));
+                    if let Some(charge) = charge {
+                        e.ext.insert("battery".into(), charge * (1.0 - loss));
+                    }
                 }
             }
         }
@@ -2228,6 +3432,9 @@ fn effect(w: &mut World, t: &Entity, h: &Resolved, kind: &str, r: &mut Rng, iden
             return;
         }
     }
+    if w.rules.profile == RuleProfile::Rts2026Full {
+        super::expanded_damage2026::record_builtin(w, t.id, identity, kind);
+    }
     w.emit(
         EventKind::CriticalHit {
             side: t.side,
@@ -2241,6 +3448,46 @@ fn effect(w: &mut World, t: &Entity, h: &Resolved, kind: &str, r: &mut Rng, iden
 #[cfg(test)]
 mod source_effect_tests {
     use super::*;
+    #[test]
+    fn v4_immediate_underwater_cascades_do_not_discard_the_second_generation() {
+        let (mut w, t, mut h) = sub(53, 50.0, false);
+        w.rules.profile = RuleProfile::Rts2026Full;
+        w.rules.in_batch = true;
+        h.hit.secondary = true;
+        fire(
+            &mut w,
+            &t,
+            &h,
+            &mut Rng::new(53),
+            "source-secondary",
+            true,
+            0,
+            false,
+        );
+        assert!(
+            !w.rules.pending.is_empty(),
+            "14.1/14.4 immediate follow-on flooding must not be silently discarded"
+        );
+        assert!(w.rules.pending.iter().all(|h| h.secondary));
+    }
+    #[test]
+    fn v4_destroyed_hull_never_creates_an_unbounded_cascade() {
+        let (mut w, t, h) = sub(53, 50.0, false);
+        w.rules.profile = RuleProfile::Rts2026Full;
+        w.rules.in_batch = true;
+        w.entity_mut(t.id).unwrap().hp = 0.;
+        fire(
+            &mut w,
+            &t,
+            &h,
+            &mut Rng::new(53),
+            "destroyed-hull",
+            true,
+            0,
+            false,
+        );
+        assert!(w.rules.pending.is_empty(),"zero-DP hull is already lost under14.1, additional functional effects do not regenerate wreck hits");
+    }
     #[test]
     fn shaped_charge_applies_the_printed_modifier_to_the_roll_not_the_threshold() {
         let mut exercised = false;
@@ -2392,6 +3639,10 @@ mod source_effect_tests {
                 torpedo_deep: false,
                 impact_area: None,
                 targeted_sensor: None,
+                mine: None,
+                navigation: None,
+                projector: None,
+        asw: None,
             },
             dp: 10.0,
             penetrated: true,
@@ -2705,6 +3956,12 @@ pub fn step(w: &mut World) {
             } else {
                 0
             };
+            let modifier = modifier
+                + if (w.rules.profile == RuleProfile::Rts2026Full) && index == 0 {
+                    val(&t, "damage.cargo_fire_modifier") as u8
+                } else {
+                    0
+                };
             let roll = (raw + modifier).min(10);
             let count = data().dc_reduction[roll as usize - 1][tier.min(3)];
             let change = (0..count.unsigned_abs())

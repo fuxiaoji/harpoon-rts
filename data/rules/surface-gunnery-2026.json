@@ -1,0 +1,334 @@
+{
+  "source": {
+    "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+    "version": "2026-01-01",
+    "sha256": "8196ffc715bbcccd862d8597c607de7816dac5baee31fa659f89dfaf4323700c",
+    "pdf_pages": [
+      91,
+      92,
+      93
+    ],
+    "printed_pages": [
+      "8-11",
+      "8-12",
+      "8-13"
+    ],
+    "root_visual_review": "2026-10-28"
+  },
+  "base_probability": {
+    "Manual": [
+      0.5,
+      0.3,
+      0.1,
+      0.05
+    ],
+    "GS4": [
+      0.6,
+      0.4,
+      0.15,
+      0.05
+    ],
+    "GS5": [
+      0.7,
+      0.5,
+      0.2,
+      0.1
+    ],
+    "GS6": [
+      0.75,
+      0.55,
+      0.25,
+      0.15
+    ]
+  },
+  "modifier_per_band": [
+    0.05,
+    0.05,
+    0.03,
+    0.03
+  ],
+  "probability_maximum": 0.9,
+  "damage_multiplier_by_max_barrels": [
+    [
+      2,
+      1,
+      1,
+      1,
+      1
+    ],
+    [
+      4,
+      2,
+      2,
+      1,
+      1
+    ],
+    [
+      6,
+      3,
+      3,
+      2,
+      1
+    ],
+    [
+      8,
+      4,
+      3,
+      2,
+      1
+    ],
+    [
+      10,
+      5,
+      4,
+      3,
+      2
+    ],
+    [
+      12,
+      6,
+      4,
+      3,
+      2
+    ]
+  ],
+  "modifiers": {
+    "visibility_max_percent": [
+      [
+        20,
+        -4
+      ],
+      [
+        40,
+        -2
+      ]
+    ],
+    "visibility_ignore_if": [
+      "radar_GFC",
+      "target_illuminated",
+      "target_silhouetted"
+    ],
+    "sun_obscured": {
+      "max_degrees": 10,
+      "modifier": -2
+    },
+    "twilight_silhouette": {
+      "max_degrees": 30,
+      "modifier": 1
+    },
+    "illuminated_by_starshell_fire_searchlight_or_missile_launch": 1,
+    "dead_reckoning_first_turn_after_visual_loss": -4,
+    "blind_muzzle_flash": {
+      "modifier": -6,
+      "ignore_visibility_modifier": true
+    },
+    "sea_state_rows": {
+      "3": {
+        "AB": 0,
+        "CD": 0,
+        "EG": -2
+      },
+      "4": {
+        "AB": 0,
+        "CD": -2,
+        "EG": -4
+      },
+      "5": {
+        "AB": -2,
+        "CD": -4,
+        "EG": null
+      },
+      "6": {
+        "AB": -4,
+        "CD": -6,
+        "EG": null
+      }
+    },
+    "sea_state_null_means": "no_fire_possible",
+    "no_fire_above_sea_state": 6,
+    "firing_ship_not_under_fire": 1,
+    "overconcentration_per_extra_ship": -1,
+    "overconcentration_conditions": [
+      "EO_OP_fire_control",
+      "same_shell_size_group",
+      "Long_or_Extreme_shot"
+    ],
+    "point_blank": {
+      "visibility_min_percent": 30,
+      "short_range_divisor": 2,
+      "short_range_rounding": "down_in_Annex_yards",
+      "modifier": 4,
+      "damage_factor": 2,
+      "penetration_factor": 1
+    },
+    "land_clutter": {
+      "target_arc_half_angle_deg": 45,
+      "inside_unmodified_fc_radar_range": true,
+      "modifier": -1
+    },
+    "local_control": -3,
+    "shooter_speed_above_kts": 30,
+    "shooter_speed_modifier": -2,
+    "shooter_evasive": -3,
+    "barrel_modifier_by_max_count": [
+      [
+        2,
+        0
+      ],
+      [
+        4,
+        1
+      ],
+      [
+        6,
+        2
+      ],
+      [
+        8,
+        3
+      ],
+      [
+        10,
+        4
+      ]
+    ],
+    "barrel_modifier_above10": null,
+    "target_speed": {
+      "40_and_above": -4,
+      "30_through39": -2,
+      "10_and_less_nonstationary": 1,
+      "stationary": 2
+    },
+    "target_evasive": {
+      "minimum_speed_kts": 20,
+      "B": -2,
+      "CD": -4,
+      "EG": -6
+    },
+    "target_aspect_columns": [
+      "Broad",
+      "Quarter",
+      "Narrow"
+    ],
+    "target_aspect": {
+      "A": [
+        2,
+        1,
+        0
+      ],
+      "B": [
+        1,
+        0,
+        -1
+      ],
+      "CD": [
+        0,
+        -1,
+        -2
+      ],
+      "EG": [
+        -2,
+        -3,
+        -4
+      ]
+    },
+    "target_H_aspect": null
+  },
+  "guns": {
+    "cn_pj45a": {
+      "name": "PRC PJ-45A 130mm/70",
+      "shell": "HE",
+      "source": "China's Navy 1 Dec 25, Annex C - Naval Guns C-1 (PDF68 row visually verified 2026-10-28)",
+      "bands": [
+        {
+          "max_range_kyd": 8.5,
+          "belt_pen_cm": 2,
+          "damage": 25
+        },
+        {
+          "max_range_kyd": 19.1,
+          "belt_pen_cm": 1,
+          "damage": 21
+        },
+        {
+          "max_range_kyd": 25.4,
+          "belt_pen_cm": 1,
+          "deck_pen_cm": 1,
+          "damage": 19
+        },
+        {
+          "max_range_kyd": 31.8,
+          "belt_pen_cm": 1,
+          "deck_pen_cm": 1,
+          "damage": 17
+        }
+      ],
+      "aa_max_range_kyd": 16.4,
+      "aa_rating": 0.85,
+      "penetration_note": "Short/Medium print belt (vertical) penetration; Long/Extreme print the belt/deck pair; each value is checked against its own armor face",
+      "barrels": null,
+      "barrels_note": "not printed in Annex C; service.barrels must be declared by the scenario",
+      "caliber_mm": 130
+    }
+  },
+  "aspect": {
+    "source": "English2026 PDF111/10-2 Aspect Diagram, also referenced by collision and surface-gunnery procedures",
+    "narrow_max_deg": 20,
+    "broad_min_deg": 60
+  },
+  "execution": {
+    "revision": "RTS-GUNNERY-20261029-01",
+    "cadence": "One atomic planned/reaction-only attack per declared ship-gun per Tactical Turn; no ammunition bookkeeping unless explicitly authored; canonical same-phase intent conflicts reject before debit",
+    "native_report_maximum_age_s": 180,
+    "target": "Actual source ship size/armor and aspect sampled only in referee resolution. Own current native visual report required; no fusion/shared position masquerades as own GFC.",
+    "scope": "Qualified authored naval gun service and one verified Annex C row. Unqualified legacy Full gun Pk is rejected. Unprinted/unsupported obscurant/terrain/armor-face consequences stay pending.",
+    "tactical_turn_seconds": 180,
+    "d100_arithmetic": "Existing ULP-aware threshold comparator, no rule rounding or new probability adjustment.",
+    "shared_ship_gun_contract": {
+      "revision": "RTS-GUN-SHARED-20261030-01",
+      "source_distinction": "Existing RTS atomic-intent conversion, not a printed firing-rate or probability rule",
+      "cadence": "one declared ship-gun Tactical Turn slot shared by surface and NGFS",
+      "conflict": "same-phase surface/NGFS target conflicts reject before either debit, independent of command/provider order",
+      "physical_stock": "when explicit shells-per-attack tracking is enabled, debit actual aggregate and declared physical stock together"
+    }
+  },
+  "sea_modifiers": {
+    "3": [
+      0,
+      0,
+      -2
+    ],
+    "4": [
+      0,
+      -2,
+      -4
+    ],
+    "5": [
+      -2,
+      -4,
+      null
+    ],
+    "6": [
+      -4,
+      -6,
+      null
+    ]
+  },
+  "manual": {
+    "maximum_caliber_mm": 60,
+    "local_control_modifier_already_included": true
+  },
+  "line_of_fire": {
+    "friendly_ship_blocks_if_short_or_medium_and_within_deg": 5,
+    "land_height_always_blocks_m": 100,
+    "lower_land_blocking": "scenario specified",
+    "aircraft_OTH_spotting_can_replace_land_blocked_LOS": true
+  },
+  "overconcentration_shell_groups_mm": {
+    "small_max": 150,
+    "medium_min": 151,
+    "medium_max": 278,
+    "large_min": 279,
+    "large_max": 456
+  }
+}

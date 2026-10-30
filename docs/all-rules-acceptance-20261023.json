@@ -1,0 +1,7532 @@
+{
+  "schema": 1,
+  "date": "2026-10-23",
+  "all_mechanisms_complete": false,
+  "toc_only_is_not_complete": true,
+  "rows": [
+    {
+      "rule_id": "HV2026-1.1-P1-1",
+      "printed_section": "1.1",
+      "title": "Background",
+      "printed_page": "1-1",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          15
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-1.2-P1-1",
+      "printed_section": "1.2",
+      "title": "Scope",
+      "printed_page": "1-1",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          15
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-1.3-P1-1",
+      "printed_section": "1.3",
+      "title": "Players",
+      "printed_page": "1-1",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          15
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-1.4-P1-1",
+      "printed_section": "1.4",
+      "title": "Scales",
+      "printed_page": "1-1",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          15
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-1.5-P1-2",
+      "printed_section": "1.5",
+      "title": "Materials",
+      "printed_page": "1-2",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          16
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-1.6-P1-2",
+      "printed_section": "1.6",
+      "title": "Organization",
+      "printed_page": "1-2",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          16
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-1.7-P1-2",
+      "printed_section": "1.7",
+      "title": "Game Pieces",
+      "printed_page": "1-2",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          16
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-2.1-P2-1",
+      "printed_section": "2.1",
+      "title": "Size Classes",
+      "printed_page": "2-1",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          17
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-2.2-P2-1",
+      "printed_section": "2.2",
+      "title": "Preparation for Play",
+      "printed_page": "2-1",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          17
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-2.2.1-P2-1",
+      "printed_section": "2.2.1",
+      "title": "Filling out the Ship Reference Sheet",
+      "printed_page": "2-1",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          17
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-2.2.2-P2-3",
+      "printed_section": "2.2.2",
+      "title": "Filling out the Air Mission Form",
+      "printed_page": "2-3",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          19
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-2.3-P2-3",
+      "printed_section": "2.3",
+      "title": "Turn Sequence",
+      "printed_page": "2-3",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          19
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-2.3.1-P2-3",
+      "printed_section": "2.3.1",
+      "title": "Time Representation",
+      "printed_page": "2-3",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          19
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-2.3.2-P2-4",
+      "printed_section": "2.3.2",
+      "title": "Intermediate Turn Sequence",
+      "printed_page": "2-4",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          20
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-2.3.3-P2-4",
+      "printed_section": "2.3.3",
+      "title": "Tactical Turn Sequence",
+      "printed_page": "2-4",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          20
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-2.3.4-P2-5",
+      "printed_section": "2.3.4",
+      "title": "Transitioning Between Turns",
+      "printed_page": "2-5",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          21
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-2.4-P2-5",
+      "printed_section": "2.4",
+      "title": "Plotting Movement",
+      "printed_page": "2-5",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          21
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-2.5-P2-5",
+      "printed_section": "2.5",
+      "title": "Plotting Orders for Unmanned Systems",
+      "printed_page": "2-5",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          21
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-2.5.1-P2-6",
+      "printed_section": "2.5.1",
+      "title": "Loss of Command",
+      "printed_page": "2-6",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          22
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-2.5.2-P2-6",
+      "printed_section": "2.5.2",
+      "title": "Mission Plotting",
+      "printed_page": "2-6",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          22
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-3.0.1-P3-1",
+      "printed_section": "3.0.1",
+      "title": "Proportional Movement",
+      "printed_page": "3-1",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          23
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-3.0.2-P3-1",
+      "printed_section": "3.0.2",
+      "title": "The Three-Minute Rule",
+      "printed_page": "3-1",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          23
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-3.1-P3-1",
+      "printed_section": "3.1",
+      "title": "Ship Movement",
+      "printed_page": "3-1",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          23
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-3.1.1-P3-1",
+      "printed_section": "3.1.1",
+      "title": "Speed Change",
+      "printed_page": "3-1",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          23
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-3.1.2-P3-1",
+      "printed_section": "3.1.2",
+      "title": "Crash Back",
+      "printed_page": "3-1",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          23
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-3.1.3-P3-3",
+      "printed_section": "3.1.3",
+      "title": "Astern",
+      "printed_page": "3-3",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          25
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-3.1.4-P3-3",
+      "printed_section": "3.1.4",
+      "title": "Course Changes and Turning",
+      "printed_page": "3-3",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          25
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null,
+      "latest_partial_audit": {
+        "report": "docs/all-rules-after-following-20261023.md",
+        "status": "partial_subsets_only",
+        "note": "Index row is not promoted to whole-mechanism tested. See chapter audit and open questions R-052 through R-056; R-054 remains open."
+      }
+    },
+    {
+      "rule_id": "HV2026-3.1.5-P3-3",
+      "printed_section": "3.1.5",
+      "title": "Effects of Weather",
+      "printed_page": "3-3",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          25
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-3.1.6-P3-3",
+      "printed_section": "3.1.6",
+      "title": "Evasive Steering",
+      "printed_page": "3-3",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          25
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-3.1.7-P3-4",
+      "printed_section": "3.1.7",
+      "title": "Impulse Movement",
+      "printed_page": "3-4",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          26
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-3.2-P3-6",
+      "printed_section": "3.2",
+      "title": "Submarine Movement",
+      "printed_page": "3-6",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          28
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-3.2.1-P3-6",
+      "printed_section": "3.2.1",
+      "title": "Depths and Depth Changes",
+      "printed_page": "3-6",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          28
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null,
+      "latest_partial_audit": {
+        "report": "docs/all-rules-search-navigation-20261024.md",
+        "status": "partial_subsets_only",
+        "note": "Exact tested subset only; row/index not promoted to whole mechanism. R054/R062/R063/R064 and chapter ledger retain unresolved branches."
+      }
+    },
+    {
+      "rule_id": "HV2026-3.2.2-P3-6",
+      "printed_section": "3.2.2",
+      "title": "Submerged Submarine Movement",
+      "printed_page": "3-6",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          28
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-3.2.3-P3-7",
+      "printed_section": "3.2.3",
+      "title": "Crash Dive",
+      "printed_page": "3-7",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          29
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-3.2.4-P3-7",
+      "printed_section": "3.2.4",
+      "title": "Diesel Submarine Battery Endurance",
+      "printed_page": "3-7",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          29
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null,
+      "latest_partial_audit": {
+        "report": "docs/all-rules-search-navigation-20261024.md",
+        "status": "partial_subsets_only",
+        "note": "Exact tested subset only; row/index not promoted to whole mechanism. R054/R062/R063/R064 and chapter ledger retain unresolved branches."
+      }
+    },
+    {
+      "rule_id": "HV2026-3.2.5-P3-7",
+      "printed_section": "3.2.5",
+      "title": "Air-Independent Power",
+      "printed_page": "3-7",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          29
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null,
+      "latest_partial_audit": {
+        "report": "docs/all-rules-search-navigation-20261024.md",
+        "status": "partial_subsets_only",
+        "note": "Exact tested subset only; row/index not promoted to whole mechanism. R054/R062/R063/R064 and chapter ledger retain unresolved branches."
+      }
+    },
+    {
+      "rule_id": "HV2026-3.3-P3-8",
+      "printed_section": "3.3",
+      "title": "Collisions and Ramming",
+      "printed_page": "3-8",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          30
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-3.3.1-P3-8",
+      "printed_section": "3.3.1",
+      "title": "Collision Resolution",
+      "printed_page": "3-8",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          30
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-3.3.2-P3-9",
+      "printed_section": "3.3.2",
+      "title": "Collision Damage",
+      "printed_page": "3-9",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          31
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-3.4-P3-10",
+      "printed_section": "3.4",
+      "title": "Grounding",
+      "printed_page": "3-10",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          32
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-3.5-P3-10",
+      "printed_section": "3.5",
+      "title": "Torpedo Movement",
+      "printed_page": "3-10",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          32
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-3.6-P3-10",
+      "printed_section": "3.6",
+      "title": "Getting Underway",
+      "printed_page": "3-10",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          32
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-3.7-P3-10",
+      "printed_section": "3.7",
+      "title": "Arrival of Units in the Battle Area",
+      "printed_page": "3-10",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          32
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-4.0.1-P4-1",
+      "printed_section": "4.0.1",
+      "title": "Stepped Aircraft Movement",
+      "printed_page": "4-1",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          33
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-4.1-P4-1",
+      "printed_section": "4.1",
+      "title": "Dogfight Movement",
+      "printed_page": "4-1",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          33
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-4.2-P4-1",
+      "printed_section": "4.2",
+      "title": "Speeds",
+      "printed_page": "4-1",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          33
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-4.3-P4-1",
+      "printed_section": "4.3",
+      "title": "Hover",
+      "printed_page": "4-1",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          33
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-4.4-P4-1",
+      "printed_section": "4.4",
+      "title": "Course Changes and Turning",
+      "printed_page": "4-1",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          33
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-4.5-P4-1",
+      "printed_section": "4.5",
+      "title": "Altitude and Altitude Changes",
+      "printed_page": "4-1",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          33
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-4.5.1-P4-2",
+      "printed_section": "4.5.1",
+      "title": "Altitude Changes Over Land",
+      "printed_page": "4-2",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          34
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-4.5.2-P4-2",
+      "printed_section": "4.5.2",
+      "title": "Flying at Sea-skimming altitude",
+      "printed_page": "4-2",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          34
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-4.5.3-P4-2",
+      "printed_section": "4.5.3",
+      "title": "Flying at Nap-of-the-Earth altitude",
+      "printed_page": "4-2",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          33,
+          34
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-4.5.4-P4-2",
+      "printed_section": "4.5.4",
+      "title": "Flying at Very Low altitude",
+      "printed_page": "4-2",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          34
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-4.5.5-P4-2",
+      "printed_section": "4.5.5",
+      "title": "Flying at Very Low altitude over Land",
+      "printed_page": "4-2",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          34
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-4.6-P4-3",
+      "printed_section": "4.6",
+      "title": "Aircraft Launching and Landing",
+      "printed_page": "4-3",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          35
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-4.6.1-P4-3",
+      "printed_section": "4.6.1",
+      "title": "Carriers and Flight Decks",
+      "printed_page": "4-3",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          35
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-4.6.2-P4-3",
+      "printed_section": "4.6.2",
+      "title": "Helicopter Pads",
+      "printed_page": "4-3",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          35
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-4.6.3-P4-3",
+      "printed_section": "4.6.3",
+      "title": "Sea Surface",
+      "printed_page": "4-3",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          35
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-4.6.4-P4-3",
+      "printed_section": "4.6.4",
+      "title": "Launching & Recovering Aircraft",
+      "printed_page": "4-3",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          35
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-4.6.4.1-P4-4",
+      "printed_section": "4.6.4.1",
+      "title": "Catapults and Arresting Gear",
+      "printed_page": "4-4",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          36
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-4.6.4.2-P4-4",
+      "printed_section": "4.6.4.2",
+      "title": "Fly-Off",
+      "printed_page": "4-4",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          36
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-4.6.4.3-P4-4",
+      "printed_section": "4.6.4.3",
+      "title": "Pad Launch",
+      "printed_page": "4-4",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          36
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-4.6.5-P4-4",
+      "printed_section": "4.6.5",
+      "title": "Sea Surface Landings and Takeoffs",
+      "printed_page": "4-4",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          36
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-4.6.6-P4-4",
+      "printed_section": "4.6.6",
+      "title": "Swamping",
+      "printed_page": "4-4",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          36
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-4.6.7-P4-4",
+      "printed_section": "4.6.7",
+      "title": "Ready Times",
+      "printed_page": "4-4",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          36
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-4.7-P4-4",
+      "printed_section": "4.7",
+      "title": "Aircraft Endurance",
+      "printed_page": "4-4",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          36
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-4.7.1-P4-4",
+      "printed_section": "4.7.1",
+      "title": "Aircraft Ranges",
+      "printed_page": "4-4",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          36
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-4.7.2-P4-4",
+      "printed_section": "4.7.2",
+      "title": "Increasing Range",
+      "printed_page": "4-4",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          36
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-4.7.3-P4-5",
+      "printed_section": "4.7.3",
+      "title": "Altitude Effects on Range",
+      "printed_page": "4-5",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          37
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-4.7.4-P4-5",
+      "printed_section": "4.7.4",
+      "title": "Throttle Effects on Range",
+      "printed_page": "4-5",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          37
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-4.7.5-P4-5",
+      "printed_section": "4.7.5",
+      "title": "Load Effects on Range",
+      "printed_page": "4-5",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          37
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-4.7.6-P4-5",
+      "printed_section": "4.7.6",
+      "title": "Strike Mission Planning",
+      "printed_page": "4-5",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          37
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-4.7.7-P4-5",
+      "printed_section": "4.7.7",
+      "title": "Combat Air Patrol Mission Planning",
+      "printed_page": "4-5",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          37
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-4.7.8-P4-5",
+      "printed_section": "4.7.8",
+      "title": "Dogfight Effects on Endurance",
+      "printed_page": "4-5",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          37
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-4.8-P4-6",
+      "printed_section": "4.8",
+      "title": "Inflight Refueling",
+      "printed_page": "4-6",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          38
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-4.8.1-P4-6",
+      "printed_section": "4.8.1",
+      "title": "Inflight Refuel Procedure",
+      "printed_page": "4-6",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          38
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-4.8.2-P4-6",
+      "printed_section": "4.8.2",
+      "title": "Inflight Refuel Times",
+      "printed_page": "4-6",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          38
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-4.9-P4-7",
+      "printed_section": "4.9",
+      "title": "Helicopter Inflight Refueling",
+      "printed_page": "4-7",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          39
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-4.10-P4-7",
+      "printed_section": "4.10",
+      "title": "Missile Movement",
+      "printed_page": "4-7",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          39
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-4.10.1-P4-7",
+      "printed_section": "4.10.1",
+      "title": "Missile Trajectories",
+      "printed_page": "4-7",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          39
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-4.10.2-P4-7",
+      "printed_section": "4.10.2",
+      "title": "Missile Range Modifiers",
+      "printed_page": "4-7",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          39
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-4.10.3-P4-7",
+      "printed_section": "4.10.3",
+      "title": "Evasive Maneuvers",
+      "printed_page": "4-7",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          39
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-4.10.4-P4-7",
+      "printed_section": "4.10.4",
+      "title": "Waypoints",
+      "printed_page": "4-7",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          39
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-5.1-P5-1",
+      "printed_section": "5.1",
+      "title": "Sensor Basics",
+      "printed_page": "5-1",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          40
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-5.1.1-P5-1",
+      "printed_section": "5.1.1",
+      "title": "Active and Passive Sensors",
+      "printed_page": "5-1",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          40
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-5.2-P5-1",
+      "printed_section": "5.2",
+      "title": "Radar",
+      "printed_page": "5-1",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          40
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-5.2.1-P5-1",
+      "printed_section": "5.2.1",
+      "title": "Detection by Radar",
+      "printed_page": "5-1",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          40
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-5.2.2-P5-2",
+      "printed_section": "5.2.2",
+      "title": "Size of Contacts",
+      "printed_page": "5-2",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          41
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-5.2.3-P5-2",
+      "printed_section": "5.2.3",
+      "title": "Radar Information",
+      "printed_page": "5-2",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          41
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-5.2.4-P5-2",
+      "printed_section": "5.2.4",
+      "title": "Shipboard Radar Types",
+      "printed_page": "5-2",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          41
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-5.2.5-P5-3",
+      "printed_section": "5.2.5",
+      "title": "Airborne Radar Types",
+      "printed_page": "5-3",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          42
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-5.2.6-P5-3",
+      "printed_section": "5.2.6",
+      "title": "Ground Radar Types",
+      "printed_page": "5-3",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          42
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-5.2.7-P5-4",
+      "printed_section": "5.2.7",
+      "title": "LPI radars",
+      "printed_page": "5-4",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          43
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-5.2.8-P5-4",
+      "printed_section": "5.2.8",
+      "title": "Radar Line of Sight",
+      "printed_page": "5-4",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          43
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-5.2.9-P5-4",
+      "printed_section": "5.2.9",
+      "title": "Environmental Effects on Radar",
+      "printed_page": "5-4",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          43
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-5.2.9.1-P5-4",
+      "printed_section": "5.2.9.1",
+      "title": "Sea State Clutter",
+      "printed_page": "5-4",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          43
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-5.2.9.2-P5-4",
+      "printed_section": "5.2.9.2",
+      "title": "Rain Clutter",
+      "printed_page": "5-4",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          43
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-5.2.9.3-P5-4",
+      "printed_section": "5.2.9.3",
+      "title": "Land Mass Clutter",
+      "printed_page": "5-4",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          43
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-5.2.9.4-P5-4",
+      "printed_section": "5.2.9.4",
+      "title": "Combining Clutter Effects",
+      "printed_page": "5-4",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          43,
+          119
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-5.2.9.5-P5-4",
+      "printed_section": "5.2.9.5",
+      "title": "Radar Ducting",
+      "printed_page": "5-4",
+      "toc_pdf_page": 7,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          43
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-5.3-P5-6",
+      "printed_section": "5.3",
+      "title": "Electromagnetic Support (ES)",
+      "printed_page": "5-6",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          45
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-5.3.1-P5-7",
+      "printed_section": "5.3.1",
+      "title": "Emitter Locating Systems",
+      "printed_page": "5-7",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          46
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-5.4-P5-7",
+      "printed_section": "5.4",
+      "title": "Sonars",
+      "printed_page": "5-7",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          46
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-5.4.1-P5-7",
+      "printed_section": "5.4.1",
+      "title": "Hull-Mounted Sonars",
+      "printed_page": "5-7",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          46
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-5.4.2-P5-8",
+      "printed_section": "5.4.2",
+      "title": "Towed Arrays",
+      "printed_page": "5-8",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          47
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-5.4.2.1-BODY-P048",
+      "printed_section": "5.4.2.1",
+      "title": "Bearing Ambiguity and Towed Array Stabiliza-",
+      "printed_page": "5-9",
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          48
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null,
+      "review": "body heading absent from parsed TOC; manual reconciliation required"
+    },
+    {
+      "rule_id": "HV2026-5.4.3-P5-9",
+      "printed_section": "5.4.3",
+      "title": "Dipping Sonars",
+      "printed_page": "5-9",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          48
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-5.4.4-P5-9",
+      "printed_section": "5.4.4",
+      "title": "Sonobuoys",
+      "printed_page": "5-9",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          48
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-5.4.5-P5-9",
+      "printed_section": "5.4.5",
+      "title": "Acoustic Intercept Receivers",
+      "printed_page": "5-9",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          48
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-5.4.6-P5-13",
+      "printed_section": "5.4.6",
+      "title": "Sonar Detection",
+      "printed_page": "5-13",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          52
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-5.4.6.1-P5-13",
+      "printed_section": "5.4.6.1",
+      "title": "Active Sonar Detection",
+      "printed_page": "5-13",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          52
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null,
+      "latest_partial_audit": {
+        "report": "docs/all-rules-after-following-20261023.md",
+        "status": "partial_subsets_only",
+        "note": "Index row is not promoted to whole-mechanism tested. See chapter audit and open questions R-052 through R-056; R-054 remains open."
+      }
+    },
+    {
+      "rule_id": "HV2026-5.4.6.2-P5-14",
+      "printed_section": "5.4.6.2",
+      "title": "Passive Sonar Detection",
+      "printed_page": "5-14",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          53
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-5.4.6.3-P5-14",
+      "printed_section": "5.4.6.3",
+      "title": "Sonobuoy Detection",
+      "printed_page": "5-14",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          53
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-5.4.6.4-P5-15",
+      "printed_section": "5.4.6.4",
+      "title": "Detecting Aircraft with Passive Sonars",
+      "printed_page": "5-15",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          54
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-5.4.6.5-P5-15",
+      "printed_section": "5.4.6.5",
+      "title": "Special Passive Detection Conditions",
+      "printed_page": "5-15",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          54
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-5.4.6.6-P5-16",
+      "printed_section": "5.4.6.6",
+      "title": "Contact Classification",
+      "printed_page": "5-16",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          55
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-5.4.7-P5-17",
+      "printed_section": "5.4.7",
+      "title": "Acoustic Propagation Paths",
+      "printed_page": "5-17",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          56
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-5.4.7.1-P5-17",
+      "printed_section": "5.4.7.1",
+      "title": "Direct Path and The Layer",
+      "printed_page": "5-17",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          56
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-5.4.7.2-P5-18",
+      "printed_section": "5.4.7.2",
+      "title": "Bottom Bounce",
+      "printed_page": "5-18",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          57
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-5.4.7.3-P5-19",
+      "printed_section": "5.4.7.3",
+      "title": "Convergence Zones",
+      "printed_page": "5-19",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          58
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-5.4.8-P5-20",
+      "printed_section": "5.4.8",
+      "title": "Alerted Operator and Holding Contact",
+      "printed_page": "5-20",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          59
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-5.5-P5-20",
+      "printed_section": "5.5",
+      "title": "Electro-Optical/Infrared Sensors",
+      "printed_page": "5-20",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          59
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-5.5.1-P5-20",
+      "printed_section": "5.5.1",
+      "title": "Shipboard Scanning IR Sensors",
+      "printed_page": "5-20",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          59
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-5.5.2-P5-20",
+      "printed_section": "5.5.2",
+      "title": "Airborne Forward-Looking Infrared (FLIR)",
+      "printed_page": "5-20",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          59
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-5.5.3-P5-20",
+      "printed_section": "5.5.3",
+      "title": "Infrared Search and Track (IRST)",
+      "printed_page": "5-20",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          59
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-5.5.4-P5-20",
+      "printed_section": "5.5.4",
+      "title": "TV and Low Light-Level TV (LLLTV)",
+      "printed_page": "5-20",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          59
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-5.6-P5-20",
+      "printed_section": "5.6",
+      "title": "Laser Sensors",
+      "printed_page": "5-20",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          59
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-5.6.1-P5-21",
+      "printed_section": "5.6.1",
+      "title": "Laser Rangefinders",
+      "printed_page": "5-21",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          60
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-5.6.2-P5-21",
+      "printed_section": "5.6.2",
+      "title": "Laser Designators",
+      "printed_page": "5-21",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          60
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-5.6.3-P5-21",
+      "printed_section": "5.6.3",
+      "title": "Laser Warning Systems",
+      "printed_page": "5-21",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          60
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-5.6.4-P5-21",
+      "printed_section": "5.6.4",
+      "title": "Laser Spot Trackers (LST)",
+      "printed_page": "5-21",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          60
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-5.6.5-BODY-P060",
+      "printed_section": "5.6.5",
+      "title": "Laser Ranger and Marked Target Seeker",
+      "printed_page": "5-21",
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          60
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null,
+      "review": "body heading absent from parsed TOC; manual reconciliation required"
+    },
+    {
+      "rule_id": "HV2026-5.7-P5-21",
+      "printed_section": "5.7",
+      "title": "Non-acoustic Sensors",
+      "printed_page": "5-21",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          60
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-5.7.1-P5-21",
+      "printed_section": "5.7.1",
+      "title": "Magnetic Anomaly Detectors (MAD)",
+      "printed_page": "5-21",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          60
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-5.7.2-P5-21",
+      "printed_section": "5.7.2",
+      "title": "Wide-Area MAD Search",
+      "printed_page": "5-21",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          60
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-5.7.3-P5-22",
+      "printed_section": "5.7.3",
+      "title": "Wake Sensors",
+      "printed_page": "5-22",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          61
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-5.7.4-P5-22",
+      "printed_section": "5.7.4",
+      "title": "Less-than-Successful Non-Acoustic Sensors",
+      "printed_page": "5-22",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          61
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-5.8-P5-23",
+      "printed_section": "5.8",
+      "title": "Visual Detection",
+      "printed_page": "5-23",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          62
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-5.8.1-BODY-P062",
+      "printed_section": "5.8.1",
+      "title": "Making Visual Detections",
+      "printed_page": "5-23",
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          62
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null,
+      "review": "body heading absent from parsed TOC; manual reconciliation required"
+    },
+    {
+      "rule_id": "HV2026-5.8.2-P5-23",
+      "printed_section": "5.8.2",
+      "title": "Sighting from Ships",
+      "printed_page": "5-23",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          62
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-5.8.3-P5-23",
+      "printed_section": "5.8.3",
+      "title": "Sighting from Aircraft to the Surface",
+      "printed_page": "5-23",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          62
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-5.8.4-P5-23",
+      "printed_section": "5.8.4",
+      "title": "Sighting Aircraft",
+      "printed_page": "5-23",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          62
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-5.8.5-P5-23",
+      "printed_section": "5.8.5",
+      "title": "Periscopes",
+      "printed_page": "5-23",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          62
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-5.8.6-P5-23",
+      "printed_section": "5.8.6",
+      "title": "Spotting Targets on Land",
+      "printed_page": "5-23",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          62
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-5.8.7-P5-27",
+      "printed_section": "5.8.7",
+      "title": "Environmental Effects",
+      "printed_page": "5-27",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          66
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-5.8.7.1-P5-27",
+      "printed_section": "5.8.7.1",
+      "title": "Clouds",
+      "printed_page": "5-27",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          66
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-5.8.7.2-BODY-P067",
+      "printed_section": "5.8.7.2",
+      "title": "Squalls",
+      "printed_page": "5-28",
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          67
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null,
+      "review": "body heading absent from parsed TOC; manual reconciliation required"
+    },
+    {
+      "rule_id": "HV2026-5.8.7.3-P5-28",
+      "printed_section": "5.8.7.3",
+      "title": "Squalls",
+      "printed_page": "5-28",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01"
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-5.8.8-P5-28",
+      "printed_section": "5.8.8",
+      "title": "Firing Starshells",
+      "printed_page": "5-28",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          67
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-5.8.9-P5-28",
+      "printed_section": "5.8.9",
+      "title": "Identifying Visual Contacts (optional rule)",
+      "printed_page": "5-28",
+      "toc_pdf_page": 8,
+      "optional": true,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          67
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-5.8.10-P5-29",
+      "printed_section": "5.8.10",
+      "title": "Sighting in Intermediate Turns (optional rule)",
+      "printed_page": "5-29",
+      "toc_pdf_page": 8,
+      "optional": true,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          68
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-5.8.11-P5-29",
+      "printed_section": "5.8.11",
+      "title": "Visual Signaling",
+      "printed_page": "5-29",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          68
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-5.8.12-P5-29",
+      "printed_section": "5.8.12",
+      "title": "Stack Smoke",
+      "printed_page": "5-29",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          68
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-6.1-P6-1",
+      "printed_section": "6.1",
+      "title": "Combat Systems",
+      "printed_page": "6-1",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          69
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-6.2-P6-1",
+      "printed_section": "6.2",
+      "title": "Weapons Directors",
+      "printed_page": "6-1",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          69
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-6.2.1-P6-1",
+      "printed_section": "6.2.1",
+      "title": "Missile Fire Control",
+      "printed_page": "6-1",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          69
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-6.2.2-P6-1",
+      "printed_section": "6.2.2",
+      "title": "Gunfire Directors",
+      "printed_page": "6-1",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          69
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-6.2.3-P6-1",
+      "printed_section": "6.2.3",
+      "title": "Local Control",
+      "printed_page": "6-1",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          69
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-6.3-P6-2",
+      "printed_section": "6.3",
+      "title": "Fire Control Solutions",
+      "printed_page": "6-2",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          70
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-6.3.1-P6-2",
+      "printed_section": "6.3.1",
+      "title": "Fire Control Solution Quality",
+      "printed_page": "6-2",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          70
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-6.3.2-P6-2",
+      "printed_section": "6.3.2",
+      "title": "Radio-frequency (RF) Fire Control Solutions",
+      "printed_page": "6-2",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          70
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-6.3.3-P6-5",
+      "printed_section": "6.3.3",
+      "title": "Passive RF Cross-Fix",
+      "printed_page": "6-5",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          73
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-6.3.4-P6-5",
+      "printed_section": "6.3.4",
+      "title": "Acoustic Sensor Fire Control Solutions",
+      "printed_page": "6-5",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          73
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-6.3.5-P6-5",
+      "printed_section": "6.3.5",
+      "title": "Visual Sensor Fire Control Solutions",
+      "printed_page": "6-5",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          73
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-6.3.6-P6-5",
+      "printed_section": "6.3.6",
+      "title": "Bearing-Only Launch",
+      "printed_page": "6-5",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          73
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-6.3.7-P6-6",
+      "printed_section": "6.3.7",
+      "title": "ASCM & Torpedo Firing Orders",
+      "printed_page": "6-6",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          74
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-6.3.8-P6-6",
+      "printed_section": "6.3.8",
+      "title": "Rolling for Weapon Placement",
+      "printed_page": "6-6",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          74
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-6.3.9-P6-6",
+      "printed_section": "6.3.9",
+      "title": "Tactical Data Links",
+      "printed_page": "6-6",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          74
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-6.3.10-BODY-P075",
+      "printed_section": "6.3.10",
+      "title": "Sharing Contact Information Without TDLs",
+      "printed_page": "6-7",
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          75
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null,
+      "review": "body heading absent from parsed TOC; manual reconciliation required"
+    },
+    {
+      "rule_id": "HV2026-6.4-P6-7",
+      "printed_section": "6.4",
+      "title": "Submarine Fire Control Systems",
+      "printed_page": "6-7",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          75
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-7.1-P7-1",
+      "printed_section": "7.1",
+      "title": "Rates of Fire",
+      "printed_page": "7-1",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          76
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-7.2-P7-1",
+      "printed_section": "7.2",
+      "title": "Shipboard Weapons Firing Arcs",
+      "printed_page": "7-1",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          76
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-7.3-P7-1",
+      "printed_section": "7.3",
+      "title": "Weapons Danger Space",
+      "printed_page": "7-1",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          76
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-7.4-P7-1",
+      "printed_section": "7.4",
+      "title": "Guided Missiles",
+      "printed_page": "7-1",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          76
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-7.4.1-P7-1",
+      "printed_section": "7.4.1",
+      "title": "Directed Guidance Methods",
+      "printed_page": "7-1",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          76
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-7.4.2-P7-1",
+      "printed_section": "7.4.2",
+      "title": "Passive Guidance Methods",
+      "printed_page": "7-1",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          76
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-7.4.3-P7-2",
+      "printed_section": "7.4.3",
+      "title": "Navigational Guidance",
+      "printed_page": "7-2",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          77
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-7.4.4-P7-2",
+      "printed_section": "7.4.4",
+      "title": "Active Radar Guidance",
+      "printed_page": "7-2",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          77
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-7.4.5-P7-2",
+      "printed_section": "7.4.5",
+      "title": "Midcourse Guidance",
+      "printed_page": "7-2",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          77
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-7.4.6-P7-2",
+      "printed_section": "7.4.6",
+      "title": "Guidance Links",
+      "printed_page": "7-2",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          77
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-7.4.7-P7-3",
+      "printed_section": "7.4.7",
+      "title": "Terminal Guidance",
+      "printed_page": "7-3",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          78
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-7.4.8-P7-3",
+      "printed_section": "7.4.8",
+      "title": "Special Guidance Features",
+      "printed_page": "7-3",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          78
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-7.5-P7-4",
+      "printed_section": "7.5",
+      "title": "Torpedo Guidance",
+      "printed_page": "7-4",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          79
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-7.5.1-P7-4",
+      "printed_section": "7.5.1",
+      "title": "Torpedo Seeker Generations",
+      "printed_page": "7-4",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          79
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-7.5.2-P7-4",
+      "printed_section": "7.5.2",
+      "title": "Tube-Launched Torpedoes",
+      "printed_page": "7-4",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          79
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-7.5.3-P7-4",
+      "printed_section": "7.5.3",
+      "title": "Air-Dropped and Standoff Torpedoes",
+      "printed_page": "7-4",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          79
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null,
+      "latest_partial_audit": {
+        "report": "docs/all-rules-search-navigation-20261024.md",
+        "status": "partial_subsets_only",
+        "note": "Exact tested subset only; row/index not promoted to whole mechanism. R054/R062/R063/R064 and chapter ledger retain unresolved branches."
+      }
+    },
+    {
+      "rule_id": "HV2026-7.5.4-P7-4",
+      "printed_section": "7.5.4",
+      "title": "Wire-Guided Torpedoes",
+      "printed_page": "7-4",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          79
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null,
+      "latest_partial_audit": {
+        "report": "docs/all-rules-search-navigation-20261024.md",
+        "status": "partial_subsets_only",
+        "note": "Exact tested subset only; row/index not promoted to whole mechanism. R054/R062/R063/R064 and chapter ledger retain unresolved branches."
+      }
+    },
+    {
+      "rule_id": "HV2026-7.5.5-P7-5",
+      "printed_section": "7.5.5",
+      "title": "Wake-Homing Torpedoes",
+      "printed_page": "7-5",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          80
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-7.5.6-P7-5",
+      "printed_section": "7.5.6",
+      "title": "Acquisition Ranges",
+      "printed_page": "7-5",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          80
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-7.5.7-P7-5",
+      "printed_section": "7.5.7",
+      "title": "Dual-Speed Torpedoes",
+      "printed_page": "7-5",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          32,
+          80
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-7.5.8-P7-5",
+      "printed_section": "7.5.8",
+      "title": "Quiet Torpedoes",
+      "printed_page": "7-5",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          80
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-7.6-P7-5",
+      "printed_section": "7.6",
+      "title": "Effects of Weather on Shipboard Weapons",
+      "printed_page": "7-5",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          80
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-8.1-P8-1",
+      "printed_section": "8.1",
+      "title": "Antiair Warfare (AAW)",
+      "printed_page": "8-1",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          81
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-8.1.1-P8-1",
+      "printed_section": "8.1.1",
+      "title": "Radar-Guided Surface-to-Air Missiles",
+      "printed_page": "8-1",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          81
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-8.1.2-P8-3",
+      "printed_section": "8.1.2",
+      "title": "Visually-Aimed Surface-to-Air Missiles",
+      "printed_page": "8-3",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          83
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-8.1.3-P8-3",
+      "printed_section": "8.1.3",
+      "title": "Air Defense Gunnery",
+      "printed_page": "8-3",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          83
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-8.1.4-P8-4",
+      "printed_section": "8.1.4",
+      "title": "Close-in Weapons Systems",
+      "printed_page": "8-4",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          84
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-8.1.5-P8-4",
+      "printed_section": "8.1.5",
+      "title": "The Three-Second Rule",
+      "printed_page": "8-4",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          84,
+          130
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-8.1.6-P8-10",
+      "printed_section": "8.1.6",
+      "title": "Receding Air Targets",
+      "printed_page": "8-10",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          90
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-8.1.7-P8-10",
+      "printed_section": "8.1.7",
+      "title": "Small Arms Fire at Aircraft",
+      "printed_page": "8-10",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          90
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-8.1.8-P8-10",
+      "printed_section": "8.1.8",
+      "title": "Antiair Firing Restriction",
+      "printed_page": "8-10",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          90
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-8.1.9-P8-10",
+      "printed_section": "8.1.9",
+      "title": "Laser Dazzlers",
+      "printed_page": "8-10",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          90
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-8.1.10-P8-10",
+      "printed_section": "8.1.10",
+      "title": "Point Defense Band Engagements",
+      "printed_page": "8-10",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          90
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-8.2-P8-10",
+      "printed_section": "8.2",
+      "title": "Ballistic Missile Defense",
+      "printed_page": "8-10",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          74,
+          90
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-8.3-P8-11",
+      "printed_section": "8.3",
+      "title": "Surface Gunnery",
+      "printed_page": "8-11",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          91,
+          117
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-8.3.1-P8-11",
+      "printed_section": "8.3.1",
+      "title": "Overconcentration",
+      "printed_page": "8-11",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          91
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-8.3.2-P8-13",
+      "printed_section": "8.3.2",
+      "title": "Point-Blank Fire",
+      "printed_page": "8-13",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          93
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-8.3.3-P8-13",
+      "printed_section": "8.3.3",
+      "title": "Line of Fire Restrictions",
+      "printed_page": "8-13",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          93
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-8.3.4-P8-13",
+      "printed_section": "8.3.4",
+      "title": "Attacks by Small Craft",
+      "printed_page": "8-13",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          93
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-8.3.5-P8-13",
+      "printed_section": "8.3.5",
+      "title": "Artillery Fire Against Ships",
+      "printed_page": "8-13",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          93
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-8.3.5.2-P8-20",
+      "printed_section": "8.3.5.2",
+      "title": "Multiple attacks",
+      "printed_page": "8-20",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          100
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-8.3.6-P8-13",
+      "printed_section": "8.3.6",
+      "title": "Tank and Antitank Fire Against Ships",
+      "printed_page": "8-13",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          93
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-8.3.7-P8-14",
+      "printed_section": "8.3.7",
+      "title": "Infantry Fire Against Ships",
+      "printed_page": "8-14",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          94
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-8.4-P8-14",
+      "printed_section": "8.4",
+      "title": "Antiship Missiles",
+      "printed_page": "8-14",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          94
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-8.4.1-P8-14",
+      "printed_section": "8.4.1",
+      "title": "Antiship Missile Attacks",
+      "printed_page": "8-14",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          94
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-8.4.2-P8-14",
+      "printed_section": "8.4.2",
+      "title": "Bearing-Only Launch (BOL) Attacks",
+      "printed_page": "8-14",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          94
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-8.4.3-P8-14",
+      "printed_section": "8.4.3",
+      "title": "Ballistic Missile Attacks Against Ships",
+      "printed_page": "8-14",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          94
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-8.5-P8-18",
+      "printed_section": "8.5",
+      "title": "Surface Ship Attacks on Subs (ASW)",
+      "printed_page": "8-18",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          98
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-8.5.1-P8-18",
+      "printed_section": "8.5.1",
+      "title": "Surface-Launched Torpedoes",
+      "printed_page": "8-18",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          98
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-8.5.2-P8-18",
+      "printed_section": "8.5.2",
+      "title": "ASW Standoff Weapons",
+      "printed_page": "8-18",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          98
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-8.5.3-P8-19",
+      "printed_section": "8.5.3",
+      "title": "ASW Projectors",
+      "printed_page": "8-19",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          99
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-8.5.3.1-P8-20",
+      "printed_section": "8.5.3.1",
+      "title": "Attack sonars",
+      "printed_page": "8-20",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          100
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-8.5.3.3-P8-20",
+      "printed_section": "8.5.3.3",
+      "title": "The Special Hedgehog Rule",
+      "printed_page": "8-20",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          100
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-8.5.4-P8-20",
+      "printed_section": "8.5.4",
+      "title": "Depth Charge Attacks",
+      "printed_page": "8-20",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          100
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-8.5.4.1-P8-20",
+      "printed_section": "8.5.4.1",
+      "title": "Ship DC Patterns",
+      "printed_page": "8-20",
+      "toc_pdf_page": 8,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          100
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-8.5.4.2-P8-20",
+      "printed_section": "8.5.4.2",
+      "title": "Depth Charge Procedure",
+      "printed_page": "8-20",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          100
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-8.5.4.3-P8-21",
+      "printed_section": "8.5.4.3",
+      "title": "Depth Charge Attack Restrictions",
+      "printed_page": "8-21",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          101
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-8.5.4.4-P8-21",
+      "printed_section": "8.5.4.4",
+      "title": "Air-Dropped Depth Charge Attacks",
+      "printed_page": "8-21",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          101
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-9.1-P9-1",
+      "printed_section": "9.1",
+      "title": "Aircraft Maneuver Ratings",
+      "printed_page": "9-1",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          102
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-9.2-P9-1",
+      "printed_section": "9.2",
+      "title": "Aircraft Damage Ratings",
+      "printed_page": "9-1",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          102
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-9.3-P9-1",
+      "printed_section": "9.3",
+      "title": "Air Combat Restrictions",
+      "printed_page": "9-1",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          102
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-9.4-P9-1",
+      "printed_section": "9.4",
+      "title": "Dogfighting",
+      "printed_page": "9-1",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          102
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-9.4.1-P9-1",
+      "printed_section": "9.4.1",
+      "title": "Gaining Position",
+      "printed_page": "9-1",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          102
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-9.4.2-P9-2",
+      "printed_section": "9.4.2",
+      "title": "Gun Attacks",
+      "printed_page": "9-2",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          103
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-9.4.3-P9-2",
+      "printed_section": "9.4.3",
+      "title": "Defensive Guns",
+      "printed_page": "9-2",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          103
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-9.4.4-P9-2",
+      "printed_section": "9.4.4",
+      "title": "Defensive Maneuvering",
+      "printed_page": "9-2",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          103
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-9.4.5-P9-2",
+      "printed_section": "9.4.5",
+      "title": "Escaping a Dogfight",
+      "printed_page": "9-2",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          103
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-9.4.6-P9-2",
+      "printed_section": "9.4.6",
+      "title": "Ending a Dogfight",
+      "printed_page": "9-2",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          103
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-9.4.7-P9-2",
+      "printed_section": "9.4.7",
+      "title": "Special Starting Conditions (optional rule)",
+      "printed_page": "9-2",
+      "toc_pdf_page": 9,
+      "optional": true,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          103
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-9.4.8-P9-3",
+      "printed_section": "9.4.8",
+      "title": "Dogfighting in Poor Visibility",
+      "printed_page": "9-3",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          104
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-9.5-P9-3",
+      "printed_section": "9.5",
+      "title": "AAM Attacks",
+      "printed_page": "9-3",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          104
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-9.5.1-P9-4",
+      "printed_section": "9.5.1",
+      "title": "Evading AAMs Outside a Dogfight",
+      "printed_page": "9-4",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          105
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-9.5.2-P9-4",
+      "printed_section": "9.5.2",
+      "title": "Speed Effects on AAM range",
+      "printed_page": "9-4",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          105
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-9.5.3-P9-4",
+      "printed_section": "9.5.3",
+      "title": "Firing AAMs into a Dogfight",
+      "printed_page": "9-4",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          105
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-9.6-P9-4",
+      "printed_section": "9.6",
+      "title": "Air Attacks on Surface Targets",
+      "printed_page": "9-4",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          105
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-9.6.1-P9-4",
+      "printed_section": "9.6.1",
+      "title": "Bombsights",
+      "printed_page": "9-4",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          105
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-9.6.2-P9-4",
+      "printed_section": "9.6.2",
+      "title": "Air Attack Planning",
+      "printed_page": "9-4",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          105
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-9.6.3-P9-4",
+      "printed_section": "9.6.3",
+      "title": "Air Attack Procedure",
+      "printed_page": "9-4",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          105
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-9.6.4-P9-4",
+      "printed_section": "9.6.4",
+      "title": "Types of Bombing Attacks",
+      "printed_page": "9-4",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          105
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-9.6.5-P9-5",
+      "printed_section": "9.6.5",
+      "title": "Resolving Unguided Bomb Attacks",
+      "printed_page": "9-5",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          106
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-9.6.6-P9-5",
+      "printed_section": "9.6.6",
+      "title": "Resolving Cluster Bomb Attacks",
+      "printed_page": "9-5",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          106
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-9.6.7-P9-7",
+      "printed_section": "9.6.7",
+      "title": "Resolving Unguided Rocket Attacks",
+      "printed_page": "9-7",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          108
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-9.6.8-P9-7",
+      "printed_section": "9.6.8",
+      "title": "Resolving Guided Weapon Attacks",
+      "printed_page": "9-7",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          108
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-9.6.9-P9-8",
+      "printed_section": "9.6.9",
+      "title": "Resolving Strafing Attacks",
+      "printed_page": "9-8",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          109
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-9.7-P9-8",
+      "printed_section": "9.7",
+      "title": "Airborne ASW",
+      "printed_page": "9-8",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          109
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-9.7.1-P9-8",
+      "printed_section": "9.7.1",
+      "title": "Air-Dropped Torpedoes",
+      "printed_page": "9-8",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          109
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null,
+      "latest_partial_audit": {
+        "report": "docs/all-rules-search-navigation-20261024.md",
+        "status": "partial_subsets_only",
+        "note": "Exact tested subset only; row/index not promoted to whole mechanism. R054/R062/R063/R064 and chapter ledger retain unresolved branches."
+      }
+    },
+    {
+      "rule_id": "HV2026-9.7.2-P9-8",
+      "printed_section": "9.7.2",
+      "title": "Air-Dropped Conventional Depth Charges",
+      "printed_page": "9-8",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          109
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-10.1-P10-1",
+      "printed_section": "10.1",
+      "title": "Restrictions",
+      "printed_page": "10-1",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          110
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-10.2-P10-1",
+      "printed_section": "10.2",
+      "title": "Sub-Launched Torpedoes",
+      "printed_page": "10-1",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          110
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-10.2.1-P10-1",
+      "printed_section": "10.2.1",
+      "title": "Torpedo Angle Offset",
+      "printed_page": "10-1",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          110
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-10.2.2-P10-1",
+      "printed_section": "10.2.2",
+      "title": "Non-Homing Torpedoes",
+      "printed_page": "10-1",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          110
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-10.2.3-P10-1",
+      "printed_section": "10.2.3",
+      "title": "Resolving Non-Homing Torpedo Attacks",
+      "printed_page": "10-1",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          110
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-10.2.4-P10-4",
+      "printed_section": "10.2.4",
+      "title": "Homing Torpedo Attacks",
+      "printed_page": "10-4",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          113
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null,
+      "latest_partial_audit": {
+        "report": "docs/all-rules-search-navigation-20261024.md",
+        "status": "partial_subsets_only",
+        "note": "Exact tested subset only; row/index not promoted to whole mechanism. R054/R062/R063/R064 and chapter ledger retain unresolved branches."
+      }
+    },
+    {
+      "rule_id": "HV2026-10.2.5-P10-5",
+      "printed_section": "10.2.5",
+      "title": "Resolving Homing Torpedo Attacks",
+      "printed_page": "10-5",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          114
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-10.2.6-P10-5",
+      "printed_section": "10.2.6",
+      "title": "Resolving Wake-Homing Torpedo Attacks",
+      "printed_page": "10-5",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          114
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null,
+      "latest_partial_audit": {
+        "report": "docs/all-rules-after-following-20261023.md",
+        "status": "partial_subsets_only",
+        "note": "Index row is not promoted to whole-mechanism tested. See chapter audit and open questions R-052 through R-056; R-054 remains open."
+      }
+    },
+    {
+      "rule_id": "HV2026-10.2.7-P10-5",
+      "printed_section": "10.2.7",
+      "title": "Homing Torpedo Reattacks",
+      "printed_page": "10-5",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          114
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null,
+      "latest_partial_audit": {
+        "report": "docs/all-rules-search-navigation-20261024.md",
+        "status": "partial_subsets_only",
+        "note": "Exact tested subset only; row/index not promoted to whole mechanism. R054/R062/R063/R064 and chapter ledger retain unresolved branches."
+      }
+    },
+    {
+      "rule_id": "HV2026-10.3-BODY-P115",
+      "printed_section": "10.3",
+      "title": "Submerged-Launch Antiship Missiles & ASW Stand-",
+      "printed_page": "10-6",
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          115
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null,
+      "review": "body heading absent from parsed TOC; manual reconciliation required"
+    },
+    {
+      "rule_id": "HV2026-10.4-P10-6",
+      "printed_section": "10.4",
+      "title": "The Shkval",
+      "printed_page": "10-6",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          115
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-10.5-P10-6",
+      "printed_section": "10.5",
+      "title": "Torpedo Defenses (Hardkill Systems)",
+      "printed_page": "10-6",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          115
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-11.1-P11-1",
+      "printed_section": "11.1",
+      "title": "Damage to Land Targets",
+      "printed_page": "11-1",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          116
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-11.1.1-P11-1",
+      "printed_section": "11.1.1",
+      "title": "Land Target Armor Ratings",
+      "printed_page": "11-1",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          116
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-11.1.2-P11-1",
+      "printed_section": "11.1.2",
+      "title": "Land Target Critical Hits",
+      "printed_page": "11-1",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          116
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-11.2-BODY-P116",
+      "printed_section": "11.2",
+      "title": "Ballistic and Cruise Missile Attacks Against Land Tar-",
+      "printed_page": "11-1",
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          116
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null,
+      "review": "body heading absent from parsed TOC; manual reconciliation required"
+    },
+    {
+      "rule_id": "HV2026-11.3-P11-1",
+      "printed_section": "11.3",
+      "title": "Air Attacks against Land Targets",
+      "printed_page": "11-1",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          116
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-11.4-P11-1",
+      "printed_section": "11.4",
+      "title": "Naval Gunfire Attacks against Land Targets",
+      "printed_page": "11-1",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          116
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-11.5-P11-2",
+      "printed_section": "11.5",
+      "title": "Air Attacks on Airfields",
+      "printed_page": "11-2",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          117
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-11.5.1-P11-2",
+      "printed_section": "11.5.1",
+      "title": "Runway Attacks",
+      "printed_page": "11-2",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          117
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-11.5.2-P11-2",
+      "printed_section": "11.5.2",
+      "title": "General Attacks",
+      "printed_page": "11-2",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          117
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-11.6-P11-2",
+      "printed_section": "11.6",
+      "title": "Naval Bombardment of Airfields",
+      "printed_page": "11-2",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          117
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-11.7-P11-2",
+      "printed_section": "11.7",
+      "title": "Naval Bombardment of Ports",
+      "printed_page": "11-2",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          117
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-12.1-P12-1",
+      "printed_section": "12.1",
+      "title": "Airborne ECM",
+      "printed_page": "12-1",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          119
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-12.2-P12-1",
+      "printed_section": "12.2",
+      "title": "Airborne Chaff Barriers",
+      "printed_page": "12-1",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          119
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-12.3-P12-1",
+      "printed_section": "12.3",
+      "title": "Long-Range Chaff",
+      "printed_page": "12-1",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          119
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-12.4-P12-1",
+      "printed_section": "12.4",
+      "title": "Floating Antiship Missile Decoys",
+      "printed_page": "12-1",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          119
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-12.5-P12-1",
+      "printed_section": "12.5",
+      "title": "Noise Jamming",
+      "printed_page": "12-1",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          119
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-12.6-P12-2",
+      "printed_section": "12.6",
+      "title": "Acoustic Countermeasures",
+      "printed_page": "12-2",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          120
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-12.6.1-P12-2",
+      "printed_section": "12.6.1",
+      "title": "Torpedo Countermeasures",
+      "printed_page": "12-2",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          120
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-12.6.2-P12-2",
+      "printed_section": "12.6.2",
+      "title": "Mobile Submarine Simulators",
+      "printed_page": "12-2",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          120
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-12.7-P12-3",
+      "printed_section": "12.7",
+      "title": "Air-Launched Decoys",
+      "printed_page": "12-3",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          121
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-13.1-P13-1",
+      "printed_section": "13.1",
+      "title": "Mine Types",
+      "printed_page": "13-1",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          122
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-13.2-P13-1",
+      "printed_section": "13.2",
+      "title": "Mine Generations",
+      "printed_page": "13-1",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          122
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-13.3-P13-1",
+      "printed_section": "13.3",
+      "title": "Minefields",
+      "printed_page": "13-1",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          122
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-13.4-P13-1",
+      "printed_section": "13.4",
+      "title": "Designing a Minefield",
+      "printed_page": "13-1",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          122
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-13.4.1-P13-2",
+      "printed_section": "13.4.1",
+      "title": "Mixed Minefields",
+      "printed_page": "13-2",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          123
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-13.5-P13-2",
+      "printed_section": "13.5",
+      "title": "Minefield Attacks",
+      "printed_page": "13-2",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          123
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-13.6-P13-2",
+      "printed_section": "13.6",
+      "title": "Damage from Mines",
+      "printed_page": "13-2",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          123
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-13.7-P13-4",
+      "printed_section": "13.7",
+      "title": "Minelaying",
+      "printed_page": "13-4",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          125
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null,
+      "latest_partial_audit": {
+        "report": "docs/all-rules-after-following-20261023.md",
+        "status": "partial_subsets_only",
+        "note": "Index row is not promoted to whole-mechanism tested. See chapter audit and open questions R-052 through R-056; R-054 remains open."
+      }
+    },
+    {
+      "rule_id": "HV2026-13.8-P13-4",
+      "printed_section": "13.8",
+      "title": "Minesweeping and Minehunting",
+      "printed_page": "13-4",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          125
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-13.8.1-P13-4",
+      "printed_section": "13.8.1",
+      "title": "Types of Sweep Gear",
+      "printed_page": "13-4",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          125
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-13.8.2-P13-5",
+      "printed_section": "13.8.2",
+      "title": "Helicopter Minesweeping",
+      "printed_page": "13-5",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          126
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-13.8.3-P13-5",
+      "printed_section": "13.8.3",
+      "title": "Minehunting",
+      "printed_page": "13-5",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          126
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null,
+      "latest_partial_audit": {
+        "report": "docs/all-rules-after-following-20261023.md",
+        "status": "partial_subsets_only",
+        "note": "Index row is not promoted to whole-mechanism tested. See chapter audit and open questions R-052 through R-056; R-054 remains open."
+      }
+    },
+    {
+      "rule_id": "HV2026-13.8.4-P13-5",
+      "printed_section": "13.8.4",
+      "title": "Effects of Minesweeping and Minehunting",
+      "printed_page": "13-5",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          126
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-14.1-P14-1",
+      "printed_section": "14.1",
+      "title": "Applying Damage",
+      "printed_page": "14-1",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          127
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-14.1.1-P14-1",
+      "printed_section": "14.1.1",
+      "title": "Speed Reduction",
+      "printed_page": "14-1",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          127
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-14.1.2-P14-1",
+      "printed_section": "14.1.2",
+      "title": "Ship & Sub Critical Hits",
+      "printed_page": "14-1",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          127
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-14.1.3-P14-3",
+      "printed_section": "14.1.3",
+      "title": "Critical Hits from Light Guns",
+      "printed_page": "14-3",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          129
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-14.1.4-P14-3",
+      "printed_section": "14.1.4",
+      "title": "Airburst Damage",
+      "printed_page": "14-3",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          129
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-14.1.5-P14-4",
+      "printed_section": "14.1.5",
+      "title": "Missile Impacts",
+      "printed_page": "14-4",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          130
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-14.1.6-P14-4",
+      "printed_section": "14.1.6",
+      "title": "Effects of Armor",
+      "printed_page": "14-4",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          130
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-14.1.7-P14-4",
+      "printed_section": "14.1.7",
+      "title": "Armor and Underwater Attacks",
+      "printed_page": "14-4",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          130
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-14.1.8-P14-6",
+      "printed_section": "14.1.8",
+      "title": "Nuclear Weapons Effects",
+      "printed_page": "14-6",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          132
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-14.2-P14-6",
+      "printed_section": "14.2",
+      "title": "Special Damage Effects",
+      "printed_page": "14-6",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          132
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-14.2.1-P14-6",
+      "printed_section": "14.2.1",
+      "title": "Massive Damage",
+      "printed_page": "14-6",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          132
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-14.2.2-P14-6",
+      "printed_section": "14.2.2",
+      "title": "Damage to Reduced-Signature Ships",
+      "printed_page": "14-6",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          132
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-14.2.3-P14-6",
+      "printed_section": "14.2.3",
+      "title": "Damage and Acoustic Signature",
+      "printed_page": "14-6",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          132
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-14.2.4-P14-6",
+      "printed_section": "14.2.4",
+      "title": "Firing at Beached or Grounded Craft",
+      "printed_page": "14-6",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          132
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-14.2.5-BODY-P132",
+      "printed_section": "14.2.5",
+      "title": "Transferring Crew from One Small Craft to An-",
+      "printed_page": "14-6",
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          132
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null,
+      "review": "body heading absent from parsed TOC; manual reconciliation required"
+    },
+    {
+      "rule_id": "HV2026-14.3-P14-7",
+      "printed_section": "14.3",
+      "title": "Sinking",
+      "printed_page": "14-7",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          133
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-14.4-P14-7",
+      "printed_section": "14.4",
+      "title": "Fire & Flooding Critical Hits",
+      "printed_page": "14-7",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          133
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-14.5-P14-8",
+      "printed_section": "14.5",
+      "title": "Effects of Other Critical Hits",
+      "printed_page": "14-8",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          134
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-14.6-P14-10",
+      "printed_section": "14.6",
+      "title": "Repairs",
+      "printed_page": "14-10",
+      "toc_pdf_page": 9,
+      "optional": false,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          136
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-14.7-P14-10",
+      "printed_section": "14.7",
+      "title": "Equipment Serviceability (optional rule)",
+      "printed_page": "14-10",
+      "toc_pdf_page": 9,
+      "optional": true,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          136
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-14.8-P14-10",
+      "printed_section": "14.8",
+      "title": "Search and Rescue (optional rule)",
+      "printed_page": "14-10",
+      "toc_pdf_page": 9,
+      "optional": true,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          136
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "rule_id": "HV2026-14.9-P14-11",
+      "printed_section": "14.9",
+      "title": "Aircraft Damage Resolution (optional rule)",
+      "printed_page": "14-11",
+      "toc_pdf_page": 9,
+      "optional": true,
+      "status": "indexed",
+      "source": {
+        "pdf": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "body_pdf_pages": [
+          137
+        ]
+      },
+      "data": null,
+      "execution": null,
+      "tests": null
+    }
+  ],
+  "review_required": [
+    "TOC uses8.3.5.2 under8.5.3; preserve source ID plus printed-page disambiguation",
+    "Wrapped TOC titles and body-only subsections still require reconciliation; this is a seed index, not a full source audit"
+  ],
+  "table_index": [
+    {
+      "id": "HV2026-TABLE-1c4634df5277",
+      "title": "AAW Range Bands table",
+      "printed_page": "8-4",
+      "index_pdf_page": 10,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-d642140ede4d",
+      "title": "Acoustic Fire Control Solution Tables",
+      "printed_page": "6-4",
+      "index_pdf_page": 10,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-88b2a51b7620",
+      "title": "Acoustic Layer Effects table",
+      "printed_page": "5-18",
+      "index_pdf_page": 10,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-2bbd62d3bb93",
+      "title": "Air-to-Air/Surface-to-Air Visibility table",
+      "printed_page": "5-25",
+      "index_pdf_page": 10,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-508e4dab1936",
+      "title": "Air-to-Surface Visibility table",
+      "printed_page": "5-25",
+      "index_pdf_page": 10,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-6dcdf78d4971",
+      "title": "Aircraft Gun Attack Table",
+      "printed_page": "9-3",
+      "index_pdf_page": 10,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-651828d36622",
+      "title": "Aircraft Ready Times table",
+      "printed_page": "4-4",
+      "index_pdf_page": 10,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-cb6a10c963b0",
+      "title": "Altitude Bands table",
+      "printed_page": "4-3",
+      "index_pdf_page": 10,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-7dd61e823094",
+      "title": "Altitude Changes table",
+      "printed_page": "4-3",
+      "index_pdf_page": 10,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-b775c6445ada",
+      "title": "Antiair Gun Hit Chance table",
+      "printed_page": "8-9",
+      "index_pdf_page": 10,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-7820a4850fc3",
+      "title": "Antiair Gun Modifiers to AA Strength table",
+      "printed_page": "8-9",
+      "index_pdf_page": 10,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-17261be13b89",
+      "title": "Antiship Missile Attack Table",
+      "printed_page": "8-15",
+      "index_pdf_page": 10,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-acf29038bd1a",
+      "title": "Antiship Missile Seeker Acquisition Ranges table",
+      "printed_page": "7-3",
+      "index_pdf_page": 10,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-497ed58e3c76",
+      "title": "ASBM Attack Table",
+      "printed_page": "8-16",
+      "index_pdf_page": 10,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-0dfba822f3ea",
+      "title": "ASW Projectile Contact Hit Hull Penetration table",
+      "printed_page": "8-19",
+      "index_pdf_page": 10,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-b67fe640120b",
+      "title": "ASW Projector and DC Modifiers table",
+      "printed_page": "8-18",
+      "index_pdf_page": 10,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-f2ff72c169fe",
+      "title": "ASW Standoff Weapon Placement Modifiers table",
+      "printed_page": "8-18",
+      "index_pdf_page": 10,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-b13f12f25e8b",
+      "title": "Ballistic & Land Attack Cruise Missile Attack Table",
+      "printed_page": "11-3",
+      "index_pdf_page": 10,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-43b4446b086e",
+      "title": "Ballistic Missile Random Lock-On Chance table",
+      "printed_page": "8-14",
+      "index_pdf_page": 10,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-e9e98101e402",
+      "title": "Battery Charge Rate table",
+      "printed_page": "3-7",
+      "index_pdf_page": 10,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-61c4bce49573",
+      "title": "Battery Discharge Rates table",
+      "printed_page": "3-7",
+      "index_pdf_page": 10,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-2d0a957a5e4b",
+      "title": "Bottom Bounce Depth/Range table",
+      "printed_page": "5-18",
+      "index_pdf_page": 10,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-efca1b8348c2",
+      "title": "Breakdown Repair Chance table",
+      "printed_page": "14-10",
+      "index_pdf_page": 10,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-eebb4c666205",
+      "title": "Cargo Damage table",
+      "printed_page": "14-3",
+      "index_pdf_page": 10,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-0a20a760ebee",
+      "title": "Cavitation Speeds table",
+      "printed_page": "5-15",
+      "index_pdf_page": 10,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-64cb710f0057",
+      "title": "Chance of Surprise table (Air Combat)",
+      "printed_page": "9-2",
+      "index_pdf_page": 10,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-dce04b3f0431",
+      "title": "Cluster Munitions Damage table",
+      "printed_page": "9-5",
+      "index_pdf_page": 10,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-e86d3484f2fb",
+      "title": "Cluster Munitions Hit Chance Modifiers table",
+      "printed_page": "9-5",
+      "index_pdf_page": 10,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-a8e46a9caea1",
+      "title": "Clutter Effects on Range table",
+      "printed_page": "5-5",
+      "index_pdf_page": 10,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-5d9919669048",
+      "title": "Clutter Resistance table",
+      "printed_page": "5-5",
+      "index_pdf_page": 10,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-b012e3fe4455",
+      "title": "Combat System Reaction Time table",
+      "printed_page": "8-4",
+      "index_pdf_page": 10,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-344730d24fc4",
+      "title": "Combat System Reaction table",
+      "printed_page": "8-4",
+      "index_pdf_page": 10,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-b1dc41cd80b4",
+      "title": "Critical Hit Damage Ratios table",
+      "printed_page": "14-3",
+      "index_pdf_page": 11,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-c0097372a548",
+      "title": "Critical Hit Table",
+      "printed_page": "14-2",
+      "index_pdf_page": 11,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-54f3f0f85a05",
+      "title": "Dogfight Position Chance table",
+      "printed_page": "9-1",
+      "index_pdf_page": 11,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-d5586ca354b7",
+      "title": "Evaporative Duct Height table",
+      "printed_page": "5-5",
+      "index_pdf_page": 11,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-b6bde814e7c9",
+      "title": "Field Artillery Hit Chances table",
+      "printed_page": "8-13",
+      "index_pdf_page": 11,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-36c3bd7847ff",
+      "title": "Fire and Flooding Reduction table",
+      "printed_page": "14-7",
+      "index_pdf_page": 11,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-489b48b37ca0",
+      "title": "Generic Land Targets table",
+      "printed_page": "11-3",
+      "index_pdf_page": 11,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-ef3652daed1d",
+      "title": "GP Bomb Airburst Damage table",
+      "printed_page": "14-4",
+      "index_pdf_page": 11,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-83e85be171ae",
+      "title": "Grounding Chances table",
+      "printed_page": "3-10",
+      "index_pdf_page": 11,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-8c004f36a562",
+      "title": "Light & Heavy Machine Guns table",
+      "printed_page": "8-12",
+      "index_pdf_page": 11,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-5a5b1503d096",
+      "title": "RPGs from Small Craft table",
+      "printed_page": "8-12",
+      "index_pdf_page": 11,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-0e3b544428c0",
+      "title": "Homing Torpedo Attack Table",
+      "printed_page": "10-5",
+      "index_pdf_page": 11,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-0921dabe5ce8",
+      "title": "Impulse Breakdown Table",
+      "printed_page": "3-4",
+      "index_pdf_page": 11,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-a333b9319d10",
+      "title": "Influence Minesweeping Reduction table",
+      "printed_page": "13-5",
+      "index_pdf_page": 11,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-039c1b28d9df",
+      "title": "Infrared Sensor Ranges table",
+      "printed_page": "5-20",
+      "index_pdf_page": 11,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-919b1dce9e5f",
+      "title": "Land Sighting Visibility table",
+      "printed_page": "5-25",
+      "index_pdf_page": 11,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-cb10012ddabc",
+      "title": "Land/Launch Sea State table",
+      "printed_page": "4-4",
+      "index_pdf_page": 12,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-062a18f27a52",
+      "title": "Light Weapons Critical Hit table",
+      "printed_page": "14-3",
+      "index_pdf_page": 12,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-a0114bd12a0e",
+      "title": "MAD Detection Modifiers table",
+      "printed_page": "5-21",
+      "index_pdf_page": 12,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-300355671ab5",
+      "title": "Mechanical Minesweeping Reduction table",
+      "printed_page": "13-5",
+      "index_pdf_page": 12,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-2ff736637e1e",
+      "title": "Mine Attack Table",
+      "printed_page": "13-3",
+      "index_pdf_page": 12,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-26f28b72bb29",
+      "title": "Noise Jamming Arcs table",
+      "printed_page": "12-2",
+      "index_pdf_page": 12,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-0e699d5ef0ef",
+      "title": "Non-Homing Torpedo Attack Tables",
+      "printed_page": "10-2,3",
+      "index_pdf_page": 12,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-5e70719989cc",
+      "title": "Nuclear Weapons Effects Table",
+      "printed_page": "14-5",
+      "index_pdf_page": 12,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-81d7522a81bc",
+      "title": "Passive Convergence Zone Capability table",
+      "printed_page": "5-18",
+      "index_pdf_page": 12,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-69889a5f146b",
+      "title": "Passive Convergence Zone Speed Modifiers table",
+      "printed_page": "5-19",
+      "index_pdf_page": 12,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-179247fdb2eb",
+      "title": "Passive Sonar Classification Chance table",
+      "printed_page": "5-16",
+      "index_pdf_page": 12,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-d2503bbfeb10",
+      "title": "Passive Sonar Detection Modifiers table",
+      "printed_page": "5-10",
+      "index_pdf_page": 12,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-d413b8345a37",
+      "title": "Periscope Visual Detection table",
+      "printed_page": "5-25",
+      "index_pdf_page": 12,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-e302573cac0d",
+      "title": "Precision-Guided Munitions Attack table",
+      "printed_page": "9-8",
+      "index_pdf_page": 12,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-fd16c001d5f5",
+      "title": "PRH Airburst Damage table",
+      "printed_page": "7-2",
+      "index_pdf_page": 12,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-4bc16e433b2c",
+      "title": "Radar Clutter Values table",
+      "printed_page": "5-5",
+      "index_pdf_page": 12,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-a19675b81db2",
+      "title": "Radar Line of Sight table",
+      "printed_page": "5-3",
+      "index_pdf_page": 12,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-5b14d28b7a65",
+      "title": "RF Fire Control Solution Tables",
+      "printed_page": "6-2",
+      "index_pdf_page": 12,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-fe5b84465a08",
+      "title": "Runway Use Table",
+      "printed_page": "11-2",
+      "index_pdf_page": 12,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-2568ab7175aa",
+      "title": "SAM & AAM Missile Attack tables",
+      "printed_page": "8-8",
+      "index_pdf_page": 12,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-d3ccf99eb119",
+      "title": "SAM Intercept Tables",
+      "printed_page": "8-5,6,7",
+      "index_pdf_page": 12,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-b89127e38c98",
+      "title": "Sample Fuel Offload Values table",
+      "printed_page": "4-5",
+      "index_pdf_page": 12,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-74937f58f1c3",
+      "title": "Sea State/Speed table",
+      "printed_page": "3-3",
+      "index_pdf_page": 12,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-c4fedb675388",
+      "title": "Seeker Random Lock-On Chance table",
+      "printed_page": "7-3",
+      "index_pdf_page": 12,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-48ebdce0d201",
+      "title": "Severity Levels table for Fire & Flooding",
+      "printed_page": "14-7",
+      "index_pdf_page": 13,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-668f9d251f9a",
+      "title": "Ship Speed Change table",
+      "printed_page": "3-2",
+      "index_pdf_page": 13,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-946151024f11",
+      "title": "Ship Turning Distance table",
+      "printed_page": "3-2",
+      "index_pdf_page": 13,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-fc6e58fd440c",
+      "title": "Sighting Conditions table",
+      "printed_page": "5-25",
+      "index_pdf_page": 13,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-c3c2867a75fa",
+      "title": "Sonar Detection Range Probability Modifiers table",
+      "printed_page": "5-11",
+      "index_pdf_page": 13,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-cc7133fe623d",
+      "title": "Sonar Range/Probability table",
+      "printed_page": "5-11,12",
+      "index_pdf_page": 13,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-b053f76f150a",
+      "title": "Wide-Area MAD Search (table)",
+      "printed_page": "5-21",
+      "index_pdf_page": 13,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-47dfc0f270ea",
+      "title": "SSkim/NOE Crash table",
+      "printed_page": "4-2",
+      "index_pdf_page": 13,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-9d719e36c592",
+      "title": "Submarine Depth Bands table",
+      "printed_page": "3-6",
+      "index_pdf_page": 13,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-b28c3d0e10c5",
+      "title": "Submarine Fire Control Systems table",
+      "printed_page": "6-7",
+      "index_pdf_page": 13,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-6f76238478fc",
+      "title": "Submarine Speed/Depth Change table",
+      "printed_page": "3-6",
+      "index_pdf_page": 13,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-4d1ef8695a62",
+      "title": "Submarine Torpedo Angle Offsets table",
+      "printed_page": "10-1",
+      "index_pdf_page": 13,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-bb2ae34f4aa8",
+      "title": "Surface Duct Probability table",
+      "printed_page": "5-6",
+      "index_pdf_page": 13,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-3c3568594a38",
+      "title": "Surface-to-Surface Visibility table",
+      "printed_page": "5-23",
+      "index_pdf_page": 13,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-9124f686a45b",
+      "title": "Torpedo Danger Zones table (optional rule)",
+      "printed_page": "10-4",
+      "index_pdf_page": 13,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-41d7e8f07c4d",
+      "title": "Torpedo Seeker Generations table",
+      "printed_page": "7-4",
+      "index_pdf_page": 13,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-2e44fda85423",
+      "title": "Towed Array Stabilization Time table (optional rule)",
+      "printed_page": "5-9",
+      "index_pdf_page": 13,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-9ca01bef55b1",
+      "title": "Underway Times table",
+      "printed_page": "3-10",
+      "index_pdf_page": 13,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-a19a33807cb2",
+      "title": "Unguided Ordnance Attack Tables",
+      "printed_page": "9-6",
+      "index_pdf_page": 13,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-b1def8c7c3ba",
+      "title": "Unguided Rocket Attack table",
+      "printed_page": "9-7",
+      "index_pdf_page": 13,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-f146bf925d31",
+      "title": "Visual Classification Table (optional rule)",
+      "printed_page": "5-28",
+      "index_pdf_page": 13,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-9fc7d26caa27",
+      "title": "Visual Detection Chance table",
+      "printed_page": "5-24",
+      "index_pdf_page": 13,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-a54246222418",
+      "title": "Visual Signals Range table",
+      "printed_page": "5-25",
+      "index_pdf_page": 13,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    },
+    {
+      "id": "HV2026-TABLE-31665da26dee",
+      "title": "Wake Detection Chance table",
+      "printed_page": "5-21",
+      "index_pdf_page": 13,
+      "status": "indexed",
+      "source": null,
+      "data": null,
+      "execution": null,
+      "tests": null
+    }
+  ],
+  "body_only_headings_added": [
+    "5.4.2.1",
+    "5.6.5",
+    "5.8.1",
+    "5.8.7.2",
+    "6.3.10",
+    "10.3",
+    "11.2",
+    "14.2.5"
+  ],
+  "index_counts": {
+    "section_rows": 324,
+    "table_index_candidates": 96,
+    "optional_section_rows": 6,
+    "body_only_sections": 8
+  },
+  "chapter_audits": [
+    {
+      "path": "docs/aaw-all-mechanisms-20261023.json",
+      "whole_chapter_complete": false
+    },
+    {
+      "path": "docs/aviation-all-mechanisms-20261023.json",
+      "whole_chapter_complete": false
+    },
+    {
+      "path": "docs/detection-all-mechanisms-20261023.json",
+      "whole_chapter_complete": false
+    },
+    {
+      "path": "docs/ew-all-mechanisms-20261023.json",
+      "whole_chapter_complete": false
+    },
+    {
+      "path": "docs/ground-all-mechanisms-20261023.json",
+      "whole_chapter_complete": false
+    },
+    {
+      "path": "docs/mines-all-mechanisms-20261023.json",
+      "whole_chapter_complete": false
+    },
+    {
+      "path": "docs/navigation-all-mechanisms-20261023.json",
+      "whole_chapter_complete": false
+    },
+    {
+      "path": "docs/torpedo-all-mechanisms-20261023.json",
+      "whole_chapter_complete": false
+    },
+    {
+      "path": "docs/torpedo-own-status-20261023.json",
+      "whole_chapter_complete": false
+    },
+    {
+      "path": "docs/antiship-all-mechanisms-20261024.json",
+      "whole_chapter_complete": false
+    },
+    {
+      "path": "docs/torpedo-plan-all-mechanisms-20261024.json",
+      "whole_chapter_complete": false
+    },
+    {
+      "path": "docs/search-navigation-all-mechanisms-20261024.json",
+      "whole_chapter_complete": false
+    },
+    {
+      "path": "docs/submarine-annex-a1-all-mechanisms-20261024.json",
+      "whole_chapter_complete": false
+    }
+  ],
+  "note": "Section/table indexing is not implementation coverage. Independent chapter audits retain partial/helper-only/blocked states; no completion inferred from names or file presence.",
+  "in_progress_profile": "hv2026-rts-v4",
+  "latest_validation": "docs/all-rules-communications-20261025.md",
+  "latest_packet_validation": {
+    "date": "2026-10-25",
+    "status": "tested_declared_subsets_only",
+    "report": "docs/all-rules-communications-20261025.md",
+    "log": "artifacts/rules-communications-runtime-20261025/workspace-final-second.log",
+    "workspace": {
+      "passed": 1394,
+      "failed": 0,
+      "ignored": 5,
+      "nonempty_harnesses": 88,
+      "total_harnesses": 108,
+      "cargo_exit": 0,
+      "input_snapshot": "production-before-final-second.json",
+      "log": "workspace-final-second.log",
+      "whole_book_complete": false
+    },
+    "whole_chapter_complete": false,
+    "whole_book_complete": false
+  },
+  "latest_verified_packet": {
+    "date": "2026-10-25",
+    "status": "tested_declared_subsets_only",
+    "report": "docs/all-rules-communications-20261025.md",
+    "log": "artifacts/rules-communications-runtime-20261025/workspace-final-second.log",
+    "workspace": {
+      "passed": 1394,
+      "failed": 0,
+      "ignored": 5,
+      "nonempty_harnesses": 88,
+      "total_harnesses": 108,
+      "cargo_exit": 0,
+      "input_snapshot": "production-before-final-second.json",
+      "log": "workspace-final-second.log",
+      "whole_book_complete": false
+    },
+    "whole_chapter_complete": false,
+    "whole_book_complete": false
+  },
+  "index_is_not_atomic_mechanism_denominator": true,
+  "previous_packet_validations": [
+    {
+      "date": "2026-10-24",
+      "status": "tested_declared_subsets_only",
+      "report": "docs/all-rules-after-following-20261023.md",
+      "log": "artifacts/rules-after-following-20261023/validation/workspace.log",
+      "workspace": {
+        "targets": 59,
+        "passed": 933,
+        "failed": 0,
+        "ignored": 5
+      },
+      "whole_chapter_complete": false
+    },
+    {
+      "date": "2026-10-24",
+      "status": "tested_declared_subsets_only",
+      "report": "docs/all-rules-closure-20261024.md",
+      "log": "artifacts/rules-closure-20261024/validation/workspace-final.log",
+      "workspace": {
+        "targets": 63,
+        "passed": 1024,
+        "failed": 0,
+        "ignored": 5
+      },
+      "whole_chapter_complete": false
+    },
+    {
+      "date": "2026-10-24",
+      "status": "tested_declared_subsets_only",
+      "report": "docs/all-rules-antiship-20261024.md",
+      "log": "artifacts/rules-antiship-20261024/workspace-final.log",
+      "workspace": {
+        "targets": 67,
+        "passed": 1094,
+        "failed": 0,
+        "ignored": 5
+      },
+      "whole_chapter_complete": false
+    },
+    {
+      "date": "2026-10-24",
+      "status": "tested_declared_subsets_only",
+      "report": "docs/all-rules-torpedo-plan-20261024.md",
+      "log": "artifacts/rules-torpedo-remaining-20261024/workspace-final.log",
+      "workspace": {
+        "targets": 69,
+        "passed": 1153,
+        "failed": 0,
+        "ignored": 5
+      },
+      "whole_chapter_complete": false
+    },
+    {
+      "date": "2026-10-24",
+      "status": "tested_declared_subsets_only",
+      "report": "docs/all-rules-search-navigation-20261024.md",
+      "log": "artifacts/rules-navigation-remaining-20261024/workspace-final.log",
+      "workspace": {
+        "targets": 73,
+        "passed": 1203,
+        "failed": 0,
+        "ignored": 5
+      },
+      "whole_chapter_complete": false
+    },
+    {
+      "date": "2026-10-24",
+      "status": "tested_declared_subsets_only",
+      "report": "docs/all-rules-submarine-annex-20261024.md",
+      "log": "artifacts/rules-submarine-annex-20261024/workspace-final.log",
+      "workspace": {
+        "targets": 76,
+        "passed": 1240,
+        "failed": 0,
+        "ignored": 5
+      },
+      "whole_chapter_complete": false
+    },
+    {
+      "date": "2026-10-25",
+      "status": "tested_declared_subsets_only",
+      "report": "docs/all-rules-resume-20261025.md",
+      "log": "artifacts/rules-resume-20261025/workspace-final-fourth.log",
+      "workspace": {
+        "result_sets": 99,
+        "nonempty_targets": 79,
+        "passed": 1316,
+        "failed": 0,
+        "ignored": 5
+      },
+      "whole_chapter_complete": false,
+      "whole_book_complete": false
+    },
+    {
+      "date": "2026-10-25",
+      "status": "tested_declared_subsets_only",
+      "report": "docs/all-rules-damage-signatures-20261025.md",
+      "log": "artifacts/rules-damage-signatures-20261025/workspace-final-second-privacy.log",
+      "workspace": {
+        "passed": 1356,
+        "failed": 0,
+        "ignored": 5,
+        "nonempty_harnesses": 85,
+        "total_harnesses": 105,
+        "cargo_exit": 0,
+        "input_snapshot": "production-before-final-privacy.json",
+        "log": "workspace-final-second-privacy.log",
+        "whole_book_complete": false
+      },
+      "whole_chapter_complete": false,
+      "whole_book_complete": false
+    }
+  ],
+  "handbook_source_register": {
+    "path": "artifacts/rules-handbook-register-20261025/combined-source-register.json",
+    "pages": 41,
+    "physical_objects": 258,
+    "source_only": true,
+    "not_atomic_rule_denominator": true
+  },
+  "atomic_candidate_register": {
+    "path": "artifacts/rules-atomic-index-20261025/README.md",
+    "source_only": true,
+    "not_rule_denominator": true
+  }
+}

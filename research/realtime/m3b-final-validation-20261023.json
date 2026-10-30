@@ -1,0 +1,18 @@
+{
+  "passed": true,
+  "archive_files_verified": 3068,
+  "archive_bytes": 363442236,
+  "archive_manifest_sha256": "accc1a92c476b081bc23979310cb51c7715562ef882255966d0a0850432cddd8",
+  "catalog_records_verified_before_this_record": 51,
+  "report_local_links_verified": 4,
+  "requests": 72,
+  "valid": 69,
+  "quota_refusals": 3,
+  "unknown_usage": 3,
+  "cross_process_main_replay": true,
+  "timed_pairs": 44,
+  "common_references_unchanged": true,
+  "prior_55_actual_replays_unchanged": true,
+  "posthoc_executor_v2_disclosed": true,
+  "new_model_calls_during_analysis": 0
+}

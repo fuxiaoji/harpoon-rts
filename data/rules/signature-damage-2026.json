@@ -1,0 +1,44 @@
+{
+  "id": "hv2026-damage-signatures",
+  "revision": "2026-10-25-committed-primary-signature-private-mine-v2",
+  "authority": {
+    "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+    "version": "2026-01-01",
+    "sha256": "8196ffc715bbcccd862d8597c607de7816dac5baee31fa659f89dfaf4323700c",
+    "signature_rules": {"pdf_page": 132, "printed_page": "14-6", "sections": ["14.2.2", "14.2.3"]},
+    "physical_size": {"pdf_page": 17, "printed_page": "2-1", "section": "2.1"},
+    "underwater_classes": [
+      {"class": "torpedo", "pdf_page": 130, "section": "14.1.7"},
+      {"class": "mine", "pdf_page": 123, "section": "13.6"}
+    ]
+  },
+  "threshold_fraction_original_dp": 0.1,
+  "radar_size_cap": {"A": 0, "B": 1, "C": 2, "D": 2, "E": 3, "F": 3, "G": 4},
+  "radar_labels": ["Large", "Medium", "Small", "Very Small", "Stealthy"],
+  "noise_code_indices": {"Loud": 0, "Noisy": 1, "Quiet": 2, "VeryQuiet": 3, "ExtremelyQuiet": 4},
+  "noise_code_indices_are_engine_conventions": true,
+  "rts_policy": {
+    "id": "RTS-DAMAGE-SIGNATURE-01",
+    "damage_basis": "per_committed_primary_hit",
+    "comparison": "resolved_dp >= original_dp * threshold_fraction_original_dp; no integer rounding or epsilon",
+    "aggregation": "never sum separate hits, including hits committed in one batch",
+    "radar_repeat": "each independent qualifying hit increases at most one level, capped at physical Size",
+    "acoustic_comparison_is_interpretation": "14.2.3 says 10%; >= is the declared RTS reading",
+    "noisy_loud_exception": "whole paragraph: neither noise nor carried coating benefit changes",
+    "secondary": "ongoing fire/flood casualties are excluded from primary attacks",
+    "restoration": "no automatic restoration or engineering-repair reset is inferred",
+    "unknown_source": "persist named pending branch and reject affected automatic consumers",
+    "source_identity": "immutable fitted profiles remain unchanged; effective damage is a typed runtime overlay",
+    "standalone_entry": "a public standalone torpedo advance collects its actual damage until the complete source runtime is restored; the canonical simultaneous batch remains unchanged",
+    "mine_source_privacy": "actual hidden mine hit origins remain unchanged in referee traces and physical RNG; victim receives own Impact/HP/casualty state and opaque repair cause IDs, never hidden field/model/source IDs",
+    "propeller": "cavitation uses original fitted noise; passive detection uses the damaged noise combined with louder temporary emissions"
+  },
+  "execution_scope": {
+    "radar": "real Ship only, excluding EW objects, aircraft, submarines and missiles",
+    "acoustic": "real Ship/Sub primary underwater torpedo or source mine impact only",
+    "other_underwater_classes": "pending until actual depth-charge, ASW payload or nuclear producer supplies verified attack provenance; underwater bool alone is insufficient",
+    "visibility": "complete threshold/hit truth Referee only; own unit view contains no attacker identity or enemy damage truth",
+    "enabled_profile": "hv2026-rts-v4"
+  },
+  "not_a_whole_book_completion": true
+}

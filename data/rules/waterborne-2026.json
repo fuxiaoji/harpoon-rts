@@ -1,0 +1,55 @@
+{
+  "source": {
+    "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+    "version": "2026-01-01",
+    "sha256": "8196ffc715bbcccd862d8597c607de7816dac5baee31fa659f89dfaf4323700c",
+    "pdf_pages": [36],
+    "printed_pages": ["4-4"],
+    "sections": ["4.6.5", "4.6.6"],
+    "core_crosscheck": ["core_rules_cn:p038:c01", "core_rules_cn:p038:c02"],
+    "visual_verified_on": "2026-10-27",
+    "visual_evidence": "artifacts/rules-book-wide-20261026/aviation-remaining/waterborne-next/en-p036.png",
+    "revision": "2026-10-27-same-body-water-ops-natural-swamp-1",
+    "status": "implemented_author_card_subset_pending_combined_tests"
+  },
+  "sea_operations": {
+    "landing_speed_fraction": 0.25,
+    "landing_speed_basis": "maximum",
+    "takeoff_completed_speed_fraction": 0.25,
+    "takeoff_completed_speed_basis": "FMP",
+    "altitude": "Low",
+    "direction": "into_wind",
+    "safe_sea_state": 3,
+    "completion": "end_of_Movement_phase",
+    "elapsed_takeoff_or_landing_seconds": null,
+    "unsafe_open_water_operations_risk": null
+  },
+  "swamping": {
+    "applies_to": "any live aircraft actually sitting on sea surface",
+    "safe_sea_state": 3,
+    "chance_per_excess_state": 0.1,
+    "period_s": 180,
+    "moored_exempt": true,
+    "scenario_described_shelter_reductions": [1, 2],
+    "natural_rng_purpose": "4.6.6.swamp",
+    "actual_loss_consumer": "operations::crash_aircraft once; real body/cleanup, aircraft loss ledger and own Ditched"
+  },
+  "rts_policy": {
+    "numeric_equality_tolerance": 1e-9,
+    "tolerance_meaning": "Floating point equality only; not a wind-safe heading/speed allowance or pickup radius",
+    "card_scope": "Explicit matching unarmed author complete platform/Flight card; declared Low level only; no real Annex capability alias",
+    "movement_mapping": "Normal shared Movement-end barrier, not an invented elapsed run-up/descent duration",
+    "resting_motion": "Explicit author hold position with engines stopped; no water taxi/current/drift model",
+    "same_body": true,
+    "same_fuel": true,
+    "takeoff_baseline": "Reset Flight distance clock to actual completion now/position without adding fuel",
+    "landing_fuel": "Normal shared fuel_step settles actual last airborne interval before water mode",
+    "waterborne_is_not_airborne_SSkim": true,
+    "swamp_cadence": "One scoped natural trial on normal completed180s Tac boundary, persisted before common loss; no draw for moored/zero-risk; dead body cannot reroll",
+    "partial_Tac_exposure": "Unresolved beyond explicit boundary-current-water RTS mapping; source candidates stay waterborne for the full firstTac",
+    "initial_mooring_scope": "Explicit author fixed buoy/pier at same actual body position; no mooring/unmooring/winch procedure or moving tender geometry inferred",
+    "shelter_scope": "Only explicit scenario location assigned at initial actual water point; no invented geographic extent; open water has no reduction",
+    "real_Annex_fits_verified": false,
+    "all_aircraft_sea_operations_verified": false
+  }
+}

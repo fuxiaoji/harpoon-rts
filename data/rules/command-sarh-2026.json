@@ -1,0 +1,74 @@
+{
+  "source": "English Harpoon V 2026-01-01 PDF108/9-7 section 9.6.8 Command Guided and Semiactive Radar Homing (root-rendered english-2026-pdf108.png personally viewed by root and independently by the command worker); real rows from US Aircraft 2025-12-01 4-4 PDF99/H2-1 (us-aircraft-2025-12-pdf99-h2-1.png personally viewed by the command worker); three Chinese cores cross-checked via query_rules.py --core-only (核心手册 p108/p109)",
+  "weapons": {
+    "us_agm12b_bullpup_a": {
+      "name": "AGM-12B Bullpup A",
+      "guidance": "Cmd/1",
+      "generation": 1,
+      "min_range_nm": 1.0,
+      "range_nm": 6.0,
+      "speed_kts": 1188.0,
+      "flight_path": "Direct",
+      "hang_weight_kg": 260.0,
+      "damage_points": 33.0,
+      "additional_criticals": "D6/2",
+      "penetration_cm": 8.0,
+      "signature": "VSm",
+      "min_launch_altitude_m": null,
+      "source": "US Aircraft2025-12-01 PDF99/H2-1 exact AGM-12B Bullpup A row: Cmd/1, 1-6nmi, 1188kt, Direct, 260kg, 33+D6/2, 8cm, VSm, IOC 1960, remark letter N. The remark letter's legend is not interpreted here and no rail-launch exception is claimed. AGM-12D (15kT nuclear) and AGM-12E (cluster) rows are deliberately excluded from this conventional family."
+    },
+    "us_agm12c_bullpup_b": {
+      "name": "AGM-12C Bullpup B",
+      "guidance": "Cmd/1",
+      "generation": 1,
+      "min_range_nm": 1.0,
+      "range_nm": 9.0,
+      "speed_kts": 1188.0,
+      "flight_path": "Direct",
+      "hang_weight_kg": 812.0,
+      "damage_points": 52.0,
+      "additional_criticals": "D6",
+      "penetration_cm": 12.0,
+      "signature": "VSm",
+      "min_launch_altitude_m": null,
+      "source": "US Aircraft2025-12-01 PDF99/H2-1 exact AGM-12C Bullpup B row: Cmd/1, 1-9nmi, 1188kt, Direct, 812kg, 52+D6, 12cm, VSm, IOC 1964-mid 70s, remark letter N (uninterpreted)."
+    }
+  },
+  "fits": {},
+  "author_external_fits": {
+    "us_f18e_agm12b_x2": {
+      "weapons": {
+        "us_agm12b_bullpup_a": {
+          "maximum_rounds": 2
+        }
+      }
+    },
+    "us_f18e_agm12c_x1": {
+      "weapons": {
+        "us_agm12c_bullpup_b": {
+          "maximum_rounds": 1
+        }
+      }
+    },
+    "us_f18e": {
+      "source": "scenario_assumption: explicit experimental Bullpup external mount on the already-qualified F18E airframe; not a real historical Annex loadout",
+      "weapons": {
+        "us_agm12b_bullpup_a": {
+          "maximum_rounds": 2
+        },
+        "us_agm12c_bullpup_b": {
+          "maximum_rounds": 1
+        }
+      }
+    }
+  },
+  "execution": {
+    "source": "English2026 PDF108/9-7: launcher-controlled radio/radar PGM; the aircraft must have a clear LOS to the target from launch until impact; general LOS loss quarters the base hit chance once (divide by 4); Glide/Direct full range from High/Medium, half from Low, quarter from VLow; no SSkim/NOE launch because motors ignite after release (neither row carries a rail-launch remark); intended target within +/-30 deg of the flight path; a PGM attack against a ship within 10nmi may skip Weapons Placement (no stationary-Base exemption is printed)",
+    "continuous_los": "late current-state sample after this tick controls/movement/common damage alongside SALH/EOIR; shared referee optical ray plus declared author smoke on the actual controller-to-target ray; definite loss is sticky including smoke that expires before arrival; unknown ray geometry or controller consequence persists pending_reason and holds the original terminal die",
+    "controller_death": "the shared ray reports the firing controller no longer airborne; the post-casualty Command control consequence is not source qualified and stays pending with the original die retained: no invented crash, takeover or auto-miss",
+    "probability": "existing aircombat2026 pgm table Cmd/SARH rows only; no probability cells are duplicated in this file",
+    "damage": "printed damage cell carried as flat damage_points plus separate additional_criticals D6 notation (root copies into WeaponDamage.extra); ship/facility common damage uses the printed flat DP through the existing damage pipeline",
+    "scope": "stationary allocated points only: moving-target tracking, rail-launch exceptions, control channels and the remark-letter legend are named pendings; author smoke geometry is a declared scenario experiment exercising the printed LOS-loss quarter, not a printed Command smoke rule",
+    "author_carrier_scope": "Direct use of the qualified us_f18e airframe with a scenario-authored physical weapon fit and actual declared store ledger. Derived experimental class aliases have no flight/operation qualifications and are not installed as new source-ready aircraft."
+  }
+}

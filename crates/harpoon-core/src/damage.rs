@@ -17,6 +17,18 @@ use crate::rng::Rng;
 use crate::rules::damage_tables::{self, CriticalColumn, EffectSpec, HitZone};
 use crate::types::{EntityId, PlatformKind, Side};
 use crate::world::{Entity, World};
+use serde_json::{json,Value};
+use std::sync::OnceLock;
+
+/// Versioned v4 disclosure policy, kept out of archived v2/v3 damage tables.
+pub fn bda_tables()->&'static Value {
+    static DATA:OnceLock<Value>=OnceLock::new();
+    DATA.get_or_init(||serde_json::from_str(include_str!("../../../data/rules/bda-2026.json")).expect("verified v4 BDA disclosure policy"))
+}
+pub fn persistence_policy()->&'static Value {
+    static DATA:OnceLock<Value>=OnceLock::new();
+    DATA.get_or_init(||serde_json::from_str(include_str!("../../../data/rules/persistence-2026.json")).expect("versioned Full-profile persistence policy"))
+}
 
 /// Roll damage + criticals for a successful weapon hit on `target`.
 /// `underwater` selects the underwater critical column (flooding-heavy).
@@ -68,6 +80,7 @@ pub fn apply_hit_at(
 /// Production projectile identity and signed bearing, independent of unrelated
 /// projectile iteration and event-log order. Legacy saves retain old behavior.
 pub fn apply_projectile_hit(world:&mut World, projectile:EntityId, target:EntityId, weapon:&WeaponDef, underwater:bool, shooter:Side) {
+    if crate::rules::nuclear2026::terminal_with_target(world,projectile,true,Some(target)){return;}
     if !crate::rules::damage_runtime::active(world){apply_hit_from(world,target,weapon,underwater,shooter);return;}
     let p=world.entity(projectile);let t=world.entity(target);
     let bearing=p.zip(t).map(|(p,t)|{
@@ -263,8 +276,9 @@ fn incoming_bearing_rel(
     Some(crate::geom::angle_diff(t.course_deg, from).abs())
 }
 
-/// Broadcast battle-damage assessment to the shooter's side when they track
-/// the victim.
+/// Old profiles keep their tracked-hit report. In v4 a contact is not an
+/// observation of a hit or remaining enemy hull; unsupported exact BDA stays
+/// with the victim/referee until a sourced observation-to-assessment path exists.
 pub(crate) fn bda_to_shooter(
     world: &mut World,
     target_id: EntityId,
@@ -276,6 +290,11 @@ pub(crate) fn bda_to_shooter(
     let Some(shooter_side) = shooter_side else { return };
     let Some(t) = world.entities.get(&target_id) else { return };
     if t.side == shooter_side {
+        return;
+    }
+    if world.rules.profile==crate::rules::damage_runtime::RuleProfile::Rts2026Full {
+        world.emit(EventKind::RulesEvent {domain:"bda2026".into(),rule:"R-049.unverified_enemy_bda_withheld".into(),side:None,unit:Some(target_id),contact:None,
+            detail:json!({"policy_revision":bda_tables()["revision"],"policy":bda_tables()["projection"]["unverified_enemy_hit"],"shooter_side":shooter_side,"target":target_id,"weapon":weapon.id,"damage":dmg,"hp_left":hp_left,"observation_assessment":"not_source_bound"}).to_string()},Visibility::Referee);
         return;
     }
     let tracked = world
@@ -620,19 +639,34 @@ fn zone_name(zone: HitZone) -> &'static str {
 
 /// Kill a unit: notify owner, update enemy contacts, schedule removal.
 pub fn sink(world: &mut World, target_id: EntityId) {
+    let Some(side)=world.entity(target_id).map(|e|e.side.other()) else{return};
+    sink_by(world,target_id,side);
+}
+/// Explicit attacker for source effects that can also destroy friendly units.
+/// Existing callers keep their historical attribution through `sink`.
+pub fn sink_by(world: &mut World, target_id: EntityId, attacker: Side) {
     let Some(t) = world.entities.get(&target_id).cloned() else { return };
     if !t.alive {
         return;
     }
+    let owner_notified=crate::rules::unmanned2026::loss_disclosure_allowed(world,target_id);
+    crate::rules::unmanned2026::record_destroyed(world,target_id,owner_notified);
+    crate::rules::expanded_damage2026::record_loss(world,target_id,false);
+    if t.kind.is_projectile(){crate::rules::nuclear2026::removed(world,target_id,crate::rules::nuclear2026::Removal::CarrierDestroyed);}
+    let source_clock=world.rules.profile==crate::rules::damage_runtime::RuleProfile::Rts2026Full;
     {
         let Some(t) = world.entities.get_mut(&target_id) else { return };
         t.alive = false;
         t.hp = 0.0;
         t.last_emit_tick = world.tick; // death timestamp for cleanup linger
+        if source_clock {
+            t.ext.insert(persistence_policy()["death_clock_field"].as_str().unwrap().into(),world.tick as f64);
+        }
     }
     // Sonobuoys are expendable sensors (1 DP), not scored platforms: their
     // loss must never count toward kill counts or weighted scores.
-    let is_buoy = t.class == crate::rules::asw::SONOBUOY_CLASS;
+    let is_buoy = t.class == crate::rules::asw::SONOBUOY_CLASS
+        || crate::rules::detection2026::sonobuoys::is_sensor_float(world,target_id);
     if !t.kind.is_projectile() && !is_buoy {
         world.losses[t.side.index()] += 1;
         if let Some(kind_key) = World::kill_kind(t.kind) {
@@ -652,9 +686,9 @@ pub fn sink(world: &mut World, target_id: EntityId) {
                     side: t.side,
                     unit: t.id,
                     unit_name: t.name.clone(),
-                    by_side: t.side.other(),
+                    by_side: attacker,
                 },
-                Visibility::Side(t.side),
+                if owner_notified{Visibility::Side(t.side)}else{Visibility::Referee},
             );
         }
         PlatformKind::Base => {
@@ -674,7 +708,7 @@ pub fn sink(world: &mut World, target_id: EntityId) {
                     unit: t.id,
                     unit_name: t.name.clone(),
                 },
-                Visibility::Side(t.side),
+                if owner_notified{Visibility::Side(t.side)}else{Visibility::Referee},
             );
         }
     }
@@ -748,15 +782,24 @@ pub fn cleanup_dead(world: &mut World) {
         .map(|e| (e.id, e.last_emit_tick))
         .collect();
     let now = world.tick;
+    let full=world.rules.profile==crate::rules::damage_runtime::RuleProfile::Rts2026Full;
     for (id, _) in dead {
         let kind = world.entities.get(&id).map(|e| e.kind);
-        let linger = match kind {
+        let linger = if full {
+            persistence_policy()[if kind.is_some_and(|k|k.is_projectile()){"projectile_linger_s"}else{"platform_linger_s"}].as_i64().unwrap()
+        } else {match kind {
             Some(k) if k.is_projectile() => 0,
             _ => 120,
-        };
+        }};
         // Use hp<=0 marker time — approximate with tick since death via
         // `last_emit_tick` set to death tick in sink().
-        if now - world.entities.get(&id).map(|e| e.last_emit_tick).unwrap_or(now) >= linger {
+        let died_at=if full {
+            let Some(e)=world.entities.get_mut(&id) else {continue};
+            let clock=e.ext.entry(persistence_policy()["death_clock_field"].as_str().unwrap().into()).or_insert(now as f64);
+            if !clock.is_finite() || *clock<0. || *clock>now as f64 {continue;}
+            *clock as i64
+        } else {world.entities.get(&id).map(|e|e.last_emit_tick).unwrap_or(now)};
+        if now.saturating_sub(died_at) >= linger {
             world.entities.remove(&id);
         }
     }
@@ -798,6 +841,34 @@ mod tests {
             }],
         };
         crate::scenario::load_scenario(sc, crate::db::Database::built_in()).unwrap()
+    }
+
+    #[test]
+    fn full_cleanup_death_clock_survives_world_restore_at_the_actual_linger_boundary() {
+        let mut w=test_world("cvn");
+        w.rules.profile=crate::rules::damage_runtime::RuleProfile::Rts2026Full;
+        w.tick=200;
+        let id=EntityId(1);
+        sink_by(&mut w,id,Side::Red);
+        let mut restored:World=serde_json::from_slice(&serde_json::to_vec(&w).unwrap()).unwrap();
+        for tick in [201,319] {
+            w.tick=tick;restored.tick=tick;
+            cleanup_dead(&mut w);cleanup_dead(&mut restored);
+            assert!(w.entity(id).is_some()&&restored.entity(id).is_some(),"actual death at200 must linger through319 in both processes");
+            assert_eq!(serde_json::to_value(&w).unwrap(),serde_json::to_value(&restored).unwrap());
+        }
+        w.tick=320;restored.tick=320;
+        cleanup_dead(&mut w);cleanup_dead(&mut restored);
+        assert!(w.entity(id).is_none()&&restored.entity(id).is_none());
+        assert_eq!(serde_json::to_value(&w).unwrap(),serde_json::to_value(&restored).unwrap());
+    }
+    #[test]
+    fn legacy_cleanup_keeps_its_archived_emission_clock_and_wire_shape() {
+        let mut w=test_world("cvn");w.tick=200;
+        sink_by(&mut w,EntityId(1),Side::Red);
+        assert!(!w.entity(EntityId(1)).unwrap().ext.contains_key("rts.cleanup.death_tick"));
+        w.tick=319;cleanup_dead(&mut w);assert!(w.entity(EntityId(1)).is_some());
+        w.tick=320;cleanup_dead(&mut w);assert!(w.entity(EntityId(1)).is_none());
     }
 
     /// Target (Blue, cvn) at `target_pos`, shooter (Red, ddg_aegis) at

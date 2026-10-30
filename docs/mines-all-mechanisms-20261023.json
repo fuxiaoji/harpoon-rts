@@ -1,0 +1,370 @@
+{
+  "profile": "hv2026-rts-v4",
+  "whole_chapter_complete": false,
+  "rows": [
+    {
+      "rule_id": "HV2026-13.1",
+      "mechanism": "矿型/世代附件绑定",
+      "status": "partial",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          122,
+          123,
+          124,
+          125,
+          126
+        ]
+      },
+      "data": "data/rules/mines-2026.json",
+      "execution": "mine/initialize",
+      "tests": "crates/harpoon-core/tests/mines_2026.rs::mine_table_uses_actual_source_columns_and_shared_eg_row",
+      "scope": "11 historical generic Chinese AnnexG entries retained, with five separately named exact variant IDs added by following. Ordinary bottom/moored supported branches only; unknown anchoring/case depth and special types blocked. Generic IDs are not reinterpreted as exact variants."
+    },
+    {
+      "rule_id": "HV2026-13.4",
+      "mechanism": "雷场几何和雷数",
+      "status": "tested_subset",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          122,
+          123,
+          124,
+          125,
+          126
+        ]
+      },
+      "data": "data/rules/mines-2026.json",
+      "execution": "layout/initialize",
+      "tests": "crates/harpoon-core/tests/mines_2026.rs::mine_count_conserves_inventory_despite_source_example_typo",
+      "scope": "矩形和整数行距，原示例120/123矛盾按算式守恒；未实现任意多边形"
+    },
+    {
+      "rule_id": "HV2026-13.4.1",
+      "mechanism": "混合雷场",
+      "status": "partial",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          122,
+          123,
+          124,
+          125,
+          126
+        ]
+      },
+      "data": "data/rules/mines-2026.json",
+      "execution": "State.fields",
+      "tests": "crates/harpoon-core/tests/mines_2026.rs::actual_movement_secret_attacks_friend_or_foe_and_save_resume",
+      "scope": "可用多矩形配置；异类逐行混排尚未完整源案例"
+    },
+    {
+      "rule_id": "HV2026-13.5",
+      "mechanism": "实际航迹触雷",
+      "status": "tested_subset",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          122,
+          123,
+          124,
+          125,
+          126
+        ]
+      },
+      "data": "data/rules/mines-2026.json",
+      "execution": "step/attack_positions",
+      "tests": "crates/harpoon-core/tests/mines_2026.rs::actual_movement_secret_attacks_friend_or_foe_and_save_resume",
+      "scope": "累计危险区内航程、排除安全航道；秘密D100和敌我同触雷"
+    },
+    {
+      "rule_id": "HV2026-13.5.modifiers",
+      "mechanism": "磁/声/压/载重吨",
+      "status": "tested_subset",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          122,
+          123,
+          124,
+          125,
+          126
+        ]
+      },
+      "data": "data/rules/mines-2026.json",
+      "execution": "attack_chance",
+      "tests": "crates/harpoon-core/tests/mines_2026.rs::modifiers_are_source_steps_and_never_continuous_noise_estimates",
+      "scope": "军舰消磁、15kt、5kt、160000dwt按原文离散修正；dwt需显式来源"
+    },
+    {
+      "rule_id": "HV2026-13.6",
+      "mechanism": "水下损伤与耐压壳",
+      "status": "partial",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          122,
+          123,
+          124,
+          125,
+          126
+        ]
+      },
+      "data": "data/rules/mines-2026.json",
+      "execution": "damage_solution/queue_mine",
+      "tests": "crates/harpoon-core/tests/mines_2026.rs::original_attack_die_selects_optional_tier_and_submarine_hull_chances",
+      "scope": "非TPS和已核深度分支；接触雷TPS与天线原文冲突待裁"
+    },
+    {
+      "rule_id": "HV2026-13.6.optional",
+      "mechanism": "可选伤害档",
+      "status": "partial",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          122,
+          123,
+          124,
+          125,
+          126
+        ]
+      },
+      "data": "data/rules/mines-2026.json",
+      "execution": "damage_solution",
+      "tests": "crates/harpoon-core/tests/mines_2026.rs::unsupported_mine_combinations_do_not_invent_damage_or_service_year",
+      "scope": "保留原成功D100；Shallow对水面Major与Full优先级不明时pending"
+    },
+    {
+      "rule_id": "HV2026-13.7",
+      "mechanism": "动态布雷",
+      "status": "partial",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          122,
+          123,
+          124,
+          125,
+          126
+        ]
+      },
+      "data": "data/rules/mines-2026.json",
+      "execution": "Command::Mines -> mines2026/lifecycle.rs::apply/step, torpedo2026 shared physical tube API",
+      "tests": "crates/harpoon-core/tests/mines_dynamic_2026.rs,19 following tests with classified hunting; original mines_2026 eleven unchanged",
+      "scope": "One complete homogeneous source bottom-mine row: real route/legal work, source role180s quota, own combat reduction, actual inventory and atomic release/arming; submarine same physical tube and360s reload. Air/mobile/counter/mixed/partial rows remain incomplete; no invented partial-density attacks."
+    },
+    {
+      "rule_id": "HV2026-13.7.arming",
+      "mechanism": "武装/延时/船计数器",
+      "status": "partial",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          122,
+          123,
+          124,
+          125,
+          126
+        ]
+      },
+      "data": "data/rules/mines-2026.json",
+      "execution": "mines2026/lifecycle.rs::step and arming_seconds/step",
+      "tests": "mines_dynamic_2026 plus conventional mines_2026",
+      "scope": "Actual cohort release clocks with per-body Shallow360s/IntI540s and explicit activation<=two weeks; other depths require explicit author source. Fixed-field counters remain explicit; complete dynamic counters and unsupported mine methods not implemented."
+    },
+    {
+      "rule_id": "HV2026-13.8.1",
+      "mechanism": "扫具布放/拖速/转向",
+      "status": "tested_subset",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          122,
+          123,
+          124,
+          125,
+          126
+        ]
+      },
+      "data": "data/rules/mines-2026.json",
+      "execution": "apply/gear_step/navigation_limits",
+      "tests": "crates/harpoon-core/tests/mines_2026.rs::real_sweep_deployment_tow_cap_short_stay_and_restream_survive_load",
+      "scope": "Oropesa真实短收/重放；不同扫具需来源装配，非完整MSF型号覆盖"
+    },
+    {
+      "rule_id": "HV2026-13.8.1.combined",
+      "mechanism": "复合引信与同时扫具",
+      "status": "tested_subset",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          122,
+          123,
+          124,
+          125,
+          126
+        ]
+      },
+      "data": "data/rules/mines-2026.json",
+      "execution": "apply/swept_passes",
+      "tests": "crates/harpoon-core/tests/mines_2026.rs::simultaneous_multifuze_sweeps_need_declared_fit_and_stationary_is_no_pass",
+      "scope": "需显式combined装备能力；单扫具不清复合引信"
+    },
+    {
+      "rule_id": "HV2026-13.8.2",
+      "mechanism": "直升机扫雷",
+      "status": "partial",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          122,
+          123,
+          124,
+          125,
+          126
+        ]
+      },
+      "data": "data/rules/mines-2026.json",
+      "execution": "apply/gear_step/finish_pass",
+      "tests": "crates/harpoon-core/tests/mines_2026.rs::sweep_is_local_reduction_with_cap_ne_and_two_helicopter_passes",
+      "scope": "免触雷/VLow/非交战/20kt/双航次语义在模块；完整来源型号真实飞行扫雷未验"
+    },
+    {
+      "rule_id": "HV2026-13.8.3",
+      "mechanism": "猎雷",
+      "status": "partial",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          122,
+          123,
+          124,
+          125,
+          126
+        ]
+      },
+      "data": "data/rules/mines-2026.json",
+      "execution": "mines2026/lifecycle.rs::apply/step and search.rs::step, with separate classified receipts",
+      "tests": "mines_dynamic_2026 nineteen and mines_search_2026 fourteen directed tests; separate logs/validation overlays",
+      "scope": "Trusted own classified single-mine receipt plus explicit neutralizer fit/finite charge admits real individual D6*1800s work, pause/resume without reroll/recharge and referee-only physical progress. Search echo does not grant classification or Hunt. Real Type193M complete receiver parameters and mine-classification procedure remain blocked/TBD; full search-classify-neutralize chain incomplete."
+    },
+    {
+      "rule_id": "HV2026-13.8.4",
+      "mechanism": "扫雷削减表",
+      "status": "tested_subset",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          122,
+          123,
+          124,
+          125,
+          126
+        ]
+      },
+      "data": "data/rules/mines-2026.json",
+      "execution": "sweep_remaining/swept_passes",
+      "tests": "crates/harpoon-core/tests/mines_2026.rs::sweep_is_local_reduction_with_cap_ne_and_two_helicopter_passes",
+      "scope": "区域内削减，75%正文上限与0.20表格冲突明确保留解释"
+    },
+    {
+      "rule_id": "HV2026-13.special",
+      "mechanism": "特殊漂雷/机动雷",
+      "status": "blocked",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          122,
+          123,
+          124,
+          125,
+          126
+        ]
+      },
+      "data": "data/rules/mines-2026.json",
+      "execution": "initialize",
+      "tests": "crates/harpoon-core/tests/mines_2026.rs::unsupported_mobile_and_drifting_fields_never_use_regular_row_attacks",
+      "scope": "防止特殊类型套普通逐行程序；需漂移和单次随机间距专用执行"
+    },
+    {
+      "rule_id": "HV2026-5.4.6.1-MINE-SEARCH",
+      "mechanism": "Independent bottom-mine sonar echo",
+      "status": "tested_subset",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          49,
+          50,
+          51,
+          52,
+          126
+        ],
+        "blocked_real_fit": "17-1.Commonwealth_Navies_1_Dec_25.pdf PDF65/A-61 Type193M fit note only; no parameter row onPDF90/K-2"
+      },
+      "data": "data/rules/mines-2026.json search; detection-2026.json sonar",
+      "execution": "mines2026/search.rs::initialize/step/own_echoes, detection2026::sonar_row/sonar_probability",
+      "tests": "mines_search_2026 fourteen directed cases",
+      "scope": "Explicit fictional dedicated keel receiver only; author class/source and sonar_a_scenario_assumption identity cannot shadow historical equipment. Actual active/healthy fitted sensor, exact bottom depth, source VSmall/modifiers, original per-receiver180s trial. Reports retain author basis/source and opaque Side IDs; truth_body/dice only referee. RealType193M source parameters remain blocked/null; no classification/Hunt/FCS/score permission."
+    }
+  ],
+  "validation": "Historical continuation-workspace-final.log accepted only the then-existing conventional mine/sweep subset. Following and current directed evidence are separate overlays below.",
+  "following_validation": {
+    "log": "artifacts/rules-following-20261023/validation/workspace.log",
+    "workspace_targets": 56,
+    "workspace_passed": 877,
+    "workspace_failed": 0,
+    "workspace_ignored": 5,
+    "mine_dynamic_tests": 19,
+    "conventional_mine_tests": 11,
+    "scope": "Complete source bottom-mine row physical laying/shared tubes and previously classified individual neutralization; no engine search/classification claim."
+  },
+  "after_following_validation": {
+    "status": "mine_search_fourteen_workspace_http_and_historical_replay_green",
+    "log": "artifacts/rules-after-following-20261023/validation/contact-mine-green-wake-group-red-20261024.log",
+    "mines_search_2026": {
+      "passed": 14,
+      "failed": 0,
+      "ignored": 0
+    },
+    "source_correction": "Real Ton/Type193M automatic parameters withdrawn: Commonwealth2025 PDF65 proves1971 fit only, PDF90 has no Type193M row. Profile remains blocked/null and creates no receiver binding/echo. Positive engine cases use unmistakable fictional author equipment and labelled reports.",
+    "table_extent": "English PDF50-51 complete nonuniform .5..100nm printed50percent centres; MAX selects100, exact internal ties remain blocked. No probability cells added or changed.",
+    "meaning": "Directed engineering algorithm/source-rejection evidence only. No real complete MH receiver fit, mine classifier or complete search-to-Hunt chain accepted.",
+    "latest_workspace_log": "artifacts/rules-after-following-20261023/validation/workspace.log",
+    "latest_workspace": {
+      "targets": 59,
+      "passed": 933,
+      "failed": 0,
+      "ignored": 5
+    }
+  },
+  "latest_packet_validation": {
+    "date": "2026-10-24",
+    "status": "tested_declared_subsets_only",
+    "report": "docs/all-rules-after-following-20261023.md",
+    "log": "artifacts/rules-after-following-20261023/validation/workspace.log",
+    "workspace": {
+      "targets": 59,
+      "passed": 933,
+      "failed": 0,
+      "ignored": 5
+    },
+    "whole_chapter_complete": false
+  }
+}

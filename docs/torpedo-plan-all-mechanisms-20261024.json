@@ -1,0 +1,491 @@
+{
+  "schema": "harpoon-local-mechanism-ledger-v1",
+  "packet": "rules-torpedo-remaining-20261024",
+  "scope": "Own prelaunch Torpedo Plot, exact report binding, public DTO/privacy, narrow acoustic FCS generation and controller/interface admission",
+  "status": "tested_declared_subsets_only",
+  "global_rule_ledger_modified": true,
+  "whole_book_closed": false,
+  "test_counts_are_rule_counts": false,
+  "source_authority": {
+    "rules": "14-2.HpnV_Rules_1_Jan_26.pdf",
+    "sha256": "8196ffc715bbcccd862d8597c607de7816dac5baee31fa659f89dfaf4323700c",
+    "plot_pages": [
+      74,
+      79
+    ],
+    "plot_sections": [
+      "6.3.7",
+      "7.5.2",
+      "7.5.4"
+    ],
+    "virginia": "Americas Navy 2025-12-01 PDF16/A-13 Virginia(ii) Blocks I-IV Cbt Sys Gen6; English2026 PDF72/6-4 acoustic combat-system modifiers",
+    "retired_candidate": "The wrongly identified English2021 candidate is withdrawn and must not supply 2026 values.",
+    "corrected_candidate_limits": "Do not consume corrected-2026 as wholly qualified: ACM1 versus torpedo2 Evasion & ACMs is .34, not candidate .33; acoustic individual placement and shallow-water-capable exceptions require explicit coverage. Current production .34 was retained."
+  },
+  "targeted_evidence": [
+    {
+      "id": "plot10",
+      "log": "artifacts/rules-torpedo-remaining-20261024/plot-fcs-first-integrated.log",
+      "target": "torpedo_plot_2026",
+      "passed": 10,
+      "failed": 0,
+      "scope": "Core Plot contracts, actual legacy release privacy and save/projection boundaries"
+    },
+    {
+      "id": "fcs7",
+      "log": "artifacts/rules-torpedo-remaining-20261024/plot-fcs-first-integrated.log",
+      "target": "torpedo_fcs_generation_2026",
+      "passed": 7,
+      "failed": 0,
+      "scope": "Narrow generation binding and actual source FCS/Fire using explicitly authored measured-contact fixtures",
+      "integrity_note": "Original seven-case red/green logs retained; three missing source cases restored, seven cases and full69-target1153 rerun passed. See fcs-seven-cases-restored.log and workspace-final.log."
+    },
+    {
+      "id": "server12",
+      "log": "artifacts/rules-torpedo-remaining-20261024/controllers-integrated.log",
+      "target": "server source_torpedo filter",
+      "passed": 12,
+      "failed": 0,
+      "scope": "Own Plot validation, true seven-field producer-consumer adapter, FSM/LLM, player reservation and AI batch preflight"
+    },
+    {
+      "id": "old11",
+      "log": "artifacts/rules-torpedo-remaining-20261024/controllers-prior-posture.log",
+      "target": "server source_closure filter",
+      "passed": 11,
+      "failed": 0,
+      "scope": "Prior source contracts and ASW posture/timing regressions; these are reused checks, not new rule implementations"
+    },
+    {
+      "id": "mcp12",
+      "log": "artifacts/rules-torpedo-remaining-20261024/mcp-integrated-fixture-fixed.log",
+      "target": "MCP contract_tests",
+      "passed": 12,
+      "failed": 0,
+      "scope": "Native contracts, schema shapes, real Session plan application and explicit manual ownership; not final binary stdio transport"
+    }
+  ],
+  "joint_acceptance": {
+    "workspace": {
+      "targets": 69,
+      "passed": 1153,
+      "failed": 0,
+      "ignored": 5
+    },
+    "node_passed": 67,
+    "http": {
+      "ok": true,
+      "checkpoint": "1792829334370-25352-544",
+      "checkpoint_tick": 544,
+      "after": "1792829334557-25352-579",
+      "after_tick": 579,
+      "complete_world_equal": true,
+      "actual_own_sonar_contact": 1,
+      "fire_result": "positive",
+      "initial_contacts_tracks_plans_empty": true,
+      "native_measured_fcs_confirmed": true,
+      "author_good_used": false,
+      "manual_control_persisted": true,
+      "source_weapon_profiles_visible": true,
+      "invalid_plot_never_queued_or_took_control": true,
+      "invalid_batch_source_filtered_before_acceptance": true,
+      "invalid_batch_ticks_advanced_and_plan_id_consumed": true,
+      "private_author_fcs_not_projected": true,
+      "verification": {
+        "command_batches": 2,
+        "events_verified": 220,
+        "tick": 579,
+        "verified": true,
+        "world_fnv64": "f6a801d08c042b01"
+      }
+    },
+    "cross_process": {
+      "ok": true,
+      "complete_world_equal": true,
+      "independent_process_port": 8845,
+      "verification": {
+        "command_batches": 2,
+        "events_verified": 220,
+        "tick": 579,
+        "verified": true,
+        "world_fnv64": "f6a801d08c042b01"
+      }
+    },
+    "mcp_stdio": {
+      "ok": true,
+      "outer_commands": 37,
+      "native_command_shapes": 70,
+      "queued_transport_only": 68,
+      "dummy_plot_source_rejections": [
+        "antiship",
+        "torpedo"
+      ],
+      "dummy_plots_prove_parse_and_rejection_only": true,
+      "real_torpedo_plot_executed": true,
+      "actual_own_sonar_contact": 1,
+      "fire_result": "positive",
+      "author_good_used": false,
+      "source_weapon_profiles_visible": true,
+      "explicit_manual_takeover_before_valid_plot": true,
+      "manual_control_persisted": true,
+      "invalid_plot_never_queued_or_took_control": true,
+      "public_release_excludes_author_fcs": true,
+      "foreign_unknown_same_rejection": true,
+      "sha256": "a982b6a3749e5c93d2858caa8fb5b819e32a0d45d61e3d99cced50c6f071718a"
+    },
+    "compatibility": {
+      "ok": true,
+      "old_v4_fingerprint_rejected": true,
+      "rejected_load_world_unchanged": true,
+      "old_v4_original_sha256": "a545ab71c57dc732119d97674a8f214ce6d993b5031790ddcd3aa08b12d7b2e4",
+      "old_v3_original_sha256": "b0b352a176f527fa42fd30c497b5fc7ecb86080d2bad1b999c0d56f3b4bfbab6",
+      "old_v3_original_sha_unchanged": true,
+      "old_v3_actual_replay": {
+        "command_batches": 1,
+        "events_verified": 7,
+        "tick": 299,
+        "verified": true,
+        "world_fnv64": "ab2ffcb9c57e6195"
+      },
+      "old_v3_continuation_profile": "hv2026-rts-v3",
+      "verification": {
+        "command_batches": 1,
+        "events_verified": 15,
+        "tick": 329,
+        "verified": true,
+        "world_fnv64": "933df72aebd01cdd"
+      }
+    },
+    "historical_sol": {
+      "sha256_before": "51b0c4a9d5fab2ed102fb8decec7d7f1f2def6004d10feeadc10d546cbb9ac99",
+      "exit_code": 0,
+      "source": "E:/CodexBuilds/harpoon-ai-closure-20261021/sol-match-saves/1792589873234-53292-10800.json",
+      "elapsed_seconds": 61.3921634,
+      "sha256_after": "51b0c4a9d5fab2ed102fb8decec7d7f1f2def6004d10feeadc10d546cbb9ac99"
+    },
+    "processes_stopped": true,
+    "new_ui_or_physical_tablet": "not_performed",
+    "new_real_llm_match": "not_performed"
+  },
+  "mechanisms": [
+    {
+      "local_id": "TORP-PLAN-01",
+      "global_relation": "R-054 partial interface subset",
+      "mechanism": "Typed explicit prelaunch Plot",
+      "status": "tested_subset",
+      "tested_subset": [
+        "Explicit contact, weapon, speed_index, depth, enable, bearing/null, spread and cut_wire fields; missing fields and unknown author/FCS/dice fields rejected",
+        "Readonly validation does not deduct ammunition, consume random state or occupy tubes",
+        "Only replaces the actor/weapon future Plan; does not alter existing flight or launch ledger"
+      ],
+      "evidence": [
+        "plot10",
+        "server12",
+        "mcp12"
+      ],
+      "limits": [
+        "Plot is not a wire order and does not establish FCS or actual fire readiness",
+        "No default enable point or source parameter is guessed"
+      ],
+      "final_protocol_scope": "Actual native scan/Plan/source Fire validated only under explicit synthetic sonar/tube scenario inputs; no full source hardware or chapter claim."
+    },
+    {
+      "local_id": "TORP-PLAN-02",
+      "mechanism": "Exact own actor and ContactId binding",
+      "status": "tested_subset",
+      "tested_subset": [
+        "Own current finite located classified report and mounted source Torpedo/Lwt required",
+        "Plans keyed by EntityId and weapon, so same display names do not share orders",
+        "Fire with another ContactId fails even when both reports refer to the same referee body",
+        "Plot admission remains invariant when secret enemy alive/position/depth are changed"
+      ],
+      "evidence": [
+        "plot10",
+        "server12",
+        "mcp12"
+      ],
+      "limits": [
+        "Controlled own-report adapter fixtures are not native sonar scanning evidence",
+        "No inference of enemy truth from contact loss"
+      ],
+      "final_protocol_scope": "Actual native scan/Plan/source Fire validated only under explicit synthetic sonar/tube scenario inputs; no full source hardware or chapter claim."
+    },
+    {
+      "local_id": "TORP-PLAN-03",
+      "mechanism": "New Plan cannot inherit author Good FCS",
+      "status": "tested_subset",
+      "tested_subset": [
+        "Plan conversion fixes internal Order.solution to None",
+        "A new Plan supersedes old name-based author orders and cannot fall back to author Good after exact-report failure",
+        "Actual source Fire independently requires own measured FCS and checks its source gates",
+        "No-plan old author-order compatibility remains separate"
+      ],
+      "evidence": [
+        "plot10",
+        "fcs7",
+        "mcp12"
+      ],
+      "limits": [
+        "A queued or accepted Fire is not actual release; no-track MCP case holds ammunition"
+      ],
+      "final_protocol_scope": "Actual native scan/Plan/source Fire validated only under explicit synthetic sonar/tube scenario inputs; no full source hardware or chapter claim."
+    },
+    {
+      "local_id": "TORP-PLAN-04",
+      "mechanism": "Own carried seven-field weapon profiles and future plans",
+      "status": "tested_subset",
+      "tested_subset": [
+        "Only actual own mounted and source-bound weapon IDs are projected",
+        "Public profile contains exactly source/guidance/generation/settings/max_depth_m/surface/submarine",
+        "Air/Ship without tube fit retain own profiles/plans while tube inventory stays null/unknown",
+        "Unknown source profile does not fall back to generic database range/speed",
+        "Actual core own_view/observe output is consumed by the FSM, using a public DTO rather than private Weapon"
+      ],
+      "evidence": [
+        "plot10",
+        "server12"
+      ],
+      "limits": [
+        "No shallow_water_capable field was invented or added to the public projection",
+        "Profile availability does not prove legal real-world hardware fit, FCS, wire state or successful release"
+      ],
+      "final_protocol_scope": "Actual native scan/Plan/source Fire validated only under explicit synthetic sonar/tube scenario inputs; no full source hardware or chapter claim."
+    },
+    {
+      "local_id": "TORP-PLAN-05",
+      "mechanism": "Historical release privacy and unreported state",
+      "status": "tested_subset",
+      "tested_subset": [
+        "An actual old author-order release publicly retains only the six declared setting groups",
+        "Entire author solution and arbitrary author Order.source narration are absent from public declarations",
+        "Pre-ledger historical Flight fallback uses the same public whitelist",
+        "Private LaunchRecord/Flight history remains unchanged",
+        "Unknown physical alive/in-flight and reported result remain unknown"
+      ],
+      "evidence": [
+        "plot10",
+        "server12",
+        "mcp12"
+      ],
+      "limits": [
+        "No flight truth, secret disappearance, missing feedback or complete input data is turned into a capture/hit/death report",
+        "Own weapon-profile provenance is distinct from the removed author-FCS narration"
+      ],
+      "final_protocol_scope": "Actual native scan/Plan/source Fire validated only under explicit synthetic sonar/tube scenario inputs; no full source hardware or chapter claim."
+    },
+    {
+      "local_id": "TORP-FCS-01",
+      "mechanism": "Exact Virginia section6.3 acoustic combat-system generation",
+      "status": "tested_subset",
+      "tested_subset": [
+        "Only exact us_virginia Blocks I-IV source row maps acoustic combat generation6",
+        "Active acoustic uses printed +1 and passive acoustic +2 via the actual FCS solver",
+        "Unknown acoustic platform/aircraft cannot invent generation1",
+        "Own measured report/receiver geometry is used instead of secret target lifecycle/motion",
+        "Actual source release without author Good is tested in the preserved seven-case log"
+      ],
+      "evidence": [
+        "fcs7"
+      ],
+      "limits": [
+        "Not section6.4 tracker/wire capacities, BlockV, aliases or actual sonar hardware",
+        "Authored successful measured-report fixtures do not prove native sonar receiver scanning"
+      ],
+      "final_protocol_scope": "Actual native scan/Plan/source Fire validated only under explicit synthetic sonar/tube scenario inputs; no full source hardware or chapter claim."
+    },
+    {
+      "local_id": "TORP-AI-01",
+      "mechanism": "FSM consumes explicit own Plan",
+      "status": "tested_subset",
+      "tested_subset": [
+        "Full-v4 surface/sub/air Torpedo/Lwt helper holds without an existing own Plan",
+        "Exact selected CID/weapon and selected source setting range are honored instead of nearest contact/generic range",
+        "Actual own mount status, known allocation and source tube readiness are required",
+        "Unknown profile, invalid plan, bearing-only/stale/nonfinite contact, unknown allocation and disabled/servicing mount hold",
+        "Policy requests one round and retains wire intent without automatically turning +110 degrees at18kt",
+        "Manual takeover persists and explicit resume consumes the existing Plan",
+        "v1-v3 branch and prior source posture/timers retain their tested behavior"
+      ],
+      "evidence": [
+        "server12",
+        "old11"
+      ],
+      "limits": [
+        "Single-round helper budget is AI policy, not an author source rate-of-fire constant",
+        "Human Fire round choice still goes through actual source gates",
+        "No autonomous Plot generation, default enable, actual Flight.wire reading or enemy-truth choice"
+      ],
+      "final_protocol_scope": "Actual native scan/Plan/source Fire validated only under explicit synthetic sonar/tube scenario inputs; no full source hardware or chapter claim."
+    },
+    {
+      "local_id": "TORP-AI-02",
+      "mechanism": "LLM own observation and typed validation",
+      "status": "tested_subset",
+      "tested_subset": [
+        "Chinese and English prompts retain own plans, legal carried settings and unknown release counts",
+        "Prompt distinguishes prelaunch Plot from in-flight WireOrder and forbids deriving FCS from author data",
+        "Full-v4 does not treat generic22nm or2-4round doctrine as source order permission",
+        "Ai source rejects manual actors; Player source can continue manual operation; client author/FCS/dice injection is rejected"
+      ],
+      "evidence": [
+        "server12",
+        "old11"
+      ],
+      "limits": [
+        "Prompt/validator tests are not a new real LLM match or model-behavior evaluation"
+      ],
+      "final_protocol_scope": "Actual native scan/Plan/source Fire validated only under explicit synthetic sonar/tube scenario inputs; no full source hardware or chapter claim."
+    },
+    {
+      "local_id": "TORP-API-01",
+      "mechanism": "Shared schema discovery and native MCP Session",
+      "status": "tested_subset",
+      "tested_subset": [
+        "Outer command family count stays37; Torpedo Plot increases nested native shapes to70",
+        "Published shapes are native-deserialized and actor paths checked",
+        "Dummy Plot shapes prove parse/schema only and must pass separate own-source validation before queueing",
+        "Legal MCP Plot applies to actual Session state; unknown FCS still blocks actual Fire",
+        "Foreign and unknown actors receive equivalent rejection before inbox"
+      ],
+      "evidence": [
+        "mcp12",
+        "old11"
+      ],
+      "limits": [
+        "70 shapes are schema forms, not70 executable rule completions"
+      ],
+      "final_protocol_scope": "Actual native scan/Plan/source Fire validated only under explicit synthetic sonar/tube scenario inputs; no full source hardware or chapter claim."
+    },
+    {
+      "local_id": "TORP-API-02",
+      "mechanism": "Manual takeover and source preflight ordering",
+      "status": "tested_subset",
+      "tested_subset": [
+        "HTTP Player queue performs readonly core Plot preflight before inbox or automatic persistent manual reservation",
+        "Invalid speed/source/spread does not acquire control or store a Plan",
+        "MCP retains its explicit SetUnitAutomation enabled=false ownership command; Plot submission alone is not HTTP-style implicit takeover",
+        "Existing manual reservations in world/inbox block AI, including attempted AI reenable"
+      ],
+      "evidence": [
+        "server12",
+        "mcp12",
+        "old11"
+      ],
+      "limits": [
+        "HTTP and MCP ownership entry semantics remain intentionally different",
+        "No new UI manual workflow or physical-device interaction has been run"
+      ],
+      "final_protocol_scope": "Actual native scan/Plan/source Fire validated only under explicit synthetic sonar/tube scenario inputs; no full source hardware or chapter claim."
+    },
+    {
+      "local_id": "TORP-API-03",
+      "mechanism": "AI batch source filtering before policy resource registration",
+      "status": "tested_subset",
+      "tested_subset": [
+        "The validate_commands to supervise_ai chain rejects source-invalid spread[0,1] before policy review/guard reservation",
+        "Valid spread[0] remains admissible, preventing a reject-all false fix",
+        "Source-invalid Plot is absent from accepted/applied and does not create a Plan or acquire manual control"
+      ],
+      "evidence": [
+        "server12"
+      ],
+      "limits": [
+        "The existing advance contract still advances requested ticks and consumes plan_id after filtering, even when accepted/applied are empty",
+        "This is per-item source filtering, not an atomic batch rollback or a promise that no simulation time advances"
+      ],
+      "final_protocol_scope": "Actual native scan/Plan/source Fire validated only under explicit synthetic sonar/tube scenario inputs; no full source hardware or chapter claim."
+    },
+    {
+      "local_id": "TORP-HTTP-01",
+      "mechanism": "Native sonar to actual source FCS release candidate",
+      "status": "tested_subset",
+      "tested_subset": [
+        "Actual native sonar contact/classification and same-observer measured-motion FCS; no injected contact/track/author solution",
+        "Actual T544 Plan/Fire, ammunition/tube/LaunchRecord/Flight with Order.solution=null",
+        "Complete World local/cross-process equality and T579/220-event recorded replay",
+        "Actual HTTP/MCP manual persistence and source preflight; old-v4 refusal and old-v3 replay/continuation"
+      ],
+      "prepared": [
+        "http-native-scenario.json uses actual mounted sonar_p_hull/sonar_a_hull instance IDs and native detection_2026 schema",
+        "Empty contacts/tracks/plans and author orders are required at the starting snapshot",
+        "Native passive classification and continuous active measured positions must produce actual own FCS; first possible completion is tick181, not guaranteed",
+        "HTTP/MCP scripts must verify actual release/ammo and preserve unknown outcomes, save/replay and manual control"
+      ],
+      "evidence": [
+        "http/acceptance-2/http-validation.json",
+        "http/acceptance-2/cross-process-validation.json",
+        "http/acceptance-2/mcp-validation.json",
+        "http/acceptance-2/compatibility-validation.json"
+      ],
+      "limits": [
+        "Synthetic author sonar/target/tube mechanism inputs do not establish real hardware fits or complete R054 search/reattack.",
+        "No new UI, physical-tablet or real-LLM-match acceptance."
+      ],
+      "final_protocol_scope": "Actual native scan/Plan/source Fire validated only under explicit synthetic sonar/tube scenario inputs; no full source hardware or chapter claim."
+    }
+  ],
+  "remaining_not_closed": [
+    {
+      "scope": "R-054 search",
+      "status": "remaining",
+      "items": [
+        "Complete150yd-diameter spiral trajectory",
+        "500yd endurance debit per circle and two depth bands per circle",
+        "Search to maximum depth and upward spiral timing",
+        "Full air-dropped search and missed-acquisition continuation"
+      ]
+    },
+    {
+      "scope": "R-054 shallow water",
+      "status": "remaining_source_execution_acceptance",
+      "items": [
+        "Section7.5.6 Shallow-water-capable exception with exact AnnexF capability binding",
+        "Do not apply unconditional shallow-water penalty to the source-verified capable Mk54 or infer capability for other weapons"
+      ]
+    },
+    {
+      "scope": "R-054 opportunity and reattack",
+      "status": "remaining",
+      "items": [
+        "Opportunity and multiple targets under real acquisition and knowledge boundaries",
+        "Full reattack/reacquisition paths and actual continuation",
+        "5000yd mutual-interference combinations",
+        "Section10.2.4 independent placement per acoustic salvo weapon must not inherit the general same-type shared-die shortcut"
+      ]
+    },
+    {
+      "scope": "True fits and capacity",
+      "status": "remaining",
+      "items": [
+        "Real source-bound sonar receiver hardware/performance coverage",
+        "Section6.4 tracking/wire capacities and exact platform variants",
+        "Other unknown Annex bindings; no expansion from the narrow Virginia6.3 input"
+      ]
+    },
+    {
+      "scope": "Full-book ledger outside this packet",
+      "status": "unchanged_remaining",
+      "items": [
+        "Existing unresolved navigation, damage and repair portions, including pending R-059/R-060 subitems",
+        "Full weapon/attachment data and unresolved SAM/ASCM/Wake/trigger paths",
+        "Real mine search-classification-neutralization coverage and other mine mechanisms",
+        "Naval gun/depth-charge and communications rules not closed by this packet",
+        "Other chapter, optional and E00-E13 items in the global ledger",
+        "Complete BDA/sinking confirmation and double-blind paths remain bounded by their existing evidence"
+      ]
+    },
+    {
+      "scope": "Product and real play",
+      "status": "not_performed_here",
+      "items": [
+        "New UI and physical tablet acceptance",
+        "New real LLM match",
+        "No percentage or full-book completion denominator inferred from tests or data-row counts"
+      ]
+    }
+  ],
+  "whole_chapter_complete": false,
+  "all_mechanisms_complete": false,
+  "validation": "docs/all-rules-torpedo-plan-20261024.md",
+  "evidence_path_base": "D:/desktop/鱼叉"
+}

@@ -121,11 +121,11 @@ fn observation_exposes_own_breakdown_weights_and_in_flight_ordnance() {
     assert_eq!(victory.own_kill_points, 10.0);
 
     let contact = blue.contacts.iter().find(|c| c.id == cid).unwrap();
-    assert_eq!(contact.own_in_flight, 2, "own rounds in flight at the contact");
+    assert_eq!(contact.own_in_flight, Some(2), "own rounds in flight at the contact");
 
     let red = observe(&w, Side::Red, 0, 0);
     assert!(
-        red.contacts.iter().all(|c| c.own_in_flight == 0),
+        red.contacts.iter().all(|c| c.own_in_flight == Some(0)),
         "Red holds no Blue launches; its own in-flight count stays 0"
     );
 }

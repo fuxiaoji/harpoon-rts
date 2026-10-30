@@ -1,0 +1,2193 @@
+{
+  "version": "Harpoon V 2026-01-01",
+  "source": {
+    "file": "14-2.HpnV_Rules_1_Jan_26.pdf",
+    "sha256": "8196ffc715bbcccd862d8597c607de7816dac5baee31fa659f89dfaf4323700c",
+    "pdf_pages": [
+      18,
+      19,
+      69,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87,
+      88,
+      89,
+      90
+    ],
+    "printed": "8-1 to 8-10",
+    "visual_verified": true
+  },
+  "intercept_rows": [
+    "2nd",
+    "3rd",
+    "4th",
+    "5th/6th Human",
+    "5th Auto",
+    "6th Auto"
+  ],
+  "intercept": {
+    "high": {
+      "7": [
+        [
+          "E-V-2L-3M-S-P",
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          "E-V-3L-3M-2S-P",
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          "E-2V-2L-3M-3S",
+          "E-V-L-M-2S-P",
+          null,
+          null,
+          null
+        ],
+        [
+          "E-2V-2L-3M-3S",
+          "E-V-L-M-2S-P",
+          null,
+          null,
+          null
+        ],
+        [
+          "E-2V-2L-3M-3S-P",
+          "E-V-L-2M-2S-P",
+          null,
+          null,
+          null
+        ],
+        [
+          "E-2V-2L-3M-3S-P",
+          "E-V-L-2M-2S-P",
+          null,
+          null,
+          null
+        ]
+      ],
+      "6": [
+        [
+          "V-2L-3M-2S",
+          "V-L-M-S-P",
+          null,
+          null,
+          null
+        ],
+        [
+          "V-3L-3M-2S-P",
+          "V-L-2M-S-P",
+          null,
+          null,
+          null
+        ],
+        [
+          "V-3L-3M-3S",
+          "V-L-2M-2S-P",
+          "V-L-M-S-P",
+          null,
+          null
+        ],
+        [
+          "V-3L-3M-3S",
+          "V-L-2M-2S-P",
+          "V-L-M-S-P",
+          null,
+          null
+        ],
+        [
+          "V-3L-3M-3S-P",
+          "V-2L-2M-2S-P",
+          "V-L-M-2S-P",
+          null,
+          null
+        ],
+        [
+          "V-3L-3M-3S-P",
+          "V-2L-2M-2S-P",
+          "V-L-M-2S-P",
+          null,
+          null
+        ]
+      ],
+      "5": [
+        [
+          "2L-3M-2S",
+          "2L-M-S",
+          "L-M-S",
+          null,
+          null
+        ],
+        [
+          "3L-2M-3S-P",
+          "2L-M-2S",
+          "L-M-S-P",
+          "L-M-P",
+          null
+        ],
+        [
+          "3L-3M-2S-P",
+          "2L-2M-S-P",
+          "L-2M-S",
+          "L-M-S",
+          "L-M-P"
+        ],
+        [
+          "3L-3M-2S-P",
+          "2L-2M-S-P",
+          "L-2M-S",
+          "L-M-S",
+          "L-M-P"
+        ],
+        [
+          "3L-3M-3S-P",
+          "2L-2M-2S-P",
+          "L-2M-S-P",
+          "L-M-S-P",
+          "L-M-S"
+        ],
+        [
+          "3L-3M-3S-P",
+          "2L-2M-2S-P",
+          "L-2M-S-P",
+          "L-M-S-P",
+          "L-M-S"
+        ]
+      ],
+      "4": [
+        [
+          "L-2M-2S-P",
+          "L-M-S-P",
+          "L-M-P",
+          null,
+          null
+        ],
+        [
+          "2L-2M-2S",
+          "L-2M-S",
+          "L-M-S",
+          "L-M-P",
+          "L-S"
+        ],
+        [
+          "2L-2M-3S-P",
+          "L-2M-S-P",
+          "L-M-S-P",
+          "L-M-S",
+          "L-M-P"
+        ],
+        [
+          "2L-2M-3S-P",
+          "L-2M-S-P",
+          "L-M-S-P",
+          "L-M-S",
+          "L-M-P"
+        ],
+        [
+          "2L-3M-3S-P",
+          "L-2M-2S-P",
+          "L-M-2S",
+          "L-M-S-P",
+          "L-M-S"
+        ],
+        [
+          "2L-3M-3S-P",
+          "L-2M-2S-P",
+          "L-M-2S",
+          "L-M-S-P",
+          "L-M-S"
+        ]
+      ],
+      "3": [
+        [
+          "2M-2S-P",
+          "2M-S",
+          "M-S",
+          "M-S",
+          null
+        ],
+        [
+          "3M-2S-P",
+          "2M-S-P",
+          "M-S-P",
+          "M-S",
+          "M-S"
+        ],
+        [
+          "3M-2S-P",
+          "2M-2S",
+          "2M-S",
+          "M-S-P",
+          "M-S"
+        ],
+        [
+          "3M-2S-P",
+          "2M-2S",
+          "2M-S",
+          "M-S-P",
+          "M-S"
+        ],
+        [
+          "3M-3S-P",
+          "2M-2S-P",
+          "2M-S-P",
+          "M-2S",
+          "M-S-P"
+        ],
+        [
+          "3M-3S-P",
+          "2M-2S-P",
+          "2M-S-P",
+          "M-2S",
+          "M-S-P"
+        ]
+      ],
+      "2": [
+        [
+          "2M-S-P",
+          "M-S-P",
+          "M-S",
+          "M-P",
+          "M"
+        ],
+        [
+          "2M-2S-P",
+          "M-S-P",
+          "M-S",
+          "M-P",
+          "M-P"
+        ],
+        [
+          "2M-3S-P",
+          "M-2S-P",
+          "M-S-P",
+          "M-S",
+          "M-S"
+        ],
+        [
+          "2M-3S-P",
+          "M-2S-P",
+          "M-S-P",
+          "M-S",
+          "M-S"
+        ],
+        [
+          "3M-3S-P",
+          "2M-S-P",
+          "M-2S",
+          "M-S-P",
+          "M-S"
+        ],
+        [
+          "3M-3S-P",
+          "2M-S-P",
+          "M-2S",
+          "M-S-P",
+          "M-S"
+        ]
+      ],
+      "1": [
+        [
+          "2S-P",
+          "S-P",
+          "S",
+          "S",
+          "S"
+        ],
+        [
+          "2S-P",
+          "2S",
+          "S-P",
+          "S",
+          "S"
+        ],
+        [
+          "3S-P",
+          "2S-P",
+          "S-P",
+          "S-P",
+          "S"
+        ],
+        [
+          "3S-P",
+          "2S-P",
+          "S-P",
+          "S-P",
+          "S"
+        ],
+        [
+          "3S-P",
+          "2S-P",
+          "2S-P",
+          "S-P",
+          "S-P"
+        ],
+        [
+          "3S-P",
+          "2S-P",
+          "2S-P",
+          "S-P",
+          "S-P"
+        ]
+      ]
+    },
+    "medium": {
+      "6": [
+        [
+          "V-2L-2M-2S-P",
+          null,
+          null,
+          null
+        ],
+        [
+          "V-2L-3M-2S-P",
+          null,
+          null,
+          null
+        ],
+        [
+          "V-3L-3M-2S-P",
+          "V-L-2M-S-P",
+          null,
+          null
+        ],
+        [
+          "V-3L-3M-2S-P",
+          "V-L-2M-S-P",
+          null,
+          null
+        ],
+        [
+          "V-3L-3M-3S-P",
+          "V-L-2M-2S-P",
+          null,
+          null
+        ],
+        [
+          "V-3L-3M-3S-P",
+          "V-L-2M-2S-P",
+          null,
+          null
+        ]
+      ],
+      "5": [
+        [
+          "2L-3M-2S",
+          "L-M-2S",
+          null,
+          null
+        ],
+        [
+          "3L-2M-3S-P",
+          "2L-M-2S",
+          null,
+          null
+        ],
+        [
+          "3L-3M-2S-P",
+          "2L-2M-S-P",
+          "L-M-S-P",
+          null
+        ],
+        [
+          "3L-3M-2S-P",
+          "2L-2M-S-P",
+          "L-M-S-P",
+          "L-M-S"
+        ],
+        [
+          "3L-3M-3S-P",
+          "2L-2M-2S-P",
+          "L-2M-S-P",
+          "L-M-S-P"
+        ],
+        [
+          "3L-3M-3S-P",
+          "2L-2M-2S-P",
+          "L-2M-S-P",
+          "L-M-S-P"
+        ]
+      ],
+      "4": [
+        [
+          "L-2M-2S-P",
+          "L-M-S-P",
+          null,
+          null
+        ],
+        [
+          "2L-2M-2S",
+          "L-2M-S",
+          "L-M-S",
+          "L-S"
+        ],
+        [
+          "2L-2M-3S-P",
+          "L-2M-S-P",
+          "L-M-S-P",
+          "L-M-S"
+        ],
+        [
+          "2L-2M-3S-P",
+          "L-2M-S-P",
+          "L-M-S-P",
+          "L-M-S"
+        ],
+        [
+          "2L-3M-3S-P",
+          "L-2M-2S-P",
+          "L-M-2S",
+          "L-M-S-P"
+        ],
+        [
+          "2L-3M-3S-P",
+          "L-2M-2S-P",
+          "L-M-2S",
+          "L-M-S-P"
+        ]
+      ],
+      "3": [
+        [
+          "2M-2S-P",
+          "2M-S",
+          "M-S",
+          null
+        ],
+        [
+          "3M-2S-P",
+          "2M-S-P",
+          "M-S-P",
+          "M-S"
+        ],
+        [
+          "3M-2S-P",
+          "2M-2S",
+          "2M-S",
+          "M-S-P"
+        ],
+        [
+          "3M-2S-P",
+          "2M-2S",
+          "2M-S",
+          "M-S-P"
+        ],
+        [
+          "3M-3S-P",
+          "2M-2S-P",
+          "2M-S-P",
+          "M-2S"
+        ],
+        [
+          "3M-3S-P",
+          "2M-2S-P",
+          "2M-S-P",
+          "M-2S"
+        ]
+      ],
+      "2": [
+        [
+          "2M-S-P",
+          "M-S-P",
+          "M-S",
+          null
+        ],
+        [
+          "2M-2S-P",
+          "M-S-P",
+          "M-S",
+          "M-P"
+        ],
+        [
+          "2M-3S-P",
+          "M-2S-P",
+          "M-S-P",
+          "M-S"
+        ],
+        [
+          "2M-3S-P",
+          "M-2S-P",
+          "M-S-P",
+          "M-S"
+        ],
+        [
+          "3M-3S-P",
+          "2M-S-P",
+          "M-2S",
+          "M-S-P"
+        ],
+        [
+          "3M-3S-P",
+          "2M-S-P",
+          "M-2S",
+          "M-S-P"
+        ]
+      ],
+      "1": [
+        [
+          "2S-P",
+          "S-P",
+          "S",
+          "S"
+        ],
+        [
+          "2S-P",
+          "2S",
+          "S-P",
+          "S"
+        ],
+        [
+          "3S-P",
+          "2S-P",
+          "S-P",
+          "S-P"
+        ],
+        [
+          "3S-P",
+          "2S-P",
+          "S-P",
+          "S-P"
+        ],
+        [
+          "3S-P",
+          "2S-P",
+          "2S-P",
+          "S-P"
+        ],
+        [
+          "3S-P",
+          "2S-P",
+          "2S-P",
+          "S-P"
+        ]
+      ]
+    },
+    "low": {
+      "4": [
+        [
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          "L-2M-3S",
+          null,
+          null,
+          null
+        ],
+        [
+          "2L-2M-3S-P",
+          "L-M-2S-P",
+          null,
+          null
+        ],
+        [
+          "2L-2M-3S-P",
+          "L-M-2S-P",
+          null,
+          null
+        ],
+        [
+          "2L-3M-3S-P",
+          "L-2M-2S-P",
+          null,
+          null
+        ],
+        [
+          "2L-3M-3S-P",
+          "L-2M-2S-P",
+          null,
+          null
+        ]
+      ],
+      "3": [
+        [
+          "2M-2S-P",
+          null,
+          null,
+          null
+        ],
+        [
+          "3M-2S-P",
+          null,
+          null,
+          null
+        ],
+        [
+          "3M-2S-P",
+          "2M-2S",
+          "M-S-P",
+          null
+        ],
+        [
+          "3M-2S-P",
+          "2M-2S",
+          "M-S-P",
+          null
+        ],
+        [
+          "3M-3S-P",
+          "2M-2S-P",
+          "2M-S-P",
+          null
+        ],
+        [
+          "3M-3S-P",
+          "2M-2S-P",
+          "2M-S-P",
+          null
+        ]
+      ],
+      "2": [
+        [
+          "2M-S-P",
+          null,
+          null,
+          null
+        ],
+        [
+          "2M-2S-P",
+          "M-S-P",
+          null,
+          null
+        ],
+        [
+          "2M-3S-P",
+          "M-2S-P",
+          "M-S-P",
+          "M-S"
+        ],
+        [
+          "2M-3S-P",
+          "M-2S-P",
+          "M-S-P",
+          "M-S"
+        ],
+        [
+          "3M-3S-P",
+          "2M-S-P",
+          "M-2S",
+          "M-S-P"
+        ],
+        [
+          "3M-3S-P",
+          "2M-S-P",
+          "M-2S",
+          "M-S-P"
+        ]
+      ],
+      "1": [
+        [
+          "2S-P",
+          "S-P",
+          null,
+          null
+        ],
+        [
+          "2S-P",
+          "2S",
+          "S-P",
+          "P"
+        ],
+        [
+          "3S-P",
+          "2S-P",
+          "S-P",
+          "S-P"
+        ],
+        [
+          "3S-P",
+          "2S-P",
+          "S-P",
+          "S-P"
+        ],
+        [
+          "3S-P",
+          "2S-P",
+          "2S-P",
+          "S-P"
+        ],
+        [
+          "3S-P",
+          "2S-P",
+          "2S-P",
+          "S-P"
+        ]
+      ]
+    },
+    "vlow": {
+      "2": [
+        [
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          "M-3S-P",
+          null,
+          null,
+          null
+        ],
+        [
+          "M-3S-P",
+          null,
+          null,
+          null
+        ]
+      ],
+      "1": [
+        [
+          "P",
+          null,
+          null,
+          null
+        ],
+        [
+          "S-P",
+          "P",
+          null,
+          null
+        ],
+        [
+          "2S-P",
+          "S",
+          "P",
+          null
+        ],
+        [
+          "2S-P",
+          "S-P",
+          "S",
+          "P"
+        ],
+        [
+          "3S-P",
+          "2S-P",
+          "S-P",
+          "S"
+        ],
+        [
+          "3S-P",
+          "2S-P",
+          "S-P",
+          "S"
+        ]
+      ]
+    }
+  },
+  "missile_attack": [
+    [
+      -4.5,
+      1,
+      2
+    ],
+    [
+      -4.0,
+      2,
+      4
+    ],
+    [
+      -3.5,
+      4,
+      8
+    ],
+    [
+      -3.0,
+      6,
+      12
+    ],
+    [
+      -2.5,
+      8,
+      15
+    ],
+    [
+      -2.0,
+      10,
+      19
+    ],
+    [
+      -1.5,
+      15,
+      28
+    ],
+    [
+      -1.0,
+      20,
+      36
+    ],
+    [
+      -0.5,
+      25,
+      44
+    ],
+    [
+      -0.0,
+      30,
+      51
+    ],
+    [
+      0.5,
+      35,
+      58
+    ],
+    [
+      1.0,
+      40,
+      64
+    ],
+    [
+      1.5,
+      45,
+      70
+    ],
+    [
+      2.0,
+      50,
+      75
+    ],
+    [
+      2.5,
+      55,
+      80
+    ],
+    [
+      3.0,
+      60,
+      84
+    ],
+    [
+      3.5,
+      65,
+      88
+    ],
+    [
+      4.0,
+      70,
+      91
+    ],
+    [
+      4.5,
+      75,
+      94
+    ],
+    [
+      5.0,
+      80,
+      95
+    ],
+    [
+      5.5,
+      85,
+      95
+    ]
+  ],
+  "gun_attack": [
+    [
+      0.0,
+      0.02
+    ],
+    [
+      0.1,
+      0.06
+    ],
+    [
+      0.2,
+      0.09
+    ],
+    [
+      0.3,
+      0.12
+    ],
+    [
+      0.4,
+      0.14
+    ],
+    [
+      0.5,
+      0.16
+    ],
+    [
+      0.6,
+      0.17
+    ],
+    [
+      0.7,
+      0.19
+    ],
+    [
+      0.8,
+      0.21
+    ],
+    [
+      0.9,
+      0.22
+    ],
+    [
+      1.0,
+      0.23
+    ],
+    [
+      1.1,
+      0.25
+    ],
+    [
+      1.2,
+      0.26
+    ],
+    [
+      1.3,
+      0.27
+    ],
+    [
+      1.4,
+      0.28
+    ],
+    [
+      1.5,
+      0.29
+    ],
+    [
+      1.6,
+      0.31
+    ],
+    [
+      1.7,
+      0.32
+    ],
+    [
+      1.8,
+      0.33
+    ],
+    [
+      1.9,
+      0.34
+    ],
+    [
+      2.0,
+      0.35
+    ],
+    [
+      2.1,
+      0.36
+    ],
+    [
+      2.2,
+      0.37
+    ],
+    [
+      2.3,
+      0.38
+    ],
+    [
+      2.4,
+      0.39
+    ],
+    [
+      2.5,
+      0.39
+    ],
+    [
+      2.6,
+      0.4
+    ],
+    [
+      2.7,
+      0.41
+    ],
+    [
+      2.8,
+      0.42
+    ],
+    [
+      2.9,
+      0.43
+    ],
+    [
+      3.0,
+      0.44
+    ],
+    [
+      3.1,
+      0.45
+    ],
+    [
+      3.2,
+      0.45
+    ],
+    [
+      3.3,
+      0.46
+    ],
+    [
+      3.4,
+      0.47
+    ],
+    [
+      3.5,
+      0.48
+    ],
+    [
+      3.6,
+      0.49
+    ],
+    [
+      3.7,
+      0.49
+    ],
+    [
+      3.8,
+      0.5
+    ],
+    [
+      3.9,
+      0.51
+    ],
+    [
+      4.0,
+      0.52
+    ],
+    [
+      4.1,
+      0.52
+    ],
+    [
+      4.2,
+      0.53
+    ],
+    [
+      4.3,
+      0.54
+    ],
+    [
+      4.4,
+      0.54
+    ],
+    [
+      4.5,
+      0.55
+    ],
+    [
+      4.6,
+      0.56
+    ],
+    [
+      4.7,
+      0.57
+    ],
+    [
+      4.8,
+      0.57
+    ],
+    [
+      4.9,
+      0.58
+    ],
+    [
+      5.0,
+      0.59
+    ],
+    [
+      5.1,
+      0.59
+    ],
+    [
+      5.2,
+      0.6
+    ],
+    [
+      5.3,
+      0.61
+    ],
+    [
+      5.4,
+      0.61
+    ],
+    [
+      5.5,
+      0.62
+    ],
+    [
+      5.6,
+      0.62
+    ],
+    [
+      5.7,
+      0.63
+    ],
+    [
+      5.8,
+      0.64
+    ],
+    [
+      5.9,
+      0.64
+    ],
+    [
+      6.0,
+      0.65
+    ],
+    [
+      6.1,
+      0.66
+    ],
+    [
+      6.2,
+      0.66
+    ],
+    [
+      6.3,
+      0.67
+    ],
+    [
+      6.4,
+      0.67
+    ],
+    [
+      6.5,
+      0.68
+    ],
+    [
+      6.6,
+      0.69
+    ],
+    [
+      6.7,
+      0.69
+    ],
+    [
+      6.8,
+      0.7
+    ],
+    [
+      6.9,
+      0.7
+    ],
+    [
+      7.0,
+      0.71
+    ],
+    [
+      7.1,
+      0.72
+    ],
+    [
+      7.2,
+      0.72
+    ],
+    [
+      7.3,
+      0.73
+    ],
+    [
+      7.4,
+      0.73
+    ],
+    [
+      7.5,
+      0.74
+    ],
+    [
+      7.6,
+      0.74
+    ],
+    [
+      7.7,
+      0.75
+    ],
+    [
+      7.8,
+      0.76
+    ],
+    [
+      7.9,
+      0.76
+    ],
+    [
+      8.0,
+      0.77
+    ],
+    [
+      8.1,
+      0.77
+    ],
+    [
+      8.2,
+      0.78
+    ],
+    [
+      8.3,
+      0.78
+    ],
+    [
+      8.4,
+      0.79
+    ],
+    [
+      8.5,
+      0.79
+    ],
+    [
+      8.6,
+      0.8
+    ],
+    [
+      8.7,
+      0.8
+    ],
+    [
+      8.8,
+      0.81
+    ],
+    [
+      8.9,
+      0.81
+    ],
+    [
+      9.0,
+      0.82
+    ],
+    [
+      9.1,
+      0.82
+    ],
+    [
+      9.2,
+      0.83
+    ],
+    [
+      9.3,
+      0.83
+    ],
+    [
+      9.4,
+      0.84
+    ],
+    [
+      9.5,
+      0.84
+    ],
+    [
+      9.6,
+      0.85
+    ],
+    [
+      9.7,
+      0.86
+    ],
+    [
+      9.8,
+      0.86
+    ],
+    [
+      9.9,
+      0.87
+    ],
+    [
+      10.0,
+      0.87
+    ],
+    [
+      10.1,
+      0.88
+    ],
+    [
+      10.2,
+      0.88
+    ],
+    [
+      10.3,
+      0.88
+    ],
+    [
+      10.4,
+      0.89
+    ],
+    [
+      10.5,
+      0.89
+    ],
+    [
+      10.6,
+      0.9
+    ]
+  ],
+  "crossing_max_angles": [
+    [
+      5,
+      15
+    ],
+    [
+      10,
+      20
+    ],
+    [
+      20,
+      45
+    ],
+    [
+      45,
+      90
+    ],
+    [
+      60,
+      90
+    ],
+    [
+      90,
+      90
+    ],
+    [
+      90,
+      90
+    ],
+    [
+      90,
+      90
+    ]
+  ],
+  "range_ata": [
+    0,
+    0,
+    0,
+    -0.5,
+    -0.5,
+    -1,
+    -1.5,
+    -2
+  ],
+  "signature_ata": [
+    0,
+    0,
+    0,
+    -1,
+    -2
+  ],
+  "signature_gun": [
+    1,
+    0,
+    0,
+    -1,
+    -2
+  ],
+  "combat_system": {
+    "2": [
+      -1,
+      0
+    ],
+    "3": [
+      0,
+      1
+    ],
+    "4": [
+      0.5,
+      2
+    ],
+    "5h": [
+      1,
+      2.5
+    ],
+    "6h": [
+      1,
+      2.5
+    ],
+    "5a": [
+      1.5,
+      3
+    ],
+    "6a": [
+      1.5,
+      3
+    ]
+  },
+  "countermeasures": [
+    [
+      [
+        -1.5,
+        -2,
+        -2.5,
+        -3.5
+      ],
+      [
+        -1,
+        -1.5,
+        -2,
+        -3
+      ],
+      [
+        -2.5,
+        -3.5,
+        -4.5,
+        -5.5
+      ]
+    ],
+    [
+      [
+        -1,
+        -1.5,
+        -2,
+        -3
+      ],
+      [
+        -0.5,
+        -1,
+        -1.5,
+        -2.5
+      ],
+      [
+        -2,
+        -3,
+        -3.5,
+        -5
+      ]
+    ],
+    [
+      [
+        -0.5,
+        -1,
+        -1.5,
+        -2.5
+      ],
+      [
+        -0.5,
+        -0.5,
+        -1,
+        -2
+      ],
+      [
+        -1,
+        -2,
+        -3,
+        -4.5
+      ]
+    ],
+    [
+      [
+        0,
+        -0.5,
+        -1,
+        -2
+      ],
+      [
+        0,
+        -0.5,
+        -0.5,
+        -1.5
+      ],
+      [
+        -0.5,
+        -1,
+        -2,
+        -3.5
+      ]
+    ],
+    [
+      [
+        0,
+        0,
+        -0.5,
+        -1.5
+      ],
+      [
+        0,
+        0,
+        -0.5,
+        -1
+      ],
+      [
+        0,
+        -0.5,
+        -1,
+        -2.5
+      ]
+    ]
+  ],
+  "procedural_rts": {
+    "point_defense_nm": 4,
+    "increment_s": 30,
+    "ciws_bursts_per_increment": 2,
+    "gun_regular_attacks_per_transit": 1,
+    "pd_order": [
+      "sam",
+      "gun",
+      "energy"
+    ],
+    "decimal_range_continuity": "Printed 4.0/4.1 etc means contiguous <=4, >4; no unadjudicated 0.1 nmi gaps.",
+    "rounding": "Only exact printed missile half-index and gun tenth-strength supported; otherwise blocked pending source rounding."
+  },
+  "weapon_profiles": {
+    "us_ford:sam_medium": {
+      "name": "RIM-162 ESSM Blk I",
+      "ata": 3.5,
+      "range_nm": 18,
+      "min_range_nm": 0.5,
+      "speed_kts": 2250,
+      "seeker_generation": 3,
+      "sea_capability": 0,
+      "min_alt_m": 0,
+      "max_alt_m": 7500,
+      "radar_guided": true,
+      "source": "America Navy2025 PDF79/D3; fit PDF7/A4",
+      "channels": 4,
+      "launcher_arcs": [
+        "SW",
+        "PA"
+      ],
+      "channel_source": "English2026 PDF69/6-1 Gen6Auto SARH4 channels/two missiles; Ford-specific SPY3 FC from USNavy2025 PDF7 sensor remarks and PDF89 J3; SPY6(V)3 weapon-line belongs JFK fit and is not used for Ford",
+      "guidance": "SARH",
+      "directors": 1,
+      "director_sensor": "us_spy3_fc"
+    },
+    "hv2026_essm_i": {
+      "name": "RIM-162 ESSM Blk I",
+      "ata": 3.5,
+      "range_nm": 18,
+      "min_range_nm": 0.5,
+      "speed_kts": 2250,
+      "seeker_generation": 3,
+      "sea_capability": 0,
+      "min_alt_m": 0,
+      "max_alt_m": 7500,
+      "radar_guided": true,
+      "source": "America Navy2025 PDF79/D3; fit PDF7/A4",
+      "guidance": "SARH"
+    },
+    "hv2026_hq9": {
+      "name": "HQ-9",
+      "ata": 3,
+      "range_nm": 55,
+      "min_range_nm": 3.8,
+      "speed_kts": 3438,
+      "seeker_generation": 3,
+      "sea_capability": 1,
+      "min_alt_m": 0,
+      "max_alt_m": 30000,
+      "radar_guided": true,
+      "source": "China Navy2025 PDF71/D1",
+      "guidance": "TVM"
+    },
+    "hv2026_hq9a": {
+      "name": "HQ-9A",
+      "ata": 3,
+      "range_nm": 80,
+      "min_range_nm": 3.8,
+      "speed_kts": 3438,
+      "seeker_generation": 3,
+      "sea_capability": 0,
+      "min_alt_m": 0,
+      "max_alt_m": 30000,
+      "radar_guided": true,
+      "source": "China Navy2025 PDF71/D1",
+      "guidance": "TVM"
+    },
+    "hv2026_hq9b": {
+      "name": "HQ-9B",
+      "ata": 3.5,
+      "range_nm": 162,
+      "min_range_nm": 3.8,
+      "speed_kts": 3438,
+      "seeker_generation": 4,
+      "sea_capability": 0,
+      "min_alt_m": 0,
+      "max_alt_m": 30000,
+      "radar_guided": true,
+      "source": "China Navy2025 PDF71/D1",
+      "guidance": "I&M/TSARH"
+    },
+    "hv2026_hq16a": {
+      "name": "HQ-16A",
+      "ata": 3,
+      "range_nm": 18.9,
+      "min_range_nm": 1.9,
+      "speed_kts": 2008,
+      "seeker_generation": 3,
+      "sea_capability": 0,
+      "min_alt_m": 0,
+      "max_alt_m": 30000,
+      "radar_guided": true,
+      "source": "China Navy2025 PDF71/D1",
+      "guidance": "I&M/TSARH"
+    },
+    "hv2026_hq16b": {
+      "name": "HQ-16B",
+      "ata": 3,
+      "range_nm": 37.8,
+      "min_range_nm": 2.2,
+      "speed_kts": 2008,
+      "seeker_generation": 3,
+      "sea_capability": 0,
+      "min_alt_m": 0,
+      "max_alt_m": 30000,
+      "radar_guided": true,
+      "source": "China Navy2025 PDF71/D1",
+      "guidance": "I&M/TSARH"
+    },
+    "us_ford:us_essm_i": {
+      "name": "RIM-162 ESSM Blk I",
+      "ata": 3.5,
+      "range_nm": 18,
+      "min_range_nm": 0.5,
+      "speed_kts": 2250,
+      "seeker_generation": 3,
+      "sea_capability": 0,
+      "min_alt_m": 0,
+      "max_alt_m": 7500,
+      "radar_guided": true,
+      "source": "America Navy2025 PDF79/D3; fit PDF7/A4",
+      "channels": 4,
+      "launcher_arcs": [
+        "SW",
+        "PA"
+      ],
+      "channel_source": "English2026 PDF69/6-1 Gen6Auto SARH4 channels/two missiles; Ford-specific SPY3 FC from USNavy2025 PDF7 sensor remarks and PDF89 J3; SPY6(V)3 weapon-line belongs JFK fit and is not used for Ford",
+      "guidance": "SARH",
+      "directors": 1,
+      "director_sensor": "us_spy3_fc"
+    },
+    "us_essm_i": {
+      "name": "RIM-162 ESSM Blk I",
+      "ata": 3.5,
+      "range_nm": 18,
+      "min_range_nm": 0.5,
+      "speed_kts": 2250,
+      "seeker_generation": 3,
+      "sea_capability": 0,
+      "min_alt_m": 0,
+      "max_alt_m": 7500,
+      "radar_guided": true,
+      "source": "America Navy2025 PDF79/D3; fit PDF7/A4",
+      "guidance": "SARH"
+    },
+    "us_essm_ii": {
+      "name": "RIM-162 ESSM Blk II",
+      "ata": 4,
+      "range_nm": 27,
+      "min_range_nm": 0,
+      "speed_kts": 2250,
+      "seeker_generation": 4,
+      "sea_capability": 0,
+      "min_alt_m": 0,
+      "max_alt_m": 15500,
+      "radar_guided": true,
+      "source": "US Navy2025 PDF79/D3; weapon only, no automatic Ford fit",
+      "guidance": "SARH"
+    }
+  },
+  "gun_fits": {
+    "us_ford:ciws_30mm": {
+      "name": "Mk15 Phalanx Blk IB",
+      "caliber_mm": 20,
+      "aa_strength": 9.5,
+      "autonomous": true,
+      "sskim_capable": true,
+      "local_control_allowed": false,
+      "range_kyd": 2.4,
+      "max_alt_m": 2000,
+      "arcs": [
+        "SW",
+        "P",
+        "PQ&SQ"
+      ],
+      "source": "America Navy2025 PDF7/A4,PDF75-76/C1-2",
+      "ammunition_engagements": 7,
+      "fit_source_verified": true
+    },
+    "us_burke_2a:gun_5in": {
+      "director_sensor": "radar_air_long",
+      "director_name": "SPY-1D",
+      "director_arc": "F",
+      "director_binding_source": "America Navy2025 PDF34/A31 remarks: Mk45 uses SPY-1 for AA; radar_air_long is this platform's primary air radar stable ID; no alternate EO fit inferred",
+      "name": "Mk45 Mod4 5in/62",
+      "caliber_mm": 127,
+      "aa_strength": 0.8,
+      "autonomous": false,
+      "sskim_capable": false,
+      "local_control_allowed": false,
+      "range_kyd": 12,
+      "max_alt_m": 15500,
+      "arcs": [
+        "F"
+      ],
+      "ammunition_engagements": null,
+      "source": "USNavy2025 PDF34/A31 FlightIIA baseline(not79/80); SPY1 AA director; PDF75/C1 N=no local; scenario allocation supplies finite shells"
+    },
+    "us_burke_2a:us_mk45_mod4": {
+      "director_sensor": "radar_air_long",
+      "director_name": "SPY-1D",
+      "director_arc": "F",
+      "director_binding_source": "America Navy2025 PDF34/A31 remarks: Mk45 uses SPY-1 for AA; radar_air_long is this platform's primary air radar stable ID; no alternate EO fit inferred",
+      "name": "Mk45 Mod4 5in/62",
+      "caliber_mm": 127,
+      "aa_strength": 0.8,
+      "autonomous": false,
+      "sskim_capable": false,
+      "local_control_allowed": false,
+      "range_kyd": 12,
+      "max_alt_m": 15500,
+      "arcs": [
+        "F"
+      ],
+      "ammunition_engagements": null,
+      "source": "USNavy2025 PDF34/A31 FlightIIA baseline(not79/80); SPY1 AA director; PDF75/C1 N=no local; scenario allocation supplies finite shells"
+    }
+  },
+  "target_profiles": {
+    "us_gbu31_mk84_satnav1": {
+      "signature": 3,
+      "maneuver_rating": null,
+      "maneuver_rating_status": "R059: missile/bomb category MR applicability remains unresolved; Annex H2 has no MR column, which is not missing hardware data. Source9.6.8 Ext.Glide is nonmaneuvering, but PDF88 nonmaneuvering-aircraft MR0 cannot automatically be extended to this bomb's SAM adjudication.",
+      "maneuvering": false,
+      "terminal_maneuvers": false,
+      "high_diving": true,
+      "sprint_vehicle": false,
+      "source": "USAircraft2025 PDF102/H2-4 Mk84 GBU31 SATNAV1 VSmall; English2026 PDF108 section9.6.8 Ext.Glide flies directly without maneuver; PDF109 requires this SATNAV1 High+ release. PDF88/8-8 defines HighDiving as attacks from High+ or ballistic profile, so the published CS1-3 Short/PD modifier applies without inventing a steep terminal maneuver."
+    },
+    "cn_yj83": {
+      "signature": 3,
+      "maneuver_rating": null,
+      "maneuver_rating_status": "TBD R-059: Annex D has no target MR; strict SAM adjudication pending",
+      "maneuvering": false,
+      "terminal_maneuvers": false,
+      "high_diving": false,
+      "sprint_vehicle": false,
+      "source": "China Navy2025 PDF71-72/D1-2; YJ12 surface family only, no air variant inference"
+    },
+    "cn_yj82": {
+      "signature": 3,
+      "maneuver_rating": null,
+      "maneuver_rating_status": "TBD R-059: Annex D has no target MR; strict SAM adjudication pending",
+      "maneuvering": false,
+      "terminal_maneuvers": false,
+      "high_diving": false,
+      "sprint_vehicle": false,
+      "source": "China Navy2025 PDF71-72/D1-2; YJ12 surface family only, no air variant inference"
+    },
+    "cn_yj62": {
+      "signature": 3,
+      "maneuver_rating": null,
+      "maneuver_rating_status": "TBD R-059: Annex D has no target MR; strict SAM adjudication pending",
+      "maneuvering": false,
+      "terminal_maneuvers": false,
+      "high_diving": false,
+      "sprint_vehicle": false,
+      "source": "China Navy2025 PDF71-72/D1-2; YJ12 surface family only, no air variant inference"
+    },
+    "cn_yj18": {
+      "signature": 3,
+      "maneuver_rating": null,
+      "maneuver_rating_status": "TBD R-059: Annex D has no target MR; strict SAM adjudication pending",
+      "maneuvering": false,
+      "terminal_maneuvers": false,
+      "high_diving": false,
+      "sprint_vehicle": true,
+      "source": "China Navy2025 PDF71-72/D1-2; YJ12 surface family only, no air variant inference"
+    },
+    "cn_yj12": {
+      "signature": 3,
+      "maneuver_rating": null,
+      "maneuver_rating_status": "TBD R-059: Annex D has no target MR; strict SAM adjudication pending",
+      "maneuvering": false,
+      "terminal_maneuvers": true,
+      "high_diving": false,
+      "sprint_vehicle": false,
+      "source": "China Navy2025 PDF71-72/D1-2; YJ12 surface family only, no air variant inference"
+    },
+    "cn_yj12_surface_skim": {
+      "signature": 3,
+      "maneuver_rating": null,
+      "maneuver_rating_status": "TBD R-059: Annex D has no target MR; strict SAM adjudication pending",
+      "maneuvering": false,
+      "terminal_maneuvers": true,
+      "high_diving": false,
+      "sprint_vehicle": false,
+      "source": "China Navy2025 PDF71-72/D1-2; YJ12 surface family only, no air variant inference"
+    }
+  },
+  "arcs": {
+    "SS": [
+      [
+        0,
+        180
+      ]
+    ],
+    "PS": [
+      [
+        180,
+        360
+      ]
+    ],
+    "S": [
+      [
+        30,
+        150
+      ]
+    ],
+    "P": [
+      [
+        210,
+        330
+      ]
+    ],
+    "SW": [
+      [
+        0,
+        150
+      ]
+    ],
+    "PW": [
+      [
+        210,
+        360
+      ]
+    ],
+    "SQ": [
+      [
+        90,
+        180
+      ]
+    ],
+    "PQ": [
+      [
+        180,
+        270
+      ]
+    ],
+    "SA": [
+      [
+        30,
+        180
+      ]
+    ],
+    "PA": [
+      [
+        180,
+        330
+      ]
+    ],
+    "F": [
+      [
+        0,
+        150
+      ],
+      [
+        210,
+        360
+      ]
+    ],
+    "A": [
+      [
+        30,
+        330
+      ]
+    ],
+    "SB": [
+      [
+        0,
+        90
+      ]
+    ],
+    "PB": [
+      [
+        270,
+        360
+      ]
+    ]
+  },
+  "sam_salvo_summary": [
+    {
+      "gen": 1,
+      "control": "any",
+      "guidance": [
+        "Beam-R",
+        "Cmd"
+      ],
+      "channels": 1,
+      "missiles": 1
+    },
+    {
+      "gen": 2,
+      "control": "any",
+      "guidance": [
+        "Beam-R",
+        "Cmd"
+      ],
+      "channels": 1,
+      "missiles": 1
+    },
+    {
+      "gen": 2,
+      "control": "any",
+      "guidance": [
+        "SARH"
+      ],
+      "channels": 1,
+      "missiles": 2
+    },
+    {
+      "gen": 3,
+      "control": "any",
+      "guidance": [
+        "Cmd",
+        "SARH",
+        "I&M/TSARH"
+      ],
+      "channels": 1,
+      "missiles": 2
+    },
+    {
+      "gen": 3,
+      "control": "any",
+      "guidance": [
+        "TVM"
+      ],
+      "channels": 6,
+      "missiles": 2
+    },
+    {
+      "gen": 4,
+      "control": "any",
+      "guidance": [
+        "SARH",
+        "I&M/TSARH"
+      ],
+      "channels": 1,
+      "missiles": 2
+    },
+    {
+      "gen": 4,
+      "control": "any",
+      "guidance": [
+        "TVM"
+      ],
+      "channels": 6,
+      "missiles": 2
+    },
+    {
+      "gen": 5,
+      "control": "human",
+      "guidance": [
+        "SARH",
+        "I&M/TSARH",
+        "TARH"
+      ],
+      "channels": 2,
+      "missiles": 2
+    },
+    {
+      "gen": 6,
+      "control": "human",
+      "guidance": [
+        "SARH",
+        "I&M/TSARH",
+        "TARH"
+      ],
+      "channels": 2,
+      "missiles": 2
+    },
+    {
+      "gen": 5,
+      "control": "automatic",
+      "guidance": [
+        "SARH",
+        "I&M/TSARH",
+        "TARH"
+      ],
+      "channels": 3,
+      "missiles": 2
+    },
+    {
+      "gen": 5,
+      "control": "automatic",
+      "guidance": [
+        "TVM"
+      ],
+      "channels": 6,
+      "missiles": 2
+    },
+    {
+      "gen": 6,
+      "control": "automatic",
+      "guidance": [
+        "SARH",
+        "I&M/TSARH",
+        "TARH"
+      ],
+      "channels": 4,
+      "missiles": 2
+    }
+  ],
+  "missile_speed_modifiers": [
+    [
+      250,
+      2
+    ],
+    [
+      500,
+      1
+    ],
+    [
+      750,
+      0
+    ],
+    [
+      1525,
+      -1
+    ],
+    [
+      2300,
+      -2
+    ],
+    [
+      3075,
+      -3
+    ],
+    [
+      4100,
+      -4
+    ],
+    [
+      5125,
+      -5
+    ],
+    [
+      null,
+      -6
+    ]
+  ],
+  "gun_speed_modifiers": [
+    [
+      0,
+      3
+    ],
+    [
+      250,
+      2
+    ],
+    [
+      500,
+      1
+    ],
+    [
+      750,
+      0
+    ],
+    [
+      1525,
+      -1
+    ],
+    [
+      2300,
+      -2
+    ],
+    [
+      3075,
+      -4
+    ],
+    [
+      null,
+      -6
+    ]
+  ],
+  "target_modifiers": {
+    "non_maneuvering_mr": 0,
+    "terminal_maneuvers": -1,
+    "NOE": -4,
+    "sea_capability": [
+      0,
+      -2,
+      -4
+    ],
+    "land_clutter": -2,
+    "bearing": {
+      "Closing": 0,
+      "Divergent": -2,
+      "Crossing": -4
+    },
+    "high_diving": -2,
+    "hoj_ata_factor": 0.5,
+    "unmaneuvering_countermeasures_factor": 0.5
+  },
+  "gun_modifiers": {
+    "combat_system": [
+      -3,
+      -3,
+      -1,
+      0,
+      0,
+      0
+    ],
+    "NOE": -3,
+    "SSkim_not_capable": -3,
+    "High": -2,
+    "terminal_maneuvers": -1,
+    "non_maneuvering": 1,
+    "large_caliber_non_maneuvering_threshold_mm": 65,
+    "high_diving": -2,
+    "land_clutter": -2,
+    "directed_local_factor": 0.25,
+    "golden_bb": 0.02,
+    "max_probability": 0.9
+  },
+  "combat_system_bindings": {
+    "us_ford": [
+      6,
+      true
+    ],
+    "us_burke_2a": [
+      6,
+      true
+    ]
+  },
+  "source_fcs_sensors": {
+    "us_spy3_fc": {
+      "generation": 6,
+      "role": "3D, FC",
+      "air": [
+        150,
+        150,
+        119,
+        48,
+        14
+      ],
+      "surface": [
+        45,
+        45,
+        30,
+        17,
+        9.5
+      ],
+      "primary_mode": "3D",
+      "secondary_mode_factor": 0.5,
+      "source": "USNavy2025 PDF89/J3 noteC; Ford-specific source fit PDF7/A4",
+      "visual_verified": true
+    }
+  }
+}

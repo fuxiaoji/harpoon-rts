@@ -1,0 +1,278 @@
+{
+  "version": "Harpoon V 2026-01-01",
+  "source": {
+    "rule_pdf_pages": [
+      39,
+      88,
+      102,
+      104,
+      105
+    ],
+    "rule_printed": "4-7/8-8/9-3/9-4",
+    "visual_verified": true,
+    "annex": "USAircraft2025 PDF106/H4-2;ChinaNavy2025 PDF83/H-5; source selected current aircraft fits"
+  },
+  "weapons": {
+    "us_aim120d": {
+      "name": "AIM-120D",
+      "ata": 4,
+      "boresight_ata": 4.5,
+      "range_nm": 60,
+      "boresight_range_nm": 10,
+      "speed_kts": 2295,
+      "seeker_generation": 5,
+      "guidance": "TARH",
+      "snap": true,
+      "dogfight": true,
+      "aspect": "all",
+      "ceiling_m": 30000,
+      "hang_weight_kg": 162,
+      "hoj": true,
+      "minimum_range": "No minimum-range column in H4; no legacy unprinted exclusion added.",
+      "sskim_capability": null,
+      "source": "USAircraft2025 PDF106/H4-2"
+    },
+    "us_aim120c7": {
+      "name": "AIM-120C-7",
+      "ata": 4,
+      "boresight_ata": 4.5,
+      "range_nm": 44,
+      "boresight_range_nm": 10,
+      "speed_kts": 2295,
+      "seeker_generation": 4,
+      "guidance": "TARH",
+      "snap": true,
+      "dogfight": true,
+      "aspect": "all",
+      "ceiling_m": 30000,
+      "hang_weight_kg": 162,
+      "hoj": true,
+      "minimum_range": "No minimum-range column in H4; no legacy unprinted exclusion added.",
+      "sskim_capability": null,
+      "source": "USAircraft2025 PDF106/H4-2"
+    },
+    "us_aim9x2": {
+      "name": "AIM-9X-2",
+      "ata": 4,
+      "boresight_ata": 4,
+      "range_nm": 12,
+      "boresight_range_nm": 12,
+      "speed_kts": 1434,
+      "seeker_generation": 4,
+      "guidance": "TIIRH",
+      "snap": false,
+      "dogfight": true,
+      "aspect": "all",
+      "ceiling_m": 30000,
+      "hang_weight_kg": 85,
+      "hoj": false,
+      "minimum_range": "No minimum-range column in H4; no legacy unprinted exclusion added.",
+      "sskim_capability": null,
+      "source": "USAircraft2025 PDF106/H4-2"
+    },
+    "cn_pl12": {
+      "name": "PL-12",
+      "ata": 3,
+      "boresight_ata": 3.5,
+      "range_nm": 37.8,
+      "boresight_range_nm": 9.5,
+      "speed_kts": 2295,
+      "seeker_generation": 3,
+      "guidance": "TARH",
+      "snap": true,
+      "dogfight": true,
+      "aspect": "all",
+      "ceiling_m": 30000,
+      "hang_weight_kg": 199,
+      "hoj": false,
+      "minimum_range": "No minimum-range column in H4; no legacy unprinted exclusion added.",
+      "sskim_capability": null,
+      "source": "ChinaNavy2025 PDF83/H-5"
+    },
+    "cn_pl15": {
+      "name": "PL-15",
+      "ata": 3.5,
+      "boresight_ata": 4,
+      "range_nm": 108,
+      "boresight_range_nm": 9.5,
+      "speed_kts": 2295,
+      "seeker_generation": 4,
+      "guidance": "TARH",
+      "snap": true,
+      "dogfight": true,
+      "aspect": "all",
+      "ceiling_m": 30000,
+      "hang_weight_kg": 215,
+      "hoj": false,
+      "minimum_range": "No minimum-range column in H4; no legacy unprinted exclusion added.",
+      "sskim_capability": null,
+      "source": "ChinaNavy2025 PDF83/H-5"
+    },
+    "cn_pl10": {
+      "name": "PL-10",
+      "ata": 3.5,
+      "boresight_ata": 3.5,
+      "range_nm": 10.8,
+      "boresight_range_nm": 10.8,
+      "speed_kts": 2295,
+      "seeker_generation": 4,
+      "guidance": "IIRH",
+      "snap": false,
+      "dogfight": true,
+      "aspect": "all",
+      "ceiling_m": 30000,
+      "hang_weight_kg": 105,
+      "hoj": false,
+      "minimum_range": "No minimum-range column in H4; no legacy unprinted exclusion added.",
+      "sskim_capability": null,
+      "source": "ChinaNavy2025 PDF83/H-5"
+    },
+    "cn_pl8": {
+      "name": "PL-8",
+      "ata": 3,
+      "boresight_ata": 3,
+      "range_nm": 8.1,
+      "boresight_range_nm": 8.1,
+      "speed_kts": 1721,
+      "seeker_generation": 3,
+      "guidance": "IRH",
+      "snap": false,
+      "dogfight": true,
+      "aspect": "all",
+      "ceiling_m": 30000,
+      "hang_weight_kg": 120,
+      "hoj": false,
+      "minimum_range": "No minimum-range column in H4; no legacy unprinted exclusion added.",
+      "sskim_capability": null,
+      "source": "ChinaNavy2025 PDF83/H-5"
+    },
+    "cn_pl8b": {
+      "name": "PL-8B",
+      "ata": 2.5,
+      "boresight_ata": 2.5,
+      "range_nm": 8.1,
+      "boresight_range_nm": 8.1,
+      "speed_kts": 1721,
+      "seeker_generation": 3,
+      "guidance": "IRH",
+      "snap": false,
+      "dogfight": true,
+      "aspect": "all",
+      "ceiling_m": 30000,
+      "hang_weight_kg": 115,
+      "hoj": false,
+      "minimum_range": "No minimum-range column in H4; no legacy unprinted exclusion added.",
+      "sskim_capability": null,
+      "source": "ChinaNavy2025 PDF83/H-5"
+    },
+    "us_aim174b": {
+      "name": "AIM-174B",
+      "ata": 5,
+      "boresight_ata": 5.5,
+      "range_nm": 140,
+      "boresight_range_nm": 10,
+      "speed_kts": 2006,
+      "seeker_generation": 5,
+      "guidance": "TARH",
+      "snap": true,
+      "dogfight": true,
+      "aspect": "all",
+      "ceiling_m": null,
+      "hang_weight_kg": 860,
+      "hoj": false,
+      "minimum_range": "No minimum-range column in H4; no legacy unprinted exclusion added.",
+      "sskim_capability": null,
+      "source": "USAircraft2025 PDF106/H4-2",
+      "ceiling_source": "RHigh; engine numeric boundary not bound here; variant not enabled"
+    }
+  },
+  "aircraft": {
+    "cn_j15": {
+      "jammer": null,
+      "decoy": 2,
+      "radar_targets": 4,
+      "source": "ChinaNavy2025 PDF51/B11 basic J15 row/PL12 remark"
+    },
+    "cn_j15d": {
+      "jammer": null,
+      "decoy": 2,
+      "radar_targets": null,
+      "source": "ChinaNavy2025 PDF51/B11 base D; AESA target count not confirmed"
+    },
+    "us_f18e": {
+      "jammer": 4,
+      "decoy": 4,
+      "radar_targets": 4,
+      "source": "USAircraft2025 PDF49/B44 2012 J&D/APG79 combined mode4 explicit RTS always-combined fit"
+    },
+    "us_f18e_asm": {
+      "jammer": 4,
+      "decoy": 4,
+      "radar_targets": 4,
+      "source": "USAircraft2025 PDF49/B44 selected modern ASM loadout"
+    },
+    "us_f35c": {
+      "jammer": 4,
+      "decoy": 4,
+      "radar_targets": 4,
+      "source": "USAircraft2025 PDF51/B46/J3p114 APG81"
+    },
+    "us_f35c_gbu31_mk84x2": {
+      "jammer": 4,
+      "decoy": 4,
+      "radar_targets": 4,
+      "source": "USAircraft2025 PDF51/B46/J3p114 APG81; same verified F35C airframe and countermeasure/radar fit, exact internal2 AIM120D+2 Mk84 GBU31"
+    },
+    "us_f18e_mk82": {
+      "jammer": 4,
+      "decoy": 4,
+      "radar_targets": 4,
+      "source": "USAircraft2025 PDF49/B44 2012 J&D/APG79 combined mode4 explicit RTS always-combined fit; same airframe Mk82 source variant"
+    }
+  },
+  "range": {
+    "slow_launch_below_kts": 330,
+    "slow_launch_factor": 0.5,
+    "fast_launch_above_kts": 860,
+    "fast_launch_factor": 1.5,
+    "closing_combined_bands": [
+      [
+        2000,
+        1.5
+      ],
+      [
+        null,
+        2
+      ]
+    ],
+    "closing_min_combined": 501,
+    "closing_half_angle": 45,
+    "tail_half_angle": 45,
+    "low_factor": 0.5,
+    "tail_factor": 0.5
+  },
+  "round_seconds": 60,
+  "max_packet": 2,
+  "snap_penalty": -1,
+  "dogfight_unrated_factor": 0.5,
+  "hoj_factor": 0.5,
+  "rts_adaptations": [
+    "Retain visible projectile flight; adjudicate packet once at first arrival.",
+    "Commit same-second launches before automatic evasion starts, to avoid entity-ID first-mover advantage.",
+    "One packet per aircraft per60s; selecting one missile commits that opportunity.",
+    "Fitted aircraft countermeasures are automatically used when evading per9.5.1; no extra invented chaff percentage is stacked.",
+    "9.5.1 applies outside a dogfight. Once a non-TARH packet controller evades, the saved packet remains permanently unguided even after the incoming threat has disappeared.",
+    "9.4 target-speed modifiers for aircraft inside a dogfight use source cruise speed at the fight altitude, independent of plotted speed or FMP fuel accounting.",
+    "English2026 PDF105 section9.5.1 requires the surprised/nonmaneuvering declaration when the AAM is fired. The saved launch Attack.maneuvering is this declaration; false keeps MR0 and halves the eligible current countermeasure modifier at physical arrival. Current hardware, signature, speed, damage and guidance remain live; a declaration-window expiry cannot cancel the original declaration."
+  ],
+  "night_dogfight": {
+    "source": "Harpoon V2026-01-01 English PDF104/printed9-3 section9.4.8; visually verified; Chinese RAG core_rules_cn:p104:c02 cross-check",
+    "unrestricted_maneuver_rating_max": 0.5,
+    "required_sensor_domains": [
+      "fitted_operational_radar",
+      "verified_irst"
+    ],
+    "command_scan_bridge_ticks": 1,
+    "procedural_adaptation": "Commands execute before the source sensor pass each one-second RTS tick. Consume only own observer/sensor/target successful scan evidence from this or the immediately preceding tick; this is a pipeline bridge, not a published extra detection-retention time. Fused contacts, another observer, Visual/FLIR/ESM, a damaged or disabled receiver, future timestamps and older evidence do not satisfy the onboard condition. IR mode bindings are static scenario/source fits; a future runtime mode-switch feature must snapshot acquisition mode."
+  }
+}

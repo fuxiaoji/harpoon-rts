@@ -1,0 +1,191 @@
+{
+  "chapter": 12,
+  "source_version": "2026-01-01",
+  "all_chapter_complete": false,
+  "rows": [
+    {
+      "id": "EW-01",
+      "section_pdf": "12.1 / PDF119",
+      "mechanism": "机载雷达防御ECM与红外对抗按制导类型适用",
+      "source_status": "verified_source",
+      "data_status": "structured",
+      "execution_tests": "既有导弹路径有局部防御；全部载荷/世代/重量与独立防攻组合未验"
+    },
+    {
+      "id": "EW-02",
+      "section_pdf": "12.1 / PDF119",
+      "mechanism": "进攻噪声干扰与防御ECM并存",
+      "source_status": "verified_source",
+      "data_status": "structured",
+      "execution_tests": "既有噪声干扰与导弹ECM分离，完整组合源案例未验"
+    },
+    {
+      "id": "EW-03",
+      "section_pdf": "12.2 / PDF119",
+      "mechanism": "箔条走廊容量、0.25海里宽、飞行消耗、所在高度遮雷达",
+      "source_status": "verified_source",
+      "data_status": "structured",
+      "execution_tests": "not_implemented；没有以自卫箔条替代专用走廊"
+    },
+    {
+      "id": "EW-04",
+      "section_pdf": "12.2 / PDF119",
+      "mechanism": "箔条每3回合降一高度带、每10分钟随风移动、Low覆盖VLow",
+      "source_status": "verified_source",
+      "data_status": "structured",
+      "execution_tests": "not_implemented；缺局部体积与风场生命周期"
+    },
+    {
+      "id": "EW-05",
+      "section_pdf": "12.2 / PDF119",
+      "mechanism": "普通飞机穿云超过2回合10%发动机事故、施放机例外",
+      "source_status": "verified_source",
+      "data_status": "structured / trial cadence TBD",
+      "execution_tests": "blocked；原文未明多次检定频率，不能每秒重掷"
+    },
+    {
+      "id": "EW-06",
+      "section_pdf": "12.3 / PDF119",
+      "mechanism": "远程箔条5海里、15分钟、部署时50%小/中型回波",
+      "source_status": "verified_source",
+      "data_status": "structured",
+      "execution_tests": "tested_subset；明确源安装/库存、5海里门、唯一回波骰、15分钟和真雷达假回波已接；6.3.2未完成"
+    },
+    {
+      "id": "EW-07",
+      "section_pdf": "12.3 / PDF119",
+      "mechanism": "已锁定导弹不被远程箔条转移，未锁定/主动指向可攻击",
+      "source_status": "verified_source",
+      "data_status": "structured",
+      "execution_tests": "not_implemented；缺有身份的诱饵实体与导引状态链"
+    },
+    {
+      "id": "EW-08",
+      "section_pdf": "12.4 / PDF119",
+      "mechanism": "浮动反舰诱饵1分钟部署、最多3小时、可预沉",
+      "source_status": "verified_source",
+      "data_status": "structured",
+      "execution_tests": "tested_subset；1分钟部署、准确寿命、真实回波与主动沉没已接；安装数量必须明确来源"
+    },
+    {
+      "id": "EW-09",
+      "section_pdf": "12.4 / PDF119",
+      "mechanism": "浮动诱饵海况>4即沉、半风速漂移、拖速最多10节",
+      "source_status": "verified_source",
+      "data_status": "structured",
+      "execution_tests": "tested_subset；明确风场下漂移及海况淹没已接；拖曳缆绳/10节门仍未完成"
+    },
+    {
+      "id": "EW-10",
+      "section_pdf": "12.5 / PDF119–120",
+      "mechanism": "队外/护航/点干扰、点干扰ES/RWR先探测、同雷达不叠加",
+      "source_status": "verified_source",
+      "data_status": "structured",
+      "execution_tests": "executable_subset；electronic_warfare::configure/range_modifier_for，只有已核两型飞机"
+    },
+    {
+      "id": "EW-11",
+      "section_pdf": "12.5 / PDF120",
+      "mechanism": "六代主瓣/旁瓣全表、扣抗杂波、旁瓣净效应减半下取整",
+      "source_status": "verified_source",
+      "data_status": "structured",
+      "execution_tests": "existing_tested_subset；既有Su-24MP例与两部雷达/旁瓣测试，尚非全组合/全平台验收"
+    },
+    {
+      "id": "EW-12",
+      "section_pdf": "12.5 / PDF119",
+      "mechanism": "噪声干扰作为辐射雷达被ES接收并识别为噪声",
+      "source_status": "verified_source",
+      "data_status": "structured",
+      "execution_tests": "partial；旧扫描有辐射门，v4仍需明确噪声发射源绑定/可见信息，不能自动公开干扰机身份"
+    },
+    {
+      "id": "EW-13",
+      "section_pdf": "12.6.1 / PDF120",
+      "mechanism": "鱼雷ACM与声纳干扰作用域分离、内置/小外置2回合、大外置最多7回合",
+      "source_status": "verified_source",
+      "data_status": "structured",
+      "execution_tests": "tested_subset；真实世代/库存/寿命与作用域已接，active_acms由10.2.5消费；大外置无准确来源寿命即阻断"
+    },
+    {
+      "id": "EW-14",
+      "section_pdf": "12.6.1 / PDF120",
+      "mechanism": "声纳干扰10度锥、Loud噪声，拖曳诱饵无限寿命但成功诱骗后被毁",
+      "source_status": "verified_source",
+      "data_status": "structured",
+      "execution_tests": "tested_subset；真实Loud扫描/干扰锥、拖曳无限寿命和消耗接口已接；移动外置干扰器缺航速资料仍阻断"
+    },
+    {
+      "id": "EW-15",
+      "section_pdf": "12.6.2 / PDF121",
+      "mechanism": "4代机动潜艇诱饵寿命/最大速度/MAD/主动回波全表、3/4代2次变航变速",
+      "source_status": "verified_source",
+      "data_status": "structured",
+      "execution_tests": "tested_subset；4代最大速度/寿命及实际运动/代际回波、3/4代两次转向已接；低速能耗与变速仍未完成；低代被动接触切主动后立即识破尚未接"
+    },
+    {
+      "id": "EW-16",
+      "section_pdf": "12.6.2 / PDF120–121",
+      "mechanism": "诱饵继承潜艇声纹、鱼雷脱靶再攻时可获取诱饵、影响火控",
+      "source_status": "verified_source",
+      "data_status": "structured / references",
+      "execution_tests": "executable_subset；声纹继承、被动分类与10.2.5接口已接；实际机动诱饵次窗分类、完整再获取/火控尚未验；不能仅由裁判generation公开诱饵身份"
+    },
+    {
+      "id": "EW-17",
+      "section_pdf": "12.7 / PDF121",
+      "mechanism": "TALD预设航迹、250–500节、挂载/重量/三联架、射程原例",
+      "source_status": "verified_source",
+      "data_status": "structured",
+      "execution_tests": "not_implemented；只保存原书离散例，不外推滑翔包线"
+    },
+    {
+      "id": "EW-18",
+      "section_pdf": "12.7 / PDF121",
+      "mechanism": "RF/箔条TALD及动力诱饵、40次箔条/1海里线、各航点变航变高度",
+      "source_status": "verified_source",
+      "data_status": "structured",
+      "execution_tests": "not_implemented；缺完整型号附件/载荷与飞行动力学"
+    },
+    {
+      "id": "EW-19",
+      "section_pdf": "12-3 sidebar / PDF121",
+      "mechanism": "Suter攻击由想定设计具体规则",
+      "source_status": "verified_source",
+      "data_status": "scenario_specific",
+      "execution_tests": "not_enabled；无书中通用数值，不虚构自动网络攻击效果"
+    }
+  ],
+  "source_evidence": "artifacts/rules-all-20261023/ew/manifest.json",
+  "data": "data/rules/ew-2026.json",
+  "new_runtime_enabled": true,
+  "open_questions": [
+    {
+      "id": "EW-Q01",
+      "reason": "Chaff barrier engine failure check cadence unspecified after more than two turns in cloud."
+    },
+    {
+      "id": "EW-Q02",
+      "reason": "Mobile decoy endurance stated at maximum speed; other-speed energy model unspecified."
+    }
+  ],
+  "runtime_scope": "explicit hv2026-rts-v4, source-equipped scenario fixtures; chapter incomplete",
+  "validation": {
+    "status": "tested_subset",
+    "first_log": "artifacts/rules-next-20261023/validation/first-core.log",
+    "first_result": {
+      "passed": 11,
+      "failed": 2
+    },
+    "target": "ew_2026",
+    "cases": 13,
+    "execution_doc": "ew-execution-20261023.md",
+    "latest_verified_log": "artifacts/rules-next-20261023/validation/second-core-run.log",
+    "latest_verified_result": {
+      "passed": 13,
+      "failed": 0,
+      "ignored": 0
+    },
+    "not_claimed": "chapter completion, complete RF weapon distraction/acquisition, real weapon-triggered towed destruction, full workspace success"
+  }
+}

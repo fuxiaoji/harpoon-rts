@@ -1,0 +1,82 @@
+{
+  "revision": "2026-10-29-cas-radio-qualification-1",
+  "rule_id": "HV2026-E12.94-cas-communications-groups",
+  "task": "ZCODE-COMMS-20261029",
+  "status": "three_group_scope_consumed_by_links_route_with_declared_qualification",
+  "source": "《海上指挥》主/次水面战斗舰船（经调整）行94：通信（expanded manual PDF14/15, personally viewed 2026-10-28 and re-viewed 2026-10-29；both ship-size tables print identical group wording）",
+  "authority": {
+    "expanded_manual_cn": {
+      "file": "3-2.（扩展损伤手册26版）Harpoon_V_Expanded_Critical_Hit_Tables_(Chinese_Language).pdf",
+      "sha256": "a2c3878ccfcbfcba02f714f11d5527573dee736a0deae092b9833977c52b32b5",
+      "pdf_pages": [
+        14,
+        15
+      ]
+    },
+    "english_2026_main_rules": {
+      "file": "14-2.HpnV_Rules_1_Jan_26.pdf",
+      "sha256": "8196ffc715bbcccd862d8597c607de7816dac5baee31fa659f89dfaf4323700c",
+      "pdf_pages": [
+        135
+      ],
+      "printed": "14-9 §14.5 Communications: 1-2 Long-range radio communications / 3-4 Short-range radio communications / 5-6 Aircraft radio communications; loss of long-range comms prevents the ship from communicating with units beyond the horizon; losing short-range communications prevents ships from using radio with other ships in the same formation; aircraft radio is necessary to communicate with any aircraft, whether it is a helicopter or controlling interceptors on-scene, talking to its helicopter or a carrier marshalling aircraft for landing.",
+      "personally_viewed": "2026-10-29, expanded-atoms/source-pages/english-p135.png"
+    },
+    "english_priority": "CaS conversion is the optional E00 self-fit rule; the base English 14-9 §14.5 Communications block carries the same three scopes and is the English authority for the scope wording"
+  },
+  "producer": "existing: expanded_damage2026::resolve_extra \"communications\" rolls D6 and component_critical disables one fitted ComponentKind::Communications room with the matching cas_group (unchanged this batch; no natural hit re-implemented)",
+  "groups": {
+    "long_range": {
+      "cas_die": [
+        1,
+        2
+      ],
+      "printed": "远程无线电通信。舰船不能与地平线以外的单位通信。",
+      "printed_en": "Loss of long-range comms prevents the ship from communicating with units beyond the horizon.",
+      "blocks": "beyond_horizon_radio",
+      "scope": "applies to any unit endpoint (ships and aircraft alike) only when the link is actually beyond the radio horizon"
+    },
+    "short_range": {
+      "cas_die": [
+        3,
+        4
+      ],
+      "printed": "近程无线电通信。舰船不能与同一编队中的其他舰船进行无线电通信。",
+      "printed_en": "Losing short-range communications prevents ships from using radio with other ships in the same formation.",
+      "blocks": "formation_radio",
+      "scope": "applies only to ship-to-ship links inside the same declared formation; ship/aircraft, ship/submarine and cross-formation links are outside the scope"
+    },
+    "aircraft": {
+      "cas_die": [
+        5,
+        6
+      ],
+      "printed": "飞机无线电通信。舰船不能与飞机通信。",
+      "printed_en": "Aircraft radio is necessary to communicate with any aircraft, whether it is a helicopter or controlling interceptors on-scene, talking to its helicopter or a carrier marshalling aircraft for landing.",
+      "blocks": "air_radio",
+      "scope": "applies to any link with an aircraft endpoint, unconditionally on range or formation"
+    }
+  },
+  "consumer_abi": {
+    "query": "expanded_damage2026::cas_communications::communications_group_available(&World, EntityId, group) -> Result<bool, String>",
+    "semantics": "All fitted rooms intact or no fitted room => no CaS block; all fitted rooms disabled => group unavailable; partial surviving-room redundancy and component source gaps => pending. No implicit spare-room redundancy (unprinted).",
+    "gate": "radio_pair_gate(&World, sender, receiver, beyond_los: Option<bool>, same_formation: Option<bool>): Some(false) scope-inapplicable passes; Some(true) scope-applied blocks with 'radio group unavailable'; None unresolved scope fails closed with '<group> ... source_pending' naming the missing declared input",
+    "helper": "group_for_cas_die(d: u8) -> Result<&'static str, String> maps the printed 1-2/3-4/5-6 spans without re-rolling",
+    "qualification": {
+      "type": "links::RadioQualification (VoiceFit.radio_qualification: Option<links::RadioQualification>, root-added shared parent field)",
+      "fields": {
+        "source": "must be scenario_assumption…; validated in links::validate_config",
+        "antenna_height_m": "declared feed height for the printed radio horizon; consumed only where the fitted transport prints no antenna height (HF/satellite/author-directed); an HF height is never assumed; LOS transports always use their own printed heights",
+        "formation": "typed links::FormationId(String); two ships are same-formation only when both endpoints declare the same non-empty id; never inferred from side or peers"
+      },
+      "validation": "non-authored source, negative/non-finite height, blank formation, or a qualification with neither input is a configuration error at load"
+    },
+    "link_points_parent_wires": {
+      "long_range": "links::route resolves beyond_los per transport pair and calls radio_pair_gate before the transport match",
+      "short_range": "links::route resolves same_formation (ship-ship only) and calls radio_pair_gate",
+      "aircraft": "radio_pair_gate checks the aircraft group on both endpoints whenever either endpoint is PlatformKind::Aircraft"
+    },
+    "precedent": "detection2026/sonobuoys.rs::power consumes binding_operational(ComponentKind::Communications, \"sonobuoy_radio\") — same style of gate keyed on cas_group",
+    "consumers": "communications2026::edges (warnings/solutions/air solutions), validate_transport (GCI vectors, aircombat starting) — all ride links::route"
+  }
+}

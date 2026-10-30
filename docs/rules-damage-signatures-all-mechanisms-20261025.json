@@ -1,0 +1,174 @@
+{
+  "schema": 1,
+  "date": "2026-10-25",
+  "profile": "hv2026-rts-v4",
+  "status": "tested_declared_subsets_only",
+  "final_signoff": true,
+  "whole_book_complete": false,
+  "whole_chapter_complete": false,
+  "all_mechanisms_complete": false,
+  "evidence_root": "artifacts/rules-damage-signatures-20261025",
+  "authority": {
+    "file": "14-2.HpnV_Rules_1_Jan_26.pdf",
+    "edition": "2026-01-01",
+    "sha256": "8196ffc715bbcccd862d8597c607de7816dac5baee31fa659f89dfaf4323700c",
+    "parent_visual_pages": [
+      17,
+      132
+    ]
+  },
+  "rts_policy": "RTS-DAMAGE-SIGNATURE-01 per_committed_primary_hit; inclusive unrounded10%; Noisy/Loud whole-paragraph exception; repeated radar one-step cap; no invented repair restoration",
+  "rows": [
+    {
+      "rule_id": "HV2026-14.2.2",
+      "branch_id": "committed-primary-hit-threshold",
+      "source": "English2026 14.2.2, PDF132/14-6",
+      "data": "signature-damage-2026.json, source SHA + PDF17/2-1,132/14-6; explicit RTS-DAMAGE-SIGNATURE-01",
+      "execution": "damage_runtime::resolve actual unrounded post-armor/TPS DP >= prehit hp_max*.1; one step per independent primary hit, cap physical Size; no secondary/cumulative/reset inference",
+      "tests": "damage_signatures_source_20261025; damage_signature_mines_20261025 (native MDM-1); explicit per-hit RTS policy",
+      "status": "tested_declared_branch"
+    },
+    {
+      "rule_id": "HV2026-14.2.2",
+      "branch_id": "source-scope-and-missing-fields",
+      "source": "English2026 14.2.2 + 2.1.1 Size A-G",
+      "data": "signature-damage-2026.json, source SHA + PDF17/2-1,132/14-6; explicit RTS-DAMAGE-SIGNATURE-01",
+      "execution": "Real surface Ship + reduced fitted radar signature only; source Size missing preserves pending; Aircraft/Sub/EW objects not extrapolated",
+      "tests": "core source cases + boundary cases; A-G seven cap entries are a data-contract test, not seven native attacks",
+      "status": "tested_declared_branch"
+    },
+    {
+      "rule_id": "HV2026-14.2.3",
+      "branch_id": "committed-underwater-acoustic",
+      "source": "English2026 14.2.3, PDF132/14-6",
+      "data": "signature-damage-2026.json, source SHA + PDF17/2-1,132/14-6; explicit RTS-DAMAGE-SIGNATURE-01",
+      "execution": "Real Ship/Sub known Torpedo/Lwt or native mine origin; >=10% originalDP becomes Noisy, loses coating benefit; fitted Noisy/Loud paragraph exception; other causes pending",
+      "tests": "core source12 + boundary9 + native mine4, with actual primary DP rather than nominal warhead or HP difference",
+      "status": "tested_declared_branch"
+    },
+    {
+      "rule_id": "HV2026-14.2.3",
+      "branch_id": "radar-sonar-air-consumers",
+      "source": "English2026 14.2.2/3 + existing source detection tables",
+      "data": "No detection/weapon numeric table edits",
+      "execution": "Radar projected before Annex column; active/AIR coating and passive/CZ noise from same state; static fit retained for propeller/cavitation, transient louder noise combined",
+      "tests": "damage_signature_consumers_20261025 real scan radar76→133, active/AIR3.2→4, passive range4→8 with same rolls",
+      "status": "tested_declared_branch"
+    },
+    {
+      "rule_id": "HV2026-14.2.3",
+      "branch_id": "torpedo-placement-capture-pursuit",
+      "source": "English2026 14.2.3 + existing source torpedo placement/capture",
+      "data": "Source fitted identity separated from effective damaged profile",
+      "execution": "Shared target-spec projection for both source domains and opportunity scan; captured target later damaged does not trigger config mismatch or reroll; MOSS snapshot remains independent",
+      "tests": "consumer cases incl placement7→9 and actual capture then real damage/manual/restore; boundary native MOSS deploy12ticks",
+      "status": "tested_declared_branch"
+    },
+    {
+      "rule_id": "HV2026-14.2.3",
+      "branch_id": "domain-isolation-and-public-entry",
+      "source": "Source acoustic clause does not govern unrelated guidance or physical Size",
+      "data": "No acoustic fallback invented",
+      "execution": "Wake/Gyro physical profile survives unknown acoustic source; public torpedo advance commits primary damage after restoring its live runtime",
+      "tests": "damage_signature_nonacoustic_20261025 three native source-red→green cases",
+      "status": "tested_declared_branch"
+    },
+    {
+      "rule_id": "HV2026-14.2.2-3",
+      "branch_id": "source-conflict-and-readonly-guard",
+      "source": "Source fields must be explicit and consistent",
+      "data": "Independent coating/noise conflict guard + immutable source baseline",
+      "execution": "Coating conflict remains pending even when passive noise absent; acoustic missing does not block visual/IR/MAD/Wake/Gyro; read-only observers reject changed fit",
+      "tests": "boundary9 + consumer ninth active-noise-unneeded source-red→green",
+      "status": "tested_declared_branch"
+    },
+    {
+      "rule_id": "HV2026-14.2.2-3",
+      "branch_id": "own-status-and-manual-control",
+      "source": "Repository observation/ownership contract; source events remain Referee",
+      "data": "Whitelist fitted/effective owner state only; no free setter",
+      "execution": "HTTP/MCP/LLM/FSM share owner observation and real sensor consumers; compact LLM retains status; persistent manual ownership untouched; UI bilingual notes",
+      "tests": "core/boundary privacy, prompt regression, actual stdio + HTTP, actual owned Edge zh/en 1600x1000/1024x768, zero commands in passive UI inspection",
+      "status": "tested_declared_branch"
+    },
+    {
+      "rule_id": "HV2026-13.5-14.2",
+      "branch_id": "private-mine-origin",
+      "source": "Repository double-blind contract; native mine table/DP unchanged",
+      "data": "Stable victim-local opaque cause aliases persisted only in Full; full raw referee evidence retained",
+      "execution": "Queue/resolve register mine identity before traces; private-origin damage traces Referee; owner repair ledger projects identities/keys without merging independent causes; RNG and physical hit identity unchanged",
+      "tests": "damage_signature_mine_privacy_20261025 three real-red→green: two native source cases, third one natural Engineering plus two explicit adjudicated record_engineering causes; actual enemy field HTTP+restore",
+      "status": "tested_declared_branch"
+    },
+    {
+      "rule_id": "HV2026-14.2.2-3",
+      "branch_id": "persistence-and-version-compatibility",
+      "source": "Repository deterministic replay contract",
+      "data": "Only Full fingerprint adds new signature JSON; historical empty fields skipped",
+      "execution": "Full seven separate-process complete World continuations; old four v4 source mismatches refuse atomically; Legacy/v2/v3 numerical rules unchanged",
+      "tests": "final actual binary HTTP four torpedo + three mine checkpoints, full replay; original v3 T299/329 and Sol T10800/360batches/7505events checksum22b2238739248f90",
+      "status": "tested_declared_branch"
+    },
+    {
+      "rule_id": "HV2026-14",
+      "branch_id": "remaining-damage-and-whole-book",
+      "source": "All other source branches require their own execution proof",
+      "data": "Source-only packages remain unadopted",
+      "execution": "Full expanded E00-E13, optional/CaS, other critical consumers, nuclear, facilities, batteries/AIP, TDL/unmanned and exact fits remain open",
+      "tests": "No whole-chapter or whole-book closure claimed",
+      "status": "open_not_implemented_or_not_fully_accepted"
+    }
+  ],
+  "workspace": {
+    "passed": 1356,
+    "failed": 0,
+    "ignored": 5,
+    "nonempty_harnesses": 85,
+    "total_harnesses": 105,
+    "cargo_exit": 0,
+    "input_snapshot": "production-before-final-privacy.json",
+    "log": "workspace-final-second-privacy.log",
+    "whole_book_complete": false
+  },
+  "node": {
+    "passed": 70,
+    "failed": 0
+  },
+  "registered_new_independent_cases": 40,
+  "cases_are_not_rule_count": true,
+  "production_inputs": 296,
+  "post_cargo_ui_only_delta": [
+    "harpoon-rts/web/app.js",
+    "harpoon-rts/web/style.css"
+  ],
+  "protocol_evidence": {
+    "http-validation.json": {
+      "path": "artifacts/rules-damage-signatures-20261025/protocol/http-validation.json",
+      "sha256": "e0dafb5292d6261adc587a1587443cef83e80f57bff3e92a777426d1740eed8e"
+    },
+    "mine-http-validation.json": {
+      "path": "artifacts/rules-damage-signatures-20261025/protocol/mine-http-validation.json",
+      "sha256": "3a2c4928896e9c1c6e2c2d42e4a7ff24d32da67d36911ba9f86a2184d1faceb3"
+    },
+    "mcp-validation.json": {
+      "path": "artifacts/rules-damage-signatures-20261025/protocol/mcp-validation.json",
+      "sha256": "191e721c0e5a6eb901604c03ef1e37f774862b999254b8e3f588216a15c2d1b6"
+    },
+    "cross-process-validation.json": {
+      "path": "artifacts/rules-damage-signatures-20261025/protocol/cross-process-validation.json",
+      "sha256": "41b72339a6c47590afae75e5495b37747730646bf98c7e4c474446db1ca6b0a3"
+    },
+    "mine-cross-process-validation.json": {
+      "path": "artifacts/rules-damage-signatures-20261025/protocol/mine-cross-process-validation.json",
+      "sha256": "9aa94a96aa844a1466e1d6db9970016d14a7a6dce6efa48d75389a92a04956aa"
+    },
+    "compatibility-validation.json": {
+      "path": "artifacts/rules-damage-signatures-20261025/protocol/compatibility-validation.json",
+      "sha256": "466f55c8e04298eef34f04c70adc8f4547241115884ceb42fa58adeeb786a1c9"
+    }
+  },
+  "cross_process_checkpoints": 7,
+  "ui_receipt": "ui-final/validation.json",
+  "no_new_llm_match": true,
+  "complete_real_equipment_fits_claimed": false
+}

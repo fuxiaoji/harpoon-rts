@@ -1,0 +1,1278 @@
+{
+  "schema": 1,
+  "date": "2026-10-23",
+  "profile": "hv2026-rts-v3",
+  "profile_default": false,
+  "whole_chapters_complete": false,
+  "scope_note": "本表为本批优先规则的分项执行台账，非全书覆盖率。tested仅指accepted_scope，剩余分支另列，部分实现绝不并入整章完成。",
+  "data_facts": {
+    "aircraft": 11,
+    "decks": 9,
+    "radar_rows": 6,
+    "radar_bindings": 6,
+    "missile_signatures": 16
+  },
+  "rows": [
+    {
+      "rule_id": "HV04.06-01",
+      "title": "舰载机起飞队列与实际放飞",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          35,
+          36
+        ],
+        "printed_pages": [
+          "4-3",
+          "4-4"
+        ]
+      },
+      "status": "tested",
+      "accepted_scope": "显式v3、已核机型/甲板：排队预留库存；至少Alert+5；实际序列完成才出生。RTS-04-11/12为程序改编。",
+      "remaining": "",
+      "data": "data/rules/operations-v3.json",
+      "execution": "crates/harpoon-core/src/rules/operations.rs::queue_launch/update",
+      "tests": "catapult_launch_is_not_an_instant_eight_plane_spawn; launch_reservations_prevent_duplicate_orders_without_removing_hangar_inventory",
+      "audit": {
+        "source": "verified_source",
+        "data": "structured_subscope",
+        "execution": "executable_subscope",
+        "tests": "passing_subscope"
+      }
+    },
+    {
+      "rule_id": "HV04.06-02",
+      "title": "弹射速率与中断重启",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          36
+        ],
+        "printed_pages": [
+          "4-4"
+        ]
+      },
+      "status": "tested",
+      "accepted_scope": "每弹射器120秒；不可用期间中断；恢复后重走完整序列，同一道不能同时放两机。",
+      "remaining": "",
+      "data": "data/rules/operations-v3.json",
+      "execution": "crates/harpoon-core/src/rules/operations.rs::update",
+      "tests": "damaged_catapult_restarts_sequence_and_does_not_release_two_planes_in_same_lane",
+      "audit": {
+        "source": "verified_source",
+        "data": "structured_subscope",
+        "execution": "executable_subscope",
+        "tests": "passing_subscope"
+      }
+    },
+    {
+      "rule_id": "HV04.06-03",
+      "title": "弹射起飞风速条件",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          36
+        ],
+        "printed_pages": [
+          "4-4"
+        ]
+      },
+      "status": "tested",
+      "accepted_scope": "实际舰速＋迎风分量满足30节；不拿命令航速代替实际航速；风条件缺失阻断。迎风1度容差为RTS程序。",
+      "remaining": "",
+      "data": "data/rules/operations-v3.json",
+      "execution": "crates/harpoon-core/src/rules/operations.rs::weather_check",
+      "tests": "wind_over_deck_is_actual_speed_plus_aligned_wind",
+      "audit": {
+        "source": "verified_source",
+        "data": "structured_subscope",
+        "execution": "executable_subscope",
+        "tests": "passing_subscope"
+      }
+    },
+    {
+      "rule_id": "HV04.06-04",
+      "title": "离舰实际高度、速度与方向",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          36
+        ],
+        "printed_pages": [
+          "4-4"
+        ]
+      },
+      "status": "tested",
+      "accepted_scope": "已核11种机型：Low代表值61米、低空FMP的25%；弹射沿舰艏，滑跑与垂直起飞迎风。代表高度属于RTS改编。",
+      "remaining": "",
+      "data": "data/rules/operations-v3.json",
+      "execution": "crates/harpoon-core/src/rules/operations.rs::update",
+      "tests": "flyoff_and_pad_depart_into_wind_instead_of_ship_heading; catapult_launch_is_not_an_instant_eight_plane_spawn",
+      "audit": {
+        "source": "verified_source",
+        "data": "structured_subscope",
+        "execution": "executable_subscope",
+        "tests": "passing_subscope"
+      }
+    },
+    {
+      "rule_id": "HV04.06-05",
+      "title": "固定翼着舰包线与吞吐",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          36
+        ],
+        "printed_pages": [
+          "4-4"
+        ]
+      },
+      "status": "tested",
+      "accepted_scope": "已核舰机：Low、25%FMP、程序性航向容差和1.5海里接近门；首架满足条件即时着舰，后续间隔60秒。",
+      "remaining": "",
+      "data": "data/rules/operations-v3.json",
+      "execution": "crates/harpoon-core/src/rules/operations.rs::recovery_ready",
+      "tests": "an_aircraft_at_high_altitude_cannot_instantly_recover; recovery_rate_is_one_per_minute_then_actual_guided_weapon_turnaround",
+      "audit": {
+        "source": "verified_source",
+        "data": "structured_subscope",
+        "execution": "executable_subscope",
+        "tests": "passing_subscope"
+      }
+    },
+    {
+      "rule_id": "HV04.06-06",
+      "title": "拦阻装置与回收兼容",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          36
+        ],
+        "printed_pages": [
+          "4-4"
+        ]
+      },
+      "status": "tested",
+      "accepted_scope": "实舰需已核拦阻装置，VTOL/直升机例外；本方接收机型和容量仍须匹配。cv/cvn为显式抽象训练型，不能由任意机库名单推断装置。 起飞同样不得将直升机甲板当固定翼滑跑跑道。",
+      "remaining": "",
+      "data": "data/rules/operations-v3.json",
+      "execution": "crates/harpoon-core/src/air.rs::compatible_recovery",
+      "tests": "wing_inventory_does_not_establish_arresting_gear; strict_operations_cannot_silently_use_legacy_cycle_for_unknown_aircraft; helicopter_pad_does_not_establish_a_fixed_wing_flyoff_runway",
+      "audit": {
+        "source": "verified_source",
+        "data": "structured_subscope",
+        "execution": "executable_subscope",
+        "tests": "passing_subscope"
+      }
+    },
+    {
+      "rule_id": "HV04.06-07",
+      "title": "垂直起降共享作业位",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          35,
+          36
+        ],
+        "printed_pages": [
+          "4-3",
+          "4-4"
+        ]
+      },
+      "status": "tested",
+      "accepted_scope": "已核Burke/Zumwalt作业位；每位180秒共享起飞和降落；最近实际操作锁与排队锁同时生效。",
+      "remaining": "",
+      "data": "data/rules/operations-v3.json",
+      "execution": "crates/harpoon-core/src/rules/operations.rs::queue_launch/recovery_ready/update",
+      "tests": "pad_uses_three_minute_shared_launch_and_landing_capacity",
+      "audit": {
+        "source": "verified_source",
+        "data": "structured_subscope",
+        "execution": "executable_subscope",
+        "tests": "passing_subscope"
+      }
+    },
+    {
+      "rule_id": "HV04.06-08",
+      "title": "双甲板、滑跑与着舰冲突",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          35,
+          36
+        ],
+        "printed_pages": [
+          "4-3",
+          "4-4"
+        ]
+      },
+      "status": "partial",
+      "accepted_scope": "已验Ford双甲板艏弹射可与回收并行、腰弹射阻止回收，以及滑跑30秒连续序列和迎风方向。",
+      "remaining": "完整非双甲板/多种舰型、舰面停放/重排尚缺；J-15实际混合武器挂载及滑跃载荷<80%资格尚未全核，当前通过的是作业程序测试，不能算完整滑跃出动资格。",
+      "data": "data/rules/operations-v3.json",
+      "execution": "crates/harpoon-core/src/rules/operations.rs::queue_launch/recovery_ready/update",
+      "tests": "bow_catapults_can_continue_during_recovery_but_waist_catapults_block_it; flyoff_sequence_launches_one_aircraft_per_thirty_seconds",
+      "audit": {
+        "source": "verified_source",
+        "data": "structured_subscope",
+        "execution": "executable_subscope",
+        "tests": "not_accepted"
+      }
+    },
+    {
+      "rule_id": "HV04.06-09",
+      "title": "安全海况和事故概率",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          36
+        ],
+        "printed_pages": [
+          "4-4"
+        ]
+      },
+      "status": "tested",
+      "accepted_scope": "已核尺寸、稳定器≥8节、直升机回收系统与机型尺寸修正累计；每超一级20%；独立D100；事故计己损，不增加对方确认战果；胜利评分仍按想定既有损失口径。",
+      "remaining": "",
+      "data": "data/rules/operations-v3.json",
+      "execution": "crates/harpoon-core/src/rules/operations.rs::weather_check/crash_aircraft",
+      "tests": "safe_sea_state_uses_actual_size_stabilizer_speed_and_recovery_system; sea_state_crashes_are_own_losses_without_invented_enemy_kills",
+      "audit": {
+        "source": "verified_source",
+        "data": "structured_subscope",
+        "execution": "executable_subscope",
+        "tests": "passing_subscope"
+      }
+    },
+    {
+      "rule_id": "HV04.06-10",
+      "title": "舰面重排",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          35
+        ],
+        "printed_pages": [
+          "4-3"
+        ]
+      },
+      "status": "not_implemented",
+      "accepted_scope": "已核原文14+D6分钟/每12架。",
+      "remaining": "缺实际停机位置/重排任务与设施受损联动；不能用现有300秒替代。",
+      "data": null,
+      "execution": null,
+      "tests": null,
+      "audit": {
+        "source": "verified_source",
+        "data": "not_structured",
+        "execution": "not_implemented",
+        "tests": "not_accepted"
+      }
+    },
+    {
+      "rule_id": "HV04.06-11",
+      "title": "准备时间全表与工序顺序",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          36
+        ],
+        "printed_pages": [
+          "4-4"
+        ]
+      },
+      "status": "tested",
+      "accepted_scope": "四种尺寸的装弹/加油/警戒数值已逐格检验；直升机警戒减半；加油与装弹取较长，然后警戒；不适用格阻断。",
+      "remaining": "",
+      "data": "data/rules/operations-v3.json",
+      "execution": "crates/harpoon-core/src/rules/operations.rs::ready_seconds/recovery_ready",
+      "tests": "every_printed_ready_and_reaction_cell_matches_independent_source_transcription; source_ready_times_are_size_and_load_specific_and_fuel_parallel_with_arm",
+      "audit": {
+        "source": "verified_source",
+        "data": "structured_subscope",
+        "execution": "executable_subscope",
+        "tests": "passing_subscope"
+      }
+    },
+    {
+      "rule_id": "HV04.06-12",
+      "title": "舰上12架并行加油装弹",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          36
+        ],
+        "printed_pages": [
+          "4-4"
+        ]
+      },
+      "status": "tested",
+      "accepted_scope": "12个勤务位；第13架等位；警戒阶段不继续占用加油装弹位；事故飞机不占后续勤务位。",
+      "remaining": "",
+      "data": "data/rules/operations-v3.json",
+      "execution": "crates/harpoon-core/src/rules/operations.rs::recovery_ready",
+      "tests": "fuel_arm_service_limits_twelve_aircraft_but_alert_work_frees_the_place; landing_crash_does_not_consume_a_fuel_and_arm_service_place",
+      "audit": {
+        "source": "verified_source",
+        "data": "structured_subscope",
+        "execution": "executable_subscope",
+        "tests": "passing_subscope"
+      }
+    },
+    {
+      "rule_id": "HV04.06-13",
+      "title": "初始勤务状态、Alert+5一小时时限",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          36
+        ],
+        "printed_pages": [
+          "4-4"
+        ]
+      },
+      "status": "not_implemented",
+      "accepted_scope": "现有ready库存按作者给定已准备机，起飞命令加入至少5分钟。",
+      "remaining": "仍缺未武装/未警戒初态、人员一小时Alert+5限制和重新警戒；不能称完整准备生命周期。",
+      "data": null,
+      "execution": null,
+      "tests": null,
+      "audit": {
+        "source": "verified_source",
+        "data": "not_structured",
+        "execution": "not_implemented",
+        "tests": "not_accepted"
+      }
+    },
+    {
+      "rule_id": "HV04.06-14",
+      "title": "取消队列和持续人工控制",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          35,
+          36
+        ],
+        "printed_pages": [
+          "4-3",
+          "4-4"
+        ]
+      },
+      "status": "tested",
+      "accepted_scope": "RTS程序：母舰召回取消尚未起飞的预留；无架次/库存损失；起飞任务保存下令时人工归属，母舰恢复AI不转移待飞飞机所有权。",
+      "remaining": "",
+      "data": "data/rules/operations-v3.json",
+      "execution": "crates/harpoon-core/src/rules/operations.rs::cancel_launches/update; sim::RecoverAircraft",
+      "tests": "recall_cancels_reserved_launches_without_a_sortie_or_inventory_loss; queued_manual_launch_keeps_its_ownership_after_carrier_returns_to_ai",
+      "audit": {
+        "source": "verified_source",
+        "data": "structured_subscope",
+        "execution": "executable_subscope",
+        "tests": "passing_subscope"
+      }
+    },
+    {
+      "rule_id": "HV04.06-15",
+      "title": "岸基机场跑道完整作业",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          36
+        ],
+        "printed_pages": [
+          "4-4"
+        ]
+      },
+      "status": "not_implemented",
+      "accepted_scope": "v3未知机场勤务数据不借用旧通用周期。",
+      "remaining": "须按第11章补跑道/设施/机型资格、损伤与作业状态。",
+      "data": null,
+      "execution": null,
+      "tests": null,
+      "audit": {
+        "source": "verified_source",
+        "data": "not_structured",
+        "execution": "not_implemented",
+        "tests": "not_accepted"
+      }
+    },
+    {
+      "rule_id": "HV04.06-16",
+      "title": "海上起降与淹没",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          36
+        ],
+        "printed_pages": [
+          "4-4"
+        ]
+      },
+      "status": "not_implemented",
+      "accepted_scope": "已读安全海况3、每超一级每战术回合10%淹没等原文。",
+      "remaining": "尚无浮筒/水上机、系泊/背风条件和相应动作状态。",
+      "data": null,
+      "execution": null,
+      "tests": null,
+      "audit": {
+        "source": "verified_source",
+        "data": "not_structured",
+        "execution": "not_implemented",
+        "tests": "not_accepted"
+      }
+    },
+    {
+      "rule_id": "HV04.07-01",
+      "title": "高度/油门/挂载对续航",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          36,
+          37
+        ],
+        "printed_pages": [
+          "4-4",
+          "4-5"
+        ]
+      },
+      "status": "partial",
+      "accepted_scope": "flight-profiles已有部分已核喷气机低空、FMP等修正；耗尽计己损一次已验。",
+      "remaining": "全部发动机类别、满载阈值、外油箱、盘旋不位移、近战耗油及返航储备尚未闭环。",
+      "data": "data/rules/operations-v3.json",
+      "execution": "crates/harpoon-core/src/air.rs::fly_missions; rules/flight_profiles.rs",
+      "tests": "fuel_exhaustion_counts_an_own_aircraft_loss_once",
+      "audit": {
+        "source": "verified_source",
+        "data": "structured_subscope",
+        "execution": "executable_subscope",
+        "tests": "passing_subscope"
+      }
+    },
+    {
+      "rule_id": "HV04.07-02",
+      "title": "个体机架次与每日限制",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          37
+        ],
+        "printed_pages": [
+          "4-5"
+        ]
+      },
+      "status": "not_implemented",
+      "accepted_scope": "原文小/中型每天两架次且单架次≤8小时，大型每天一架次。",
+      "remaining": "目前按机型库存回收重生，无个体机身每日身份。",
+      "data": null,
+      "execution": null,
+      "tests": null,
+      "audit": {
+        "source": "verified_source",
+        "data": "not_structured",
+        "execution": "not_implemented",
+        "tests": "not_accepted"
+      }
+    },
+    {
+      "rule_id": "HV04.08-01",
+      "title": "空中加油",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          37,
+          38
+        ],
+        "printed_pages": [
+          "4-5",
+          "4-6"
+        ]
+      },
+      "status": "not_implemented",
+      "accepted_scope": "已有原文检索/渲染证据，不等于已录入。",
+      "remaining": "供受油资格/燃油质量、输送、双机配合、油料消耗全过程待完成。",
+      "data": null,
+      "execution": null,
+      "tests": null,
+      "audit": {
+        "source": "verified_source",
+        "data": "not_structured",
+        "execution": "not_implemented",
+        "tests": "not_accepted"
+      }
+    },
+    {
+      "rule_id": "HV05.02-01",
+      "title": "来源雷达附件、特征与高度包线",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          40,
+          41,
+          42,
+          43
+        ],
+        "printed_pages": [
+          "5-1",
+          "5-2",
+          "5-3",
+          "5-4"
+        ]
+      },
+      "status": "partial",
+      "accepted_scope": "已录6种中国雷达条目、6项美方绑定、11种机型及16项弹体特征；实用朝向/高度/地平线限制。",
+      "remaining": "全库雷达/目标特征、载荷和方面完整覆盖仍缺；未知绑定阻断，不用外形尺寸代特征。",
+      "data": "data/rules/operations-v3.json",
+      "execution": "crates/harpoon-core/src/rules/operations.rs::radar_range/radar_profile; crates/harpoon-core/src/sensors.rs",
+      "tests": "radar_uses_source_signature_range_arc_and_both_physical_heights; airborne_radar_altitude_windows_and_ship_las_ceiling_use_printed_bands",
+      "audit": {
+        "source": "verified_source",
+        "data": "structured_subscope",
+        "execution": "executable_subscope",
+        "tests": "passing_subscope"
+      }
+    },
+    {
+      "rule_id": "HV05.02-02",
+      "title": "杂波源全表与最大值合并",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          43,
+          44
+        ],
+        "printed_pages": [
+          "5-4",
+          "5-5"
+        ]
+      },
+      "status": "partial",
+      "accepted_scope": "海况/降水/地形分类、代际抗杂波和范围因子已结构化；海岸不擅自推断山地/树林；明确作者地形区按±5度扇区相交。",
+      "remaining": "全组合逐格测试未完成；净杂波>20无印出格而阻断；地形遮蔽/气象空间分布仍缺。",
+      "data": "data/rules/operations-v3.json",
+      "execution": "crates/harpoon-core/src/rules/operations.rs::clutter_modifier/radar_range",
+      "tests": "radar_clutter_matches_sps10_jungle_example_and_largest_source_rule; land_clutter_uses_sector_intersection_and_the_largest_source",
+      "audit": {
+        "source": "verified_source",
+        "data": "structured_subscope",
+        "execution": "executable_subscope",
+        "tests": "passing_subscope"
+      }
+    },
+    {
+      "rule_id": "HV05.02-03",
+      "title": "普通雷达不得识别舰级",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          40,
+          41
+        ],
+        "printed_pages": [
+          "5-1",
+          "5-2"
+        ]
+      },
+      "status": "tested",
+      "accepted_scope": "v3普通雷达航迹不写class_name，不再借质量阈值泄露真态舰级；其他来源独立识别另记。",
+      "remaining": "",
+      "data": "data/rules/operations-v3.json",
+      "execution": "crates/harpoon-core/src/sensors.rs::apply_detections",
+      "tests": "ordinary_radar_does_not_reveal_ship_class_or_instant_true_motion",
+      "audit": {
+        "source": "verified_source",
+        "data": "structured_subscope",
+        "execution": "executable_subscope",
+        "tests": "passing_subscope"
+      }
+    },
+    {
+      "rule_id": "HV05.02-04",
+      "title": "航向航速形成时间",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          40,
+          41
+        ],
+        "printed_pages": [
+          "5-1",
+          "5-2"
+        ]
+      },
+      "status": "tested",
+      "accepted_scope": "连续一个180秒战术回合的本方位置测量形成运动估计；此前motion_known=false，零不代表静止；不复制真态速度。",
+      "remaining": "",
+      "data": "data/rules/operations-v3.json",
+      "execution": "crates/harpoon-core/src/rules/operations.rs::update_radar_motion; observe::ContactObs",
+      "tests": "radar_motion_is_derived_from_observed_positions_after_180_seconds",
+      "audit": {
+        "source": "verified_source",
+        "data": "structured_subscope",
+        "execution": "executable_subscope",
+        "tests": "passing_subscope"
+      }
+    },
+    {
+      "rule_id": "HV05.02-05",
+      "title": "编队雷达特征提升",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          40
+        ],
+        "printed_pages": [
+          "5-1"
+        ]
+      },
+      "status": "not_implemented",
+      "accepted_scope": "原文3架升一级、9架升两级。",
+      "remaining": "须有明确编组成员/离合及载荷特征；不得从偶然靠近推断编队。",
+      "data": null,
+      "execution": null,
+      "tests": null,
+      "audit": {
+        "source": "verified_source",
+        "data": "not_structured",
+        "execution": "not_implemented",
+        "tests": "not_accepted"
+      }
+    },
+    {
+      "rule_id": "HV05.02-06",
+      "title": "潜望镜/桅杆短暂接触",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          40
+        ],
+        "printed_pages": [
+          "5-1"
+        ]
+      },
+      "status": "not_implemented",
+      "accepted_scope": "原文25%、ISAR50%，海况>4禁用的分支待接。",
+      "remaining": "桅杆状态、接触窗口与独立骰尚缺。",
+      "data": null,
+      "execution": null,
+      "tests": null,
+      "audit": {
+        "source": "verified_source",
+        "data": "not_structured",
+        "execution": "not_implemented",
+        "tests": "not_accepted"
+      }
+    },
+    {
+      "rule_id": "HV05.02-07",
+      "title": "NCTR/SAR/ISAR等识别能力",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          40,
+          41,
+          42
+        ],
+        "printed_pages": [
+          "5-1",
+          "5-2",
+          "5-3"
+        ]
+      },
+      "status": "not_implemented",
+      "accepted_scope": "普通雷达已禁止无依据识别。",
+      "remaining": "特殊雷达的已核装配、目标域与识别条件仍缺。",
+      "data": null,
+      "execution": null,
+      "tests": null,
+      "audit": {
+        "source": "verified_source",
+        "data": "not_structured",
+        "execution": "not_implemented",
+        "tests": "not_accepted"
+      }
+    },
+    {
+      "rule_id": "HV05.02-08",
+      "title": "蒸发/表面波导",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          43,
+          44,
+          45
+        ],
+        "printed_pages": [
+          "5-4",
+          "5-5",
+          "5-6"
+        ]
+      },
+      "status": "not_implemented",
+      "accepted_scope": "已提取原页；没有把波导当常驻范围加成。",
+      "remaining": "形成条件、D100高度、季节/风况修正和视距表待结构化/执行。",
+      "data": null,
+      "execution": null,
+      "tests": null,
+      "audit": {
+        "source": "verified_source",
+        "data": "not_structured",
+        "execution": "not_implemented",
+        "tests": "not_accepted"
+      }
+    },
+    {
+      "rule_id": "HV05.02-09",
+      "title": "三维地形遮蔽与掠地飞行",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          35,
+          43
+        ],
+        "printed_pages": [
+          "4-3",
+          "5-4"
+        ]
+      },
+      "status": "partial",
+      "accepted_scope": "现有海岸挡海面视线。",
+      "remaining": "无高程数据，不能假定空中视线畅通或被任意陆地遮挡；TA/TF与高度规则未完整。",
+      "data": null,
+      "execution": null,
+      "tests": null,
+      "audit": {
+        "source": "verified_source",
+        "data": "not_structured",
+        "execution": "not_implemented",
+        "tests": "not_accepted"
+      }
+    },
+    {
+      "rule_id": "HV05.03-01",
+      "title": "ESM/测向与电子战全规则",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          45,
+          46
+        ],
+        "printed_pages": [
+          "5-6",
+          "5-7"
+        ]
+      },
+      "status": "partial",
+      "accepted_scope": "既有electronic-warfare模块为已核子集。",
+      "remaining": "全附件/频段/代际、LPI及侦收程序未全验；本批不重记完成。",
+      "data": null,
+      "execution": null,
+      "tests": null,
+      "audit": {
+        "source": "verified_source",
+        "data": "not_structured",
+        "execution": "not_implemented",
+        "tests": "not_accepted"
+      }
+    },
+    {
+      "rule_id": "HV05.04-01",
+      "title": "声纳与水下探测全规则",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [],
+        "printed_pages": []
+      },
+      "status": "partial",
+      "accepted_scope": "既有声纳、浮标、反潜模块不能代表整章来源完成。",
+      "remaining": "主动/被动、环境/声速层/底地形、会聚区/拖阵及全附件待独立四路台账。",
+      "data": null,
+      "execution": null,
+      "tests": null,
+      "audit": {
+        "source": "separate_audit_required",
+        "data": "not_structured",
+        "execution": "not_implemented",
+        "tests": "not_accepted"
+      }
+    },
+    {
+      "rule_id": "HV05.08-01",
+      "title": "目视、红外、光电等探测",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [],
+        "printed_pages": []
+      },
+      "status": "partial",
+      "accepted_scope": "旧有视觉/IR概率模型仍在。",
+      "remaining": "不能列为2026严格程序；须逐项来源替换和信息隔离验收。",
+      "data": null,
+      "execution": null,
+      "tests": null,
+      "audit": {
+        "source": "separate_audit_required",
+        "data": "not_structured",
+        "execution": "not_implemented",
+        "tests": "not_accepted"
+      }
+    },
+    {
+      "rule_id": "HV08.01-01",
+      "title": "作战系统2D6及正常反应时间全表",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          81,
+          84
+        ],
+        "printed_pages": [
+          "8-1",
+          "8-4"
+        ]
+      },
+      "status": "tested",
+      "accepted_scope": "全部55个调整格及正常延迟列，按作战系统代际/人控自动区分；正延迟进入真实雷达链，连续窗口只掷一次。",
+      "remaining": "",
+      "data": "data/rules/operations-v3.json",
+      "execution": "crates/harpoon-core/src/rules/operations.rs::reaction/radar_clocks/radar_recognized",
+      "tests": "every_printed_ready_and_reaction_cell_matches_independent_source_transcription; fifth_and_sixth_generation_reaction_runs_in_sensor_chain_and_is_private_until_recognition",
+      "audit": {
+        "source": "verified_source",
+        "data": "structured_subscope",
+        "execution": "executable_subscope",
+        "tests": "passing_subscope"
+      }
+    },
+    {
+      "rule_id": "HV08.01-02",
+      "title": "ES/TDL提示与负反应调整",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          40,
+          81,
+          84
+        ],
+        "printed_pages": [
+          "5-1",
+          "8-1",
+          "8-4"
+        ]
+      },
+      "status": "not_implemented",
+      "accepted_scope": "负格数据已录；当前不凭负格虚构超程航迹。",
+      "remaining": "缺ES+1、NRT+1、RT+2的来源条件、修正掷骰及提前检测几何。",
+      "data": null,
+      "execution": null,
+      "tests": null,
+      "audit": {
+        "source": "verified_source",
+        "data": "not_structured",
+        "execution": "not_implemented",
+        "tests": "not_accepted"
+      }
+    },
+    {
+      "rule_id": "HV08.01-03",
+      "title": "SAM缺测高延迟",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          81
+        ],
+        "printed_pages": [
+          "8-1"
+        ]
+      },
+      "status": "tested",
+      "accepted_scope": "无可用3D/HF且>15海里追加两增量60秒；手动和自动都过反应门。",
+      "remaining": "",
+      "data": "data/rules/operations-v3.json",
+      "execution": "crates/harpoon-core/src/rules/operations.rs::sam_reaction_ready; crates/harpoon-core/src/weapons.rs",
+      "tests": "without_height_finder_sam_needs_two_more_increments_beyond_fifteen_nm; sam_point_defense_exclusion_and_reaction_gate_both_manual_and_auto_fire",
+      "audit": {
+        "source": "verified_source",
+        "data": "structured_subscope",
+        "execution": "executable_subscope",
+        "tests": "passing_subscope"
+      }
+    },
+    {
+      "rule_id": "HV08.01-04",
+      "title": "近防区SAM最小射程排除",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          81,
+          84
+        ],
+        "printed_pages": [
+          "8-1",
+          "8-4"
+        ]
+      },
+      "status": "tested",
+      "accepted_scope": "Point Defense≤4海里，最小射程>2.5海里的SAM不允许射入；相等和区间外已测。",
+      "remaining": "",
+      "data": "data/rules/operations-v3.json",
+      "execution": "crates/harpoon-core/src/rules/operations.rs::sam_pd_legal; crates/harpoon-core/src/weapons.rs",
+      "tests": "sam_point_defense_exclusion_and_reaction_gate_both_manual_and_auto_fire",
+      "audit": {
+        "source": "verified_source",
+        "data": "structured_subscope",
+        "execution": "executable_subscope",
+        "tests": "passing_subscope"
+      }
+    },
+    {
+      "rule_id": "HV08.01-05",
+      "title": "防空齐射弹库守恒",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          81
+        ],
+        "printed_pages": [
+          "8-1"
+        ]
+      },
+      "status": "tested",
+      "accepted_scope": "新v3实际发几发扣几发；剩余1发不发2发；大弹库不因u8转换归零；Legacy/v2保留原录制语义。",
+      "remaining": "",
+      "data": "data/rules/operations-v3.json",
+      "execution": "crates/harpoon-core/src/weapons.rs::fire_control_scan/manual_fire",
+      "tests": "sam_actual_launched_rounds_never_exceed_or_wrap_the_magazine; historical_save_checksum_and_recorded_core_replay_remain_valid",
+      "audit": {
+        "source": "verified_source",
+        "data": "structured_subscope",
+        "execution": "executable_subscope",
+        "tests": "passing_subscope"
+      }
+    },
+    {
+      "rule_id": "HV08.01-06",
+      "title": "拦截范围、角速度和齐射机会",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          81,
+          83,
+          85,
+          86,
+          87
+        ],
+        "printed_pages": [
+          "8-1",
+          "8-3",
+          "8-5",
+          "8-6",
+          "8-7"
+        ]
+      },
+      "status": "not_implemented",
+      "accepted_scope": "反应/最小射程门已接，不等于完整SAM流程。",
+      "remaining": "F-pole拦截范围、目标航路/方面、三张拦截表和分射程带机会、制导/照射器弧与能力待完成。",
+      "data": null,
+      "execution": null,
+      "tests": null,
+      "audit": {
+        "source": "indexed_tables_not_visually_verified",
+        "data": "not_structured",
+        "execution": "not_implemented",
+        "tests": "not_accepted"
+      }
+    },
+    {
+      "rule_id": "HV08.01-07",
+      "title": "SAM ATA命中表及全部修正",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          88
+        ],
+        "printed_pages": [
+          "8-8"
+        ]
+      },
+      "status": "not_implemented",
+      "accepted_scope": "当前末段Pk仍是RTS近似。",
+      "remaining": "ATA减机动值、尺寸/速度/方面/高度/末段机动等全修正及表格未接；不得称严格防空结算。",
+      "data": null,
+      "execution": null,
+      "tests": null,
+      "audit": {
+        "source": "indexed_tables_not_visually_verified",
+        "data": "not_structured",
+        "execution": "not_implemented",
+        "tests": "not_accepted"
+      }
+    },
+    {
+      "rule_id": "HV08.01-08",
+      "title": "目视瞄准SAM",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          83
+        ],
+        "printed_pages": [
+          "8-3"
+        ]
+      },
+      "status": "not_implemented",
+      "accepted_scope": "源程序已定位。",
+      "remaining": "MANPADS人员瞄准、前后方面资格、专门近防窗口待完成。",
+      "data": null,
+      "execution": null,
+      "tests": null,
+      "audit": {
+        "source": "verified_source",
+        "data": "not_structured",
+        "execution": "not_implemented",
+        "tests": "not_accepted"
+      }
+    },
+    {
+      "rule_id": "HV08.01-09",
+      "title": "舰炮防空命中与修正",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          83,
+          84,
+          89
+        ],
+        "printed_pages": [
+          "8-3",
+          "8-4",
+          "8-9"
+        ]
+      },
+      "status": "not_implemented",
+      "accepted_scope": "8-9表已视觉核验，但未结构化接入。",
+      "remaining": "AA强度、局控/炮位/射界/照射器/表格全修正待接；8-4示例VLow-3与8-9红字表VLow0有冲突。",
+      "data": null,
+      "execution": null,
+      "tests": null,
+      "audit": {
+        "source": "verified_source",
+        "data": "not_structured",
+        "execution": "not_implemented",
+        "tests": "not_accepted"
+      }
+    },
+    {
+      "rule_id": "HV08.01-10",
+      "title": "自主CIWS两次射击/增量",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          84
+        ],
+        "printed_pages": [
+          "8-4"
+        ]
+      },
+      "status": "not_implemented",
+      "accepted_scope": "现有CIWS旧概率/重装周期仍在。",
+      "remaining": "每30秒增量在近防带两次、首发结算后再选目标、实际炮位射界/AA表待完成。",
+      "data": null,
+      "execution": null,
+      "tests": null,
+      "audit": {
+        "source": "verified_source",
+        "data": "not_structured",
+        "execution": "not_implemented",
+        "tests": "not_accepted"
+      }
+    },
+    {
+      "rule_id": "HV08.01-11",
+      "title": "近程拦截破片概率全表",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          84
+        ],
+        "printed_pages": [
+          "8-4"
+        ]
+      },
+      "status": "tested",
+      "accepted_scope": "12个口径/速度概率格，按真实拟合口径，不按通用武器别名；记录距离、实际TTG与D100；遵循近防带操作句，非距离插值。",
+      "remaining": "",
+      "data": "data/rules/operations-v3.json",
+      "execution": "crates/harpoon-core/src/rules/operations.rs::fragment_probability/intercept",
+      "tests": "three_second_table_uses_actual_caliber_and_speed_boundaries; fragment_hook_reaches_the_correct_missile_target_and_uses_source_table_not_distance_curve",
+      "audit": {
+        "source": "verified_source",
+        "data": "structured_subscope",
+        "execution": "executable_subscope",
+        "tests": "passing_subscope"
+      }
+    },
+    {
+      "rule_id": "HV08.01-12",
+      "title": "破片减半关键损伤",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          84
+        ],
+        "printed_pages": [
+          "8-4"
+        ]
+      },
+      "status": "partial",
+      "accepted_scope": "无普通DP/无强制首火；装甲阻断；已核整数结果进入空爆/小艇列。",
+      "remaining": "原机体骰或减半有分数时取整依据未核，保存已掷结果并阻断；未知目标装甲/口径/机体附加关键同样待裁。 小艇列选择已修，但小艇全条件独立集成仍需补测。",
+      "data": "data/rules/operations-v3.json",
+      "execution": "crates/harpoon-core/src/rules/operations.rs::intercept; rules/damage_runtime.rs::intercept_fragments",
+      "tests": "odd_airframe_fragment_critical_count_is_blocked_without_a_rounding_rule; pending_fraction_preserves_rolls_outside_event_ring_and_never_rerolls_on_restore",
+      "audit": {
+        "source": "verified_source",
+        "data": "structured_subscope",
+        "execution": "executable_subscope",
+        "tests": "passing_subscope"
+      }
+    },
+    {
+      "rule_id": "HV08.01-13",
+      "title": "误伤、后退目标及其他防空分支",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [
+          84,
+          88
+        ],
+        "printed_pages": [
+          "8-4",
+          "8-8"
+        ]
+      },
+      "status": "not_implemented",
+      "accepted_scope": "v3不启用旧版“2海里内友机5%半伤”的无原文概率。",
+      "remaining": "真正§8.1.8友舰规则、离去目标、机炮攻击等仍待逐条录入。",
+      "data": null,
+      "execution": null,
+      "tests": null,
+      "audit": {
+        "source": "verified_source",
+        "data": "not_structured",
+        "execution": "not_implemented",
+        "tests": "not_accepted"
+      }
+    },
+    {
+      "rule_id": "ENG-SAVE-01",
+      "title": "新旧版本、快照与完整重演",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [],
+        "printed_pages": []
+      },
+      "status": "tested",
+      "accepted_scope": "v3显式启用及组合表指纹；旧缺省Legacy；旧AI参数缺省/序列化兼容；原Sol三小时档校验和及完整重演；新版队列跨存档全World一致。",
+      "remaining": "",
+      "data": "data/rules/operations-v3.json",
+      "execution": "harpoon-server/src/persistence.rs; rules/damage_runtime.rs",
+      "tests": "historical_save_checksum_and_recorded_core_replay_remain_valid; explicit_v3_table_identity_and_queue_survive_roundtrip; verify-http.py",
+      "audit": {
+        "source": "separate_audit_required",
+        "data": "structured_subscope",
+        "execution": "executable_subscope",
+        "tests": "passing_subscope"
+      }
+    },
+    {
+      "rule_id": "ENG-OBS-01",
+      "title": "玩家观察和中文规则日志",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [],
+        "printed_pages": []
+      },
+      "status": "tested",
+      "accepted_scope": "队列只见本方；识别前雷达时钟仅裁判；未知运动有明确标志；电脑/横竖平板中英队列和中文来源事件。 本方雷达附件最大标称与未知数据阻断明确显示，按真实拟合口径显示近防炮，LLM不丢失annex/source_caliber_mm字段。",
+      "remaining": "",
+      "data": "data/rules/operations-v3.json",
+      "execution": "observe.rs; web/app.js; web/combat-help.js",
+      "tests": "queued_inventory_is_only_exposed_to_its_own_side_and_is_not_still_available; verify-ui.cjs; combat-help.test.cjs; own_observation_publishes_verified_nominal_radar_ranges_and_fitted_gun_caliber; prompt_includes_own_endurance_and_bda_and_reports_command_overflow",
+      "audit": {
+        "source": "separate_audit_required",
+        "data": "structured_subscope",
+        "execution": "executable_subscope",
+        "tests": "passing_subscope"
+      }
+    },
+    {
+      "rule_id": "UPSTREAM-DMG-01",
+      "title": "远端损伤连锁截断",
+      "source": {
+        "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "version": "2026-01-01",
+        "pdf_pages": [],
+        "printed_pages": []
+      },
+      "status": "partial",
+      "accepted_scope": "保留远端身份缩短/事件环避免原OOM。",
+      "remaining": "远端只允许首代次生连锁的硬截断未经过原规则验收，不能算严格来源修复；需单独版本化受控待裁/有界调度，不在此批冒称解决。",
+      "data": null,
+      "execution": null,
+      "tests": null,
+      "audit": {
+        "source": "separate_audit_required",
+        "data": "not_structured",
+        "execution": "not_implemented",
+        "tests": "not_accepted"
+      }
+    }
+  ],
+  "rounding_policy": "本批不外推未核取整格；R-032分数结果阻断并保存已掷证据。"
+}

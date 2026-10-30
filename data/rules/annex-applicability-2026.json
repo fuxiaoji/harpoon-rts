@@ -1,0 +1,837 @@
+{
+  "status": "mixed_consumed_field_registry_and_unresolved_cross_category_source_review",
+  "rule_id": "HV-ANNEX-CROSS-CATEGORY-2026-01",
+  "purpose": "Exact per-field Annex applicability for11 depth/surface and6 conventional battery entries is consumed by submarine_annex. The original six-ASCM MR/ATA cross-category audit below remains source-review-only, unresolved and not a numeric weapon consumer.",
+  "authorities": {
+    "rules_2026": {
+      "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+      "sha256": "8196ffc715bbcccd862d8597c607de7816dac5baee31fa659f89dfaf4323700c",
+      "pdf_pages": [
+        81,
+        82,
+        83,
+        88,
+        89,
+        102,
+        103,
+        104,
+        105
+      ],
+      "printed_pages": [
+        "8-1",
+        "8-2",
+        "8-3",
+        "8-8",
+        "8-9",
+        "9-1",
+        "9-2",
+        "9-3",
+        "9-4"
+      ],
+      "sections": [
+        "8.1.1",
+        "8.2",
+        "9.1",
+        "9.5"
+      ]
+    },
+    "china_navy_2025": {
+      "document": "6-3.（数据库）2025版Chinas_Navy_1_Dec_25.pdf",
+      "edition": "2025-12-01",
+      "sha256": "9ff46ff0c91f323d48c37e9917df6d87583fbe0df337a6dd0bb40bc488d98b2c",
+      "pdf_pages": [
+        71,
+        72,
+        82
+      ],
+      "printed_pages": [
+        "D-1",
+        "D-2",
+        "H-4"
+      ]
+    },
+    "sweden_sitrep63_2022": {
+      "id": "sweden_sitrep63_2022",
+      "document": "27.（数据库）瑞典海军2025（NSITREP_63_13_Nov_25）.pdf",
+      "version": "Naval SITREP #63 October2022 actual printed issue; original filename retained",
+      "sha256": "1b40b60e3e349abcc9a850f2a1bfa6c87fe54be71e13ed5f1131d927c70c9a87",
+      "pdf_pages": [
+        3
+      ],
+      "printed_pages": [
+        "Naval SITREP Page2"
+      ],
+      "fields": [
+        "Btry Rtng",
+        "Propulsion",
+        "Remarks: base AIP capacity"
+      ],
+      "parent_visual_review": true
+    }
+  },
+  "field_boundaries": {
+    "annex_ata_rating": "Annex D1 labels an ATA Rating column. It is a weapon-side attack field, not a target's Maneuver Rating. The six D1 ASCM rows listed below have blank cells in that column.",
+    "target_maneuver_rating": {
+      "value": null,
+      "state": "cross_category_applicability_unresolved",
+      "meaning": "No numeric value is assigned here. Null does not mean MR 0, does not prove a per-model MR is missing, and does not establish that every missile target requires an MR value.",
+      "conflicting_context": [
+        "HV2026 §8.1.1 includes missiles or aircraft in the bogey definition and step 9 subtracts bogey MR.",
+        "HV2026 §9.1 defines aircraft MR pairs.",
+        "The official Kh-22N SAM example has no additional MR deduction, but does not state a universal missile-target exemption.",
+        "The SAM/AAM table footnote names non-maneuvering aircraft; the AA-gun missile rule is in a separate gun-modifier procedure."
+      ]
+    },
+    "source_remarks": "Store only the printed row letters and cited note text. Do not convert those notes to terminal_maneuvers, high_diving, maneuver_rating, or a live maneuvering boolean without an independently resolved rule and time-state binding.",
+    "current_runtime_note": "Static source and data audit only. Current AAW SAM preparation rejects a target profile with no numeric MR; whether the general missile procedure requires that value remains unresolved."
+  },
+  "current_target_ids": [
+    {
+      "stable_id": "cn_yj83",
+      "source_row": "PRC YJ-83 [CSS-N-8 Saccade]",
+      "source": {
+        "pdf_page": 71,
+        "printed_page": "D-1",
+        "annex": "D1 Surface Missiles"
+      },
+      "source_fields": {
+        "range_nm": 97,
+        "min_range_nm": 8.1,
+        "damage": "38 + D6/2",
+        "penetration_cm": 9,
+        "flight_path": "SSkim Cruise",
+        "speed_kts": 594,
+        "signature": "VSmall",
+        "ioc": "1998",
+        "ata_rating_cell": null,
+        "remarks_letters": [
+          "H"
+        ]
+      },
+      "remark_text": [
+        {
+          "letter": "H",
+          "text": "Up to three waypoints.",
+          "source": {
+            "pdf_page": 72,
+            "printed_page": "D-2"
+          }
+        }
+      ],
+      "target_maneuver_rating": null,
+      "terminal_or_live_state_flags": null
+    },
+    {
+      "stable_id": "cn_yj82",
+      "source_row": "PRC YJ-82",
+      "source": {
+        "pdf_page": 71,
+        "printed_page": "D-1",
+        "annex": "D1 Surface Missiles"
+      },
+      "source_fields": {
+        "range_nm": 16.2,
+        "min_range_nm": 4.3,
+        "damage": "37 + D6/2",
+        "penetration_cm": 9,
+        "flight_path": "SSkim Cruise",
+        "speed_kts": 594,
+        "signature": "VSmall",
+        "ioc": "c2004",
+        "ata_rating_cell": null,
+        "remarks_letters": []
+      },
+      "remark_text": [],
+      "target_maneuver_rating": null,
+      "terminal_or_live_state_flags": null
+    },
+    {
+      "stable_id": "cn_yj62",
+      "source_row": "PRC YJ-62",
+      "source": {
+        "pdf_page": 71,
+        "printed_page": "D-1",
+        "annex": "D1 Surface Missiles"
+      },
+      "source_fields": {
+        "range_nm": 189,
+        "min_range_nm": 21.6,
+        "damage": "44 + D6",
+        "penetration_cm": 15,
+        "flight_path": "SSkim Cruise",
+        "speed_kts": 528,
+        "signature": "VSmall",
+        "ioc": "2006",
+        "ata_rating_cell": null,
+        "remarks_letters": []
+      },
+      "remark_text": [],
+      "target_maneuver_rating": null,
+      "terminal_or_live_state_flags": null
+    },
+    {
+      "stable_id": "cn_yj18",
+      "source_row": "PRC YJ-18, 18A, 18B [CSS-NX-13]",
+      "source": {
+        "pdf_page": 71,
+        "printed_page": "D-1",
+        "annex": "D1 Surface Missiles"
+      },
+      "source_fields": {
+        "range_nm": 165.5,
+        "min_range_nm": 10.8,
+        "damage": "33 + D6/2",
+        "penetration_cm": 13,
+        "flight_path": "SSkim Cruise",
+        "speed_kts": 528,
+        "signature": "VSmall",
+        "ioc": "2018",
+        "ata_rating_cell": null,
+        "remarks_letters": [
+          "G"
+        ]
+      },
+      "remark_text": [
+        {
+          "letter": "G",
+          "text": "Last 10.8 nmi is covered by sprint vehicle @ Mach 3.0 (1980 kts).",
+          "source": {
+            "pdf_page": 72,
+            "printed_page": "D-2"
+          }
+        }
+      ],
+      "target_maneuver_rating": null,
+      "terminal_or_live_state_flags": null
+    },
+    {
+      "stable_id": "cn_yj12",
+      "source_row": "PRC YJ-12A, YJ-12B first/high-cruise row",
+      "source": {
+        "pdf_page": 71,
+        "printed_page": "D-1",
+        "annex": "D1 Surface Missiles"
+      },
+      "source_fields": {
+        "range_nm": 162,
+        "min_range_nm": 10.8,
+        "damage": "48 + D6",
+        "penetration_cm": 13,
+        "flight_path": "High Cruise",
+        "speed_kts": 1719,
+        "signature": "VSmall",
+        "ioc": "2017",
+        "ata_rating_cell": null,
+        "remarks_letters": [
+          "E",
+          "F"
+        ]
+      },
+      "remark_text": [
+        {
+          "letter": "E",
+          "text": "Terminal SSkimmer.",
+          "source": {
+            "pdf_page": 72,
+            "printed_page": "D-2"
+          }
+        },
+        {
+          "letter": "F",
+          "text": "Terminal maneuvers.",
+          "source": {
+            "pdf_page": 72,
+            "printed_page": "D-2"
+          }
+        }
+      ],
+      "target_maneuver_rating": null,
+      "terminal_or_live_state_flags": null
+    },
+    {
+      "stable_id": "cn_yj12_surface_skim",
+      "source_row": "PRC YJ-12A, YJ-12B unnamed continuation/SSkim row",
+      "source": {
+        "pdf_page": 71,
+        "printed_page": "D-1",
+        "annex": "D1 Surface Missiles"
+      },
+      "source_fields": {
+        "range_nm": 54,
+        "min_range_nm": 10.8,
+        "damage": "46 + D6",
+        "penetration_cm": 13,
+        "flight_path": "SSkim Cruise",
+        "speed_kts": 1320,
+        "signature": "VSmall (family continuation cell)",
+        "ioc": "2017 (family continuation cell)",
+        "ata_rating_cell": null,
+        "remarks_letters": [
+          "E",
+          "F"
+        ]
+      },
+      "remark_text": [
+        {
+          "letter": "E",
+          "text": "Terminal SSkimmer.",
+          "source": {
+            "pdf_page": 72,
+            "printed_page": "D-2"
+          }
+        },
+        {
+          "letter": "F",
+          "text": "Terminal maneuvers.",
+          "source": {
+            "pdf_page": 72,
+            "printed_page": "D-2"
+          }
+        }
+      ],
+      "target_maneuver_rating": null,
+      "terminal_or_live_state_flags": null
+    }
+  ],
+  "effective_yj12_database_variants": [
+    {
+      "stable_id": "cn_yj12",
+      "source_row": "China Navy D1 first YJ-12A/B row",
+      "source": {
+        "pdf_page": 71,
+        "printed_page": "D-1"
+      },
+      "effective_values": {
+        "range_nm": 162,
+        "min_range_nm": 10.8,
+        "speed_kts": 1719,
+        "profile": "high",
+        "ship_dp": 48,
+        "extra": "D6",
+        "penetration_cm": 13
+      },
+      "source_remarks": [
+        {
+          "letter": "E",
+          "text": "Terminal SSkimmer."
+        },
+        {
+          "letter": "F",
+          "text": "Terminal maneuvers."
+        }
+      ],
+      "normalized_terminal_or_maneuver_flags": null
+    },
+    {
+      "stable_id": "cn_yj12_surface_skim",
+      "source_row": "China Navy D1 unnamed YJ-12A/B continuation row",
+      "source": {
+        "pdf_page": 71,
+        "printed_page": "D-1"
+      },
+      "effective_values": {
+        "range_nm": 54,
+        "min_range_nm": 10.8,
+        "speed_kts": 1320,
+        "profile": "skim",
+        "ship_dp": 46,
+        "extra": "D6",
+        "penetration_cm": 13
+      },
+      "source_remarks": [
+        {
+          "letter": "E",
+          "text": "Terminal SSkimmer."
+        },
+        {
+          "letter": "F",
+          "text": "Terminal maneuvers."
+        }
+      ],
+      "normalized_terminal_or_maneuver_flags": null
+    },
+    {
+      "stable_id": "cn_yj12_air",
+      "source_row": "China Navy H2 YJ-12 first/high-cruise row",
+      "source": {
+        "pdf_page": 82,
+        "printed_page": "H-4"
+      },
+      "effective_values": {
+        "range_nm": 216,
+        "min_range_nm": 21.6,
+        "speed_kts": 1719,
+        "profile": "vhi",
+        "ship_dp": 48,
+        "extra": "D6",
+        "penetration_cm": 9
+      },
+      "source_remarks": [
+        {
+          "letter": "D",
+          "text": "High altitude launch. Last 27 nm is SSkim at 1585 knots. May perform terminal evasive maneuvers."
+        }
+      ],
+      "runtime_data_current_fields_for_review": {
+        "min_launch_altitude_m": 7501,
+        "terminal_nm": 27,
+        "terminal_speed_kts": 1585,
+        "numeric_high_altitude_threshold_source_status": "needs independent mapping review; H2 prints high-altitude condition but this record does not treat 7501 m as a literal printed value"
+      },
+      "normalized_terminal_or_maneuver_flags": null
+    },
+    {
+      "stable_id": "cn_yj12_air_skim",
+      "source_row": "China Navy H2 YJ-12 continuation/SSkim row",
+      "source": {
+        "pdf_page": 82,
+        "printed_page": "H-4"
+      },
+      "effective_values": {
+        "range_nm": 110,
+        "min_range_nm": 21.6,
+        "speed_kts": 1320,
+        "profile": "skim",
+        "ship_dp": 46,
+        "extra": "D6",
+        "penetration_cm": 9
+      },
+      "source_remarks": [
+        {
+          "letter": "D",
+          "text": "High altitude launch. Last 27 nm is SSkim at 1585 knots. May perform terminal evasive maneuvers.",
+          "scope_status": "family-level H2 remark; do not turn capability language into a terminal-state boolean"
+        }
+      ],
+      "runtime_data_current_fields_for_review": {
+        "min_launch_altitude_m": 7501,
+        "terminal_nm": 27,
+        "terminal_speed_kts": 1585,
+        "numeric_high_altitude_threshold_source_status": "needs independent mapping review; H2 prints high-altitude condition but this record does not treat 7501 m as a literal printed value"
+      },
+      "normalized_terminal_or_maneuver_flags": null
+    }
+  ],
+  "runtime_review_not_production_change": {
+    "loader": "scenario.rs calls damage_runtime::configure_database for non-Legacy worlds; that function splits the cn_yj12 base into configured IDs and rebinds aircraft fits to cn_yj12_air.",
+    "sam_consumer": "aaw2026 target selection keys profiles by exact projectile weapon; world_prepare currently requires numeric target MR.",
+    "aam_consumer": "aam2026 obtains target MR from aircraft combat data; do not substitute Annex weapon ATA or an ASCM target-profile value.",
+    "unresolved_rule": "Whether §8.1.1's bogey-MR subtraction applies to missile target categories, and how to represent an inapplicable modifier, remains unresolved. Do not change current nulls or gate based on this candidate alone."
+  },
+  "proposed_metadata_text_only": {
+    "old_status_phrase": "TBD R-059: Annex D has no target MR; strict SAM adjudication pending",
+    "candidate_replacement": "TBD R-059: numeric target MR unset; missile-target applicability of §8.1.1 bogey-MR subtraction unresolved; SAM adjudication pending",
+    "apply_to": [
+      "cn_yj83",
+      "cn_yj82",
+      "cn_yj62",
+      "cn_yj18",
+      "cn_yj12",
+      "cn_yj12_surface_skim"
+    ],
+    "applied": false
+  },
+  "cross_category_review_status": "review-candidate-not-consumed-not-accepted; original current_target_ids/effective_yj12_database_variants preserved",
+  "runtime_field_registry": {
+    "revision": "2026-10-26-field-scoped-annex-runtime-1",
+    "profile": "hv2026-rts-v4",
+    "status": "production-candidate-pending-wide-batch-verification",
+    "lookup": "exact stable ID and exact field; no family/prefix/display-name inference",
+    "source_contract": "artifacts/rules-book-wide-20261026/battery-annex/source-contract.md",
+    "source_matrix": "artifacts/rules-book-wide-20261026/battery-annex/annex-field-consumers.json",
+    "categories": {
+      "platform": "11 mapped exact Sub classes, fields independently qualified; no whole platform completion",
+      "variant": "printed grouped-field scope only; sensor/weapon/named-hull/time variants not inherited",
+      "sensor": "actual installed sensor and exact class:sensor/source binding remain required; AnnexA name not a numeric K fit",
+      "weapon": "actual installed variant/mount/stock and source release state required; ASCM MR remains unresolved below",
+      "battery": "6 conventional fits only; capacity not charge;new not lithium;5Emerg separate",
+      "nuclear": "nuclear2026 exact source_variant/yield+actual installed delivery; Nuclear propulsion not warhead fit; other owner stream",
+      "TDL": "communications2026 explicit source hardware/protocol/directed peer fit; no class/radar-name AnnexL inference; other owner stream"
+    },
+    "platforms": {
+      "cn_039a": {
+        "identity": "exact stable ID only; real Sub required by entity consumer",
+        "fields": {
+          "maximum_game_depth_m": {
+            "source_verified": true,
+            "runtime_fit": "source_bound_exact_row",
+            "data_path": "submarine-annex-2025.json#/platforms/cn_039a/maximum_game_depth_m",
+            "consumer": "submarine_annex::maximum_depth_m",
+            "source": "China's Navy2025-12-01 PDF12/A-5 Type039A/039B/039C [Yuan] shared row: Max Depth Int V; Damage & Speed Breakdown Surf Speed at Dam Pts0 is13kt.",
+            "scope": "printed game depth-band upper mapping only"
+          },
+          "surface_max_kts": {
+            "source_verified": true,
+            "runtime_fit": "source_bound_exact_row",
+            "data_path": "submarine-annex-2025.json#/platforms/cn_039a/surface_max_kts",
+            "consumer": "submarine_annex::surface_max_kts",
+            "source": "China's Navy2025-12-01 PDF12/A-5 Type039A/039B/039C [Yuan] shared row: Max Depth Int V; Damage & Speed Breakdown Surf Speed at Dam Pts0 is13kt.",
+            "scope": "undamaged surface speed only"
+          },
+          "battery_fit": {
+            "source_verified": true,
+            "runtime_fit": "source_bound_exact_row",
+            "data_path": "submarine-annex-2025.json#/platforms/cn_039a/battery_fit",
+            "consumer": "submarine_annex::battery_fit -> battery2026::initialize/step",
+            "source": {
+              "authority": "cn_navy_2025",
+              "pdf_page": 12,
+              "printed_page": "A-5",
+              "annex_row": "Type 039A/039B/039C [Yuan] SSP",
+              "mapping": "Exact current stable ID; grouped variant applicability limited to row Type 039A/039B/039C."
+            },
+            "scope": "capacity/old-new/AIP row only; not chemistry/current charge/snorkel/initial AIP"
+          }
+        },
+        "not_a_whole_platform_qualification": true
+      },
+      "cn_kilo": {
+        "identity": "exact stable ID only; real Sub required by entity consumer",
+        "fields": {
+          "maximum_game_depth_m": {
+            "source_verified": true,
+            "runtime_fit": "source_bound_exact_row",
+            "data_path": "submarine-annex-2025.json#/platforms/cn_kilo/maximum_game_depth_m",
+            "consumer": "submarine_annex::maximum_depth_m",
+            "source": "China's Navy2025-12-01 PDF13/A-6 Russian Project636/636M [Improved Kilo] row at lower left; its continued Damage & Speed Breakdown is at upper right: Max Depth Int IV, undamaged Surf Speed11kt.",
+            "scope": "printed game depth-band upper mapping only"
+          },
+          "surface_max_kts": {
+            "source_verified": true,
+            "runtime_fit": "source_bound_exact_row",
+            "data_path": "submarine-annex-2025.json#/platforms/cn_kilo/surface_max_kts",
+            "consumer": "submarine_annex::surface_max_kts",
+            "source": "China's Navy2025-12-01 PDF13/A-6 Russian Project636/636M [Improved Kilo] row at lower left; its continued Damage & Speed Breakdown is at upper right: Max Depth Int IV, undamaged Surf Speed11kt.",
+            "scope": "undamaged surface speed only"
+          },
+          "battery_fit": {
+            "source_verified": true,
+            "runtime_fit": "source_bound_exact_row",
+            "data_path": "submarine-annex-2025.json#/platforms/cn_kilo/battery_fit",
+            "consumer": "submarine_annex::battery_fit -> battery2026::initialize/step",
+            "source": {
+              "authority": "cn_navy_2025",
+              "pdf_page": 13,
+              "printed_page": "A-6",
+              "annex_row": "Russian Project 636/636M [Improved Kilo] SS",
+              "mapping": "Exact current stable ID Project 636/636M grouped row only."
+            },
+            "scope": "capacity/old-new/AIP row only; not chemistry/current charge/snorkel/initial AIP"
+          }
+        },
+        "not_a_whole_platform_qualification": true
+      },
+      "ru_kilo": {
+        "identity": "exact stable ID only; real Sub required by entity consumer",
+        "fields": {
+          "maximum_game_depth_m": {
+            "source_verified": true,
+            "runtime_fit": "source_bound_exact_row",
+            "data_path": "submarine-annex-2025.json#/platforms/ru_kilo/maximum_game_depth_m",
+            "consumer": "submarine_annex::maximum_depth_m",
+            "source": "Russia's Navy2025-12-01 PDF23/A-20 Project636.3 Varshavyanka [Improved Kilo] left-upper row: Max Depth Int IV; undamaged Surf Speed11kt. Exact ru_kilo is636.3, not a generic Kilo-family alias.",
+            "scope": "printed game depth-band upper mapping only"
+          },
+          "surface_max_kts": {
+            "source_verified": true,
+            "runtime_fit": "source_bound_exact_row",
+            "data_path": "submarine-annex-2025.json#/platforms/ru_kilo/surface_max_kts",
+            "consumer": "submarine_annex::surface_max_kts",
+            "source": "Russia's Navy2025-12-01 PDF23/A-20 Project636.3 Varshavyanka [Improved Kilo] left-upper row: Max Depth Int IV; undamaged Surf Speed11kt. Exact ru_kilo is636.3, not a generic Kilo-family alias.",
+            "scope": "undamaged surface speed only"
+          },
+          "battery_fit": {
+            "source_verified": true,
+            "runtime_fit": "source_bound_exact_row",
+            "data_path": "submarine-annex-2025.json#/platforms/ru_kilo/battery_fit",
+            "consumer": "submarine_annex::battery_fit -> battery2026::initialize/step",
+            "source": {
+              "authority": "ru_navy_2025",
+              "pdf_page": 23,
+              "printed_page": "A-20",
+              "annex_row": "Project 636.3 Varshavyanka [Improved Kilo] SS",
+              "mapping": "Exact current stable ID Project 636.3 only; do not infer other Project 636 variants."
+            },
+            "scope": "capacity/old-new/AIP row only; not chemistry/current charge/snorkel/initial AIP"
+          }
+        },
+        "not_a_whole_platform_qualification": true
+      },
+      "ru_kilo_636": {
+        "identity": "exact stable ID only; real Sub required by entity consumer",
+        "fields": {
+          "maximum_game_depth_m": {
+            "source_verified": true,
+            "runtime_fit": "source_bound_exact_row",
+            "data_path": "submarine-annex-2025.json#/platforms/ru_kilo_636/maximum_game_depth_m",
+            "consumer": "submarine_annex::maximum_depth_m",
+            "source": "Russia's Navy2025-12-01 PDF23/A-20 Project636 Varshavyanka [Improved Kilo] left-lower row, continued text and Damage & Speed Breakdown at upper right: Max Depth Int IV; undamaged Surf Speed11kt. Not the following Project877 row.",
+            "scope": "printed game depth-band upper mapping only"
+          },
+          "surface_max_kts": {
+            "source_verified": true,
+            "runtime_fit": "source_bound_exact_row",
+            "data_path": "submarine-annex-2025.json#/platforms/ru_kilo_636/surface_max_kts",
+            "consumer": "submarine_annex::surface_max_kts",
+            "source": "Russia's Navy2025-12-01 PDF23/A-20 Project636 Varshavyanka [Improved Kilo] left-lower row, continued text and Damage & Speed Breakdown at upper right: Max Depth Int IV; undamaged Surf Speed11kt. Not the following Project877 row.",
+            "scope": "undamaged surface speed only"
+          },
+          "battery_fit": {
+            "source_verified": true,
+            "runtime_fit": "source_bound_exact_row",
+            "data_path": "submarine-annex-2025.json#/platforms/ru_kilo_636/battery_fit",
+            "consumer": "submarine_annex::battery_fit -> battery2026::initialize/step",
+            "source": {
+              "authority": "ru_navy_2025",
+              "pdf_page": 23,
+              "printed_page": "A-20",
+              "annex_row": "Project 636 Varshavyanka [Improved Kilo] SS",
+              "mapping": "Exact current stable ID Project 636 only, distinct from 636.3 and unmapped 877EKM."
+            },
+            "scope": "capacity/old-new/AIP row only; not chemistry/current charge/snorkel/initial AIP"
+          }
+        },
+        "not_a_whole_platform_qualification": true
+      },
+      "cn_039g": {
+        "identity": "exact stable ID only; real Sub required by entity consumer",
+        "fields": {
+          "maximum_game_depth_m": {
+            "source_verified": true,
+            "runtime_fit": "source_bound_exact_row",
+            "data_path": "submarine-annex-2025.json#/platforms/cn_039g/maximum_game_depth_m",
+            "consumer": "submarine_annex::maximum_depth_m",
+            "source": "China's Navy2025-12-01 PDF12/A-5 Type039G1 right-bottom record continues PDF13/A-6 left-top before Type039/039G: its own DP74 table gives undamaged surface12kt; MaxDepth IntV is on A5. Not the neighboring DP73/150new row.",
+            "scope": "printed game depth-band upper mapping only"
+          },
+          "surface_max_kts": {
+            "source_verified": true,
+            "runtime_fit": "source_bound_exact_row",
+            "data_path": "submarine-annex-2025.json#/platforms/cn_039g/surface_max_kts",
+            "consumer": "submarine_annex::surface_max_kts",
+            "source": "China's Navy2025-12-01 PDF12/A-5 Type039G1 right-bottom record continues PDF13/A-6 left-top before Type039/039G: its own DP74 table gives undamaged surface12kt; MaxDepth IntV is on A5. Not the neighboring DP73/150new row.",
+            "scope": "undamaged surface speed only"
+          },
+          "battery_fit": {
+            "source_verified": true,
+            "runtime_fit": "source_bound_exact_row",
+            "data_path": "submarine-annex-2025.json#/platforms/cn_039g/battery_fit",
+            "consumer": "submarine_annex::battery_fit -> battery2026::initialize/step",
+            "source": {
+              "authority": "cn_navy_2025",
+              "pdf_page": 12,
+              "printed_page": "A-5; continuation A-6",
+              "annex_row": "Type 039G1 [Song Mod] SS",
+              "mapping": "Exact current cn_039g stable ID is the already qualified Type039G1 alias, not neighboring Type039/039G150new; DP74 continuation only."
+            },
+            "scope": "capacity/old-new/AIP row only; not chemistry/current charge/snorkel/initial AIP"
+          }
+        },
+        "not_a_whole_platform_qualification": true
+      },
+      "ru_lada": {
+        "identity": "exact stable ID only; real Sub required by entity consumer",
+        "fields": {
+          "maximum_game_depth_m": {
+            "source_verified": true,
+            "runtime_fit": "source_bound_exact_row",
+            "data_path": "submarine-annex-2025.json#/platforms/ru_lada/maximum_game_depth_m",
+            "consumer": "submarine_annex::maximum_depth_m",
+            "source": "Russia's Navy2025-12-01 PDF22/A-19 generic Project677 Lada right-lower record and own DP70 table: MaxDepth IntIV and undamaged surface10kt. Named B-585 submerged18 and two named future lithium500 variants are not generic data.",
+            "scope": "printed game depth-band upper mapping only"
+          },
+          "surface_max_kts": {
+            "source_verified": true,
+            "runtime_fit": "source_bound_exact_row",
+            "data_path": "submarine-annex-2025.json#/platforms/ru_lada/surface_max_kts",
+            "consumer": "submarine_annex::surface_max_kts",
+            "source": "Russia's Navy2025-12-01 PDF22/A-19 generic Project677 Lada right-lower record and own DP70 table: MaxDepth IntIV and undamaged surface10kt. Named B-585 submerged18 and two named future lithium500 variants are not generic data.",
+            "scope": "undamaged surface speed only"
+          },
+          "battery_fit": {
+            "source_verified": true,
+            "runtime_fit": "source_bound_exact_row",
+            "data_path": "submarine-annex-2025.json#/platforms/ru_lada/battery_fit",
+            "consumer": "submarine_annex::battery_fit -> battery2026::initialize/step",
+            "source": {
+              "authority": "ru_navy_2025",
+              "pdf_page": 22,
+              "printed_page": "A-19",
+              "annex_row": "Project 677 [Lada] SS generic class",
+              "mapping": "Generic current stable ID only. Named Kronshtadt B-586 and Velikiye Luki B-587 lithium500 estimate and named B-58518kt are not imported."
+            },
+            "scope": "capacity/old-new/AIP row only; not chemistry/current charge/snorkel/initial AIP"
+          }
+        },
+        "not_a_whole_platform_qualification": true
+      },
+      "us_virginia": {
+        "identity": "exact stable ID only; real Sub required by entity consumer",
+        "fields": {
+          "maximum_game_depth_m": {
+            "source_verified": true,
+            "runtime_fit": "source_bound_exact_row",
+            "data_path": "submarine-annex-2025.json#/platforms/us_virginia/maximum_game_depth_m",
+            "consumer": "submarine_annex::maximum_depth_m",
+            "source": "America's Navy 2025-12-01 PDF16/A-13 Virginia(ii) Blocks I-IV shared class row: Max Depth Int V; Damage & Speed Breakdown Surf Speed at Dam Pts0 is 15kt.",
+            "scope": "printed game depth-band upper mapping only"
+          },
+          "surface_max_kts": {
+            "source_verified": true,
+            "runtime_fit": "source_bound_exact_row",
+            "data_path": "submarine-annex-2025.json#/platforms/us_virginia/surface_max_kts",
+            "consumer": "submarine_annex::surface_max_kts",
+            "source": "America's Navy 2025-12-01 PDF16/A-13 Virginia(ii) Blocks I-IV shared class row: Max Depth Int V; Damage & Speed Breakdown Surf Speed at Dam Pts0 is 15kt.",
+            "scope": "undamaged surface speed only"
+          },
+          "battery_fit": {
+            "source_verified": true,
+            "runtime_fit": "not_applicable_to_conventional_executor",
+            "source": "America2025 PDF14/15/16 nuclear5(Emerg.) printed emergency role",
+            "consumer": null,
+            "missing": "separate nuclear emergency battery procedure and actual fit/state not mapped"
+          }
+        },
+        "not_a_whole_platform_qualification": true
+      },
+      "us_virginia_blk5": {
+        "identity": "exact stable ID only; real Sub required by entity consumer",
+        "fields": {
+          "maximum_game_depth_m": {
+            "source_verified": true,
+            "runtime_fit": "source_bound_exact_row",
+            "data_path": "submarine-annex-2025.json#/platforms/us_virginia_blk5/maximum_game_depth_m",
+            "consumer": "submarine_annex::maximum_depth_m",
+            "source": "America's Navy 2025-12-01 PDF16/A-13 Virginia(ii) Blocks V-VI subgroup shares the printed class Max Depth Int V and Surf Speed 15kt rows; Block V-VI DP rows are NOT imported.",
+            "scope": "printed game depth-band upper mapping only"
+          },
+          "surface_max_kts": {
+            "source_verified": true,
+            "runtime_fit": "source_bound_exact_row",
+            "data_path": "submarine-annex-2025.json#/platforms/us_virginia_blk5/surface_max_kts",
+            "consumer": "submarine_annex::surface_max_kts",
+            "source": "America's Navy 2025-12-01 PDF16/A-13 Virginia(ii) Blocks V-VI subgroup shares the printed class Max Depth Int V and Surf Speed 15kt rows; Block V-VI DP rows are NOT imported.",
+            "scope": "undamaged surface speed only"
+          },
+          "battery_fit": {
+            "source_verified": true,
+            "runtime_fit": "not_applicable_to_conventional_executor",
+            "source": "America2025 PDF14/15/16 nuclear5(Emerg.) printed emergency role",
+            "consumer": null,
+            "missing": "separate nuclear emergency battery procedure and actual fit/state not mapped"
+          }
+        },
+        "not_a_whole_platform_qualification": true
+      },
+      "us_seawolf": {
+        "identity": "exact stable ID only; real Sub required by entity consumer",
+        "fields": {
+          "maximum_game_depth_m": {
+            "source_verified": true,
+            "runtime_fit": "source_bound_exact_row",
+            "data_path": "submarine-annex-2025.json#/platforms/us_seawolf/maximum_game_depth_m",
+            "consumer": "submarine_annex::maximum_depth_m",
+            "source": "America's Navy 2025-12-01 PDF16/A-13 Seawolf(ii) S,C: Max Depth Deep I; Damage & Speed Breakdown Surf Speed at Dam Pts0 is 18kt (shared with JC subgroup; J/JC DP rows NOT imported).",
+            "scope": "printed game depth-band upper mapping only"
+          },
+          "surface_max_kts": {
+            "source_verified": true,
+            "runtime_fit": "source_bound_exact_row",
+            "data_path": "submarine-annex-2025.json#/platforms/us_seawolf/surface_max_kts",
+            "consumer": "submarine_annex::surface_max_kts",
+            "source": "America's Navy 2025-12-01 PDF16/A-13 Seawolf(ii) S,C: Max Depth Deep I; Damage & Speed Breakdown Surf Speed at Dam Pts0 is 18kt (shared with JC subgroup; J/JC DP rows NOT imported).",
+            "scope": "undamaged surface speed only"
+          },
+          "battery_fit": {
+            "source_verified": true,
+            "runtime_fit": "not_applicable_to_conventional_executor",
+            "source": "America2025 PDF14/15/16 nuclear5(Emerg.) printed emergency role",
+            "consumer": null,
+            "missing": "separate nuclear emergency battery procedure and actual fit/state not mapped"
+          }
+        },
+        "not_a_whole_platform_qualification": true
+      },
+      "us_ohio_ssgn": {
+        "identity": "exact stable ID only; real Sub required by entity consumer",
+        "fields": {
+          "maximum_game_depth_m": {
+            "source_verified": true,
+            "runtime_fit": "source_bound_exact_row",
+            "data_path": "submarine-annex-2025.json#/platforms/us_ohio_ssgn/maximum_game_depth_m",
+            "consumer": "submarine_annex::maximum_depth_m",
+            "source": "America's Navy 2025-12-01 PDF15/A-12 Ohio SSGN right column: Max Depth Int V; own Damage & Speed Breakdown Surf Speed at Dam Pts0 is 15kt (Ethan Allen left-column row NOT borrowed).",
+            "scope": "printed game depth-band upper mapping only"
+          },
+          "surface_max_kts": {
+            "source_verified": true,
+            "runtime_fit": "source_bound_exact_row",
+            "data_path": "submarine-annex-2025.json#/platforms/us_ohio_ssgn/surface_max_kts",
+            "consumer": "submarine_annex::surface_max_kts",
+            "source": "America's Navy 2025-12-01 PDF15/A-12 Ohio SSGN right column: Max Depth Int V; own Damage & Speed Breakdown Surf Speed at Dam Pts0 is 15kt (Ethan Allen left-column row NOT borrowed).",
+            "scope": "undamaged surface speed only"
+          },
+          "battery_fit": {
+            "source_verified": true,
+            "runtime_fit": "not_applicable_to_conventional_executor",
+            "source": "America2025 PDF14/15/16 nuclear5(Emerg.) printed emergency role",
+            "consumer": null,
+            "missing": "separate nuclear emergency battery procedure and actual fit/state not mapped"
+          }
+        },
+        "not_a_whole_platform_qualification": true
+      },
+      "us_ohio_ssbn": {
+        "identity": "exact stable ID only; real Sub required by entity consumer",
+        "fields": {
+          "maximum_game_depth_m": {
+            "source_verified": true,
+            "runtime_fit": "source_bound_exact_row",
+            "data_path": "submarine-annex-2025.json#/platforms/us_ohio_ssbn/maximum_game_depth_m",
+            "consumer": "submarine_annex::maximum_depth_m",
+            "source": "America's Navy 2025-12-01 PDF14/A-11 Ohio SSBN: Max Depth Int V; Surf Speed 15kt in the right upper-column continuation before the Lafayette heading (PDF15 Lafayette Surf 16 NOT borrowed).",
+            "scope": "printed game depth-band upper mapping only"
+          },
+          "surface_max_kts": {
+            "source_verified": true,
+            "runtime_fit": "source_bound_exact_row",
+            "data_path": "submarine-annex-2025.json#/platforms/us_ohio_ssbn/surface_max_kts",
+            "consumer": "submarine_annex::surface_max_kts",
+            "source": "America's Navy 2025-12-01 PDF14/A-11 Ohio SSBN: Max Depth Int V; Surf Speed 15kt in the right upper-column continuation before the Lafayette heading (PDF15 Lafayette Surf 16 NOT borrowed).",
+            "scope": "undamaged surface speed only"
+          },
+          "battery_fit": {
+            "source_verified": true,
+            "runtime_fit": "not_applicable_to_conventional_executor",
+            "source": "America2025 PDF14/15/16 nuclear5(Emerg.) printed emergency role",
+            "consumer": null,
+            "missing": "separate nuclear emergency battery procedure and actual fit/state not mapped"
+          }
+        },
+        "not_a_whole_platform_qualification": true
+      },
+      "se_ss_a19": {
+        "identity": "exact stable ID only; real Sub required",
+        "fields": {
+          "battery_fit": {
+            "source_verified": true,
+            "runtime_fit": "source_bound_exact_row",
+            "data_path": "submarine-annex-2025.json#/platforms/se_ss_a19/battery_fit",
+            "consumer": "submarine_annex::battery_fit -> battery2026::initialize/step",
+            "source": {
+              "authority": "sweden_sitrep63_2022",
+              "pdf_page": 3,
+              "printed_page": "Naval SITREP Page2",
+              "annex_row": "Type A19 SSP base row (Gotland, Uppland, Halland), named MLU excluded",
+              "mapping": "Exact stable ID se_ss_a19 base TypeA19; named2015+ MLU2400-unit variant excluded; battery field only."
+            },
+            "scope": "150(new), AIP fitted and printed base2000-unit source only; no depth/speed/sensors/weapons/MLU/chemistry/initial state qualification"
+          }
+        },
+        "not_a_whole_platform_qualification": true
+      }
+    },
+    "all_real_annex_fields_implemented": false,
+    "whole_book_complete": false
+  }
+}

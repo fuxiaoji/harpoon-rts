@@ -1,0 +1,233 @@
+{
+  "schema": 1,
+  "date": "2026-10-25",
+  "profile": "hv2026-rts-v4",
+  "status": "tested_declared_subsets_only",
+  "final_signoff": true,
+  "whole_book_complete": false,
+  "whole_chapter_complete": false,
+  "all_mechanisms_complete": false,
+  "evidence_root": "artifacts/rules-resume-20261025",
+  "authority": {
+    "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+    "version": "2026-01-01 English digital rules",
+    "sha256": "8196ffc715bbcccd862d8597c607de7816dac5baee31fa659f89dfaf4323700c",
+    "parent_visual_pages": [
+      28,
+      79,
+      80,
+      114,
+      132
+    ],
+    "additional": "US2025 PDF14-16/A-11--A-13, SHA189416d65b92d5e2fa50c59c99e309ca5715a5db287e5323295152034e61c5c8; prior precise weapon/source rows retained"
+  },
+  "rows": [
+    {
+      "rule_id": "HV2026-3.1.4",
+      "branch_id": "hard-pivot-179-180-window",
+      "source": "English2026 normal/hard navigation turn windows; existing source hard table unchanged",
+      "data": "navigation-2026.json unchanged",
+      "execution": "navigation2026::hard::step records actual pivot turn_degrees/prior_course",
+      "tests": "navigation_hard_rudder_regression_20261025 H11",
+      "status": "tested_declared_branch"
+    },
+    {
+      "rule_id": "HV2026-3.1.4",
+      "branch_id": "hard-waterjet-G-readonly-preflight",
+      "source": "Source table has no waterjet G row",
+      "data": "navigation-2026.json unchanged",
+      "execution": "navigation2026::hard::validate_order calls source row before queue/manual/risk",
+      "tests": "navigation_hard_rudder_regression_20261025 H12 + legal waterjet A control",
+      "status": "tested_declared_branch"
+    },
+    {
+      "rule_id": "HV2026-ANNEX-A-DEPTH",
+      "branch_id": "eleven-id-provenance",
+      "source": "US2025 PDF14-16 and English2026 PDF28; parent independently viewed",
+      "data": "submarine-annex-2025.json revision4, scope/USauthority/4 IntV strings only; all numeric platform fields byte-equivalent in parsed values",
+      "execution": "Existing exact-ID submarine_annex consumers unchanged; new v4 fingerprint",
+      "tests": "submarine_annex_provenance_20261025 source red then green",
+      "status": "tested_metadata_correction"
+    },
+    {
+      "rule_id": "HV2026-10.2.7",
+      "branch_id": "reattack-initial-window-pass0-only",
+      "source": "English2026 PDF114/10-5,1000yd Past and real reacquisition circle",
+      "data": "torpedo-2026 execution revision17, numerical source cells unchanged",
+      "execution": "torpedo2026::advance_flight requires pass0 for initial_window",
+      "tests": "torpedo_following_regression_20261025 actual180degree off-axis negative + corrected legacy reattack5",
+      "status": "tested_declared_branch"
+    },
+    {
+      "rule_id": "HV2026-10.2.7",
+      "branch_id": "unique-ordinary-opportunity",
+      "source": "English2026 PDF114/10-5 opportunity ship and MOSS procedure; candidate-specific source profile",
+      "data": "Explicit original and candidate target profiles required; no inferred foil/coating/generation",
+      "execution": "torpedo2026::opportunity::{begin,scan,advance}; native damage owner retained after launcher removal",
+      "tests": "torpedo_following_regression_20261025 + torpedo_opportunity_source_boundaries_20261025 +6 independent-process checkpoints shared with MOSS",
+      "status": "tested_declared_subset"
+    },
+    {
+      "rule_id": "HV2026-10.2.7",
+      "branch_id": "real-mobile-decoy-torpedo-ACM-column",
+      "source": "English2026 PDF114/10-5; MOSS uses Torpedo ACM column and a hit destroys decoy",
+      "data": "Existing source Ph matrix; actual deployed decoy noise/generation, no original target coating inheritance",
+      "execution": "opportunity real EW object pursuit and source terminal/destruction",
+      "tests": "torpedo_opportunity_moss_20261025 true hit and miss; corrected legacy O1/O4/O5",
+      "status": "tested_declared_subset"
+    },
+    {
+      "rule_id": "HV2026-10.2.7",
+      "branch_id": "multiple-or-unknown-opportunities",
+      "source": "No sourced acoustic nearest/ID priority. English2026 PDF78/7-3 really has20/10/5/2/1 Seeker Random Lock-On Chance for missile RF/IR/EO signatures; it cannot be assumed to be a torpedo acoustic selection table.",
+      "data": "No invented acoustic priority or cross-domain weights",
+      "execution": "opportunity::scan saves full candidate pending before candidate dice",
+      "tests": "corrected legacy O2/O3 two real EWDeploy MOSS; source_boundaries unknown candidate",
+      "status": "tested_pending_guard_not_complete_mechanism"
+    },
+    {
+      "rule_id": "HV2026-7.5.3",
+      "branch_id": "same-type-active-5000yd-unique-pair",
+      "source": "English2026 PDF79/7-4, active enable/fastest support7.5.2/7.5.7",
+      "data": "torpedo-2026.json interference5000yd/15degree source atoms; canonical weapon IDs",
+      "execution": "interference::prepare synchronized native body snapshot; one original reciprocal identity",
+      "tests": "torpedo_interference_source_20261025 exactinside/equal/outside, active enable and different real types; boundary same-payload/different-ID",
+      "status": "tested_declared_subset"
+    },
+    {
+      "rule_id": "HV2026-7.5.3",
+      "branch_id": "mutual-current-then-fast-synchronous-budget",
+      "source": "Source current setting before capture/fastest after;1second epoch explicitly RTS",
+      "data": "v17 named synchronized policy, source speed/range settings unchanged",
+      "execution": "interference::advance advances both once from same epoch, min paid common duration",
+      "tests": "torpedo_interference_boundary_20261025 slow40->fast65, physical order reversal35ticks; source short-endurance lab override labelled",
+      "status": "tested_declared_rts_mapping"
+    },
+    {
+      "rule_id": "HV2026-7.5.3",
+      "branch_id": "mutual-meeting-no-source-explosion",
+      "source": "Source specifies mutual homing; provides no torpedo-on-torpedo explosion/HP/terminal rule",
+      "data": "Explicit withdrawal of oldRTS9 automatic double destruction",
+      "execution": "Actual meeting keeps both bodies alive and complete private pending",
+      "tests": "corrected legacy I1/I5 + source unique pair/restore + actual HTTP and core independent-process checkpoints",
+      "status": "tested_pending_guard_not_complete_terminal"
+    },
+    {
+      "rule_id": "HV2026-7.5.3",
+      "branch_id": "mutual-competition-environment-prior-pending",
+      "source": "No source allocation among3+, vertical mutual geometry or unresolved environment modifiers",
+      "data": "No ID pairing, vertical teleport or inferred acoustic multiplier",
+      "execution": "Full graph includes old pair and newly enabled3rd; original global pending never resumed",
+      "tests": "source three/late-third/unequal-depth/existing-native-pending",
+      "status": "tested_pending_guard_not_complete_domains"
+    },
+    {
+      "rule_id": "HV2026-10-REFEREE-PENDING",
+      "branch_id": "actual-private-target-separate-original-release",
+      "source": "Referee evidence boundary and immutable own launch declarations",
+      "data": "v17 pending target priority; full multi-member pending retained",
+      "execution": "torpedo2026::defer + interference::pending_target",
+      "tests": "torpedo_pending_target_20261025 actualMOSS miss target3 vs immutable original2, no reroll/overwrite+restore",
+      "status": "tested_declared_branch"
+    },
+    {
+      "rule_id": "HV2026-7.5.7",
+      "branch_id": "generic-final-affordable-epoch",
+      "source": "English2026 PDF80/7-5 unused range fraction per selected source setting",
+      "data": "Source ranges/settings unchanged; numeric tolerances separate from performance",
+      "execution": "advance_flight limits Run/Search/Past/Locked before motion; actual elapsed time/fuel capped",
+      "tests": "torpedo_generic_budget_arrival_20261025 four natural source runouts,5 actual reds then greens together with arrival",
+      "status": "tested_declared_branch"
+    },
+    {
+      "rule_id": "HV2026-10.2.5",
+      "branch_id": "generic-physical-arrival-before-terminal",
+      "source": "Actual physical source attack; no extra step of attack range inferred",
+      "data": "v17 numerical tolerance1e-9nm, no changed weapon data",
+      "execution": "advance_flight actual_arrival instead of post-step remaining<=another whole step",
+      "tests": "torpedo_generic_budget_arrival_20261025 native0.1nm same-depth static target must really reach target before its original terminal die",
+      "status": "tested_declared_branch"
+    },
+    {
+      "rule_id": "HV2026-7.5.5",
+      "branch_id": "wake-gross-endurance-never-net-displacement",
+      "source": "English2026 PDF80/7-5 zigzag closes at75percent attack speed; actual source speed/range retained",
+      "data": "v17 explicit gross epoch/endurance convention in existing1second RTS policy",
+      "execution": "wake::advance_flight accumulates nominal engine cost, last epoch capped, commits position before runout",
+      "tests": "torpedo_wake_budget_20261025 native50kt/27nm endpoint and actual miss500yd/right180 return; legacyWake18 regression",
+      "status": "tested_declared_rts_mapping"
+    },
+    {
+      "rule_id": "HV2026-10-OWN-STATUS",
+      "branch_id": "private-physics-manual-and-restore",
+      "source": "Qualified own reports only; launch is not physical survival feedback",
+      "data": "No new public seeker/phase/dice fields",
+      "execution": "Existing observe/own_status and shared core; FSM/LLM/HTTP/MCP retain legal source entry points",
+      "tests": "source private nonempty events, manual/launcher removal, core separate-process10 checkpoints; actual protocol final pending",
+      "status": "tested_declared_subset"
+    },
+    {
+      "rule_id": "HV2026-3.1.4-SAVE",
+      "branch_id": "presence-preserving-hard-schema",
+      "source": "Repository immutable archives/replay contract; no rule constants changed",
+      "data": "No source numeric changes or table revision bypass",
+      "execution": "Unit.hard_rudder skips only historical absence; HardRudder Default/DerefMut/Deserialize/Serialize preserve field presence and original business field order",
+      "tests": "navigation_hard_rudder_serde_20261025 five cases; actual old navigation v4 now reaches source fingerprint refusal; old v3/Sol original full replay",
+      "status": "tested_compatibility_correction"
+    }
+  ],
+  "source_only_not_runtime": [
+    "battery-aip-source",
+    "nuclear-source",
+    "stealth-noise-source",
+    "remaining-atomic-audit",
+    "damage-signature-design"
+  ],
+  "remaining": [
+    "Full14chapters and expandedE00-E13/optional/manual tables/realAnnex fits require atomic source/data/execution/tests",
+    "FullR054 and noncoplanar/search/alternate-wake/dual-wire/source missing branches remain incomplete",
+    "Poor reattack floor vs PDF115 NoAttack example conflict",
+    "Hard-rudder sub loss-depth/crush/concurrent damage and previous UI free-click/English scope still incomplete",
+    "TDL/FCS typed provenance, battery/AIP, nuclear, full facilities and optional mechanisms",
+    "Comprehensive csg_littoral scenario and expected-utility coordinated FSM only after whole-book signoff"
+  ],
+  "workspace": {
+    "result_sets": 99,
+    "nonempty_targets": 79,
+    "passed": 1316,
+    "failed": 0,
+    "ignored": 5
+  },
+  "workspace_log": {
+    "path": "artifacts/rules-resume-20261025/workspace-final-fourth.log",
+    "sha256": "41294244bc0e73cfedb29c688fea5529b1a6868a5f6739308baaa628844a03ee"
+  },
+  "node": {
+    "passed": 70,
+    "failed": 0
+  },
+  "registered_new_independent_cases": 38,
+  "registered_cases_are_not_rule_count": true,
+  "protocol_evidence": {
+    "http-validation.json": {
+      "path": "artifacts/rules-resume-20261025/protocol-presence-final/http-validation.json",
+      "sha256": "8b77ff26172d6727ae89acf19cbc8525bf879eec310ae63ef97998c2a53789e9"
+    },
+    "cross-process-validation.json": {
+      "path": "artifacts/rules-resume-20261025/protocol-presence-final/cross-process-validation.json",
+      "sha256": "6f8cf4ba4832965ee55bc8032c182d3f1c0cee04bdbace65e8132c8874492e50"
+    },
+    "mcp-public-validation.json": {
+      "path": "artifacts/rules-resume-20261025/protocol-presence-final/mcp-public-validation.json",
+      "sha256": "aedf8848eb4e4b8d678639df45b6b6a95227ff8b1831532f410bf9a0f92817b4"
+    },
+    "hard-preflight-validation.json": {
+      "path": "artifacts/rules-resume-20261025/protocol-presence-final/hard-preflight-validation.json",
+      "sha256": "28041c1789778c5545fda12a5d810682bf2e8322f2443e4151a8f29e3bc15030"
+    },
+    "compatibility-validation.json": {
+      "path": "artifacts/rules-resume-20261025/protocol-presence-final/compatibility-validation.json",
+      "sha256": "a13efe2393aedd6c1d5d3734ed50846938085891e2a5d60ef9b298c2c58b3804"
+    }
+  }
+}

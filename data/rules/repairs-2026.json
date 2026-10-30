@@ -1,0 +1,44 @@
+{
+  "rule_id": "HV2026-14.6-RECORDED-SYSTEMS",
+  "source": {
+    "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+    "version": "2026-01-01",
+    "pdf_page": 136,
+    "printed_page": "14-10",
+    "verified": "Core RAG then actual original image2026-10-24; repairs-source transcription and independent root/wake visual review"
+  },
+  "checkpoint_hours": [
+    6,
+    12,
+    24,
+    48
+  ],
+  "chance_factors": [
+    0.5,
+    0.5,
+    1,
+    1
+  ],
+  "dice_sides": 100,
+  "source_chance": "D100/100 <= remainingDP/originalDP * factor. Keep exact ratio, no intermediate rounding.37/100 at half permits18 and rejects19, matching printed example18%.",
+  "engineering_levels_per_success": 1,
+  "sea_limit_hours": 48,
+  "supported_scope": "Forward-recorded Engineering (one/two-level), bridge, air plot, rudder, CIC, exact sensors/communications/weapon/flight-deck physical components; restore functionality only, never ammunition/cargo/aircraft/structural DP. Flooding pumping and fire restart are separate source ledger consumers.",
+  "execution_revision": "2026-10-26-wide-optional-common-session-1",
+  "execution_status": "Current wide-batch implementation; scope-specific results are in the current batch logs, not a whole-book claim.",
+  "adaptations": [
+    "Player explicitly declares post-battle start with begin_repairs; no silence timer, hidden enemy state or auto peace inference.",
+    "Manual mode snapshots inputs at the exact due tick, postpones only rolling. repair_due resolves unrolled due checkpoints chronologically, stopping after successful repair. Mode changes or late buttons cannot replace snapshots or dice.",
+    "Stable native critical/checkpoint RNG and complete state save; repeated begin does not reset start, trials, pending or failed48h cap.",
+    "Ongoing fire/flooding control cannot silently establish a battle end. First declaration during active casualties is rejected for unresolved coordination; source-time checks stop pending if own combat, another critical or active damage control resumes after declaration. No hidden enemy activity is consulted.",
+    "Referee event cursors are saved for own-unit combat detection but excluded from UnitObs.repairs, including from the damaged side; foreign event counts never become a repair UI input.",
+    "2026-10-25: real re-hit affects only the same recorded physical system; preserve earlier rolls as previous_checks, suspend until a new explicit post-battle declaration, preserve unrelated system clocks. A successful check removes one Engineering level, so a two-level critical can require two successful printed checkpoints.",
+    "2026-10-26: optional breakdown and aircraft repairs share the actual non-battle session gate; a real new airframe hit archives past checks and requires a fresh explicit post-battle declaration."
+  ],
+  "blocked": [
+    "Missing historical critical ledger cannot be inferred from aggregate counters.",
+    "Physical component restore requires a still-valid exact fitting; spent stores never regenerated.",
+    "Complete book acceptance awaits the one final joint test batch."
+  ],
+  "all_mechanisms_complete": false
+}

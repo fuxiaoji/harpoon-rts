@@ -23,7 +23,7 @@ use harpoon_core::types::{EntityId, Side};
 use harpoon_core::world::{VictoryResult, World};
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap,BTreeSet};
 use std::path::{Path, PathBuf};
 use std::sync::{Arc, Mutex};
 use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
@@ -1299,17 +1299,36 @@ fn remove_trailing_commas(text: &str) -> String {
     out
 }
 
-/// Public (crate) validation for proposals that did not just come from the
-/// model, e.g. an advise-mode proposal the player chooses to execute.
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum CommandIssuer { Ai, Player }
+
+/// AI proposals retain AI authority even if execution is delayed or accepted
+/// from an advise panel. Human command queues use validate_player_commands.
 pub(crate) fn validate_commands(
     obs: &Observation,
     side: Side,
     commands: &[Command],
 ) -> (Vec<Command>, Vec<String>) {
+    validate_commands_from(obs,side,commands,CommandIssuer::Ai)
+}
+
+/// Human authority is carried by the caller, never by an observation mutation
+/// or a model-supplied JSON flag. Shape, ownership and source gates are shared.
+pub(crate) fn validate_player_commands(
+    obs: &Observation,
+    side: Side,
+    commands: &[Command],
+) -> (Vec<Command>, Vec<String>) {
+    validate_commands_from(obs,side,commands,CommandIssuer::Player)
+}
+
+fn validate_commands_from(
+    obs:&Observation,side:Side,commands:&[Command],issuer:CommandIssuer,
+)->(Vec<Command>,Vec<String>) {
     let mut valid = Vec::new();
     let mut rejected = Vec::new();
     for command in commands.iter().take(MAX_COMMANDS) {
-        match validate_command(obs, side, command) {
+        match validate_command_from(obs, side, command, issuer) {
             Ok(()) => valid.push(command.clone()),
             Err(e) => rejected.push(format!("{}: {e}", command_short(command))),
         }
@@ -1347,6 +1366,9 @@ fn parse_and_validate_commands(
 }
 
 fn validate_command(obs: &Observation, side: Side, command: &Command) -> Result<(), String> {
+    validate_command_from(obs,side,command,CommandIssuer::Ai)
+}
+fn validate_command_from(obs: &Observation, side: Side, command: &Command, issuer:CommandIssuer) -> Result<(), String> {
     if obs.exercise.as_ref().is_some_and(|e|e.locked) {return Err("exercise alert lock: active orders are unavailable".into());}
     let own = |id: EntityId| -> Result<&UnitObs, String> {
         let u = obs
@@ -1356,6 +1378,13 @@ fn validate_command(obs: &Observation, side: Side, command: &Command) -> Result<
             .ok_or_else(|| format!("单位 #{} 不属于本方或已不在态势中", id.0))?;
         Ok(u)
     };
+    // All transports share this exhaustive actor accessor. A model cannot
+    // release a human reservation by issuing an automation command itself.
+    let actor=obs.units.iter().find(|u|u.id==command.unit_id()&&u.side==side);
+    if actor.is_none()&&!(matches!(command,Command::Unmanned{..}|Command::SetUnitAutomation{..})&&harpoon_core::observe::known_unmanned_unit(obs,command.unit_id())){return Err("发令单位须来自本方态势或已知无人编制".into());}
+    if actor.is_some_and(|u|u.manual_control) && issuer==CommandIssuer::Ai {
+        return Err("manual_control: 该单位由人工接管，AI不能下令或变更自动化权限".into());
+    }
     let contact = |id: harpoon_core::types::ContactId| -> Result<(), String> {
         if obs.contacts.iter().any(|c| c.id == id) {
             Ok(())
@@ -1371,7 +1400,198 @@ fn validate_command(obs: &Observation, side: Side, command: &Command) -> Result<
         }
     };
     match command {
-        Command::SetUnitAutomation{unit,..}=>{own(*unit)?;}
+        Command::Communications{unit,action,retain_manual}=>{
+            let u=own(*unit)?;
+            if issuer==CommandIssuer::Ai && *retain_manual {return Err("AI cannot acquire manual command authority".into());}
+            if obs.rules_profile!=harpoon_core::rules::damage_runtime::RuleProfile::Rts2026Full{return Err("原始报告警告需要v4规则".into());}
+            let data=u.communications.as_ref().ok_or("本单位没有可用原始报告或通信装配")?;
+            use harpoon_core::rules::communications2026::Action as C;
+            match action {
+                C::SendWarning{contact:c,sensor,fit,receivers}|C::SendSolution{contact:c,sensor,fit,receivers,..}|C::SendAirSolution{contact:c,sensor,fit,receivers}=>{
+                    contact(*c)?;
+                    if receivers.is_empty()||receivers.iter().collect::<BTreeSet<_>>().len()!=receivers.len(){return Err("警告需要不同的本方收件单位".into());}
+                    for receiver in receivers {own(*receiver)?;if receiver==unit{return Err("警告不能发给自己".into());}}
+                    if !data["reports"].as_array().is_some_and(|rows|rows.iter().any(|r|r["contact"].as_u64()==Some(c.0 as u64)&&r["sensor"].as_str()==Some(sensor.as_str()))){return Err("需要本单位所选传感器的原始报告".into());}
+                    if !data["fits"].as_array().is_some_and(|rows|rows.iter().any(|f|f["fit"].as_str()==Some(fit.as_str())&&f["send"]==true&&f["operational"]==true&&receivers.iter().all(|receiver|f["receivers"].as_array().is_some_and(|list|list.iter().any(|id|id.as_u64()==Some(receiver.0 as u64)))))){return Err("通信装配或本方收件路径不可用".into());}
+                },
+                C::SetAutomatic{fit,..}=>{if !data["fits"].as_array().is_some_and(|rows|rows.iter().any(|f|f["fit"].as_str()==Some(fit.as_str()))){return Err("本方通信方式不存在".into());}},
+                C::AbandonAlert{contact:c}=>{contact(*c)?;},
+                C::CombineReports{contact:c,own_sensor,messages,aim_source}=>{
+                    contact(*c)?;if let Some(sensor)=own_sensor {if !data["reports"].as_array().is_some_and(|rows|rows.iter().any(|r|r["sensor"].as_str()==Some(sensor.as_str()))){return Err("合成须使用本方实际报告".into());}}
+                    for reference in messages.iter().chain(aim_source.iter()) {if !data["messages"].as_array().is_some_and(|rows|rows.iter().any(|m|m["sender"].as_u64()==Some(reference.sender.0 as u64)&&m["id"].as_u64()==Some(reference.id)&&m["state"]=="delivered"&&m["direction"]=="received")){return Err("合成引用须为本单位实际收到的报告".into());}}
+                },
+            }
+        }
+        Command::Unmanned{unit,action,retain_manual}=>{
+            if !harpoon_core::observe::known_unmanned_unit(obs,*unit){return Err("无人控制目标须来自本方已知编制或遥测".into());}if issuer==CommandIssuer::Ai&&*retain_manual{return Err("AI cannot acquire manual command authority".into());}
+            if obs.rules_profile!=harpoon_core::rules::damage_runtime::RuleProfile::Rts2026Full{return Err("无人硬件控制需要v4规则".into());}
+            if let harpoon_core::rules::unmanned2026::Action::LaunchUuv{launcher}|harpoon_core::rules::unmanned2026::Action::RecoverUuv{launcher,..}=action {
+                let host=own(*unit)?;
+                if host.unmanned.as_ref().and_then(|v|v["launchers"].get(launcher)).is_none_or(|v|!v.is_object()) {return Err("无人潜航器收放需要本方已知的明确母舰库存安排".into());}
+            }
+            match action {harpoon_core::rules::unmanned2026::Action::TakeControl{controller,..}|harpoon_core::rules::unmanned2026::Action::AssignAutonomous{controller,..}=>{own(*controller)?;},harpoon_core::rules::unmanned2026::Action::RequestRadio{vehicle,..}=>{if !harpoon_core::observe::known_unmanned_unit(obs,*vehicle){return Err("无线电请求须来自本方已知无人编制".into());}},harpoon_core::rules::unmanned2026::Action::PlotMission{waypoints,speed_kts}=>{for p in waypoints{finite(p.x,"waypoint.x")?;finite(p.y,"waypoint.y")?;}if let Some(v)=speed_kts{finite(*v,"speed_kts")?;if *v<0.{return Err("speed_kts必须非负".into())}}},_=>{}}
+        }
+        Command::Nuclear{unit,action,retain_manual}=>{
+            let u=own(*unit)?;if issuer==CommandIssuer::Ai&&*retain_manual{return Err("AI cannot acquire manual command authority".into());}
+            if obs.rules_profile!=harpoon_core::rules::damage_runtime::RuleProfile::Rts2026Full{return Err("核战斗部操作需要v4规则".into());}
+            let (weapon,yield_kt)=match action {harpoon_core::rules::nuclear2026::Action::SetYield{weapon,yield_kt}=>(weapon,Some(*yield_kt)),harpoon_core::rules::nuclear2026::Action::Authorize{weapon,..}=>(weapon,None)};
+            if !u.nuclear.as_ref().and_then(|v|v["warheads"].as_array()).is_some_and(|rows|rows.iter().any(|r|r["weapon"].as_str()==Some(weapon.as_str())&&yield_kt.is_none_or(|y|r["allowed_yields_kt"].as_array().is_some_and(|ys|ys.iter().any(|n|n.as_u64()==Some(y as u64)))))){return Err("本方缺少该核装配或来源可选当量".into());}
+        }
+        Command::Antiship{unit,action}=>{
+            let u=own(*unit)?;
+            if obs.rules_profile!=harpoon_core::rules::damage_runtime::RuleProfile::Rts2026Full{return Err("来源反舰航线命令需要v4规则".into());}
+            match action {
+                harpoon_core::rules::surface2026::antiship::Action::Plot{contact:c,weapon,course_deg,speed_kts,enable_run_nm,waypoints,..}=>{
+                    contact(*c)?;
+                    if !u.weapons.iter().any(|m|m.weapon==*weapon){return Err("反舰航线需要本方现有挂载".into());}
+                    finite(*course_deg,"course_deg")?;finite(*speed_kts,"speed_kts")?;finite(*enable_run_nm,"enable_run_nm")?;
+                    if *speed_kts<=0.||*enable_run_nm<0.{return Err("反舰航速必须为正、自导启用航程必须非负".into());}
+                    for p in waypoints {finite(p.x,"waypoint.x")?;finite(p.y,"waypoint.y")?;}
+                }
+            }
+        }
+        Command::SetUnitAutomation{unit,..}=>{if !harpoon_core::observe::known_unmanned_unit(obs,*unit){own(*unit)?;}}
+        Command::Navigation{unit,action}=>{
+            own(*unit)?;if obs.rules_profile!=harpoon_core::rules::damage_runtime::RuleProfile::Rts2026Full{return Err("来源航行命令需要v4规则".into());}
+            if let harpoon_core::rules::navigation2026::Action::Ram{contact:c,speed_kts}=action{
+                contact(*c)?;if let Some(speed)=speed_kts{finite(*speed,"speed_kts")?;if *speed<0.{return Err("撞击航速须非负".into());}}
+            }
+        }
+        Command::Detection{unit,..}=>{own(*unit)?;if obs.rules_profile!=harpoon_core::rules::damage_runtime::RuleProfile::Rts2026Full{return Err("探测勤务命令需要v4规则".into());}}
+        Command::ElectronicWarfare{unit,action}=>{
+            own(*unit)?;
+            if obs.rules_profile!=harpoon_core::rules::damage_runtime::RuleProfile::Rts2026Full{return Err("电子战部署命令需要v4规则".into());}
+            match action {
+                harpoon_core::rules::ew2026::Action::Deploy{at,course_deg,speed_kts,depth_m,..}=>{
+                    if let Some(p)=at{finite(p.x,"at.x")?;finite(p.y,"at.y")?;}
+                    if let Some(v)=course_deg{finite(*v,"course_deg")?;}
+                    if let Some(v)=speed_kts{finite(*v,"speed_kts")?;if *v<0.{return Err("speed_kts 必须非负".into());}}
+                    if let Some(v)=depth_m{finite(*v,"depth_m")?;if *v<0.{return Err("depth_m 必须非负".into());}}
+                }
+                harpoon_core::rules::ew2026::Action::MobileCourse{course_deg,..}=>finite(*course_deg,"course_deg")?,
+                harpoon_core::rules::ew2026::Action::MobileSpeed{speed_kts,..}=>finite(*speed_kts,"speed_kts")?,
+                harpoon_core::rules::ew2026::Action::Sink{..}
+                |harpoon_core::rules::ew2026::Action::FloatingTow{..}
+                |harpoon_core::rules::ew2026::Action::FloatingUntow{..}
+                |harpoon_core::rules::ew2026::Action::StartChaffBarrier{..}
+                |harpoon_core::rules::ew2026::Action::StopChaffBarrier=>{}
+            }
+        }
+        Command::Torpedo{unit,action}=>{
+            own(*unit)?;
+            if obs.rules_profile!=harpoon_core::rules::damage_runtime::RuleProfile::Rts2026Full{return Err("鱼雷勤务命令需要v4规则".into());}
+            match action {
+                harpoon_core::rules::torpedo2026::Action::Plot{contact:c,weapon,speed_index,depth_m,enable_run_nm,bearing_deg,spread_deg,cut_wire}=>{
+                    let u=own(*unit)?;contact(*c)?;
+                    if !u.weapons.iter().any(|m|m.weapon==*weapon){return Err("鱼雷计划需要本方实际挂载".into());}
+                    let profile=u.torpedoes.as_ref().and_then(|v|v["weapon_profiles"].get(weapon)).ok_or("本方来源鱼雷档位资料缺失")?;
+                    let setting=profile["settings"].as_array().and_then(|v|v.get(*speed_index)).ok_or("本方来源鱼雷档位不存在")?;
+                    let maximum=profile["max_depth_m"].as_f64().filter(|v|v.is_finite()).ok_or("来源最大工作深度缺失")?;
+                    let range=setting["range_nm"].as_f64().filter(|v|v.is_finite()&&*v>0.).ok_or("来源档位航程缺失")?;
+                    finite(*depth_m,"depth_m")?;finite(*enable_run_nm,"enable_run_nm")?;
+                    if *depth_m<0.||*depth_m>maximum||*enable_run_nm<0.||*enable_run_nm>range {return Err("鱼雷计划深度或启用点超出本方来源档位".into());}
+                    if let Some(bearing)=bearing_deg {finite(*bearing,"bearing_deg")?;if !(0. ..360.).contains(bearing){return Err("bearing_deg 必须在0..360".into());}}
+                    if spread_deg.len()>255{return Err("鱼雷散布超出命令数量上限".into());}
+                    for spread in spread_deg {finite(*spread,"spread_deg")?;if !(-180. ..=180.).contains(spread){return Err("鱼雷散布必须在-180..180".into());}}
+                    if *cut_wire&&!matches!(profile["guidance"].as_str(),Some("Wire"|"DualWire")){return Err("非线导鱼雷不能声明切线首发".into());}
+                    let c=obs.contacts.iter().find(|v|v.id==*c).unwrap();
+                    if c.stale||c.bearing_only||!c.estimate.x.is_finite()||!c.estimate.y.is_finite()
+                        ||!match c.category {Some(harpoon_core::types::PlatformKind::Ship)=>profile["surface"]==true,Some(harpoon_core::types::PlatformKind::Sub)=>profile["submarine"]==true,_=>false} {return Err("鱼雷计划需要本方当前定位且类别匹配的接触".into());}
+                }
+                harpoon_core::rules::torpedo2026::Action::WireOrder{depth_m,bearing_deg,enable_run_nm,..}=>{
+                    finite(*depth_m,"depth_m")?;finite(*bearing_deg,"bearing_deg")?;finite(*enable_run_nm,"enable_run_nm")?;
+                    if *depth_m<0.||*enable_run_nm<0.{return Err("鱼雷深度和自导启用距离必须非负".into());}
+                }
+                harpoon_core::rules::torpedo2026::Action::Hardkill{contact:c,..}=>contact(*c)?,
+                _=>{}
+            }
+        }
+        Command::Ground{unit,action}=>{
+            own(*unit)?;
+            if obs.rules_profile!=harpoon_core::rules::damage_runtime::RuleProfile::Rts2026Full{return Err("场站勤务命令需要v4规则".into());}
+            match action {
+                harpoon_core::rules::ground2026::Action::RepairRunway{runway}=>{own(*runway)?;},
+                harpoon_core::rules::ground2026::Action::PumpDock{service,..}=>{
+                    let actor=own(*unit)?;
+                    if actor.ground.as_ref().and_then(|g|g["drydocks"]["services"].get(service)).is_none_or(|r|!r.is_object()){return Err("抽灌干坞需要本方已知的泵站和坞门安排".into());}
+                },
+                harpoon_core::rules::ground2026::Action::GciVector{service,aircraft,course_deg}=>{
+                    let actor=own(*unit)?; own(*aircraft)?; finite(*course_deg,"course_deg")?;
+                    if actor.ground.as_ref().and_then(|g|g["gci"]["services"].get(service)).is_none_or(|r|!r.is_object()) {return Err("GCI引导需要本方已知的明确指挥、飞机和无线电安排".into());}
+                },
+                harpoon_core::rules::ground2026::Action::AlongsideResupply{service,rounds}=>{
+                    let actor=own(*unit)?;
+                    let row=actor.ground.as_ref().and_then(|g|g["berth_resupply"]["services"].get(service));
+                    if service.trim().is_empty() || *rounds==0 || row.is_none_or(|r|!r.is_object()) {return Err("靠泊补给需要本舰已知的明确补给安排和正整数数量".into());}
+                },
+                harpoon_core::rules::ground2026::Action::CancelAlongsideResupply{service}=>{
+                    let actor=own(*unit)?;
+                    if actor.ground.as_ref().and_then(|g|g["berth_resupply"]["services"].get(service)).is_none_or(|r|!r.is_object()) {return Err("取消补给需要本舰已知的补给安排".into());}
+                },
+                harpoon_core::rules::ground2026::Action::Spot{contact:c,method}=>{
+                    contact(*c)?;
+                    match method {
+                        harpoon_core::rules::ground2026::Spotting::Aerial{aircraft}=>{own(*aircraft)?;},
+                        harpoon_core::rules::ground2026::Spotting::Ground{observer}|harpoon_core::rules::ground2026::Spotting::Beacon{observer}=>{own(*observer)?;},
+                        _=>{}
+                    }
+                }
+            }
+        }
+        Command::Asw{unit,action,retain_manual}=>{
+            if *retain_manual{return Err("manual control intent is assigned by the player transport".into());}
+            let actor=own(*unit)?;
+            if obs.rules_profile!=harpoon_core::rules::damage_runtime::RuleProfile::Rts2026Full{return Err("深弹阵形需要v4规则".into());}
+            match action {
+                harpoon_core::rules::asw_weapons2026::Action::DepthChargePattern{contact:c,weapon,charges,allocations,..}=>{
+                    contact(*c)?;
+                    if weapon.trim().is_empty()||*charges==0||allocations.is_empty()||actor.depth_charges.is_none(){return Err("深弹阵形需要已知物理装载、数量、投放深度与本方接触".into());}
+                },
+                harpoon_core::rules::asw_weapons2026::Action::DepthChargeEvasion{..}=>{
+                    if actor.kind!=harpoon_core::types::PlatformKind::Sub{return Err("只有本方潜艇可声明深弹规避".into());}
+                },
+                harpoon_core::rules::asw_weapons2026::Action::DepthChargeDepthReport{attack,..}|harpoon_core::rules::asw_weapons2026::Action::DepthChargeSelectDepth{attack,..}=>{
+                    if attack.trim().is_empty(){return Err("深弹问答需要本方已有的明确攻击标记".into());}
+                },
+                harpoon_core::rules::asw_weapons2026::Action::ReloadDepthCharges{weapon,allocations}=>{
+                    if weapon.trim().is_empty()||allocations.is_empty()||actor.depth_charges.is_none(){return Err("重装深弹需要本方真实深弹架与库存安排".into());}
+                },
+            }
+        }
+        Command::SearchAndRescue{unit,action,retain_manual}=>{
+            if *retain_manual {return Err("manual control intent is assigned by the player transport".into());}
+            let u=own(*unit)?;
+            if obs.rules_profile!=harpoon_core::rules::damage_runtime::RuleProfile::Rts2026Full {return Err("搜救命令需要v4规则".into());}
+            if let harpoon_core::rules::expanded_damage2026::RescueAction::Begin{group,..}=action {
+                if !u.survivors.iter().any(|r|r["label"].as_str()==Some(group.as_str())) {return Err("本方已发现的幸存者标记不存在".into());}
+            }
+        }
+        Command::AamHoj{unit,weapon,..}=>{let u=own(*unit)?;if obs.rules_profile!=harpoon_core::rules::damage_runtime::RuleProfile::Rts2026Full||!u.weapons.iter().any(|m|m.weapon==*weapon){return Err("HOJ需要本方已核验挂载和v4规则".into());}}
+        Command::Mines{unit,action}=>{
+            own(*unit)?;if obs.rules_profile!=harpoon_core::rules::damage_runtime::RuleProfile::Rts2026Full{return Err("水雷勤务命令需要v4规则".into());}
+            match action{harpoon_core::rules::mines2026::Action::Stream{partner:Some(id),..}=>{own(*id)?;},harpoon_core::rules::mines2026::Action::Turn{course_deg}=>finite(*course_deg,"course_deg")?,_=>{}}
+        }
+        Command::SetArray{unit,sensor,depth_m,..}=>{
+            let u=own(*unit)?;finite(*depth_m,"depth_m")?;
+            if obs.rules_profile!=harpoon_core::rules::damage_runtime::RuleProfile::Rts2026Full||*depth_m<0.||!u.sensors.iter().any(|s|s.sensor==*sensor){return Err("拖曳阵命令需要本方来源装备和有效深度（v4）".into());}
+        }
+        Command::AirCombat{unit,action}=>{
+            own(*unit)?;
+            if obs.rules_profile!=harpoon_core::rules::damage_runtime::RuleProfile::Rts2026Full{return Err("航空战斗命令需要v4规则".into());}
+            match action {
+                harpoon_core::rules::aircombat2026::Action::Declare{contact:c}|harpoon_core::rules::aircombat2026::Action::SurfaceAttack{contact:c,..}=>contact(*c)?,
+                _=>{}
+            }
+        }
+        Command::Aviation{unit,action}=>{
+            own(*unit)?;
+            if obs.rules_profile!=harpoon_core::rules::damage_runtime::RuleProfile::Rts2026Full{return Err("航空勤务命令需要v4规则".into());}
+            match action {
+                harpoon_core::rules::aviation2026::Action::Refuel{receiver,..}=>{own(*receiver)?;},
+                harpoon_core::rules::aviation2026::Action::Hifr{ship}=>{own(*ship)?;},
+                _=>{}
+            }
+        }
         Command::SetCourse { unit, course_deg } => {
             own(*unit)?;
             finite(*course_deg, "course_deg")?;
@@ -1384,16 +1604,30 @@ fn validate_command(obs: &Observation, side: Side, command: &Command) -> Result<
             }
         }
         Command::SetDepth { unit, depth_m } => {
-            own(*unit)?;
+            let u=own(*unit)?;
             finite(*depth_m, "depth_m")?;
-            if !(0.0..=1000.0).contains(depth_m) {
-                return Err("depth_m 必须在 0..1000；0表示浮航".into());
+            let source=(obs.rules_profile==harpoon_core::rules::damage_runtime::RuleProfile::Rts2026Full)
+                .then(||u.navigation.as_ref().and_then(|n|n.source_rules.as_ref())).flatten();
+            let fitted=source.and_then(|s|s.get("fit")).and_then(|f|f.get("submarine"));
+            let maximum=fitted.and_then(|f|f["maximum_depth_m"].as_f64())
+                .or_else(||source.and_then(|s|s["annex_capability"]["maximum_game_depth_m"].as_f64())).unwrap_or(1000.);
+            let maximum=maximum.min(fitted.and_then(|f|f["water_depth_m"].as_f64()).unwrap_or(f64::INFINITY));
+            if *depth_m<0. || *depth_m>maximum {
+                return Err(format!("depth_m 必须在本方已核定 source 深度范围0..{maximum}；0表示浮航"));
             }
         }
         Command::DamageControl{unit,action}=>{
             let u=own(*unit)?;
             if !matches!(u.kind,harpoon_core::types::PlatformKind::Ship|harpoon_core::types::PlatformKind::Sub){return Err("损管需要本方舰船或潜艇".into());}
-            if !matches!(action.as_str(),"flood_magazines"|"purge_aviation"|"reinforce_dc"){return Err("未知损管行动".into());}
+            if action=="begin_repairs" {
+                if issuer==CommandIssuer::Ai {return Err("human decision required: 结束战斗并开始修理必须由人工决定".into());}
+                if obs.rules_profile!=harpoon_core::rules::damage_runtime::RuleProfile::Rts2026Full {return Err("开始来源修理需要本方v4规则".into());}
+            } else if matches!(action.as_str(),"repairs_auto"|"repairs_manual"|"repair_due") {
+                if obs.rules_profile!=harpoon_core::rules::damage_runtime::RuleProfile::Rts2026Full
+                    || !u.repairs.as_ref().and_then(|v|v.get("session")).is_some_and(Value::is_object) {
+                    return Err("修理后续行动需要已由人工开始的本方v4来源修理session".into());
+                }
+            } else if !matches!(action.as_str(),"flood_magazines"|"purge_aviation"|"reinforce_dc"){return Err("未知损管行动".into());}
             if action=="purge_aviation"&&u.deck.is_none(){return Err("航空库惰化需要航空舰船".into());}
         }
         Command::SetTorpedoRun{unit,weapon,..}=>{
@@ -1672,12 +1906,20 @@ fn build_system_prompt(ctx: &TurnContext) -> String {
 - 自动选敌（weapons free）允许火控自行交战；assign_target 是持续指派；fire 只打一次。反舰导弹、鱼雷、防空导弹有飞行时间、末段拦截、箔条/诱饵、命中概率和损伤。
 - 航空：飞行甲板有 ready/cycling；launch_aircraft 需要甲板上有机型；CAP 守空、ASW 反潜、Recon 侦察、Strike 对接触突击、Rtb 返航。飞机有续航，放飞后要记得召回/回收。
 - 潜艇：set_depth 改深，主动声纳会暴露自己；鱼雷适合近距伏击。导弹射程远，但需要可靠接触与火控。
+- v4的§3.2.4电池/AIP以本方battery_state中已回传的来源状态为准；其中缺失、为null或标为pending的项目仍尚未裁定（unadjudicated）。battery:null是旧电量字段，不能覆盖明确的battery_state；未知不表示0消耗、满电或无限续航（unlimited endurance）。不要套用旧0–100、固定每秒充放或低于20%半速规则，也不要据艇名/年代补值，或在缺少运行/结算条件时把电量换算为精确续航。
+- 本方navigation.source_rules公开已核航行装配和depth_operation。v4可明确下达navigation/action.type=emergency_blow、depth_m目标，按实际速度高一来源档持续上浮至少三层；31节以上不再加档，不能直接至P/S或海面。最低承诺前重复命令不重启，SetDepth不能抵销；到Shallow后另下浮航命令。该动作强制被动Loud并结束quiet，额外空化组合未定不得推算确定声纳收益。不能据敌方真态擅自启动，保留玩家接管，未知装配/零速/极深需待裁。
+- 本方navigation.source_rules.annex_capability的maximum_game_depth_m是附录游戏深度带的上界转换，不是工程实测极限（engineering limit）；有fit时仍受其更浅上限和实际水深限制。平台卡max_depth_m可能是保留旧版数据库值，不得覆盖当前本方来源cap，也不得据静态cap补造完整航行装配、电量或水深。
+- 硬舵（v4 §3.1.4）：navigation/action.type=hard_rudder{course_deg,direction:port|starboard}是明确的急转向，带5%卡舵风险；卡舵后本舰沿该舷持续绕圈，直到每个战术回合结算窗（Resolution）的专用25%解脱成功。rudder_recovery{automatic:true}授权船员持续自动尝试解脱（显式false撤销）；free_rudder{}只授权下一个结算窗手动尝试一次。自动/手动共用同一结算窗的唯一次掷骰，玩家手动接管不取消已授权的船员程序。这与普通战损Rudder关键伤的D6模式、D6延迟和20/40/60三次修理是两个独立程序，不能互替。own的navigation.source_rules.steering只显示本方设备状态（mode/target/direction/jammed/recovery授权与下次结算时点），不含原骰。manual_control=true的单位禁止任何AI代下硬舵或解脱命令。
 - 击沉/击落敌平台计入杀伤数；导弹和鱼雷不计；飞机燃油迫降不计为对方击杀。终局以权威结果为准，平时只能看到本方确认击杀与本方损失。
 "#
     } else {
         r#"## Game model
 - One tick is one simulated second; you report proactively every 300 simulated seconds (5 minutes). This is an RTS adaptation, not the tabletop turn sequence.
 - You see exactly the same double-blind picture as the human player: own units, own contact estimates and own visible events. Never claim knowledge of undetected enemy truth, hidden positions, hidden damage or unconfirmed kills.
+- Under v4, section3.2.4 battery/AIP decisions use the own unit's reported source battery_state. Missing, null or pending items remain unadjudicated. The historical battery:null field cannot override an explicit battery_state; unknown values mean neither zero consumption, full charge nor unlimited endurance. Never apply the historical0-100 scalar, constant per-second charge/drain or20percent half-speed rule, infer missing data from class names/dates, or convert charge into exact remaining time without the required operating/accounting conditions.
+- Own navigation.source_rules exposes verified fits and depth_operation. Explicit v4 navigation/action.type=emergency_blow with depth_m ascends at the next printed speed bracket for at least three bands;31+ gets no further increase. P/S and surface require separate operations after Shallow. Repeating the same order preserves work; ordinary SetDepth cannot cancel the minimum commitment. Blow ends quiet and is passive Loud; its extra cavitation combination remains unresolved, so do not promise sonar outcomes. Use only own observations, retain player takeover, and hold unknown fits, zero-speed and VeryDeep cases for adjudication.
+- Own navigation.source_rules.annex_capability.maximum_game_depth_m converts the printed game-band upper bound, not a measured engineering hull limit. A fitted shallower limit and actual water depth still apply. Platform-card max_depth_m may preserve a historical database scalar; prefer the current own source capability. Static capability supplies no runtime navigation fit, water depth, battery charge or endurance.
+- Hard rudder (v4 3.1.4): navigation/action.type=hard_rudder{course_deg,direction:port|starboard} is an explicit emergency turn carrying a5% jam risk; once jammed the ship keeps circling to that side until the dedicated25% Resolution free succeeds. rudder_recovery{automatic:true} authorizes continuing crew attempts (explicit false revokes); free_rudder{} arms exactly one manual attempt at the next Resolution. Automatic and manual share the single roll of the same Resolution window, and a human manual takeover never cancels an authorized crew procedure. This is a separate program from the ordinary weapon Rudder critical's D6 mode, D6 delay and20/40/60 three-attempt repair — never substitute one for the other. Own navigation.source_rules.steering shows only own equipment state (mode/target/direction/jammed/recovery authorization and the next Resolution time), never raw dice. Units with manual_control=true forbid any AI hard-rudder or recovery order.
 - Contacts carry quality, last-seen age, stale flags and estimate error. A stale contact is not current truth. Identification is not a precise position.
 - Orders apply on the next tick; movement, turns, launch/recovery and reloads take simulated time. A queued receipt is not a result.
 - In the observation, speed_kts/course_deg are current actual values and ordered_* are queued command values. They can differ while paused or accelerating; do not repeat an order merely because the actual value has not changed yet.
@@ -1697,55 +1939,12 @@ MCP 工具（与游戏内命令同一套权威接口）：list_scenarios、new_g
 MCP tools (the same authoritative surface): list_scenarios, new_game{scenario,seed}, get_state{side,since,max_events}, send_command{side,command}, set_time{speed}, step{ticks}, get_events{side,since}, run_selfplay{scenario,seed,max_ticks}.
 You are not an external MCP client; you are the in-game staff. Return commands directly; the server validates them with the same Command enum and submits them to the authoritative engine. Do not claim to have called external tools."#
     };
-    let schema = if zh {
-        r#"## 命令 JSON（cmd 标签；坐标必须写成 {"x":数值,"y":数值}，单位/接触 ID 用观察中的数字）
-{"cmd":"set_course","unit":1,"course_deg":90}
-{"cmd":"set_speed","unit":1,"speed_kts":24}
-{"cmd":"set_depth","unit":2,"depth_m":120}
-{"cmd":"set_altitude","unit":3,"altitude_m":6000}
-{"cmd":"goto","unit":1,"waypoints":[{"x":330,"y":350}]}
-{"cmd":"stop","unit":1}
-{"cmd":"follow","unit":1,"leader":2,"bearing_rel_deg":0,"distance_nm":12}
-{"cmd":"clear_station","unit":1}
-{"cmd":"set_sonar","unit":2,"active":false}
-{"cmd":"set_weapons_free","unit":1,"free":true}
-{"cmd":"set_auto_chaff","unit":1,"on":true}
-{"cmd":"assign_target","unit":1,"contact":10}
-{"cmd":"clear_target","unit":1}
-{"cmd":"fire","unit":1,"contact":10,"weapon":"cn_yj18","rounds":2}
-{"cmd":"deploy_chaff","unit":1}
-{"cmd":"launch_aircraft","unit":5,"class":"cn_j15","count":2,"mission":{"mission":"cap","station":{"x":350,"y":355},"radius_nm":15,"follow":true},"profile":{"altitude_m":3000,"weapons_free":false,"manual_strike":false}}
-{"cmd":"launch_aircraft","unit":5,"class":"cn_j15","count":2,"mission":{"mission":"strike","contact":10},"profile":{"altitude_m":50,"weapons_free":false,"manual_strike":true}}
-{"cmd":"launch_aircraft","unit":5,"class":"cn_z18j","count":1,"mission":{"mission":"recon","point":{"x":430,"y":350}}}
-{"cmd":"launch_aircraft","unit":5,"class":"cn_z18f","count":2,"mission":{"mission":"asw","area":{"x":430,"y":350},"radius_nm":20}}
-{"cmd":"return_to_base","unit":3}
-{"cmd":"recover_aircraft","unit":5}
-"#
+    let schema_heading = if zh {
+        "## 共同命令 JSON Schema（cmd 标签；使用本方观察中的数字 ID，坐标为 {\"x\":数值,\"y\":数值}）。以下单份契约与 MCP/引擎同步，包含全部命令、嵌套 action 和航空 mission；仍须满足来源规则与人控权限。"
     } else {
-        r#"## Command JSON (cmd tag; points MUST be {"x":number,"y":number}; use numeric own-unit/contact ids from the observation)
-{"cmd":"set_course","unit":1,"course_deg":90}
-{"cmd":"set_speed","unit":1,"speed_kts":24}
-{"cmd":"set_depth","unit":2,"depth_m":120}
-{"cmd":"set_altitude","unit":3,"altitude_m":6000}
-{"cmd":"goto","unit":1,"waypoints":[{"x":330,"y":350}]}
-{"cmd":"stop","unit":1}
-{"cmd":"follow","unit":1,"leader":2,"bearing_rel_deg":0,"distance_nm":12}
-{"cmd":"clear_station","unit":1}
-{"cmd":"set_sonar","unit":2,"active":false}
-{"cmd":"set_weapons_free","unit":1,"free":true}
-{"cmd":"set_auto_chaff","unit":1,"on":true}
-{"cmd":"assign_target","unit":1,"contact":10}
-{"cmd":"clear_target","unit":1}
-{"cmd":"fire","unit":1,"contact":10,"weapon":"cn_yj18","rounds":2}
-{"cmd":"deploy_chaff","unit":1}
-{"cmd":"launch_aircraft","unit":5,"class":"fighter","count":2,"mission":{"mission":"cap","station":{"x":350,"y":355},"radius_nm":15,"follow":true},"profile":{"altitude_m":3000,"weapons_free":false,"manual_strike":false}}
-{"cmd":"launch_aircraft","unit":5,"class":"fighter","count":2,"mission":{"mission":"strike","contact":10},"profile":{"altitude_m":50,"weapons_free":false,"manual_strike":true}}
-{"cmd":"launch_aircraft","unit":5,"class":"aew","count":1,"mission":{"mission":"recon","point":{"x":430,"y":350}}}
-{"cmd":"launch_aircraft","unit":5,"class":"helo_asw","count":2,"mission":{"mission":"asw","area":{"x":430,"y":350},"radius_nm":20}}
-{"cmd":"return_to_base","unit":3}
-{"cmd":"recover_aircraft","unit":5}
-"#
+        "## Shared Command JSON Schema (cmd tag; use numeric IDs from your own observation and points as {\"x\":number,\"y\":number}). This single contract is shared with MCP/the engine and includes every command, nested action and air mission. Source gates and human reservations still apply."
     };
+    let schema = format!("{}\n{}", schema_heading, harpoon_core::commands::command_schema());
     let report_language = if zh {
         "用简体中文写 report；命令 JSON 保持英文字段。报告先给结论，再给依据，最后给下一步；不要输出思维链。"
     } else {
@@ -1802,18 +2001,30 @@ format!(
 - `set_engagement_policy` takes unit, air_only (true restricts automatic selection to air/missiles), max_in_flight (0 keeps legacy allocation; 1..32 caps side-wide automatic SAM/AAM commitments to each target). Manual Fire is deliberate and still uses weapon gates. Use this to keep CAP from spending ASMs and avoid every escort firing at the same aircraft.
 - `set_throttle` takes unit and setting=cruise/fmp/reheat/loiter, only for verified flight-profile types. Low flight burns extra range; VLow cannot use reheat. Use cruise altitude for safe transit, descend before the exposed ingress, and budget the return before committing. Fully-loaded mass and drop-tank effects are not inferred from weapon count.
 - `set_jamming` takes unit, mode=off/standoff/escort/spot and contacts=[...]. Use only a unit with offensive_jammer capability; spot needs fresh ES/RWR detections and is bounded by fitted pods. A radiating jammer can itself be detected by ESM even with search radar silent. Unverified victim radar generation has no invented effect; two jammers do not multiply suppression. Escort geometry and modern radar resistance matter.
-- When situation.rules_profile=hv2026-rts-v2, inspect each own unit's functional_damage, weapon/sensor operational flags and deck can_launch/can_recover. HP alone does not describe combat capability. damage_control takes unit and action=flood_magazines (loses all ammunition), purge_aviation (ends aviation fuel/rearming), or reinforce_dc (takes weapon crews away, stops firing). These are deliberate persistent tradeoffs. set_torpedo_run takes unit, weapon and deep; only verified contact-fuzed torpedoes permit this setting. A surface hull with damage.sinking is combat ineffective but remains afloat until damage.sink_at; do not report it sunk before confirmation. A damage adjudication_blocked event is unresolved, not a confirmed hit or miss.
+- In hv2026-rts-v4, inspect each own unit's signature_damage: radar effective index is its current Annex column; acoustic effective_noise and coating_benefit_lost persist after damage. Pending source branches are unresolved. These are own hull facts, never enemy BDA; do not infer a target's damage or coating from missing contacts. The shared engine applies these effects without transferring manual control.
+- Own communications reports identify the exact observer's successful scan. Use only the advertised fitted link and actual own source report; a received warning cannot masquerade as a native scan. Voice is warning-only. Qualified TL allows one sonar alerted search; NRT/RT cue and existing targeting-solution transfer require the engine's explicit provenance. Do not turn link labels into FCS quality or infer enemy BDA. Unknown classification and bearing alternatives remain uncertain. Every message retains its original time/source label. Never set internal retain_manual on any command.
+- Own unmanned state separates hardware HITL/autonomous mode from higher-level AI control. Respect real control elements, link status, transition time, limited acoustic-modem basic data and pending radio recall. Historical telemetry is not a live vehicle status. A controller's known roster permits only control/data requests without hidden position, health or local reports. Persistent human control still takes precedence.
+- Read battery_state before diesel/AIP decisions: unknown charge, capacity or reserves remain unknown. Charging, snorkeling, power modes and accounting clocks are explicit source decisions; pending data does not mean a full battery or unlimited endurance. Use only actual advertised nuclear warheads, selectable yields and release authorization; nuclear propulsion is not a nuclear weapon. No command may supply a free blast, fabricated yield, EMP or fallout outcome.
+- When situation.rules_profile is hv2026-rts-v2 or hv2026-rts-v3, inspect each own unit's functional_damage, weapon/sensor operational flags and deck can_launch/can_recover. HP alone does not describe combat capability. damage_control takes unit and action=flood_magazines (loses all ammunition), purge_aviation (ends aviation fuel/rearming), or reinforce_dc (takes weapon crews away, stops firing). These are deliberate persistent tradeoffs. set_torpedo_run takes unit, weapon and deep; only verified contact-fuzed torpedoes permit this setting. A surface hull with damage.sinking is combat ineffective but remains afloat until damage.sink_at; do not report it sunk before confirmation. A damage adjudication_blocked event is unresolved, not a confirmed hit or miss.
+- Under hv2026-rts-v3, deck.queued aircraft are reserved, not airborne. Do not repeat launches to fill them. RecoverAircraft also cancels that deck's queued launches. Source wind/sea-state, catapult or pad sequences and class-specific servicing can delay operations; unverified annex facts block that operation. contact.motion_known=false means course/speed are not yet measured; zero is not evidence that the target is stationary. No radar class_name means unidentified, never infer a confirmed class from the blip alone. Own radar annex.verified=false denotes unverified source data and blocked automatic detection, not a verified zero-range radar. Verified vs_air/vs_surface values are annex maxima; actual target signature, clutter, arcs and horizon still limit coverage. source_caliber_mm is the fitted caliber; a generic weapon ID is not a caliber claim.
+- Under hv2026-rts-v4, those source gates still apply. Own aviation reports individual Alert+5 expiry, crew/sortie availability, deck parking/respot and source-backed flight fuel. Use aviation with action type=respot to clear parked aircraft, or type=alert,class,count to re-alert eligible airframes. Refuel action requires receiver plus method=Boom/WesternProbe/SovietProbe/BuddyWestern/BuddySoviet matching the actual fitted equipment and exact rendezvous; buddy timing cannot be shortened by declaring an ordinary probe. Hifr requires ship. Never fill unspecified hot-start fuel or payload values yourself. A contact.category=null is unclassified: ES or a bearing does not reveal ship/sub/air type, identity, range, course or speed. Preserve ammunition and investigate; do not select a weapon using presumed referee truth. Source-blocked adjudications remain unresolved.
+- For source airborne ASW, read the own unit's aviation.aircombat.aerial_torpedo_release: ready_at/remaining_s, max_altitude_m, max_speed_kts and rotary_allow_hover. Prepare actual altitude and speed inside these limits, wait for ready_at, and hold if source speed is null. A queued preparation order is not actual readiness. Use only a fresh located submarine contact; bearing-only or nonfinite estimates supply no release location. own_in_flight=null remains unknown and cannot authorize an automatic follow-up. Fire still requires the actual engine fire-control and source release gates.
+- For v4 source sea-ASCM, inspect each own unit's antiship.plots. These are explicit own flight orders: selected contact, weapon, course, speed, enable_run_nm, waypoints and popup. Retain the commander's declared plot; do not derive a default enable point or fill missing source performance. Hold an automatic release without a matching existing plot or known own allocation. A plot does not establish FCS quality or authorize a hit: actual Fire independently checks source binding and fire control. The antiship action accepts only declared flight orders; enemy ECM/signature, FCS, probabilities and private placement/lock dice are never player inputs or player observation.
+- For v4 source torpedoes, use only the own unit's torpedoes.plans and torpedoes.weapon_profiles. A plan selects the exact own ContactId/weapon, a published source settings index, depth, enable point, bearing/spread and the launch cut_wire declaration. It is a prelaunch order, not a WireOrder for an existing weapon, FCS quality, capture report or confirmed hit. Hold automatic Fire if a matching plan, legal source setting, actual tube readiness/aircraft posture or known allocation is missing. Do not create a default enable point, inherit author solution/Good, infer enemy depth/alive, or turn unreported releases into zero. Respect a plan retaining wire: assistance must not automatically issue a high-speed sharp departure that contradicts that intent. The conservative source helper requests one round; the human retains explicit salvo and wire commands under the real source gates.
+- Own ground and situation.mines contain source facility/spotting and mine-warfare work or observed echoes. Use their explicit source/author labels and available actions in the shared contract; an unclassified echo supplies no hidden mine type or referee position. Never infer an unavailable source row from a legacy capability number.
+- Own repairs is the source critical-repair ledger and session, when available. begin_repairs declares the end of combat and starts repair; only the human may make that decision, so never issue it. After the own v4 ledger already contains a human-started session, repairs_auto/repairs_manual may choose its checking mode and repair_due may request the due check. No existing session means hold. The actual engine still judges critical identity, source eligibility, timing and result; do not infer enemy repair state or fill missing probabilities.
 - An own unit with manual_control=true is reserved by the human player. Do not issue orders to it or try to change its automation permission. Existing missions and basic self-defence can continue; only the human can explicitly release the reservation. Plan with the remaining permitted units.
 
 ## Decisive fleet battle doctrine
 - In a kill-count or fleet-decisive scenario, no patch of water is worth holding: find the enemy, fix the contact, and destroy platforms.
 - Prefer enemy carriers, then the escorts and aircraft that enable their strikes; mass missiles in coordinated salvos instead of trickling them into Aegis.
 - Keep your own carriers functional and use AEW/CAP to preserve the picture. Submarines are for close ambush; aircraft are for search, CAP, ASW and stand-off strike.
-- A submarine inside torpedo range (about 22 nm for Yu-10 / Mk 48) is your highest-value attack: fire a 2-4 torpedo salvo in the same turn. Single torpedoes are usually seduced by carrier decoys; do not leave an in-range submarine idle in favour of another CAP rotation.
+- Under v1-v3, the existing submarine doctrine considers a 2-4 torpedo salvo inside its nominal weapon range. Under v4, use the selected own source setting and explicit plan instead: a generic 22nm estimate is not authority for every torpedo, speed setting or spread. Do not leave a legal planned attack idle solely to order another CAP rotation, but never manufacture missing source orders or outcomes.
 - Do not fire without a usable track and fire-control solution, and do not sacrifice the last carrier air group for a marginal damage roll.
 
 ## Ammunition discipline
 - Each contact shows `own_in_flight`. Plan a target-specific salvo budget from observed defences, shooter inventories, estimated arrival times and a retained reserve. There is no universal four-ASM saturation threshold. Count existing rounds before adding more; separate air-to-air and anti-ship commitments using actual releases and weapon ids.
+- `own_in_flight: null` means unconfirmed underwater weapon status, never zero or proof of a hit/miss. Use `own_torpedo_releases` and own source tube/load/reload state for known expenditure and control eligibility; automatic follow-up waits for explicit commander allocation. A referee-side torpedo removal does not confirm its outcome.
 - Carriers and Aegis escorts bleed salvos dry with SAM, RAM, CIWS and decoys. Saturate deliberately (one coordinated window, several shooters), then hold fire and reassess with BDA before re-attacking.
 - Keep a reserve: do not empty a submarine's torpedoes or a shooter's missiles in the first hour unless it is sinking the target. A platform with empty magazines is a target.
 - Aircraft only carry a few ASMs; bring them home and re-arm instead of dribbling single rounds.
@@ -1821,7 +2032,7 @@ format!(
 ## Protect your AEW and fight the submarine war
 - The AEW aircraft is your radar picture. Keep it 25-40 nm behind your CAP line, away from known enemy fighters; if enemy fighters close within ~30 nm of the AEW, recall it or vector CAP onto them. An AEW sniped over the fleet is a self-inflicted blindness.
 - When you hold a submarine contact (category Sub), react: launch ASW helos (mission asw) over the contact, vector ASW-capable ships, and weapons-free ASW rockets inside range. Enemy submarines sink your carriers for heavy points.
-- Your own submarines hunt: transit toward the enemy's last known position, and once inside torpedo range of a tracked ship, fire a 2-4 torpedo salvo. Do not trail the fleet passively.
+- Your own submarines may hunt from observed reports. Source v4 torpedo attacks still require the existing own plan/settings and actual fire-control gates; the v1-v3 salvo doctrine does not supply v4 spread or enable orders.
 - Use `victory.kill_weights`, own losses and remaining time to balance hull attacks against affordable air defence and preserving a lead. Aircraft kills can contribute to victory; do not assume either a universal need to attack a carrier or a guaranteed win from air kills alone.
 - Sonobuoy contacts are 1-DP expendable sensors, not scoreable platforms. Never fire ASMs, guns or torpedoes at a contact identified as Sonobuoy; a missile on a buoy is a wasted magazine. (The contact list below already filters them.)
 
@@ -1895,7 +2106,7 @@ fn build_user_prompt(
         .units
         .iter()
         .map(|u| {
-            json!({
+            let mut unit=json!({
                 "id": u.id.0, "name": u.name, "class": u.class, "kind": u.kind,
                 "manual_control":u.manual_control,
                 "navigation":u.navigation,
@@ -1908,16 +2119,32 @@ fn build_user_prompt(
                 "functional_damage":u.functional_damage,
                 "fire_on": u.fire_on, "assigned": u.assigned.map(|c| c.0),
                 "engagement_policy":u.engagement_policy,
-                "weapons": u.weapons.iter().map(|w| json!({"weapon":w.weapon,"name":w.name,"ammo":w.ammo,"cooldown_s":round1(w.cooldown_s),"operational":w.operational,"min_launch_altitude_m":w.min_launch_altitude_m})).collect::<Vec<_>>(),
-                "sensors": u.sensors.iter().map(|s| json!({"sensor":s.sensor,"name":s.name,"active":s.active,"operational":s.operational,"vs_air":s.vs_air,"vs_surface":s.vs_surface,"vs_sub":s.vs_sub})).collect::<Vec<_>>(),
+                "weapons": u.weapons.iter().map(|w| json!({"weapon":w.weapon,"name":w.name,"ammo":w.ammo,"cooldown_s":round1(w.cooldown_s),"operational":w.operational,"min_launch_altitude_m":w.min_launch_altitude_m,"source_caliber_mm":w.source_caliber_mm})).collect::<Vec<_>>(),
+                "sensors": u.sensors.iter().map(|s| json!({"sensor":s.sensor,"name":s.name,"active":s.active,"operational":s.operational,"vs_air":s.vs_air,"vs_surface":s.vs_surface,"vs_sub":s.vs_sub,"annex":s.annex})).collect::<Vec<_>>(),
                 "chaff": u.chaff, "decoys": u.decoys, "endurance_s":u.endurance_s,
                 "offensive_jammer":harpoon_core::rules::electronic_warfare::capability(&u.class).map(|c|json!({"clutter":c.clutter,"spot_targets":c.spot_targets,"standoff":c.standoff,"source":c.source})),
                 "deck": u.deck.as_ref().map(|d| json!({"ready": d.ready, "cycling": d.cycling,"queued":d.queued,"can_launch":d.can_launch,"can_recover":d.can_recover})),
                 "mission": u.mission,
                 "flight_profile":u.flight_profile,
+                "aviation":u.aviation,
+                "detection":u.detection,
+                "torpedoes":u.torpedoes,
+                "antiship":u.antiship,
+                "ground":u.ground,
+                "repairs":u.repairs,
                 "systems": u.systems,
                 "below_layer": u.below_layer, "battery": u.battery, "towed_deployed": u.towed_deployed,
-            })
+            });
+            unit["signature_damage"]=json!(u.signature_damage);
+            unit["communications"]=json!(u.communications);
+            unit["unmanned"]=json!(u.unmanned);
+            unit["battery_state"]=json!(u.battery_state);
+            unit["projectors"]=json!(u.projectors);
+            unit["depth_charges"]=json!(u.depth_charges);
+            unit["survivors"]=json!(u.survivors);
+            unit["nuclear"]=json!(u.nuclear);
+            unit["expanded_damage"]=json!(u.expanded_damage);
+            unit
         })
         .collect();
     // Sonobuoys flood the contact list after re-detection and are worthless
@@ -1947,6 +2174,7 @@ fn build_user_prompt(
                 "motion_known":c.motion_known,
                 "quality": round2(c.quality), "bearing_only": c.bearing_only,
                 "own_in_flight":c.own_in_flight,"bda_hits":c.bda_hits,
+                "own_torpedo_releases":c.own_torpedo_releases,
                 "bda_damage":c.bda_damage,"bda_hp_fraction":c.bda_hp_fraction,
                 "last_seen_s": round1(c.last_seen_s), "stale": c.stale, "sensors": c.sensors,
             })
@@ -1965,6 +2193,7 @@ fn build_user_prompt(
         "result": obs.result,
         "victory": obs.victory,
         "mission": obs.mission,
+        "mines":obs.mines,
         "exercise":obs.exercise,
         "weather": obs.weather,
         "radar_environment":obs.radar_environment,
@@ -2880,9 +3109,11 @@ mod tests {
         let mut obs=harpoon_core::observe::observe(&world,Side::Blue,0,0);
         obs.units[0].endurance_s=Some(1234.5);
         obs.units[0].functional_damage.insert("damage.fire_pct".into(),3.5);
+        obs.units[0].signature_damage=Some(json!({"source":"own observation fixture","radar":{"fitted":2,"effective":1},"acoustic":{"effective_noise":1,"coating_benefit_lost":true},"pending":{}}));
+        obs.units[0].communications=Some(json!({"scope":"voice_warning_only","fits":[],"reports":[],"messages":[{"id":1,"report_is_live_track":false,"report":{"category":null,"observed_at":17}}]}));
         obs.units[0].weapons[0].operational=false;
         obs.units[0].weapons[0].min_launch_altitude_m=61.0;
-        let c=harpoon_core::observe::ContactObs {id:harpoon_core::ContactId(4),category:harpoon_core::types::PlatformKind::Ship,
+        let c=harpoon_core::observe::ContactObs {id:harpoon_core::ContactId(4),category:Some(harpoon_core::types::PlatformKind::Ship),
             ..serde_json::from_value(json!({"id":4,"category":"Ship","class_name":null,"estimate":{"x":1,"y":2},
                 "est_course_deg":0,"est_speed_kts":0,"quality":0.8,"bearing_only":false,"last_seen_s":0,"stale":false,"sensors":[],
                 "own_in_flight":3,"bda_hits":2,"bda_damage":100,"bda_hp_fraction":0.5})).unwrap()};
@@ -2890,12 +3121,18 @@ mod tests {
         let ctx=TurnContext{supervision:Value::Null,side:Side::Blue,trigger:"test".into(),settings:Settings::from_env(),autonomy:"advise".into(),
             memory:Memory::default(),recent:vec![],generation:0,scenario_id:"prompt-test".into(),seed:1,tick:0,director:false,wake_rules:vec![],trigger_detail:String::new()};
         let prompt=build_user_prompt(&ctx,&obs,&world.db,None);
-        for evidence in ["\"damage.fire_pct\":3.5","\"operational\":false","\"min_launch_altitude_m\":61.0","\"rules_profile\":\"hv2026-rts-v2\""] {assert!(prompt.contains(evidence),"missing own rule-state evidence: {evidence}");}
+        for evidence in ["\"signature_damage\":{","\"coating_benefit_lost\":true","\"effective_noise\":1","\"damage.fire_pct\":3.5","\"operational\":false","\"min_launch_altitude_m\":61.0","\"rules_profile\":\"hv2026-rts-v2\""] {assert!(prompt.contains(evidence),"missing own rule-state evidence: {evidence}");}
         for evidence in ["\"endurance_s\":1234.5","\"own_in_flight\":3","\"bda_hits\":2","\"bda_hp_fraction\":0.5"] {assert!(prompt.contains(evidence),"{evidence}");}
+        for evidence in ["\"communications\":{","\"report_is_live_track\":false","\"observed_at\":17"] {assert!(prompt.contains(evidence),"missing own warning evidence: {evidence}");}
         let commands=vec![Command::Stop{unit:obs.units[0].id};17];
         let (valid,rejected)=validate_commands(&obs,Side::Blue,&commands);
         assert_eq!(valid.len(),16);assert_eq!(rejected.len(),1);
         let system=build_system_prompt(&ctx);assert!(system.contains("manual_strike"));assert!(system.contains("return_to_base"));
+        obs.rules_profile=harpoon_core::rules::damage_runtime::RuleProfile::Rts2026Operations;
+        obs.units[0].sensors[0].annex=Some(json!({"verified":false}));
+        obs.units[0].weapons[0].source_caliber_mm=Some(20.0);
+        let prompt=build_user_prompt(&ctx,&obs,&world.db,None);
+        for evidence in ["\"annex\":{\"verified\":false}","\"source_caliber_mm\":20.0"] {assert!(prompt.contains(evidence),"source metadata lost in player prompt: {evidence}");}
     }
 
     #[test]
@@ -2970,3 +3207,282 @@ mod tests {
         assert!(runtime.take_proposals(Side::Blue, 10).unwrap().is_empty());
     }
 }
+
+#[cfg(test)]
+mod source_closure_20261024 {
+    use super::*;
+
+    fn state() -> (harpoon_core::World, Observation) {
+        let sc=scenario_from_json(r#"{"id":"source-adapter","name":"Source adapter regression","duration_s":1000,"seed":1,
+            "weather":{"visibility_nm":0,"jam":[0,0]},"units":[
+            {"side":"Blue","class":"ffg","name":"OWN","pos":[0,0],"fire_on":false},
+            {"side":"Red","class":"ffg","name":"REFEREE_ONLY_SECRET_TARGET","pos":[99,88],"fire_on":false}]}"#).unwrap();
+        let world = load_scenario(sc, Database::built_in()).unwrap();
+        let mut obs = harpoon_core::observe(&world, Side::Blue, 0, 0);
+        obs.rules_profile = harpoon_core::rules::damage_runtime::RuleProfile::Rts2026Full;
+        (world, obs)
+    }
+    fn context(language: &str) -> TurnContext {
+        let mut settings = Settings::from_env();
+        settings.language = language.into();
+        TurnContext {
+            supervision: Value::Null,
+            side: Side::Blue,
+            trigger: "test".into(),
+            settings,
+            autonomy: "advise".into(),
+            memory: Memory::default(),
+            recent: vec![],
+            generation: 0,
+            scenario_id: "source-adapter".into(),
+            seed: 1,
+            tick: 0,
+            director: false,
+            wake_rules: vec![],
+            trigger_detail: String::new(),
+        }
+    }
+    // Explicit observation-policy fixture, not a native report/physics proof.
+    // Native source admissibility is exercised in core and real protocols.
+    fn warning_policy_fixture() -> (Observation,Command) {
+        let (_,mut obs)=state();let sender=obs.units[0].id;
+        let mut receiver=obs.units[0].clone();receiver.id=EntityId(99);receiver.name="OWN WARNING RECEIVER".into();
+        obs.units.push(receiver);
+        let c:harpoon_core::observe::ContactObs=serde_json::from_value(json!({"id":7,"category":null,"class_name":null,
+            "estimate":{"x":1,"y":2},"est_course_deg":0,"est_speed_kts":0,"quality":0.25,"bearing_only":true,
+            "last_seen_s":0,"stale":false,"sensors":[],"own_in_flight":0,"bda_hits":0,"bda_damage":0,"bda_hp_fraction":null})).unwrap();
+        obs.contacts.push(c);
+        obs.units[0].communications=Some(json!({"scope":"voice_warning_only",
+            "fits":[{"fit":"policy_voice","send":true,"operational":true,"receivers":[99]}],
+            "reports":[{"contact":7,"sensor":"own_policy_sensor"}],"messages":[]}));
+        let cmd=serde_json::from_value(json!({"cmd":"communications","unit":sender,
+            "action":{"type":"send_warning","contact":7,"sensor":"own_policy_sensor","fit":"policy_voice","receivers":[99]}})).unwrap();
+        (obs,cmd)
+    }
+    #[test]
+    fn communications_ai_cannot_forge_the_internal_player_control_intent() {
+        let (obs,cmd)=warning_policy_fixture();
+        assert!(validate_command(&obs,Side::Blue,&cmd).is_ok());
+        let mut forged=cmd;
+        let Command::Communications{retain_manual,..}=&mut forged else{unreachable!()};*retain_manual=true;
+        assert!(validate_command(&obs,Side::Blue,&forged).unwrap_err().contains("manual"));
+    }
+    #[test]
+    fn communications_received_warning_never_substitutes_for_the_senders_native_report() {
+        let (mut obs,cmd)=warning_policy_fixture();
+        let data=obs.units[0].communications.as_mut().unwrap();
+        let report=data["reports"][0].clone();data["reports"]=json!([]);
+        data["messages"]=json!([{"state":"delivered","direction":"received","report":report}]);
+        assert!(validate_command(&obs,Side::Blue,&cmd).is_err());
+    }
+    fn sample(schema: &Value) -> Value {
+        if let Some(v) = schema.get("const") {
+            return v.clone();
+        }
+        if let Some(v) = schema
+            .get("enum")
+            .and_then(Value::as_array)
+            .and_then(|a| a.first())
+        {
+            return v.clone();
+        }
+        for group in ["oneOf", "anyOf"] {
+            if let Some(v) = schema
+                .get(group)
+                .and_then(Value::as_array)
+                .and_then(|a| a.first())
+            {
+                return sample(v);
+            }
+        }
+        let kind = schema["type"].as_str().or_else(|| {
+            schema["type"]
+                .as_array()
+                .and_then(|a| a.first())
+                .and_then(Value::as_str)
+        });
+        match kind {
+            Some("object") => {
+                let mut v = serde_json::Map::new();
+                for key in schema["required"]
+                    .as_array()
+                    .into_iter()
+                    .flatten()
+                    .filter_map(Value::as_str)
+                {
+                    v.insert(key.into(), sample(&schema["properties"][key]));
+                }
+                Value::Object(v)
+            }
+            Some("array") => json!([]),
+            Some("boolean") => json!(false),
+            Some("integer") => json!(schema["minimum"].as_u64().unwrap_or(0)),
+            Some("number") => json!(0.),
+            Some("string") => json!("fixture"),
+            _ => Value::Null,
+        }
+    }
+    #[test]
+    fn source_closure_llm_rejects_all_shared_command_variants_for_a_manual_actor_including_reenable(
+    ) {
+        let (_, mut obs) = state();
+        let unit = obs.units[0].id;
+        assert!(validate_command(&obs, Side::Blue, &Command::Stop { unit }).is_ok());
+        obs.units[0].manual_control = true;
+        let schema = harpoon_core::commands::command_schema();
+        let rows = schema["oneOf"].as_array().unwrap();
+        assert_eq!(rows.len(), 41);
+        for row in rows {
+            let mut raw = sample(row);
+            raw["unit"] = json!(unit);
+            let command: Command = serde_json::from_value(raw.clone())
+                .expect("shared transport must produce a real Command variant");
+            let (_, rejected) = validate_commands(&obs, Side::Blue, &[command]);
+            assert!(rejected.iter().any(|r|r.contains("manual")||r.contains("人工")),
+                "manual actor must be rejected before command-specific guesses: {raw}; got {rejected:?}");
+        }
+        for enabled in [false, true] {
+            let (accepted, rejected) = validate_commands(
+                &obs,
+                Side::Blue,
+                &[Command::SetUnitAutomation { unit, enabled }],
+            );
+            assert!(
+                accepted.is_empty() && !rejected.is_empty(),
+                "AI cannot release or alter the human reservation"
+            );
+        }
+    }
+    #[test]
+    fn source_closure_llm_prompt_preserves_own_ground_mines_envelope_and_unknown_weapon_count() {
+        let (world, mut obs) = state();
+        obs.units[0].ground = Some(json!({"fixture":"OWN_GROUND_SOURCE_PROOF","runway_cuts":2}));
+        obs.mines = Some(
+            json!({"fixture":"OWN_MINES_SOURCE_PROOF","echoes":[{"id":"opaque-own-echo","classified":false}]}),
+        );
+        obs.units[0].aviation = Some(
+            json!({"profile":"hv2026-rts-v4","aircombat":{"aerial_torpedo_release":{
+            "ready_at":181,"remaining_s":180,"max_altitude_m":2000,"rotary_allow_hover":true,"max_speed_kts":70}}}),
+        );
+        obs.contacts.push(
+            serde_json::from_value(json!({"id":71,"category":"Sub","class_name":null,
+            "estimate":{"x":0,"y":1},"est_course_deg":0,"est_speed_kts":0,"quality":1,
+            "bearing_only":false,"last_seen_s":0,"stale":false,"sensors":[],"own_in_flight":null}))
+            .unwrap(),
+        );
+        for language in ["zh-CN", "en-US"] {
+            let prompt = build_user_prompt(&context(language), &obs, &world.db, None);
+            for proof in [
+                "OWN_GROUND_SOURCE_PROOF",
+                "OWN_MINES_SOURCE_PROOF",
+                "aerial_torpedo_release",
+                "\"own_in_flight\":null",
+            ] {
+                assert!(
+                    prompt.contains(proof),
+                    "own source state was dropped from LLM observation: {proof}"
+                );
+            }
+            assert!(!prompt.contains("REFEREE_ONLY_SECRET_TARGET"));
+        }
+    }
+    #[test]
+    fn source_closure_llm_discovers_one_canonical_complete_command_contract() {
+        let canonical = harpoon_core::commands::command_schema().to_string();
+        for language in ["zh-CN", "en-US"] {
+            let system = build_system_prompt(&context(language));
+            assert_eq!(
+                system.matches(&canonical).count(),
+                1,
+                "LLM must see the same complete37-command/nested-action schema as MCP exactly once"
+            );
+        }
+    }
+    #[test]
+    fn source_closure_repairs_require_human_begin_and_existing_own_v4_session() {
+        let (_, mut obs) = state();
+        let unit = obs.units[0].id;
+        obs.units[0].repairs =
+            Some(json!({"criticals":{},"session":{"began_at":0,"automatic":false},"pending":null}));
+        let begin = validate_command(
+            &obs,
+            Side::Blue,
+            &Command::DamageControl {
+                unit,
+                action: "begin_repairs".into(),
+            },
+        )
+        .unwrap_err();
+        assert!(begin.contains("human")||begin.contains("人工"),"begin is specifically a human battle-end decision, not just an unknown action: {begin}");
+        for action in ["repairs_auto", "repairs_manual", "repair_due"] {
+            assert!(validate_command(&obs,Side::Blue,&Command::DamageControl{unit,action:action.into()}).is_ok(),"existing human-declared source session must discover the registered follow-up action {action}");
+        }
+        obs.units[0].repairs.as_mut().unwrap()["session"] = Value::Null;
+        assert!(
+            validate_command(
+                &obs,
+                Side::Blue,
+                &Command::DamageControl {
+                    unit,
+                    action: "repairs_auto".into()
+                }
+            )
+            .is_err(),
+            "AI cannot bootstrap an unbegun session"
+        );
+        obs.rules_profile = harpoon_core::rules::damage_runtime::RuleProfile::Rts2026Operations;
+        assert!(validate_command(
+            &obs,
+            Side::Blue,
+            &Command::DamageControl {
+                unit,
+                action: "repair_due".into()
+            }
+        )
+        .is_err());
+        assert!(validate_command(
+            &obs,
+            Side::Blue,
+            &Command::DamageControl {
+                unit,
+                action: "invented_repair".into()
+            }
+        )
+        .is_err());
+    }
+    #[test]
+    fn source_closure_llm_prompt_keeps_only_the_existing_own_repairs_projection() {
+        let (world, mut obs) = state();
+        obs.units[0].repairs = Some(
+            json!({"fixture":"OWN_REPAIRS_SOURCE_PROOF","criticals":{},"session":{"began_at":0,"automatic":false},"pending":null}),
+        );
+        for language in ["zh-CN", "en-US"] {
+            let prompt = build_user_prompt(&context(language), &obs, &world.db, None);
+            assert!(
+                prompt.contains("OWN_REPAIRS_SOURCE_PROOF"),
+                "existing own repair ledger is required to plan source servicing"
+            );
+            assert!(!prompt.contains("REFEREE_ONLY_SECRET_TARGET"));
+        }
+    }
+}
+
+#[cfg(test)]
+#[path = "agent_antiship_contract.rs"]
+mod antiship_controller_20261024;
+
+#[cfg(test)]
+#[path = "agent_torpedo_plot_contract.rs"]
+mod torpedo_plot_controller_20261024;
+
+#[cfg(test)]
+#[path = "agent_battery_source_contract.rs"]
+mod battery_source_contract_20261024;
+
+#[cfg(test)]
+#[path = "agent_submarine_annex_contract.rs"]
+mod submarine_annex_contract_20261024;
+
+#[cfg(test)]
+#[path = "agent_hard_rudder_contract.rs"]
+mod hard_rudder_controller_20261024;

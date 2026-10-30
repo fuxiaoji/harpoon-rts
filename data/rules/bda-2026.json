@@ -1,0 +1,27 @@
+{
+  "revision": "2026-10-23-R049-unobserved-enemy-bda-1",
+  "profile": "hv2026-rts-v4",
+  "source": {
+    "authority": "Harpoon V 2026-01-01 English",
+    "pdf_page": 75,
+    "printed_page": "6-7",
+    "section": "The Kill Chain: Assess; chapter6.1 context on PDF69/6-1",
+    "meaning": "Assess returns to platform sensors to determine whether a target was hit and, if possible, what damage it suffered. Contact detection, location and tracking are separate from that assessment.",
+    "crosscheck": "Chinese core_rules_cn:p075:c02; mandatory three-core-manual RAG searched for assessment/damage observation",
+    "visual_evidence": "artifacts/rules-next-20261023/bda-source/english-p075.png",
+    "repository_contract": "agent.md: hidden information belongs to the referee/authority server; players and agents see only their side observation"
+  },
+  "projection": {
+    "unverified_enemy_hit": "withhold exact confirmed-hit count, accumulated DP, remaining HP fraction and shooter-side Impact/BaseDamaged copies",
+    "victim": "keep actual own-unit damage and own-side damage events",
+    "referee": "keep exact physical damage and the explicit disclosure-block trace",
+    "contact_quality": "does not establish damage-observation evidence",
+    "sensor_label_or_class_identification": "does not establish an exact remaining-HP estimator"
+  },
+  "limitations": [
+    "This is a conservative v4 projection boundary, not a new BDA probability or HP-estimation formula.",
+    "A source-backed visual/acoustic/other damage-assessment path has not been implemented by this change.",
+    "Confirmed sinking, combat outcome acknowledgement, other legacy event producers and historical manually populated BDA records require separate audits.",
+    "Recorded Legacy, hv2026-rts-v2 and hv2026-rts-v3 semantics and their data fingerprints remain unchanged."
+  ]
+}

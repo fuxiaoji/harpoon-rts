@@ -670,7 +670,7 @@ fn check_contact_books(world: &World, trace: &Trace) -> Vec<String> {
         if obs
             .contacts
             .iter()
-            .any(|c| c.category == PlatformKind::Sub)
+            .any(|c| c.category == Some(PlatformKind::Sub))
         {
             f.push(format!(
                 "{side} observation has a subsurface contact; PDF p.2 has no submarine"

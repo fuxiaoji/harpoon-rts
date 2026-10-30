@@ -50,7 +50,7 @@ fn sam_stock(u:&UnitObs,db:&Database)->u32 {
     u.weapons.iter().filter(|m|db.weapons.get(&m.weapon).is_some_and(|w|w.kind==WeaponKind::Sam)).map(|m|m.ammo as u32).sum()
 }
 fn immediate_air_threat(obs:&Observation,u:&UnitObs)->bool {
-    obs.contacts.iter().any(|c|fresh(c)&&matches!(c.category,PlatformKind::Missile|PlatformKind::Aircraft)&&u.pos.range_to(c.estimate)<30.0)
+    obs.contacts.iter().any(|c|fresh(c)&&matches!(c.category,Some(PlatformKind::Missile)|Some(PlatformKind::Aircraft))&&u.pos.range_to(c.estimate)<30.0)
 }
 #[derive(Clone, Serialize, Deserialize)]
 struct QueuedRelease {
@@ -97,7 +97,7 @@ mod tests {
         p.guard(&o,&db,vec![Command::SetWeaponsFree{unit:id,free:true},Command::Goto{unit:id,waypoints:vec![Vec2::new(10.0,0.0)]}]);
         let quota=p.auto_defence[&id].allowance;let mut remaining=quota;
         for m in &mut o.units[1].weapons {if db.weapons[&m.weapon].kind==WeaponKind::Sam {let n=(m.ammo as u32).min(remaining);m.ammo-=n as u16;remaining-=n;}}
-        assert_eq!(remaining,0);o.units[1].fire_on=true;o.units[1].assigned=Some(ContactId(1));o.contacts[0].category=PlatformKind::Aircraft;o.contacts[0].estimate=Vec2::new(80.0,0.0);o.tick=30;
+        assert_eq!(remaining,0);o.units[1].fire_on=true;o.units[1].assigned=Some(ContactId(1));o.contacts[0].category=Some(PlatformKind::Aircraft);o.contacts[0].estimate=Vec2::new(80.0,0.0);o.tick=30;
         let mut restored:Supervisor=serde_json::from_slice(&serde_json::to_vec(&p).unwrap()).unwrap();
         let a=p.maintenance(&o,&db).0;let b=restored.maintenance(&o,&db).0;
         assert_eq!(serde_json::to_value(&a).unwrap(),serde_json::to_value(&b).unwrap());
@@ -105,7 +105,7 @@ mod tests {
         assert!(a.iter().any(|c|matches!(c,Command::ClearTarget{unit}if *unit==id)),"an assigned target also causes repeated automatic fire");
         assert!(p.guard(&o,&db,vec![Command::AssignTarget{unit:id,contact:ContactId(1)}]).0.is_empty());
         p.review_current(&o,&db);assert_eq!(p.tasks[&id].expires_at,630,"a fire budget must not accidentally expire navigation");
-        o.contacts[0].category=PlatformKind::Missile;o.contacts[0].estimate=Vec2::new(10.0,0.0);
+        o.contacts[0].category=Some(PlatformKind::Missile);o.contacts[0].estimate=Vec2::new(10.0,0.0);
         assert!(!p.maintenance(&o,&db).0.iter().any(|c|matches!(c,Command::SetWeaponsFree{unit,free:false}if *unit==id)));
         p.release_manual(id);assert!(!p.auto_defence.contains_key(&id));
     }
@@ -282,7 +282,7 @@ mod tests {
         o.units[1].mission = Some("strike".into());
         let mut air = o.contacts[0].clone();
         air.id = ContactId(2);
-        air.category = PlatformKind::Aircraft;
+        air.category = Some(PlatformKind::Aircraft);
         o.contacts.push(air);
         let mut p = Supervisor::default();
         p.bind_strike(EntityId(2), Some(ContactId(1)), 0);
@@ -372,7 +372,7 @@ mod tests {
         assert_eq!(p.attacks[&ContactId(1)].rounds, 2);
         o.units[1].kind = PlatformKind::Aircraft;
         o.units[1].deck = None;
-        o.contacts[0].category = PlatformKind::Missile;
+        o.contacts[0].category = Some(PlatformKind::Missile);
         o.contacts[0].estimate = o.units[1].pos;
         p.asw.insert(
             EntityId(2),
@@ -569,7 +569,7 @@ mod tests {
     #[test]
     fn shared_inflight_allocation_counts_the_entire_batch() {
         let (db, _, mut o) = setup();
-        o.contacts[0].own_in_flight = 6;
+        o.contacts[0].own_in_flight = Some(6);
         let mut p = Supervisor::default();
         let fire = Command::Fire {
             unit: EntityId(2),
@@ -580,6 +580,27 @@ mod tests {
         let (orders, _) = p.guard(&o, &db, vec![fire.clone(), fire]);
         assert_eq!(orders.len(), 1);
         assert!(matches!(orders[0], Command::Fire { rounds: 2, .. }));
+    }
+    #[test]
+    fn unknown_torpedo_outcome_never_becomes_zero_or_an_automatic_followup() {
+        let (db,_,mut o)=setup();
+        // JSON null is the public observation contract. A missing historical
+        // field remains a known legacy zero; explicit null means unknown.
+        let mut value=serde_json::to_value(&o.contacts[0]).unwrap();
+        value["own_in_flight"]=Value::Null;
+        o.contacts[0]=serde_json::from_value(value).unwrap();
+        let mut supervisor=Supervisor::default();
+        supervisor.observe(&o,&db);
+        let fire=Command::Fire{unit:EntityId(2),contact:ContactId(1),weapon:"cn_yj18".into(),rounds:2};
+        let (orders,notes)=supervisor.guard(&o,&db,vec![fire]);
+        assert!(orders.is_empty());
+        assert!(serde_json::to_string(&notes).unwrap().contains("status is unknown"));
+        supervisor.attacks.insert(ContactId(1),Attack{rounds:2,last_release:1,..Default::default()});
+        o.tick=300;
+        let _=supervisor.observe(&o,&db);
+        let attack=&supervisor.attacks[&ContactId(1)];
+        assert_eq!(attack.reviewed_rounds,0);
+        assert_eq!(attack.unconfirmed_batches,0);
     }
     #[test]
     fn expiry_cancels_navigation_and_manual_takeover_clears_owned_lease() {
@@ -626,7 +647,7 @@ mod tests {
         o.contacts[0].stale = true;
         assert!(!p.maintenance(&o, &db).0.is_empty());
         o.contacts[0].stale = false;
-        o.contacts[0].category = PlatformKind::Aircraft;
+        o.contacts[0].category = Some(PlatformKind::Aircraft);
         o.units[1].mission = Some("cap".into());
         o.units[1].assigned = Some(ContactId(1));
         for w in &mut o.units[1].weapons {
@@ -663,7 +684,7 @@ mod tests {
             p.guard(&o, &db, vec![cmd.clone()]).0[0],
             Command::SetWeaponsFree { free: false, .. }
         ));
-        o.contacts[0].category = PlatformKind::Missile;
+        o.contacts[0].category = Some(PlatformKind::Missile);
         o.contacts[0].estimate = Vec2::new(10.0, 0.0);
         assert!(matches!(
             p.guard(&o, &db, vec![cmd]).0[0],
@@ -1094,12 +1115,7 @@ fn key(unit: EntityId, weapon: &str) -> String {
     format!("{}:{}", unit.0, weapon)
 }
 pub fn unit_of(command: &Command) -> EntityId {
-    EntityId(
-        serde_json::to_value(command)
-            .ok()
-            .and_then(|v| v["unit"].as_u64())
-            .unwrap_or(0) as u32,
-    )
+    command.unit_id()
 }
 fn offensive(kind: WeaponKind) -> bool {
     matches!(
@@ -1414,7 +1430,7 @@ impl Supervisor {
                 a.observed_damage = a.observed_damage.max(c.bda_damage);
                 a.observed_hits = a.observed_hits.max(c.bda_hits);
                 if a.rounds > a.reviewed_rounds
-                    && c.own_in_flight == 0
+                    && c.own_in_flight == Some(0)
                     && obs.tick - a.last_release >= 180
                 {
                     a.last_review = obs.tick;
@@ -1499,7 +1515,7 @@ impl Supervisor {
             .any(|p| p.class == class && p.home == Some(host.id) && p.until > obs.tick)
             && !obs.contacts.iter().any(|c| {
                 fresh(c)
-                    && matches!(c.category, PlatformKind::Aircraft | PlatformKind::Missile)
+                    && matches!(c.category,Some(PlatformKind::Aircraft) | Some(PlatformKind::Missile))
                     && host.pos.range_to(c.estimate) < 35.0
             })
     }
@@ -1567,7 +1583,7 @@ impl Supervisor {
                     .filter(|id| {
                         obs.contacts.iter().any(|c| {
                             c.id == *id
-                                && matches!(c.category, PlatformKind::Ship | PlatformKind::Base)
+                                && matches!(c.category,Some(PlatformKind::Ship) | Some(PlatformKind::Base))
                         })
                     });
                 self.ew.insert(
@@ -1606,7 +1622,7 @@ impl Supervisor {
                 .contacts
                 .iter()
                 .filter(|c| {
-                    c.category == PlatformKind::Sub
+                    c.category == Some(PlatformKind::Sub)
                         && fresh(c)
                         && c.last_seen_s <= 180.0
                         && !claimed.contains(&c.id)
@@ -1615,10 +1631,7 @@ impl Supervisor {
                     h.pos.range_to(c.estimate) <= 40.0
                         && !obs.contacts.iter().any(|a| {
                             fresh(a)
-                                && matches!(
-                                    a.category,
-                                    PlatformKind::Aircraft | PlatformKind::Missile
-                                )
+                                && matches!(a.category,Some(PlatformKind::Aircraft) | Some(PlatformKind::Missile))
                                 && a.estimate.range_to(c.estimate) < 30.0
                         })
                 })
@@ -1741,10 +1754,7 @@ impl Supervisor {
                 || t.contact.is_some_and(|id| {
                     obs.contacts.iter().any(|c| {
                         c.id == id
-                            && matches!(
-                                c.category,
-                                PlatformKind::Ship | PlatformKind::Sub | PlatformKind::Base
-                            )
+                            && matches!(c.category,Some(PlatformKind::Ship) | Some(PlatformKind::Sub) | Some(PlatformKind::Base))
                     })
                 });
             let empty = offensive_task
@@ -1801,7 +1811,7 @@ impl Supervisor {
         self.auto_defence.retain(|id,_|obs.units.iter().any(|u|u.id==*id));
         for id in self.auto_defence.keys() {
             let u=obs.units.iter().find(|u|u.id==*id).unwrap();
-            let assigned_air=u.assigned.is_some_and(|id|obs.contacts.iter().any(|c|c.id==id&&matches!(c.category,PlatformKind::Aircraft|PlatformKind::Missile)));
+            let assigned_air=u.assigned.is_some_and(|id|obs.contacts.iter().any(|c|c.id==id&&matches!(c.category,Some(PlatformKind::Aircraft)|Some(PlatformKind::Missile))));
             if (u.fire_on||assigned_air) && self.defence_held(obs,db,u) {
                 if u.fire_on {commands.push(Command::SetWeaponsFree{unit:*id,free:false});}
                 if assigned_air {commands.push(Command::ClearTarget{unit:*id});}
@@ -2021,9 +2031,10 @@ impl Supervisor {
                                 .filter(|p| p.contact == *contact)
                                 .map(|p| p.rounds as u32)
                                 .sum();
+                            if let Some(known) = c.own_in_flight {
                             let n = reserved
                                 .entry(*contact)
-                                .or_insert(c.own_in_flight + pending);
+                                .or_insert(known + pending);
                             let limit: u32 =
                                 if matches!(def.kind, WeaponKind::Ascm | WeaponKind::Slcm) {
                                     8
@@ -2042,6 +2053,9 @@ impl Supervisor {
                             if reason.is_none() {
                                 *n += *rounds as u32;
                                 self.intents.insert(key(*unit, weapon), *contact);
+                            }
+                            } else if offensive(def.kind) {
+                                reason=Some("torpedo status is unknown; automatic follow-up needs explicit commander allocation");
                             }
                         }
                     }
@@ -2086,7 +2100,7 @@ impl Supervisor {
                 }
                 Command::AssignTarget{unit,contact} => {
                     if let Some(u)=obs.units.iter().find(|u|u.id==*unit&&sam_stock(u,db)>0) {
-                        if obs.contacts.iter().any(|c|c.id==*contact&&matches!(c.category,PlatformKind::Aircraft|PlatformKind::Missile)) {
+                        if obs.contacts.iter().any(|c|c.id==*contact&&matches!(c.category,Some(PlatformKind::Aircraft)|Some(PlatformKind::Missile))) {
                             self.track_auto_defence(obs,db,u);
                             if self.defence_held(obs,db,u) {reason=Some("automatic SAM assignment budget reached; reassess distant engagement");}
                         }
@@ -2144,10 +2158,7 @@ impl Supervisor {
                         .any(|u| u.id == *unit && u.mission.as_deref() == Some("strike"))
                         && obs.contacts.iter().any(|c| {
                             c.id == *contact
-                                && matches!(
-                                    c.category,
-                                    PlatformKind::Aircraft | PlatformKind::Missile
-                                )
+                                && matches!(c.category,Some(PlatformKind::Aircraft) | Some(PlatformKind::Missile))
                         }) =>
                 {
                     out.push(cmd);
@@ -2309,7 +2320,8 @@ impl Supervisor {
                 .iter()
                 .find(|c| c.id == p.contact && fresh(c) && self.target_allowed(c.id, obs.tick));
             let can_fire = valid.is_some_and(|t| {
-                let n = allocated.entry(t.id).or_insert(t.own_in_flight);
+                let Some(known)=t.own_in_flight else{return false;};
+                let n = allocated.entry(t.id).or_insert(known);
                 let good = *n + p.rounds as u32 <= 8
                     && db
                         .weapons

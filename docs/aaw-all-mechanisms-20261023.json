@@ -1,0 +1,161 @@
+{
+  "version": "2026-10-23",
+  "scope": "显式hv2026-rts-v4，章节8.1/6.2来源执行子集；整章/全书未完成",
+  "source": "Harpoon V English 2026-01-01",
+  "data": "data/rules/aaw-2026.json",
+  "code": [
+    "crates/harpoon-core/src/rules/aaw2026.rs",
+    "crates/harpoon-core/src/weapons.rs"
+  ],
+  "tests": "crates/harpoon-core/tests/aaw_2026.rs",
+  "source_test_count": 25,
+  "evidence": "../artifacts/rules-all-20261023/aaw/source-tests.log",
+  "rows": [
+    {
+      "rule_id": "8.1.1.reaction",
+      "mechanism": "反应时间及探测/测高延迟",
+      "status": "partial",
+      "scope": "复用已核v3反应时钟；ES/TDL负延迟前探测与完整HF实装仍由探测线继续",
+      "source": "PDF81/84"
+    },
+    {
+      "rule_id": "8.1.1.intercept",
+      "mechanism": "498格拦截表、375个非空格和123个运动学不可能格",
+      "status": "tested_subset",
+      "scope": "全非空格逐cell执行；真实Ford/ESSM I分配每通道预算，其他附件装配继续",
+      "source": "PDF85–87"
+    },
+    {
+      "rule_id": "8.1.1.fp",
+      "mechanism": "F-pole扩程/持续180秒90度转向",
+      "status": "partial",
+      "scope": "扩程函数及持续时长状态已实现；正文smaller range与68.8nm原例冲突，不假称所有外射程分支无歧义",
+      "source": "PDF81–82"
+    },
+    {
+      "rule_id": "8.1.1.crossing",
+      "mechanism": "八距离段、速度移行、目标方位角",
+      "status": "tested",
+      "scope": "实际SAM/AA消费，有限输入边界测试；连续RTS距离消除4.0/4.1的未定义间隙",
+      "source": "PDF83–84"
+    },
+    {
+      "rule_id": "6.2.1.salvo",
+      "mechanism": "制导/系统代数通道与每通道导弹数",
+      "status": "tested_subset",
+      "scope": "完整印刷Summary结构及全行测试；Ford单MFC四通道2弹真实封顶；完整附件director装配未全录",
+      "source": "PDF69"
+    },
+    {
+      "rule_id": "8.1.1.ata",
+      "mechanism": "21行单弹/双弹ATA命中表",
+      "status": "tested",
+      "scope": "真实物理双弹包共用D100、一起退役；保存恢复不重掷，不用两个独立单弹骰冒充双弹表",
+      "source": "PDF88"
+    },
+    {
+      "rule_id": "8.1.1.mods",
+      "mechanism": "ATA速度/签名/系统/几何/掠海/NOE/高俯冲/岸杂波",
+      "status": "tested_subset",
+      "scope": "完整修正数据及通用解算；真实源目标飞机MR/CM的接入继续9.5工作；R-059撤回六型无来源MR0，真实SAM缺MR先待裁。三个原SAM正例现明确为假想作者目标；官方Kh-22N具体算法例保留，不外推通用MR0。",
+      "source": "PDF88"
+    },
+    {
+      "rule_id": "8.1.1.cm",
+      "mechanism": "5×12反制表/不机动减半/HOJ",
+      "status": "tested_subset",
+      "scope": "60格及减半逐格测试，混合不同代J/D与0.25索引舍入待裁；不能从旧chaff标量猜代数",
+      "source": "PDF88"
+    },
+    {
+      "rule_id": "8.1.1.extra",
+      "mechanism": "3000kt SAM额外L1/M2机会",
+      "status": "partial",
+      "scope": "通用预算显式选择API有测试；尚未提供人类选择命令和AI策略，不假称实际自动已用",
+      "source": "PDF85–87"
+    },
+    {
+      "rule_id": "8.1.2.visual",
+      "mechanism": "目视SAM/早期仅后向型",
+      "status": "partial",
+      "scope": "合法性API仅，尚缺独立源MANPADS与观察/发射平台路径",
+      "source": "PDF83"
+    },
+    {
+      "rule_id": "8.1.3.aa",
+      "mechanism": "107行AA火力表与全部修正",
+      "status": "tested_subset",
+      "scope": "真实FlightIIA Mk45 Mod4 0.8源强度、F弧、一次PD通行；VLow按2026红表0而非旧例-3；其余舰炮fits未全录；R-060实际裁决原骰只存Referee，本方枪炮开火通知和耗弹保留；v3历史语义不改。",
+      "source": "PDF83–84/89"
+    },
+    {
+      "rule_id": "8.1.3.directors",
+      "mechanism": "炮位与指挥仪弧/同侧分配/局部控制",
+      "status": "partial",
+      "scope": "弧图+Ford独立3炮位与Burke单炮单director可执行；复杂共享director多炮/失能转local仍待执行",
+      "source": "PDF18–19/69/83"
+    },
+    {
+      "rule_id": "8.1.4.ciws",
+      "mechanism": "自主CIWS两次/30秒与分选第二目标",
+      "status": "tested_subset",
+      "scope": "Ford3个物理炮位分别计数，不按敌弹各送2次；源7engagement弹药；实际炮击私有日志；起算于首次burst为RTS改编；R-060实际裁决原骰只存Referee，本方枪炮开火通知和耗弹保留；v3历史语义不改。",
+      "source": "PDF84;US2025 PDF7/75–76"
+    },
+    {
+      "rule_id": "8.1.5.fragments",
+      "mechanism": "三秒破片表/半关键无DP",
+      "status": "tested_subset",
+      "scope": "调用既有v3来源破片链；不插值距离概率，来源措辞歧义保持既有台账；R-060实际裁决原骰只存Referee，本方枪炮开火通知和耗弹保留；v3历史语义不改。",
+      "source": "PDF84"
+    },
+    {
+      "rule_id": "8.1.6.recede",
+      "mechanism": "逃离目标外移并减半",
+      "status": "blocked",
+      "scope": "原例M-2S-P→2M-2S→M-S可执行，其余通用多发移位与简单逐距离段读取冲突，返回明确待裁",
+      "source": "PDF90"
+    },
+    {
+      "rule_id": "8.1.7.smallarms",
+      "mechanism": "搭载步兵轻武器AA0.2/1000码",
+      "status": "partial",
+      "scope": "合法性API与源值已入，尚缺具备编制/弹药/射击状态的实际步兵入口",
+      "source": "PDF90"
+    },
+    {
+      "rule_id": "8.1.8.friendly",
+      "mechanism": "来袭到另一友舰末30秒禁射/禁引导",
+      "status": "tested_subset",
+      "scope": "实际发射前阻断并不扣库存；末段引导同样阻断保存待裁；其他飞机/无弹道目标的通用预测还需拓展",
+      "source": "PDF90"
+    },
+    {
+      "rule_id": "8.1.9.lds",
+      "mechanism": "激光眩目器气象/1或2次/30%或60%/效果",
+      "status": "partial",
+      "scope": "完整概率/合法性/效果API；无来源LDS平台武器类型，尚未真正执行眩目/RTB/光电失能",
+      "source": "PDF90"
+    },
+    {
+      "rule_id": "8.1.10.order",
+      "mechanism": "PD依SAM→炮→能量顺序",
+      "status": "partial",
+      "scope": "枪炮等待针对同目标未决SAM；能量武器尚未装配，跨所有舰同时段完整批结算继续",
+      "source": "PDF90"
+    },
+    {
+      "rule_id": "8.1.state",
+      "mechanism": "稳定packet随机、权威日志、存读档/重演",
+      "status": "tested_subset",
+      "scope": "25项定向含真sim30秒克隆World全值一致、双弹只一terminal事件、未知裁决保存且不再移动/重掷；不是完整长期多平台验收",
+      "source": "engine tests"
+    }
+  ],
+  "latest_subset_validation": {
+    "report": "docs/all-rules-antiship-20261024.md",
+    "r059": "docs/missile-mr-source-20261024.md",
+    "r060": "docs/aaw-observation-privacy-20261024.md",
+    "whole_chapter_complete": false
+  }
+}

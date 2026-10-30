@@ -184,6 +184,8 @@
   function errorText(err) {
     if (err instanceof ApiError) {
       if (err.status === 409) return 'No game is running on the server.';
+      if (err.message.includes('Blow must ascend within verified depth bands')) return battleText('紧急上浮须在已核定深度内向浅处运动；目标须深于25米。潜望镜深度和浮航须另下令。','Emergency Blow must ascend within verified depths to deeper than 25m. Order periscope depth or surface separately.');
+      if (/Emergency Blow (must complete at least three source depth bands|three-band commitment not yet completed)/.test(err.message)) return battleText('紧急上浮至少完成三个深度带后才能改令。','Complete at least three depth bands of Emergency Blow before changing the order.');
       return err.message || `HTTP ${err.status}`;
     }
     if (err && err.name === 'AbortError') return 'Request timed out.';
@@ -362,6 +364,8 @@
     eventMap: new Map(),
     routes: new Map(),
     gotoQueues: new Map(),
+    communicationsDrafts: new Map(),
+    sourceControlDrafts: new Map(),
     startingScenario: false,
     gameGeneration: 0,
     transport: '',
@@ -825,6 +829,8 @@
     state.fireOptionsKey = null;
     state.routes.clear();
     state.gotoQueues.clear();
+    state.communicationsDrafts.clear();
+    state.sourceControlDrafts.clear();
     state.gameGeneration += 1;
     state.battlePrimed = false;
     state.battleSeq = 0;
@@ -1108,8 +1114,9 @@
     const dayNight = obs.day_night === 'Night' ? 'NIGHT' : 'DAY';
     const blueJam = Math.round(clamp(numberOr(jam[0], 0), 0, 1) * 100);
     const redJam = Math.round(clamp(numberOr(jam[1], 0), 0, 1) * 100);
+    const sourceV4 = obs.rules_profile === 'hv2026-rts-v4';
     dom.weatherChips.innerHTML = [
-      `<span class="wx-chip" title="${obs.rules_profile === 'hv2026-rts-v3' ? battleText('航空勤务、雷达及防空来源子集；未核型号阻断，全书未完成', 'Source-backed aviation/radar/AAW subset; unverified fits blocked, full rules incomplete') : obs.rules_profile === 'hv2026-rts-v2' ? battleText('新版损伤链验收中；规则录入尚未覆盖全书', 'New damage rules under validation; full rulebook coverage remains incomplete') : battleText('历史规则版本，保留原局结算', 'Historical rules preserved for this game')}">${obs.rules_profile === 'hv2026-rts-v3' ? 'HV2026 · RTS v3' : obs.rules_profile === 'hv2026-rts-v2' ? 'HV2026 · RTS v2' : 'RTS · legacy v1'}</span>`,
+      `<span class="wx-chip" title="${sourceV4 ? battleText('全书机制逐项验收版本；未核数据与歧义阻断，尚未全部完成', 'Rulebook mechanisms under individual acceptance; unverified data and ambiguities blocked, full coverage incomplete') : obs.rules_profile === 'hv2026-rts-v3' ? battleText('航空勤务、雷达及防空来源子集；未核型号阻断，全书未完成', 'Source-backed aviation/radar/AAW subset; unverified fits blocked, full rules incomplete') : obs.rules_profile === 'hv2026-rts-v2' ? battleText('新版损伤链验收中；规则录入尚未覆盖全书', 'New damage rules under validation; full rulebook coverage remains incomplete') : battleText('历史规则版本，保留原局结算', 'Historical rules preserved for this game')}">${sourceV4 ? 'HV2026 · RTS v4 · 验收' : obs.rules_profile === 'hv2026-rts-v3' ? 'HV2026 · RTS v3' : obs.rules_profile === 'hv2026-rts-v2' ? 'HV2026 · RTS v2' : 'RTS · legacy v1'}</span>`,
       `<span class="wx-chip">VIS ${visibility === null ? '—' : fmtRange(visibility)} NM</span>`,
       `<span class="wx-chip">${dayNight}</span>`,
       `<span class="wx-chip">JAM B${blueJam} / R${redJam}</span>`,
@@ -1348,18 +1355,56 @@
     }
     const platform = platformForUnit(unit);
     $('nav-speed').max = platform?.max_speed_kts || 1000;
-    $('nav-depth').max = platform?.max_depth_m || 250;
+    const sourceDepth=unit.navigation?.source_rules;
+    const fittedDepth=sourceDepth?.fit?.submarine;
+    const annexDepth=sourceDepth?.annex_capability;
+    $('nav-depth').max = Math.min(fittedDepth?.maximum_depth_m??annexDepth?.maximum_game_depth_m??platform?.max_depth_m??250,fittedDepth?.water_depth_m??Infinity);
+    $('nav-depth').title = annexDepth?battleText(`附录最大游戏深度带${annexDepth.maximum_depth_band_as_printed}；上界转换${annexDepth.maximum_game_depth_m}米，并受本艇装配及水深限制。`,`Annex maximum game depth band ${annexDepth.maximum_depth_band_as_printed}; upper bound ${annexDepth.maximum_game_depth_m}m, subject to fitted and water limits.`):'';
+    $('nav-depth-source').hidden=!annexDepth;
+    $('nav-depth-source').textContent=annexDepth?battleText(`附录游戏深度上限${annexDepth.maximum_game_depth_m}米（${annexDepth.maximum_depth_band_as_printed}）。${fittedDepth?`本艇当前上限${$('nav-depth').max}米，所在水深${fittedDepth.water_depth_m}米。`:'所在水深未知，操作前需确认。'}`,`Annex game depth ceiling ${annexDepth.maximum_game_depth_m}m (${annexDepth.maximum_depth_band_as_printed}). ${fittedDepth?`Current fitted limit ${$('nav-depth').max}m; water depth ${fittedDepth.water_depth_m}m.`:'Water depth unknown; confirm before operating.'}`):'';
     $('nav-depth').disabled = unit.kind !== 'Sub';
+    const blowFit=obs?.rules_profile==='hv2026-rts-v4'&&unit.kind==='Sub'&&unit.navigation?.source_rules?.fit?.submarine;
+    $('nav-blow-controls').hidden=!blowFit;
+    $('nav-blow-controls').querySelector('span').textContent=battleText('紧急上浮 · 使用上方目标潜深','Emergency Blow · use depth above');
+    $('nav-blow-controls').querySelector('button').textContent=battleText('执行','Execute');
+    const blowWork=unit.navigation?.source_rules?.depth_operation;
+    $('nav-blow-status').textContent=blowWork?.kind==='EmergencyBlow'
+      ?battleText(`上浮至${fmt1(blowWork.target_m)}米 · 已执行${fmt1(blowWork.worked_seconds)}秒。至少完成三个深度带才能改令，浮航须另下令。`,`Ascending to ${fmt1(blowWork.target_m)}m · ${fmt1(blowWork.worked_seconds)}s worked. Complete three depth bands before changing the order; surface separately.`)
+      :battleText('至少上浮三个深度带；会产生较大噪声。到达浅层后，潜望镜深度或浮航须另下令。','Ascend at least three depth bands with Loud noise. Order periscope depth or surface separately after reaching Shallow.');
     $('nav-altitude').disabled = unit.kind !== 'Aircraft';
+    const hardFit=obs?.rules_profile==='hv2026-rts-v4'&&unit.kind==='Ship'&&unit.navigation?.source_rules?.fit;
+    const steering=unit.navigation?.source_rules?.steering;
+    $('nav-hard-rudder-controls').hidden=!hardFit;
     for (const button of $('nav-controls').querySelectorAll('[data-nav]')) {
       const action = button.dataset.nav;
       button.disabled = !!obs?.over || (action === 'depth' && unit.kind !== 'Sub')
-        || (['radar-on','radar-off','throttle','jamming','manual-flight','asw-relocate'].includes(action) && !(obs.control_version>=2))
+        || (action === 'emergency-blow' && (!blowFit || !(unit.speed_kts>0)))
+        || (['radar-on','radar-off','throttle','jamming','manual-flight','asw-relocate','hard-rudder','free-rudder'].includes(action) && !(obs.control_version>=2))
         || (action === 'throttle' && !unit.flight_profile)
         || (action === 'jamming' && !unit.offensive_jammer)
         || (action === 'altitude' && unit.kind !== 'Aircraft')
         || (['manual-flight','asw-relocate'].includes(action) && unit.kind !== 'Aircraft')
+        || (action === 'hard-rudder' && (!hardFit || steering?.mode==='turning' || steering?.mode==='jammed'))
+        || (action === 'free-rudder' && (!hardFit || steering?.mode!=='jammed' || steering?.recovery?.armed))
         || (action.startsWith('sonar') && !unit.sensors?.some(s => s.sensor.startsWith('sonar_a')));
+    }
+    if (hardFit) {
+      const autoBox=$('nav-hard-auto');
+      if (document.activeElement!==autoBox) autoBox.checked=!!steering?.recovery?.automatic;
+      autoBox.disabled=!!obs?.over;
+      const hardStatus=$('nav-hard-status');
+      if (steering?.mode==='jammed') {
+        const sideText=steering.direction==='port'?battleText('左舷','port'):battleText('右舷','starboard');
+        hardStatus.textContent=battleText(
+          `卡舵：持续向${sideText}转向 · ${steering.recovery?.automatic?'船员持续自动解舵':steering.recovery?.armed?'已授权下个结算手动尝试':'未授权解舵'}${steering.recovery?.next_resolution_at?` · 下次结算T${steering.recovery.next_resolution_at}`:''}`,
+          `Jammed: circling to ${sideText} · ${steering.recovery?.automatic?'crew automatic recovery active':steering.recovery?.armed?'manual next Resolution authorized':'recovery not authorized'}${steering.recovery?.next_resolution_at?` · next Resolution T${steering.recovery.next_resolution_at}`:''}`);
+      } else if (steering?.mode==='planned'||steering?.mode==='turning') {
+        hardStatus.textContent=battleText(
+          steering.mode==='planned'?'硬舵已计划：实际施舵时掷一次5%卡舵风险。':'硬舵转向中：按来源前冲/枢轴执行。',
+          steering.mode==='planned'?'Hard rudder planned: one 5% jam risk rolls on first actual steering.':'Hard rudder turning: source advance/pivot legs in progress.');
+      } else {
+        hardStatus.textContent=battleText('急转向命令带5%卡舵风险；卡舵后每战术回合结算窗25%解脱。与普通战损Rudder修理(20/40/60)分开。','An emergency turn carries a 5% jam risk; each Tactical Turn Resolution offers 25% unjam. Separate from ordinary battle-damage Rudder repair (20/40/60).');
+      }
     }
     for(const option of $('nav-jamming').options)option.disabled=(option.value==='standoff'&&!unit.offensive_jammer?.standoff)||(option.value==='spot'&&!unit.offensive_jammer?.spot_targets);
   }
@@ -1380,6 +1425,8 @@
     let navInfo=$('unit-navigation');if(!navInfo){navInfo=document.createElement('p');navInfo.id='unit-navigation';navInfo.style.cssText='font:12px/1.6 "Microsoft YaHei",sans-serif;color:#a9cddd';dom.unitContent.append(navInfo);}
     const station=unit.navigation?.station,leader=station&&(obs?.units||[]).find(u=>Number(u.id)===Number(station.leader));
     navInfo.textContent=(unit.manual_control?battleText('人工接管','Manual control'):battleText('允许AI辅助','AI permitted'))+' · '+(station?battleText(`跟随 ${leader?unitName(leader):'#'+station.leader}，相对方位${fmt1(station.bearing_rel_deg)}° / ${fmt1(station.distance_nm)}海里`,`Following ${leader?unitName(leader):'#'+station.leader}, relative ${fmt1(station.bearing_rel_deg)}° / ${fmt1(station.distance_nm)}nm`):battleText(`剩余航点${unit.navigation?.waypoints?.length||0}`,`${unit.navigation?.waypoints?.length||0} remaining waypoints`))+(unit.navigation?.manual_flight?battleText(' · 手动飞行',' · Manual flight'):'');
+    const depthWork=unit.navigation?.source_rules?.depth_operation;
+    if(depthWork?.kind==='EmergencyBlow')navInfo.textContent+=battleText(` · 紧急上浮至${fmt1(depthWork.target_m)}米，已执行${fmt1(depthWork.worked_seconds)}秒；最低上浮三层后才能改令，浮航须另下令`,` · Emergency Blow to ${fmt1(depthWork.target_m)}m, ${fmt1(depthWork.worked_seconds)}s worked; complete three bands before changing the order; surface separately`);
     dom.unitSideBadge.textContent = state.side.toUpperCase();
     dom.unitSideBadge.style.color = style.hex;
 
@@ -1475,7 +1522,7 @@
       return `
         <div class="weapon-row">
           <div class="weapon-name">
-            <b title="${escapeHtml(`${mount.name || ''} · ${mount.weapon || ''}`)}">${escapeHtml(weaponName(mount.weapon))}</b>
+            <b title="${escapeHtml(`${mount.name || ''} · ${mount.weapon || ''}`)}">${escapeHtml(window.HarpoonCombat.weaponMountName(mount,weaponName(mount.weapon),window.HarpoonI18n?.language))}</b>
             <small>${escapeHtml(mount.weapon || '')}</small>
           </div>
           <div class="weapon-stat">
@@ -1511,12 +1558,9 @@
         stateLabel = 'LISTENING';
       }
       if (sensor.operational === false) { stateLabel = battleText('失能', 'DISABLED'); online = false; }
+      else if (sensor.annex?.verified === false) { stateLabel=battleText('待核验','UNVERIFIED');online=false; }
       // 探测距离提示：对空/对海/对潜（海里），让玩家知道这个传感器管什么、看多远
-      const ranges = [];
-      if (numberOr(sensor.vs_air, 0) > 0) ranges.push(`空 ${fmtRange(sensor.vs_air)}NM`);
-      if (numberOr(sensor.vs_surface, 0) > 0) ranges.push(`海 ${fmtRange(sensor.vs_surface)}NM`);
-      if (numberOr(sensor.vs_sub, 0) > 0) ranges.push(`潜 ${fmtRange(sensor.vs_sub)}NM`);
-      const rangeText = ranges.length ? ranges.join(' · ') : '—';
+      const rangeText = window.HarpoonCombat.sensorRangeText(sensor,window.HarpoonI18n?.language);
       return `
         <div class="sensor-row">
           <div class="sensor-id">
@@ -1534,7 +1578,8 @@
     else if (unit.towed_deployed === false) hints.push('拖曳阵：收起了（航速>25节自动收；<20节30秒后展开）');
     if (unit.below_layer === true) hints.push('跃变层之下：敌方被动声纳探测距离 ×0.5（你更难被发现，也更难听清别人）');
     else if (unit.below_layer === false) hints.push('跃变层之上：正常声纳传播');
-    if (unit.battery !== null && unit.battery !== undefined) hints.push(`电池：${fmtRange(unit.battery)}/100（水下耗电，<20 半速）`);
+    const batteryHint=window.HarpoonCombat.batteryText(unit,state.observation?.rules_profile,window.HarpoonI18n?.language);
+    if (batteryHint) hints.push(batteryHint);
     if (hints.length) {
       dom.sensorsList.innerHTML += `<div class="sensor-hints">${hints.map(h=>`<div>· ${escapeHtml(h)}</div>`).join('')}</div>`;
     }
@@ -1599,6 +1644,11 @@
   }
 
   function renderSystems(unit) {
+    let status = dom.systemsList.querySelector('[data-systems-status]');
+    if (!status) {
+      dom.systemsList.innerHTML = '<div class="systems-status" data-systems-status></div>';
+      status = dom.systemsList.querySelector('[data-systems-status]');
+    }
     const systems = isObject(unit.systems) ? unit.systems : {};
     const labels = {
       mobility: 'MOBILITY',
@@ -1607,7 +1657,7 @@
       fire_control: 'FIRE CTRL',
     };
     const keys = ['mobility', 'radar', 'sonar', 'fire_control'];
-    dom.systemsList.innerHTML = keys.map((key) => {
+    status.innerHTML = keys.map((key) => {
       const ratio = clamp(numberOr(systems[key], 1), 0, 1);
       const pct = Math.round(ratio * 100);
       const color = ratio <= 0.1 ? 'var(--danger)' : ratio < 0.75 ? 'var(--amber)' : 'var(--green)';
@@ -1622,10 +1672,23 @@
           <b class="system-value ${valueClass}">${value}</b>
         </div>`;
     }).join('');
-    if (['hv2026-rts-v2','hv2026-rts-v3'].includes(state.observation?.rules_profile) && ['Ship', 'Sub'].includes(unit.kind)) {
+    if (['hv2026-rts-v2','hv2026-rts-v3','hv2026-rts-v4'].includes(state.observation?.rules_profile) && ['Ship', 'Sub'].includes(unit.kind)) {
       const damage = unit.functional_damage || {};
       const fire = numberOr(damage['damage.fire_pct'], 0), flood = numberOr(damage['damage.flood_pct'], 0);
       const notes = [];
+      const signature = unit.signature_damage;
+      if (signature?.radar) {
+        const labels = [battleText('大型','Large'),battleText('中型','Medium'),battleText('小型','Small'),battleText('很小型','Very small'),battleText('隐身','Stealthy')];
+        const before = labels[signature.radar.fitted], after = labels[signature.radar.effective];
+        if (before && after) notes.push(battleText(`受损雷达特征：${before} → ${after}`, `Damaged radar signature: ${before} → ${after}`));
+      }
+      if (signature?.acoustic) {
+        notes.push(battleText('受损声学特征：嘈杂', 'Damaged acoustic signature: Noisy'));
+        if (signature.acoustic.coating_benefit_lost) notes.push(battleText('消声瓦降噪收益已丧失', 'Anechoic coating benefit lost'));
+      }
+      if (signature?.pending && Object.keys(signature.pending).length) {
+        notes.push(battleText('受损特征尚待规则裁定', 'Damaged signature awaits adjudication'));
+      }
       if (fire || flood) notes.push(battleText(`火灾 ${fire.toFixed(1)}% · 进水 ${flood.toFixed(1)}%`, `Fire ${fire.toFixed(1)}% · Flooding ${flood.toFixed(1)}%`));
       if (damage['damage.rudder_jammed']) notes.push(battleText('舵机卡住', 'Rudder jammed'));
       if (damage['damage.rudder_disabled']) notes.push(battleText('舵机失灵：航速与转向受限', 'Rudder disabled: speed and turning limited'));
@@ -1640,15 +1703,498 @@
       const tick = numberOr(state.observation?.tick, 0);
       if (damage['damage.bridge_until'] > tick) notes.push(battleText(`舰桥失能：${Math.ceil(damage['damage.bridge_until'] - tick)}秒后恢复降级指挥`, `Bridge disabled: degraded command in ${Math.ceil(damage['damage.bridge_until'] - tick)}s`));
       if (damage['damage.bridge_order_delay']) notes.push(battleText('航行命令延迟6分钟', 'Navigation orders delayed6 minutes'));
-      if (notes.length) dom.systemsList.innerHTML += `<div class="deck-empty">${notes.map(escapeHtml).join('<br>')}</div>`;
+      if (notes.length) status.innerHTML += `<div class="system-damage-notes">${notes.map(escapeHtml).join('<br>')}</div>`;
       if (!state.observation?.over && fire + flood > 0 && !damage['damage.doomed']) {
         const actions = [];
         if (!damage['damage.dc_weapons_crew']) actions.push(['reinforce_dc', battleText('武器组转损管（停火）', 'Weapon crews to damage control (cease fire)')]);
         if (!damage['damage.magazines_flooded']) actions.push(['flood_magazines', battleText('弹药库注水（丢弃弹药）', 'Flood magazines (lose ammunition)')]);
         if (unit.deck && damage['damage.aviation_fuel'] && !damage['damage.aviation_stores_purged']) actions.push(['purge_aviation', battleText('惰化航空库（停止整备）', 'Purge aviation stores (stop rearming)')]);
-        dom.systemsList.innerHTML += actions.map(([action, label]) => `<button class="cmd-btn" data-damage-control="${action}">${label}</button>`).join('');
+        status.innerHTML += actions.map(([action, label]) => `<button class="cmd-btn" data-damage-control="${action}">${label}</button>`).join('');
       }
     }
+    renderCommunications(unit);
+    renderSourceControls(unit);
+  }
+
+  function sourceControlDraft(unit) {
+    const key = Number(unit.id);
+    if (!state.sourceControlDrafts.has(key)) state.sourceControlDrafts.set(key, {
+      powerMode: '', nuclearWeapon: '', nuclearYield: '', nuclearAuthorize: false,
+      unmannedVehicle: '', unmannedMode: '', rescueGroup: '', resupplyService: '', resupplyRounds: '1', busy: false, feedback: '',
+    });
+    return state.sourceControlDrafts.get(key);
+  }
+
+  function sourceControlsLocked() {
+    return !!(state.observation?.over || state.observation?.exercise?.locked || state.startingScenario);
+  }
+
+  function updateSourceControlDraft(unit, field, value) {
+    const draft = sourceControlDraft(unit);
+    if (draft.busy || sourceControlsLocked() || !['powerMode','nuclearWeapon','nuclearYield','nuclearAuthorize','unmannedVehicle','unmannedMode','rescueGroup','resupplyService','resupplyRounds'].includes(field)) return false;
+    draft[field] = field === 'nuclearAuthorize' ? value === true : String(value);
+    if (field === 'nuclearWeapon') { draft.nuclearYield = ''; draft.nuclearAuthorize = false; }
+    if (field === 'unmannedVehicle') draft.unmannedMode = '';
+    draft.feedback = ''; return true;
+  }
+
+  function sourceValue(value, suffix = '') {
+    const amount = finiteOrNull(value);
+    return amount === null ? battleText('未知', 'Unknown') : `${fmtNum(amount)}${suffix}`;
+  }
+
+  function sourceBoolean(value, yes, no) {
+    return value === true ? yes : value === false ? no : battleText('未知', 'Unknown');
+  }
+
+  function sourceUnmannedTargets(unit) {
+    const rows = [];
+    if (['hitl', 'autonomous'].includes(unit.unmanned?.mode)) rows.push({ unit: Number(unit.id), name: unitName(unit) });
+    for (const row of unit.unmanned?.controlled || []) {
+      const id = finiteOrNull(row.unit);
+      if (Number.isInteger(id) && !rows.some(r => r.unit === id)) rows.push({unit:id, name:String(row.name || battleText('本方无人平台', 'Friendly unmanned platform'))});
+    }
+    return rows;
+  }
+
+  function sourcePanel(unit, kind, fields) {
+    let panel = dom.systemsList.querySelector(`[data-source-panel="${kind}"]`);
+    if (!panel) {
+      panel = document.createElement('section'); panel.className = 'warning-panel source-controls';
+      panel.dataset.sourcePanel = kind; dom.systemsList.append(panel);
+    }
+    if (panel.dataset.unit !== String(unit.id)) {
+      panel.dataset.unit = String(unit.id);
+      panel.innerHTML = `<h3 data-source-title></h3><p class="source-summary" data-source-summary></p>${fields}
+        <p class="warning-feedback" data-source-feedback role="status" aria-live="polite"></p>`;
+    }
+    return panel;
+  }
+
+  function renderSourceControls(unit) {
+    const draft = sourceControlDraft(unit), disabled = sourceControlsLocked() || draft.busy;
+    const txt = (panel, selector, value) => { const node = panel.querySelector(selector); if (node.textContent !== value) node.textContent = value; };
+    const feedback = draft.feedback === 'queued' ? battleText('请求已提交；以随后回传的状态为准。', 'Request queued; wait for the reported state to update.')
+      : draft.feedback === 'rejected' ? battleText('请求未获接受，请检查当前状态与许可。', 'Request not accepted. Check the current state and permissions.') : '';
+    for (const kind of ['battery', 'nuclear', 'unmanned', 'projectors', 'rescue', 'resupply']) {
+      const present = kind === 'battery' ? isObject(unit.battery_state) : kind === 'nuclear'
+        ? Array.isArray(unit.nuclear?.warheads) && unit.nuclear.warheads.length : kind === 'projectors' ? isObject(unit.projectors)
+        : kind === 'rescue' ? isObject(unit.expanded_damage?.rescue_fit) || (unit.survivors || []).length
+        : kind === 'resupply' ? isObject(unit.ground?.berth_resupply?.services) : isObject(unit.unmanned);
+      if (!present) dom.systemsList.querySelector(`[data-source-panel="${kind}"]`)?.remove();
+    }
+    if (isObject(unit.projectors)) {
+      const panel = sourcePanel(unit, 'projectors', '<p class="source-stock-list" data-projector-list></p>');
+      txt(panel, '[data-source-title]', battleText('反潜投射器', 'ASW projectors'));
+      txt(panel, '[data-source-summary]', battleText('一次开火投射完整一组；储备不会自动重装。使用武器面板选择本方接触。', 'Each fire request launches one complete pattern. Reserves do not reload automatically. Select an own contact in the weapon panel.'));
+      txt(panel, '[data-projector-list]', Object.entries(unit.projectors).flatMap(([weapon, fit]) => (fit.mounts || []).map(m => {
+        const name = (unit.weapons || []).find(w => w.weapon === weapon)?.name || weapon;
+        const arc = m.arc === 'P' ? battleText('左舷', 'Port') : m.arc === 'S' ? battleText('右舷', 'Starboard') : String(m.arc || '');
+        return battleText(`${name} ${arc}：已装 ${sourceValue(m.loaded_patterns)} 组 · 储备 ${sourceValue(m.reserve_patterns)} 组`, `${name} ${arc}: ${sourceValue(m.loaded_patterns)} loaded · ${sourceValue(m.reserve_patterns)} reserve`)
+          + (m.operational === false ? battleText(' · 当前不可用', ' · Unavailable') : '');
+      })).join('\n'));
+      txt(panel, '[data-source-feedback]', '');
+    }
+    if (isObject(unit.ground?.berth_resupply?.services)) {
+      const services = unit.ground.berth_resupply.services;
+      if (!Object.hasOwn(services, draft.resupplyService)) draft.resupplyService = '';
+      const row = services[draft.resupplyService];
+      const panel = sourcePanel(unit, 'resupply', '<label class="warning-choice"><span data-resupply-service-label></span><select data-source-draft="resupplyService"></select></label><label class="warning-choice"><span data-resupply-rounds-label></span><input data-source-draft="resupplyRounds" type="number" min="1" max="65535" step="1"></label><div class="source-actions"><button class="cmd-btn" data-source-action="resupply_start"></button><button class="cmd-btn" data-source-action="resupply_cancel"></button></div>');
+      txt(panel, '[data-source-title]', battleText('靠泊补给', 'Alongside supply'));
+      txt(panel, '[data-resupply-service-label]', battleText('本舰补给安排', 'Assigned service'));
+      txt(panel, '[data-resupply-rounds-label]', battleText('申请弹药数量', 'Rounds requested'));
+      const select = panel.querySelector('[data-source-draft="resupplyService"]');
+      warningSelectOptions(select, Object.entries(services).map(([value, service]) => ({value,label:`${value} · ${(unit.weapons || []).find(w => w.weapon === service.weapon)?.name || service.weapon}`})), battleText('请选择', 'Choose a service'), draft.resupplyService);
+      select.disabled = disabled;
+      const input = panel.querySelector('[data-source-draft="resupplyRounds"]');
+      if (document.activeElement !== input) input.value = draft.resupplyRounds;
+      input.disabled = disabled;
+      txt(panel, '[data-source-summary]', !row ? battleText('选择已安排的补给。弹药在作业完成后入库。', 'Choose an assigned service. Ammunition arrives when the work is complete.')
+        : row.job ? battleText(`已申请 ${sourceValue(row.job.rounds)} 发 · 预计 ${fmtEventTick(row.job.due)} 完成`, `${sourceValue(row.job.rounds)} rounds reserved · Due ${fmtEventTick(row.job.due)}`)
+        : battleText(`补给点库存 ${sourceValue(row.stock)} 发 · 已预留 ${sourceValue(row.reserved_stock)} 发 · 本舰容量 ${sourceValue(row.capacity)} 发${row.pending ? ' · 当前不可用' : ''}`, `Depot stock ${sourceValue(row.stock)} · Reserved ${sourceValue(row.reserved_stock)} · Ship capacity ${sourceValue(row.capacity)}${row.pending ? ' · Currently unavailable' : ''}`));
+      txt(panel, '[data-source-action="resupply_start"]', battleText('申请补给', 'Request supply'));
+      txt(panel, '[data-source-action="resupply_cancel"]', battleText('取消作业', 'Cancel supply'));
+      panel.querySelector('[data-source-action="resupply_start"]').disabled = disabled || !sourceControlCommand(unit, 'resupply_start');
+      panel.querySelector('[data-source-action="resupply_cancel"]').disabled = disabled || !sourceControlCommand(unit, 'resupply_cancel');
+      txt(panel, '[data-source-feedback]', feedback);
+    }
+    if (isObject(unit.expanded_damage?.rescue_fit) || (unit.survivors || []).length) {
+      const reports = (unit.survivors || []).filter(r => typeof r.label === 'string');
+      if (!reports.some(r => r.label === draft.rescueGroup)) draft.rescueGroup = '';
+      const task = unit.expanded_damage?.rescue;
+      const panel = sourcePanel(unit, 'rescue', '<label class="warning-choice"><span data-rescue-label></span><select data-source-draft="rescueGroup"></select></label><div class="source-actions"><button class="cmd-btn" data-source-action="rescue_begin"></button><button class="cmd-btn" data-source-action="rescue_recover"></button><button class="cmd-btn" data-source-action="rescue_cancel"></button></div>');
+      txt(panel, '[data-source-title]', battleText('搜寻与救援', 'Search and rescue'));
+      const work = task?.work;
+      const progress = !work ? '' : work.eligible ? battleText(` · 连续救援作业 ${sourceValue(work.continuous_seconds)}/${sourceValue(work.required_seconds)} 秒`, ` · Continuous recovery work ${sourceValue(work.continuous_seconds)}/${sourceValue(work.required_seconds)}s`)
+        : battleText(' · 等待静止、到位并处于上风位置', ' · Waiting for a stationary, upwind recovery position');
+      txt(panel, '[data-source-summary]', task ? battleText(`救援任务 ${task.group} · 已救起 ${sourceValue(task.picked_up)} 人`, `Rescue task ${task.group} · ${sourceValue(task.picked_up)} recovered`) + progress
+        : battleText(`本方发现 ${reports.length} 处幸存者；位置是上次测量。救起需满足静止、站位和时间条件。`, `${reports.length} own survivor reports; positions are last measurements. Recovery requires the correct stationary position and timing.`));
+      txt(panel, '[data-rescue-label]', battleText('选择已发现标记', 'Choose an observed marker'));
+      const select = panel.querySelector('[data-source-draft="rescueGroup"]');
+      warningSelectOptions(select, reports.map(r => ({value:r.label,label:`${r.label} · ${fmtEventTick(r.observed_at)}`})), battleText('请选择', 'Choose a marker'), draft.rescueGroup);
+      select.disabled = disabled;
+      const labels = {rescue_begin:battleText('开始自动救援', 'Begin automatic rescue'),rescue_recover:battleText('请求救起', 'Request recovery'),rescue_cancel:battleText('取消救援', 'Cancel rescue')};
+      for (const button of panel.querySelectorAll('[data-source-action]')) {button.textContent=labels[button.dataset.sourceAction];button.disabled=disabled || !isObject(unit.expanded_damage?.rescue_fit);}
+      panel.querySelector('[data-source-action="rescue_begin"]').disabled ||= !draft.rescueGroup;
+      panel.querySelector('[data-source-action="rescue_recover"]').disabled ||= !task;
+      panel.querySelector('[data-source-action="rescue_cancel"]').disabled ||= !task;
+      txt(panel, '[data-source-feedback]', feedback);
+    }
+    if (isObject(unit.battery_state)) {
+      const b = unit.battery_state;
+      const panel = sourcePanel(unit, 'battery', `<div class="source-actions">
+        <button class="cmd-btn" data-source-action="start_charging"></button><button class="cmd-btn" data-source-action="stop_charging"></button>
+        <button class="cmd-btn" data-source-action="raise_snorkel"></button><button class="cmd-btn" data-source-action="retract_masts"></button>
+        <button class="cmd-btn" data-source-action="aip"></button></div>
+        <div class="warning-fields"><label class="warning-choice"><span data-source-mode-label></span><select data-source-draft="powerMode"></select></label>
+        <button class="cmd-btn source-apply" data-source-action="power_mode"></button></div>`);
+      txt(panel, '[data-source-title]', battleText('电池与动力', 'Battery and propulsion'));
+      const mode = b.power_mode === 'battery' ? battleText('电池', 'Battery') : b.power_mode === 'diesel' ? battleText('柴油机', 'Diesel') : battleText('未知', 'Unknown');
+      txt(panel, '[data-source-summary]', [battleText(`电量 ${sourceValue(b.charge_units)} / ${sourceValue(b.capacity_units)}`, `Charge ${sourceValue(b.charge_units)} / ${sourceValue(b.capacity_units)}`),
+        battleText(`动力：${mode}`, `Power: ${mode}`), sourceBoolean(b.charging, battleText('正在充电', 'Charging'), battleText('未充电', 'Not charging')),
+        battleText(`通气管：${sourceBoolean(b.mast_raised, '已伸出', '已收回')}`, `Snorkel: ${sourceBoolean(b.mast_raised, 'Raised', 'Retracted')}`),
+        b.aip_fitted === true ? battleText(`AIP：${sourceBoolean(b.aip_operational, '运行中', '已停止')}，余量 ${sourceValue(b.aip_remaining_units)}`, `AIP: ${sourceBoolean(b.aip_operational, 'Operating', 'Stopped')}; remaining ${sourceValue(b.aip_remaining_units)}`)
+          : battleText(`AIP装配：${sourceBoolean(b.aip_fitted, '有', '无')}`, `AIP fitted: ${sourceBoolean(b.aip_fitted, 'Yes', 'No')}`),
+        Object.keys(b.pending_adjudications || {}).length ? battleText('部分动力条件尚待裁定', 'Some propulsion conditions await adjudication') : ''].filter(Boolean).join(' · '));
+      const labels = {start_charging:battleText('开始充电', 'Start charging'),stop_charging:battleText('停止充电', 'Stop charging'),
+        raise_snorkel:battleText('伸出通气管', 'Raise snorkel'),retract_masts:battleText('收回桅杆', 'Retract masts'),
+        aip:b.aip_operational === true ? battleText('停止AIP', 'Stop AIP') : battleText('启动AIP', 'Start AIP'),power_mode:battleText('请求切换动力', 'Request power mode')};
+      for (const button of panel.querySelectorAll('[data-source-action]')) {
+        button.textContent = labels[button.dataset.sourceAction]; button.disabled = disabled;
+      }
+      panel.querySelector('[data-source-action="start_charging"]').disabled ||= b.charging === true || finiteOrNull(b.charge_units) === null;
+      panel.querySelector('[data-source-action="stop_charging"]').disabled ||= b.charging !== true;
+      panel.querySelector('[data-source-action="raise_snorkel"]').disabled ||= b.snorkel_fitted !== true || b.mast_raised === true;
+      panel.querySelector('[data-source-action="retract_masts"]').disabled ||= b.mast_raised !== true;
+      panel.querySelector('[data-source-action="aip"]').disabled ||= b.aip_fitted !== true || typeof b.aip_operational !== 'boolean'
+        || (b.aip_operational !== true && !(finiteOrNull(b.aip_remaining_units) > 0));
+      txt(panel, '[data-source-mode-label]', battleText('选择动力模式', 'Choose power mode'));
+      const select = panel.querySelector('[data-source-draft="powerMode"]');
+      warningSelectOptions(select, [{value:'diesel',label:battleText('柴油机', 'Diesel')},{value:'battery',label:battleText('电池', 'Battery')}], battleText('请选择', 'Choose a mode'), draft.powerMode);
+      select.disabled = disabled;
+      panel.querySelector('[data-source-action="power_mode"]').disabled ||= !['diesel','battery'].includes(draft.powerMode);
+      txt(panel, '[data-source-feedback]', feedback);
+    }
+    if (Array.isArray(unit.nuclear?.warheads) && unit.nuclear.warheads.length) {
+      const rows = unit.nuclear.warheads.filter(r => typeof r.weapon === 'string' && Array.isArray(r.allowed_yields_kt));
+      if (!rows.some(r => r.weapon === draft.nuclearWeapon)) { draft.nuclearWeapon = ''; draft.nuclearYield = ''; draft.nuclearAuthorize = false; }
+      const selected = rows.find(r => r.weapon === draft.nuclearWeapon);
+      const panel = sourcePanel(unit, 'nuclear', `<div class="warning-fields"><label class="warning-choice"><span data-source-weapon-label></span><select data-source-draft="nuclearWeapon"></select></label>
+        <label class="warning-choice"><span data-source-yield-label></span><select data-source-draft="nuclearYield"></select></label></div>
+        <button class="cmd-btn" data-source-action="nuclear_yield"></button>
+        <label class="warning-recipient source-authorization"><input type="checkbox" data-source-draft="nuclearAuthorize"><span data-source-authorization-label></span></label>
+        <button class="cmd-btn source-authorize" data-source-action="nuclear_authorize"></button>`);
+      txt(panel, '[data-source-title]', battleText('核弹头设置与释放授权', 'Nuclear yield and release authorization'));
+      txt(panel, '[data-source-summary]', selected ? battleText(`当前当量 ${sourceValue(selected.selected_yield_kt)} kt · ${sourceBoolean(selected.authorized, '已获释放授权', '尚未授权释放')}`,
+        `Current yield ${sourceValue(selected.selected_yield_kt)} kt · ${sourceBoolean(selected.authorized, 'Release authorized', 'Release not authorized')}`)
+        : battleText('先选择本单位已配置的核武器。选择当量不会授权释放。', 'Choose a configured nuclear weapon. Selecting a yield does not authorize release.'));
+      txt(panel, '[data-source-weapon-label]', battleText('已配置核武器', 'Configured nuclear weapon'));
+      txt(panel, '[data-source-yield-label]', battleText('当量（kt）', 'Yield (kt)'));
+      const weaponSelect = panel.querySelector('[data-source-draft="nuclearWeapon"]');
+      warningSelectOptions(weaponSelect, rows.map(r => ({value:r.weapon,label:(unit.weapons || []).find(m => m.weapon === r.weapon)?.name || r.weapon})), battleText('请选择武器', 'Choose a weapon'), draft.nuclearWeapon);
+      const yieldSelect = panel.querySelector('[data-source-draft="nuclearYield"]');
+      const yields = (selected?.allowed_yields_kt || []).filter(v => Number.isInteger(v) && v > 0);
+      if (!yields.includes(Number(draft.nuclearYield))) draft.nuclearYield = '';
+      warningSelectOptions(yieldSelect, yields.map(v => ({value:String(v),label:`${v} kt`})), battleText('请选择当量', 'Choose a yield'), draft.nuclearYield);
+      weaponSelect.disabled = disabled; yieldSelect.disabled = disabled || !selected;
+      const check = panel.querySelector('[data-source-draft="nuclearAuthorize"]'); check.checked = draft.nuclearAuthorize; check.disabled = disabled || !selected;
+      txt(panel, '[data-source-authorization-label]', battleText('本次请求：允许所选武器释放核弹头', 'This request: authorize nuclear release for the selected weapon'));
+      const yieldButton = panel.querySelector('[data-source-action="nuclear_yield"]'); yieldButton.textContent = battleText('请求设置当量', 'Request yield change'); yieldButton.disabled = disabled || !selected || !draft.nuclearYield;
+      const authButton = panel.querySelector('[data-source-action="nuclear_authorize"]');
+      authButton.textContent = draft.nuclearAuthorize ? battleText('明确授权所选核武器释放', 'Authorize selected nuclear release') : battleText('撤销所选核武器释放授权', 'Revoke selected nuclear release');
+      authButton.disabled = disabled || !selected;
+      txt(panel, '[data-source-feedback]', feedback);
+    }
+    if (isObject(unit.unmanned)) {
+      const targets = sourceUnmannedTargets(unit);
+      if (!targets.some(t => String(t.unit) === draft.unmannedVehicle)) draft.unmannedVehicle = targets.some(t => t.unit === Number(unit.id)) ? String(unit.id) : '';
+      const vehicle = (state.observation?.units || []).find(u => String(u.id) === draft.unmannedVehicle);
+      const reported = vehicle?.unmanned;
+      const telemetry = reported?.telemetry || {};
+      const mode = reported?.mode === 'hitl' ? battleText('人工在环', 'Human in the loop') : reported?.mode === 'autonomous' ? battleText('自主', 'Autonomous') : battleText('未知', 'Unknown');
+      const panel = sourcePanel(unit, 'unmanned', `<div class="warning-fields"><label class="warning-choice"><span data-source-vehicle-label></span><select data-source-draft="unmannedVehicle"></select></label>
+        <label class="warning-choice"><span data-source-request-mode-label></span><select data-source-draft="unmannedMode"></select></label></div>
+        <p class="warning-note" data-source-telemetry-note></p><button class="cmd-btn" data-source-action="unmanned_mode"></button>`);
+      txt(panel, '[data-source-title]', battleText('无人平台控制', 'Unmanned platform control'));
+      txt(panel, '[data-source-summary]', battleText(`最后回传模式：${mode} · 状态时间 ${finiteOrNull(telemetry.status_at) === null ? '未知' : fmtEventTick(telemetry.status_at)} · 位置时间 ${finiteOrNull(telemetry.position_at) === null ? '未知' : fmtEventTick(telemetry.position_at)}`,
+        `Last reported mode: ${mode} · Status time ${finiteOrNull(telemetry.status_at) === null ? 'Unknown' : fmtEventTick(telemetry.status_at)} · Position time ${finiteOrNull(telemetry.position_at) === null ? 'Unknown' : fmtEventTick(telemetry.position_at)}`));
+      txt(panel, '[data-source-vehicle-label]', battleText('选择本方平台', 'Choose a friendly vehicle'));
+      txt(panel, '[data-source-request-mode-label]', battleText('请求模式', 'Requested mode'));
+      const vehicleSelect = panel.querySelector('[data-source-draft="unmannedVehicle"]');
+      warningSelectOptions(vehicleSelect, targets.map(t => ({value:String(t.unit),label:t.name})), battleText('请选择平台', 'Choose a vehicle'), draft.unmannedVehicle);
+      const modeSelect = panel.querySelector('[data-source-draft="unmannedMode"]');
+      warningSelectOptions(modeSelect, [{value:'hitl',label:battleText('人工在环', 'Human in the loop')},{value:'autonomous',label:battleText('自主', 'Autonomous')}], battleText('请选择模式', 'Choose a mode'), draft.unmannedMode);
+      vehicleSelect.disabled = disabled || !targets.length; modeSelect.disabled = disabled;
+      txt(panel, '[data-source-telemetry-note]', battleText('失联时保留最后回传；未回传的模式、位置和切换结果均未知。切换请求须等待链路及规则时序许可。',
+        'Link loss retains the last received report. Unreported mode, position and switch completion remain unknown. Requests still require a usable link and the rule timing.'));
+      const button = panel.querySelector('[data-source-action="unmanned_mode"]'); button.textContent = battleText('请求切换模式', 'Request mode switch');
+      button.disabled = disabled || !draft.unmannedVehicle || !['hitl','autonomous'].includes(draft.unmannedMode);
+      txt(panel, '[data-source-feedback]', feedback);
+    }
+  }
+
+  function sourceControlCommand(unit, action) {
+    const own = (state.observation?.units || []).find(u => Number(u.id) === Number(unit?.id));
+    if (!own || own.side !== state.side || sourceControlsLocked()) return null;
+    const draft = sourceControlDraft(own), id = Number(own.id);
+    if (draft.busy) return null;
+    const b = own.battery_state;
+    if (isObject(b)) {
+      let battery = null;
+      if (['start_charging','stop_charging','raise_snorkel','retract_masts'].includes(action)) battery = {type:action};
+      if (action === 'aip' && b.aip_fitted === true && typeof b.aip_operational === 'boolean') battery = {type:'set_aip_operating',enabled:!b.aip_operational};
+      if (action === 'power_mode' && ['diesel','battery'].includes(draft.powerMode)) battery = {type:'set_power_mode',mode:draft.powerMode};
+      if (battery) return {cmd:'navigation',unit:id,action:{type:'battery',action:battery}};
+    }
+    const nuclear = (Array.isArray(own.nuclear?.warheads) ? own.nuclear.warheads : []).find(r => r.weapon === draft.nuclearWeapon);
+    if (nuclear && action === 'nuclear_yield' && nuclear.allowed_yields_kt.includes(Number(draft.nuclearYield)) && Number(draft.nuclearYield) > 0)
+      return {cmd:'nuclear',unit:id,action:{type:'set_yield',weapon:nuclear.weapon,yield_kt:Number(draft.nuclearYield)}};
+    if (nuclear && action === 'nuclear_authorize') return {cmd:'nuclear',unit:id,action:{type:'authorize',weapon:nuclear.weapon,enabled:draft.nuclearAuthorize === true}};
+    if (action === 'unmanned_mode' && sourceUnmannedTargets(own).some(t => String(t.unit) === draft.unmannedVehicle) && ['hitl','autonomous'].includes(draft.unmannedMode))
+      return {cmd:'unmanned',unit:Number(draft.unmannedVehicle),action:{type:'switch_mode',mode:draft.unmannedMode}};
+    if (isObject(own.expanded_damage?.rescue_fit)) {
+      if (action === 'rescue_begin' && (own.survivors || []).some(r => r.label === draft.rescueGroup))
+        return {cmd:'search_and_rescue',unit:id,action:{type:'begin',group:draft.rescueGroup,automatic:true}};
+      if (action === 'rescue_recover' && isObject(own.expanded_damage.rescue)) return {cmd:'search_and_rescue',unit:id,action:{type:'recover_due'}};
+      if (action === 'rescue_cancel' && isObject(own.expanded_damage.rescue)) return {cmd:'search_and_rescue',unit:id,action:{type:'cancel'}};
+    }
+    const services = own.ground?.berth_resupply?.services;
+    const service = isObject(services) && Object.hasOwn(services, draft.resupplyService) ? services[draft.resupplyService] : null;
+    if (service && action === 'resupply_cancel' && isObject(service.job))
+      return {cmd:'ground',unit:id,action:{type:'cancel_alongside_resupply',service:draft.resupplyService}};
+    if (service && action === 'resupply_start' && !service.job && !service.pending) {
+      const rounds = Number(draft.resupplyRounds), stock = finiteOrNull(service.stock), reserved = finiteOrNull(service.reserved_stock);
+      const capacity = finiteOrNull(service.capacity), reservedCapacity = finiteOrNull(service.reserved_capacity);
+      const mount = (own.weapons || [])[service.mount_index], ammunition = finiteOrNull(mount?.ammo);
+      if (Number.isInteger(rounds) && rounds >= 1 && rounds <= 65535 && [stock,reserved,capacity,reservedCapacity,ammunition].every(v => v !== null)
+        && mount?.weapon === service.weapon && rounds <= stock - reserved && rounds <= capacity - ammunition - reservedCapacity)
+        return {cmd:'ground',unit:id,action:{type:'alongside_resupply',service:draft.resupplyService,rounds}};
+    }
+    return null;
+  }
+
+  async function sendSourceControl(action) {
+    const unit = selectedUnit(), command = sourceControlCommand(unit, action);
+    if (!command) return;
+    const draft = sourceControlDraft(unit), generation = state.gameGeneration, id = Number(unit.id);
+    draft.busy = true; draft.feedback = ''; renderSourceControls(unit);
+    try {
+      const ok = await postCommand(command, battleText('系统操作请求', 'System control request'), {quiet:true});
+      if (generation === state.gameGeneration) draft.feedback = ok ? 'queued' : 'rejected';
+    } catch (_) { if (generation === state.gameGeneration) draft.feedback = 'rejected'; }
+    finally { draft.busy = false; if (generation === state.gameGeneration && Number(selectedUnit()?.id) === id) renderSourceControls(selectedUnit()); }
+  }
+
+  function warningReportKey(report) {
+    return JSON.stringify([Number(report.contact), String(report.sensor)]);
+  }
+
+  function warningDraft(unit) {
+    const units = new Map((state.observation?.units || []).map(u => [Number(u.id), u]));
+    const communication = unit.communications;
+    const reports = (Array.isArray(communication?.reports) ? communication.reports : []).filter(r =>
+      Number.isInteger(finiteOrNull(r.contact)) && typeof r.sensor === 'string' && r.sensor && finiteOrNull(r.observed_at) !== null);
+    const fits = (Array.isArray(communication?.fits) ? communication.fits : []).filter(f =>
+      f.send === true && f.operational === true && typeof f.fit === 'string' && f.fit && Array.isArray(f.receivers));
+    const unitId = Number(unit.id);
+    let draft = state.communicationsDrafts.get(unitId);
+    if (!draft) {
+      draft = { report: '', fit: '', weapon: '', receivers: new Set(), busy: false, feedback: '' };
+      state.communicationsDrafts.set(unitId, draft);
+    }
+    if (!fits.some(f => f.fit === draft.fit)) {
+      draft.fit = fits.length === 1 ? fits[0].fit : '';
+      draft.receivers.clear();
+    }
+    if (!reports.some(r => warningReportKey(r) === draft.report)) draft.report = '';
+    const fit = fits.find(f => f.fit === draft.fit) || null;
+    const receivers = [...new Set((fit?.receivers || []).map(Number))]
+      .filter(id => id !== unitId && units.has(id));
+    draft.receivers = new Set([...draft.receivers].filter(id => receivers.includes(id)));
+    return { draft, reports, fits, fit, receivers, units, report: reports.find(r => warningReportKey(r) === draft.report) || null };
+  }
+
+  function warningSensorLabel(unit, report) {
+    const index = (unit?.sensors || []).findIndex(s => String(s.sensor) === String(report.sensor));
+    const installed = index >= 0 ? unit.sensors[index] : null;
+    const name = installed?.name || '';
+    if (name && !/scenario_assumption|lab_|source[_:]/i.test(name)) return name;
+    return index >= 0 ? battleText(`探测器 ${index + 1}`, `Sensor ${index + 1}`) : battleText('原报告来源', 'Original report source');
+  }
+
+  function warningReportDescription(report) {
+    const kinds = { Ship: ['水面目标', 'Surface contact'], Sub: ['水下目标', 'Subsurface contact'],
+      Aircraft: ['空中目标', 'Air contact'], Missile: ['导弹', 'Missile'], Torpedo: ['鱼雷', 'Torpedo'], Base: ['陆地目标', 'Land contact'] };
+    const kind = kinds[report.category];
+    const category = kind ? battleText(...kind) : battleText('类别未知', 'Category unknown');
+    const time = finiteOrNull(report.observed_at) === null ? battleText('时间未知', 'Time unknown') : fmtEventTick(report.observed_at);
+    const bearing = `${battleText('方位', 'Bearing')} ${fmtCourse(report.bearing_deg)}`;
+    const error = finiteOrNull(report.bearing_error_deg);
+    const uncertainty = error === null ? battleText('误差未提供', 'Uncertainty not supplied') : `±${fmtNum(error)}°`;
+    const p = report.measured_position;
+    const location = report.bearing_only || !p || finiteOrNull(p.x) === null || finiteOrNull(p.y) === null
+      ? battleText('仅有方位，距离未知', 'Bearing only; range unknown')
+      : battleText(`测得位置 ${fmt1(p.x)}, ${fmt1(p.y)} 海里`, `Reported position ${fmt1(p.x)}, ${fmt1(p.y)} nm`);
+    return `${battleText('原观测', 'Observed')} ${time} · ${category} · ${bearing} ${uncertainty} · ${location}`;
+  }
+
+  function warningSelectOptions(select, rows, placeholder, selected) {
+    const choices = [{ value: '', label: placeholder }, ...rows];
+    if (JSON.stringify([...select.options].map(o => o.value)) !== JSON.stringify(choices.map(o => o.value))) {
+      select.replaceChildren(...choices.map(row => {
+        const option = document.createElement('option'); option.value = row.value; option.textContent = row.label; return option;
+      }));
+    } else {
+      choices.forEach((row, i) => { if (select.options[i].textContent !== row.label) select.options[i].textContent = row.label; });
+    }
+    if (select.value !== selected) select.value = selected;
+  }
+
+  function renderCommunications(unit) {
+    let panel = dom.systemsList.querySelector('[data-warning-panel]');
+    if (!['voice_warning_only','fitted_communications'].includes(unit.communications?.scope)) { panel?.remove(); return; }
+    const model = warningDraft(unit), { draft, reports, fits, receivers, units, report } = model;
+    const unitId = Number(unit.id);
+    if (!panel) { panel = document.createElement('section'); panel.className = 'warning-panel'; panel.dataset.warningPanel = ''; dom.systemsList.append(panel); }
+    if (panel.dataset.unit !== String(unitId)) {
+      panel.dataset.unit = String(unitId);
+      panel.innerHTML = `<h3 data-warning-title></h3><p class="warning-note" data-warning-note></p>
+        <div class="warning-fields"><label class="warning-choice"><span data-warning-report-label></span><select data-warning-select="report"></select></label>
+        <label class="warning-choice"><span data-warning-fit-label></span><select data-warning-select="fit"></select></label></div>
+        <p class="warning-preview" data-warning-preview></p>
+        <fieldset class="warning-recipients"><legend data-warning-receivers-label></legend><div class="warning-receiver-list" data-warning-receivers></div></fieldset>
+        <p class="warning-note" data-warning-help></p><button type="button" class="cmd-btn warning-send" data-warning-send></button>
+        <div data-warning-extended><div class="source-automatic" data-warning-automatic></div>
+          <label class="warning-choice"><span data-warning-weapon-label></span><select data-warning-select="weapon"></select></label>
+          <button type="button" class="cmd-btn warning-send" data-warning-solution></button>
+          <p class="warning-note" data-warning-solution-note></p></div>
+        <p class="warning-feedback" role="status" aria-live="polite" data-warning-feedback></p>
+        <div class="warning-history" data-warning-history></div>`;
+    }
+    const text = (selector, value) => { const node = panel.querySelector(selector); if (node.textContent !== value) node.textContent = value; };
+    const extended = unit.communications.scope === 'fitted_communications';
+    text('[data-warning-title]', extended ? battleText('报告与火控解共享', 'Report and firing solution exchange') : battleText('原始报告警告', 'Original report warning'));
+    text('[data-warning-note]', battleText('手动转告所选来源的最近一次观测。警告保留原时间和位置，不代表实时接触。',
+      'Manually relay the latest observation from the selected source. Its original time and position are retained; it is not a live track.'));
+    text('[data-warning-report-label]', battleText('选择本单位的报告', 'Choose this unit’s report'));
+    text('[data-warning-fit-label]', battleText('通信方式', 'Connection'));
+    text('[data-warning-receivers-label]', battleText('明确选择收件单位', 'Choose recipients'));
+    const reportSelect = panel.querySelector('[data-warning-select="report"]');
+    warningSelectOptions(reportSelect, reports.map(r => ({ value: warningReportKey(r),
+      label: `C${Number(r.contact)} · ${warningSensorLabel(unit, r)} · ${fmtEventTick(r.observed_at)}` })),
+    battleText('请选择报告', 'Choose a report'), draft.report);
+    const fitSelect = panel.querySelector('[data-warning-select="fit"]');
+    const linkLabels = {time_late:battleText('延时数据链', 'Time-late link'),near_real_time:battleText('近实时数据链', 'Near-real-time link'),real_time:battleText('实时数据链', 'Real-time link')};
+    warningSelectOptions(fitSelect, fits.map((f, i) => ({ value: f.fit, label: f.link_kind ? `${linkLabels[f.link_kind] || battleText('数据链', 'Data link')} ${i + 1}` : battleText(`语音方式 ${i + 1}`, `Voice option ${i + 1}`) })),
+      battleText('请选择通信方式', 'Choose a connection'), draft.fit);
+    text('[data-warning-preview]', report ? warningReportDescription(report) : battleText('选择报告后查看原观测、类别和方位误差。', 'Choose a report to inspect its observation time, category and bearing uncertainty.'));
+    const receiverList = panel.querySelector('[data-warning-receivers]');
+    const receiverKey = JSON.stringify([window.HarpoonI18n?.language, receivers.map(id => [id, unitName(units.get(id))])]);
+    if (receiverList.dataset.key !== receiverKey) {
+      receiverList.dataset.key = receiverKey;
+      receiverList.innerHTML = receivers.length ? receivers.map(id => `<label class="warning-recipient"><input type="checkbox" data-warning-receiver="${id}"><span>${escapeHtml(unitName(units.get(id)))}</span></label>`).join('')
+        : `<span class="warning-note">${battleText('暂无可用收件单位', 'No eligible recipients')}</span>`;
+    }
+    const locked = !!(state.observation?.over || state.observation?.exercise?.locked || state.startingScenario);
+    for (const box of receiverList.querySelectorAll('[data-warning-receiver]')) { box.checked = draft.receivers.has(Number(box.dataset.warningReceiver)); box.disabled = locked || draft.busy; }
+    reportSelect.disabled = locked || draft.busy || !reports.length;
+    fitSelect.disabled = locked || draft.busy || !fits.length;
+    text('[data-warning-help]', !fits.length ? battleText('当前没有已配置的可用通信方式。', 'No configured connection is available.')
+      : battleText('收件单位默认不选；选择和刷新不会发送命令。', 'Recipients start unchecked. Selecting or refreshing sends no order.'));
+    const send = panel.querySelector('[data-warning-send]');
+    send.disabled = locked || draft.busy || !report || !model.fit || !draft.receivers.size;
+    send.textContent = draft.busy ? battleText('正在提交…', 'Sending…') : battleText('发送报告警告', 'Send report warning');
+    text('[data-warning-feedback]', draft.feedback === 'queued' ? battleText('通信请求已提交，请查看后续回执。', 'Communication request queued. Check subsequent receipts.')
+      : draft.feedback === 'rejected' ? battleText('发送未获接受，请检查当前报告和收件单位。', 'Warning not accepted. Check the current report and recipients.') : '');
+    const extension = panel.querySelector('[data-warning-extended]'); extension.hidden = !extended;
+    if (extended) {
+      const automatic = panel.querySelector('[data-warning-automatic]');
+      const automaticFits = fits.filter(f => ['time_late','near_real_time','real_time'].includes(f.link_kind));
+      const automaticKey = JSON.stringify([window.HarpoonI18n?.language, automaticFits.map(f => [f.fit,f.link_kind,f.automatic])]);
+      if (automatic.dataset.key !== automaticKey) {
+        automatic.dataset.key = automaticKey;
+        automatic.innerHTML = automaticFits.map((f, i) => `<div class="source-automatic-row"><span>${escapeHtml(`${linkLabels[f.link_kind]} ${i + 1} · ${sourceBoolean(f.automatic, battleText('自动共享已开启', 'Automatic sharing on'), battleText('自动共享已关闭', 'Automatic sharing off'))}`)}</span>
+          <button class="cmd-btn" data-warning-automatic-fit="${escapeHtml(f.fit)}">${escapeHtml(f.automatic === true ? battleText('请求关闭自动共享', 'Request automatic sharing off') : battleText('请求开启自动共享', 'Request automatic sharing on'))}</button></div>`).join('');
+      }
+      for (const button of automatic.querySelectorAll('[data-warning-automatic-fit]')) button.disabled = locked || draft.busy || typeof automaticFits.find(f => f.fit === button.dataset.warningAutomaticFit)?.automatic !== 'boolean';
+      const weapons = (unit.weapons || []).filter(m => m.operational !== false && Number(m.ammo) > 0 && typeof m.weapon === 'string');
+      if (!weapons.some(m => m.weapon === draft.weapon)) draft.weapon = '';
+      text('[data-warning-weapon-label]', battleText('火控解对应武器', 'Weapon for the firing solution'));
+      const weaponSelect = panel.querySelector('[data-warning-select="weapon"]');
+      warningSelectOptions(weaponSelect, [...new Map(weapons.map(m => [m.weapon,{value:m.weapon,label:m.name || m.weapon}])).values()], battleText('明确选择武器', 'Choose a weapon explicitly'), draft.weapon);
+      weaponSelect.disabled = locked || draft.busy || !weapons.length;
+      const solution = panel.querySelector('[data-warning-solution]'); solution.textContent = battleText('发送现有火控解', 'Send existing firing solution');
+      solution.disabled = locked || draft.busy || !report || !model.fit || !['near_real_time','real_time'].includes(model.fit.link_kind) || !draft.receivers.size || !draft.weapon;
+      text('[data-warning-solution-note]', battleText('火控解必须由本单位已有观测与所选武器形成；缺失来源或不兼容链路会被拒绝。提交不代表已投递或已建立火控。',
+        'A solution must already exist from this unit’s observations for the chosen weapon. Missing source evidence or incompatible links are rejected. Queuing does not confirm delivery or fire control.'));
+    }
+    const history = panel.querySelector('[data-warning-history]');
+    const messages = [...(Array.isArray(unit.communications.messages) ? unit.communications.messages : [])]
+      .sort((a, b) => numberOr(b.queued_at) - numberOr(a.queued_at) || numberOr(b.id) - numberOr(a.id)).slice(0, 4);
+    const historyKey = JSON.stringify([window.HarpoonI18n?.language, messages, [...units.values()].map(u => [u.id, unitName(u)])]);
+    if (history.dataset.key !== historyKey) {
+      history.dataset.key = historyKey;
+      history.innerHTML = messages.length ? `<h4>${battleText('最近收发回执', 'Recent receipts')}</h4>` + messages.map(m => {
+        const stateLabel = m.state === 'delivered' ? battleText('已投递', 'Delivered') : m.state === 'failed' ? battleText('未投递', 'Not delivered') : battleText('等待投递', 'Queued');
+        const direction = m.direction === 'received' ? battleText('收到', 'Received') : battleText('发出', 'Sent');
+        const sourceUnit = units.get(Number(m.sender));
+        const counterpart = m.direction === 'received' ? (sourceUnit ? unitName(sourceUnit) : battleText('本方单位', 'Friendly unit'))
+          : (m.receivers || []).map(id => units.has(Number(id)) ? unitName(units.get(Number(id))) : battleText('本方单位', 'Friendly unit')).join(', ');
+        const label = m.contact_current ? battleText('标签仍对应本方接触簿', 'Label still matches own contact book') : battleText('标签已失效或变更', 'Label is stale or reassigned');
+        const r = isObject(m.report) ? m.report : {};
+        return `<article class="warning-receipt"><b>${escapeHtml(`${direction} ${counterpart} · ${stateLabel}`)}</b>
+          <span>${escapeHtml(battleText(`发送 ${fmtEventTick(m.queued_at)} · 历史接触 C${fmtInt(r.contact)}`, `Sent ${fmtEventTick(m.queued_at)} · Historical contact C${fmtInt(r.contact)}`))}</span>
+          <span>${escapeHtml(warningReportDescription(r))}</span><span>${escapeHtml(label)}</span></article>`;
+      }).join('') : '';
+    }
+  }
+
+  async function sendReportWarning() {
+    const unit = selectedUnit();
+    if (!unit || !['voice_warning_only','fitted_communications'].includes(unit.communications?.scope) || state.observation?.over || state.observation?.exercise?.locked || state.startingScenario) return;
+    const { draft, report, fit } = warningDraft(unit);
+    if (draft.busy || !report || !fit || !draft.receivers.size) return;
+    const generation = state.gameGeneration, unitId = Number(unit.id);
+    const command = { cmd: 'communications', unit: unitId, action: { type: 'send_warning', contact: Number(report.contact),
+      sensor: String(report.sensor), fit: fit.fit, receivers: [...draft.receivers] } };
+    draft.busy = true; draft.feedback = ''; renderCommunications(unit);
+    try {
+      const ok = await postCommand(command, battleText('报告警告', 'Report warning'), { quiet: true });
+      if (generation === state.gameGeneration) draft.feedback = ok ? 'queued' : 'rejected';
+    } catch (_) { if (generation === state.gameGeneration) draft.feedback = 'rejected'; }
+    finally {
+      draft.busy = false;
+      if (generation === state.gameGeneration && Number(selectedUnit()?.id) === unitId) renderCommunications(selectedUnit());
+    }
+  }
+
+  function extendedCommunicationCommand(unit, type, fitKey = '') {
+    if (!unit || unit.communications?.scope !== 'fitted_communications' || sourceControlsLocked()) return null;
+    const own = (state.observation?.units || []).find(u => Number(u.id) === Number(unit.id));
+    if (!own || own.side !== state.side) return null;
+    const { draft, report, fit, fits } = warningDraft(own);
+    if (draft.busy) return null;
+    if (type === 'set_automatic') {
+      const automatic = fits.find(f => f.fit === fitKey);
+      if (!automatic || !['time_late','near_real_time','real_time'].includes(automatic.link_kind) || typeof automatic.automatic !== 'boolean') return null;
+      return {cmd:'communications',unit:Number(unit.id),action:{type,fit:automatic.fit,enabled:!automatic.automatic}};
+    }
+    if (type === 'send_solution' && report && fit && ['near_real_time','real_time'].includes(fit.link_kind) && draft.receivers.size
+      && own.weapons?.some(m => m.weapon === draft.weapon && m.operational !== false && Number(m.ammo) > 0))
+      return {cmd:'communications',unit:Number(unit.id),action:{type,contact:Number(report.contact),sensor:String(report.sensor),fit:fit.fit,receivers:[...draft.receivers],weapon:draft.weapon}};
+    return null;
+  }
+
+  async function sendExtendedCommunication(type, fitKey = '') {
+    const unit = selectedUnit(), command = extendedCommunicationCommand(unit, type, fitKey);
+    if (!command) return;
+    const {draft} = warningDraft(unit), generation = state.gameGeneration, id = Number(unit.id);
+    draft.busy = true; draft.feedback = ''; renderCommunications(unit);
+    try {
+      const ok = await postCommand(command, battleText('通信请求', 'Communication request'), {quiet:true});
+      if (generation === state.gameGeneration) draft.feedback = ok ? 'queued' : 'rejected';
+    } catch (_) { if (generation === state.gameGeneration) draft.feedback = 'rejected'; }
+    finally { draft.busy = false; if (generation === state.gameGeneration && Number(selectedUnit()?.id) === id) renderCommunications(selectedUnit()); }
   }
 
   function renderTargetPanel(unit, contact, obs) {
@@ -1714,15 +2260,15 @@
       }
       dom.targetBdaRow.title = battleText('BDA 估损来自本方实际观测到的命中，不是敌方隐藏真值。','BDA estimate is derived from hits this side observed, not hidden enemy truth.');
     }
-    const inFlight = Number(contact.own_in_flight) || 0;
+    const inFlight = finiteOrNull(contact.own_in_flight);
     if (dom.targetInflightRow) {
       dom.targetInflightRow.hidden = false;
       dom.targetInflightText.textContent = battleText(
-        inFlight > 0 ? `本方已在飞 ${inFlight} 枚` : '本方没有在飞弹药',
-        inFlight > 0 ? `${inFlight} OWN ROUNDS IN FLIGHT` : 'NO OWN ROUNDS IN FLIGHT');
+        inFlight === null ? '鱼雷状态未确认 · 在途数量未知' : inFlight > 0 ? `该接触已知在途 ${inFlight} 枚` : '该接触无已知在途弹药',
+        inFlight === null ? 'TORPEDO STATUS UNCONFIRMED · COUNT UNKNOWN' : inFlight > 0 ? `${inFlight} KNOWN OWN ROUNDS FOR THIS CONTACT` : 'NO KNOWN OWN ROUNDS FOR THIS CONTACT');
       dom.targetInflightRow.title = battleText(
-        '本方射向该接触、尚未落地的弹药数；判断是否需要补射或节约弹药的依据。',
-        'Own ordnance already targeted on this contact; use it to decide between re-attack and magazine discipline.');
+        '缺少鱼雷反馈时数量保持未知；弹体在裁判端消失不等于本方已确认结局。',
+        'Without torpedo feedback the count remains unknown; referee-side removal is not confirmed outcome information.');
     }
     dom.targetRange.textContent = range === null ? '—' : `${fmtRange(range)} NM`;
     dom.targetCourse.textContent = contact.motion_known === false ? battleText('跟踪中 · 待判','TRACKING · UNKNOWN') : fmtCourse(contact.est_course_deg);
@@ -3895,6 +4441,7 @@
         speed: () => ({ cmd: 'set_speed', speed_kts: Number($('nav-speed').value) }),
         course: () => ({ cmd: 'set_course', course_deg: Number($('nav-course').value) }),
         depth: () => ({ cmd: 'set_depth', depth_m: Number($('nav-depth').value) }),
+        'emergency-blow': () => ({cmd:'navigation',action:{type:'emergency_blow',depth_m:Number($('nav-depth').value)}}),
         altitude: () => ({ cmd: 'set_altitude', altitude_m: Number($('nav-altitude').value) }),
         'sonar-on': () => ({ cmd: 'set_sonar', active: true }),
         'sonar-off': () => ({ cmd: 'set_sonar', active: false }),
@@ -3904,10 +4451,12 @@
         jamming: () => ({cmd:'set_jamming',mode:$('nav-jamming').value,contacts:$('nav-jamming').value==='spot'&&state.selectedContactId?[Number(state.selectedContactId)]:[]}),
         'manual-flight': () => ({cmd:'retask_aircraft',mission:{mission:'recon',point:unit.pos},manual:true}),
         'asw-relocate': () => ({cmd:'retask_aircraft',mission:{mission:'asw',area:{x:Number($('nav-x').value),y:Number($('nav-y').value)},radius_nm:1},manual:false}),
+        'hard-rudder': () => ({cmd:'navigation',action:{type:'hard_rudder',course_deg:Number($('nav-hard-course').value),direction:$('nav-hard-side').value}}),
+        'free-rudder': () => ({cmd:'navigation',action:{type:'free_rudder'}}),
         goto: () => ({ cmd: 'goto', waypoints: [{ x: Number($('nav-x').value), y: Number($('nav-y').value) }] }),
       };
       const command = commands[action]?.();
-      const input = action === 'goto' ? [$('nav-x'), $('nav-y')] : [$('nav-' + action)].filter(Boolean);
+      const input = action === 'goto' ? [$('nav-x'), $('nav-y')] : action === 'emergency-blow' ? [$('nav-depth')] : action === 'hard-rudder' ? [$('nav-hard-course')] : [$('nav-' + action)].filter(Boolean);
       if (!command) return;
       const invalid = input.find(el => !el.checkValidity() || el.value === '');
       if (invalid) { invalid.required = true; invalid.reportValidity(); return; }
@@ -3925,6 +4474,12 @@
         return;
       }
       void postCommand({ ...command, unit: Number(unit.id) }, 'ORDER');
+    });
+    document.querySelector('.sidebar-scroll')?.addEventListener('change', async event => {
+      const box = event.target.closest('#nav-hard-auto');
+      const unit = selectedUnit();
+      if (!box || !unit) return;
+      await postCommand({cmd:'navigation',unit:Number(unit.id),action:{type:'rudder_recovery',automatic:box.checked}}, 'ORDER');
     });
     dom.sideToggle.addEventListener('click', (event) => {
       const button = event.target.closest('button[data-side]');
@@ -3970,14 +4525,62 @@
     dom.btnClearTarget.addEventListener('click', () => void issueClearTarget());
     dom.btnFire.addEventListener('click', () => void issueFire());
 
-    // Flight-deck scramble buttons (delegated: rows re-render each frame).
+    // Draft edits never send commands; only the explicit warning button does.
+    dom.systemsList.addEventListener('change', (event) => {
+      const target = event.target instanceof Element ? event.target : null;
+      const sourcePanel = target?.closest('[data-source-panel]');
+      const sourceUnit = selectedUnit();
+      if (sourcePanel && sourceUnit && sourcePanel.dataset.unit === String(sourceUnit.id)) {
+        const field = target.dataset.sourceDraft;
+        if (updateSourceControlDraft(sourceUnit, field, field === 'nuclearAuthorize' ? target.checked : target.value)) renderSourceControls(sourceUnit);
+        return;
+      }
+      const panel = target?.closest('[data-warning-panel]');
+      const unit = selectedUnit();
+      if (!panel || !unit || panel.dataset.unit !== String(unit.id)) return;
+      const model = warningDraft(unit), { draft } = model;
+      if (draft.busy || state.observation?.over || state.observation?.exercise?.locked || state.startingScenario) return;
+      if (target.matches('[data-warning-select="report"]')) draft.report = target.value;
+      else if (target.matches('[data-warning-select="weapon"]')) draft.weapon = target.value;
+      else if (target.matches('[data-warning-select="fit"]')) {
+        draft.fit = target.value;
+        draft.receivers.clear();
+      } else if (target.matches('[data-warning-receiver]')) {
+        const id = Number(target.dataset.warningReceiver);
+        if (!model.receivers.includes(id)) return;
+        if (target.checked) draft.receivers.add(id); else draft.receivers.delete(id);
+      } else return;
+      draft.feedback = '';
+      renderCommunications(unit);
+    });
     dom.systemsList.addEventListener('click', async (event) => {
+      const source = event.target instanceof Element ? event.target.closest('[data-source-action]') : null;
+      if (source) {
+        if (!source.disabled && source.closest('[data-source-panel]')?.dataset.unit === String(selectedUnit()?.id)) await sendSourceControl(source.dataset.sourceAction);
+        return;
+      }
+      const automatic = event.target instanceof Element ? event.target.closest('[data-warning-automatic-fit]') : null;
+      if (automatic) {
+        if (!automatic.disabled && automatic.closest('[data-warning-panel]')?.dataset.unit === String(selectedUnit()?.id)) await sendExtendedCommunication('set_automatic', automatic.dataset.warningAutomaticFit);
+        return;
+      }
+      const solution = event.target instanceof Element ? event.target.closest('[data-warning-solution]') : null;
+      if (solution) {
+        if (!solution.disabled && solution.closest('[data-warning-panel]')?.dataset.unit === String(selectedUnit()?.id)) await sendExtendedCommunication('send_solution');
+        return;
+      }
+      const warning = event.target instanceof Element ? event.target.closest('[data-warning-send]') : null;
+      if (warning) {
+        if (!warning.disabled && warning.closest('[data-warning-panel]')?.dataset.unit === String(selectedUnit()?.id)) await sendReportWarning();
+        return;
+      }
       const button = event.target instanceof Element ? event.target.closest('[data-damage-control]') : null;
       const unit = selectedUnit();
       if (!button || !unit || state.observation?.over) return;
       try { await postCommand({ cmd: 'damage_control', unit: Number(unit.id), action: button.dataset.damageControl }, button.textContent); }
       catch (error) { showToast(String(error.message || error), 'error'); }
     });
+    // Flight-deck scramble buttons (delegated: rows re-render each frame).
     dom.deckList.addEventListener('click', (event) => {
       const btn = event.target && event.target.closest
         ? event.target.closest('[data-deck-launch]')

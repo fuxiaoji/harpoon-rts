@@ -9,9 +9,9 @@ pub fn danger(obs: &Observation, db: &Database, point: Vec2) -> bool {
         .filter(|c| !c.stale && !c.bearing_only && c.quality >= 0.3)
         .any(|c| {
             let radius = match c.category {
-                PlatformKind::Missile => 45.0,
-                PlatformKind::Aircraft => 40.0,
-                PlatformKind::Ship => c
+                Some(PlatformKind::Missile) => 45.0,
+                Some(PlatformKind::Aircraft) => 40.0,
+                Some(PlatformKind::Ship) => c
                     .class_name
                     .as_ref()
                     .and_then(|name| db.platforms.values().find(|p| &p.name == name))
@@ -67,10 +67,10 @@ pub fn brief(obs: &Observation, db: &Database, supervision: &Value) -> Value {
         let support:Vec<_>=obs.units.iter().filter(|u|u.kind==PlatformKind::Aircraft&&u.mission.as_deref()==Some("recon")&&u.pos.range_to(h.pos)<90.0).map(|u|json!({"unit":u.id,"needs_handover":u.endurance_s.unwrap_or(0.0)<u.pos.range_to(h.pos)/db.platforms.get(&u.class).map(|p|p.cruise_speed_kts.max(60.0)).unwrap_or(300.0)*3600.0*1.3+900.0,"known_station_risk":danger(obs,db,u.pos)})).collect();
         json!({"host":h.id,"nearby_SAM_stock":sam,"local_CAP":cap,"nominal_cover":covered(obs,db,h.pos),"known_support_risk":danger(obs,db,h.pos),"support_handover":support})
     }).collect();
-    let targets:Vec<_>=obs.contacts.iter().filter(|c|c.category==PlatformKind::Ship&&!known_sensor_contact(c)&&!c.stale&&!c.bearing_only&&c.quality>=0.4&&c.bda_hp_fraction!=Some(0.0)).map(|c| {
+    let targets:Vec<_>=obs.contacts.iter().filter(|c|c.category==Some(PlatformKind::Ship)&&!known_sensor_contact(c)&&!c.stale&&!c.bearing_only&&c.quality>=0.4&&c.bda_hp_fraction!=Some(0.0)).map(|c| {
         let hold=supervision["attack_account"][c.id.0.to_string()]["hold_until"].as_i64().unwrap_or(0)>obs.tick;
         json!({"contact":c.id,"quality":c.quality,"own_in_flight":c.own_in_flight,"confirmed_hits":c.bda_hits,"confirmed_damage":c.bda_damage,"repeat_attack_held":hold,
-            "option":if hold{"recon_or_another_fresh_target"}else if c.own_in_flight>0{"await_current_attack_feedback"}else{"check_cover_fuel_support_and_shared_release_window"}})
+        "option":if hold{"recon_or_another_fresh_target"}else if c.own_in_flight.is_none(){"torpedo_status_unknown_explicit_allocation_required"}else if c.own_in_flight.is_some_and(|n|n>0){"await_current_attack_feedback"}else{"check_cover_fuel_support_and_shared_release_window"}})
     }).collect();
     json!({"basis":"own observations and nominal public data; not hidden enemy readiness","hosts":hosts,"observed_target_options":targets,
         "plan_checks":["CAP station + supporting SAM stock + ready replacement must be budgeted together","keep one safe radar relay while the strike elements descend","bind EW to a named package, reassess station and replacement before launch","joint releases must have a current firing track, fuel reserve and cancel deadline","after an unconfirmed attack, change an observed assignment or gather feedback before repeating"],
@@ -102,7 +102,7 @@ mod tests {
         );
         assert!(!danger(&known, &db, point));
         assert!(!a.to_string().contains("about"));
-        let mut buoy=known.contacts[0].clone();buoy.id=ContactId(9);buoy.category=PlatformKind::Ship;buoy.class_name=Some("AN/SSQ Sonobuoy".into());known.contacts.push(buoy);
+        let mut buoy=known.contacts[0].clone();buoy.id=ContactId(9);buoy.category=Some(PlatformKind::Ship);buoy.class_name=Some("AN/SSQ Sonobuoy".into());known.contacts.push(buoy);
         assert!(brief(&known,&db,&Value::Null)["observed_target_options"].as_array().unwrap().is_empty(),"identified buoys are sensing objects, not strike options");
     }
 }

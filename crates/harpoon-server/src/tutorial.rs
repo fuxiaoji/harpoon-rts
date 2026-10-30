@@ -126,7 +126,7 @@ impl Session {
             ("select_unit", "select_unit") => action.unit == Some(self.unit.0)
                 && world.entity(self.unit).is_some_and(|e| e.alive && e.side == Side::Blue),
             ("select_contact", "select_contact") => observe(world, Side::Blue, 0, 0).contacts.iter()
-                .any(|c| Some(c.id.0) == action.contact && !c.stale && c.category == PlatformKind::Ship),
+                .any(|c| Some(c.id.0) == action.contact && !c.stale && c.category == Some(PlatformKind::Ship)),
             ("answer", "question") => {
                 if action.answer != step.answer {
                     self.mistakes += 1;
@@ -159,7 +159,7 @@ impl Session {
             || !self.current().is_some_and(|s| s.objective == "incoming") { return Vec::new(); }
         let obs = observe(world, Side::Red, 0, 0);
         let shooter = obs.units.iter().find(|u| u.class == "mgb");
-        let Some(target) = obs.contacts.iter().find(|c| c.category == PlatformKind::Ship && !c.stale && c.quality >= 0.3) else {
+        let Some(target) = obs.contacts.iter().find(|c| c.category == Some(PlatformKind::Ship) && !c.stale && c.quality >= 0.3) else {
             return Vec::new();
         };
         if let Some(unit) = shooter {
@@ -206,9 +206,9 @@ impl Session {
                     && unit.sensors.iter().any(|s| s.sensor.starts_with("sonar_a") && s.active == active)
             }
             "depth" => (unit.depth_m-target).abs() <= 1.0 && (unit.ordered_depth_m-target).abs() < 0.1,
-            "contact" => observe(world, Side::Blue, 0, 0).contacts.iter().any(|c| c.category == PlatformKind::Ship && !c.stale),
+            "contact" => observe(world, Side::Blue, 0, 0).contacts.iter().any(|c| c.category == Some(PlatformKind::Ship) && !c.stale),
             "identified_contact" => observe(world, Side::Blue, 0, 0).contacts.iter()
-                .any(|c| c.category == PlatformKind::Ship && !c.stale && c.class_name.is_some()),
+                .any(|c| c.category == Some(PlatformKind::Ship) && !c.stale && c.class_name.is_some()),
             "gun_fire" => !unit.fire_on && unit.assigned.is_none()
                 && mine.iter().any(|c| matches!(c, Command::Fire { unit: id, weapon, rounds, .. } if *id == self.unit && weapon == "gun_5in" && *rounds > 0))
                 && events.iter().any(|e| matches!(e.kind, EventKind::GunAction { shooter, .. } if shooter == self.unit)),
@@ -225,7 +225,7 @@ impl Session {
             // ---- 实战教学关（反潜 / 三域打击 / 舰队防御） ----
             "towed" => unit.ext.get("tow_deployed").is_some_and(|v| *v > 0.5),
             "sub_contact" => observe(world, Side::Blue, 0, 0).contacts.iter()
-                .any(|c| c.category == PlatformKind::Sub && !c.stale && c.quality >= 0.4),
+                .any(|c| c.category == Some(PlatformKind::Sub) && !c.stale && c.quality >= 0.4),
             "asw_launch" => {
                 // 母舰不必是训练主单位：本课从航母放飞、从护卫舰开火。
                 let launched = mine.iter().any(|c| matches!(c, Command::LaunchAircraft { unit: id, class, .. }
@@ -272,7 +272,7 @@ impl Session {
             }
             "turn_into_raid" => {
                 let contact_bearing = observe(world, Side::Blue, 0, 0).contacts.iter()
-                    .filter(|c| c.category == PlatformKind::Missile && !c.stale)
+                    .filter(|c| c.category == Some(PlatformKind::Missile) && !c.stale)
                     .map(|c| unit.pos.bearing_to(c.estimate))
                     .next();
                 match contact_bearing {
@@ -289,7 +289,7 @@ impl Session {
                 let intercepted = events.iter().any(|e| matches!(e.kind, EventKind::Intercept { side: Side::Blue, .. }));
                 let clear = world.tick - self.checkpoint.tick >= 60
                     && !observe(world, Side::Blue, 0, 0).contacts.iter()
-                        .any(|c| c.category == PlatformKind::Missile && !c.stale);
+                        .any(|c| c.category == Some(PlatformKind::Missile) && !c.stale);
                 intercepted || clear
             }
             _ => false,

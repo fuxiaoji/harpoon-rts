@@ -14,7 +14,15 @@ use crate::world::{Entity, World, TICK_SECONDS};
 
 pub fn update_weapons(world: &mut World) {
     tick_cooldowns(world);
+    crate::rules::aircombat2026::surface::collect_surface_declarations(world);
+    crate::rules::pgm2026::before_defense_scan(world);
+    crate::rules::rocket2026::before_defense_scan(world);
+    crate::rules::cluster2026::before_defense_scan(world);
+    crate::rules::strafe2026::before_defense_scan(world);
+    crate::rules::aircombat2026::budget::close_declarations(world);
+    crate::rules::aircombat2026::begin_surface_defense_scan(world);
     fire_control_scan(world);
+    crate::rules::aircombat2026::end_surface_defense_scan(world);
     advance_projectiles(world);
 }
 
@@ -51,8 +59,12 @@ pub fn fire_control_scan(world: &mut World) {
         .values()
         .filter(|e| {
             e.alive
-                && (!crate::rules::damage_runtime::active(world)||crate::rules::damage_runtime::weapons_operational(e))
+                && !crate::rules::detection2026::sonobuoys::is_sensor_float(world,e.id)
+                && (!crate::rules::damage_runtime::active(world)||crate::rules::expanded_damage2026::platform_weapons_operational(world,e.id))
                 && !e.kind.is_projectile()
+                && crate::rules::unmanned2026::can_attack(world,e.id)
+                && crate::rules::unmanned2026::can_reaction_fire(world,e.id)
+                && e.ext.get("nuclear.mission_abort")!=Some(&1.0)
                 && !e.weapons.is_empty()
                 && e.systems.fire_control > 0.05
         })
@@ -67,23 +79,11 @@ pub fn fire_control_scan(world: &mut World) {
         .collect();
 
     for shooter in shooters {
-        // Resolve the target: assigned contact first; else nearest valid
-        // contact when weapons are free.
-        let mut target: Option<(ContactId, EntityId)> = None;
-        if let Some(cid) = shooter.assigned {
-            if let Some(eid) = resolve_contact(world, shooter.side, cid) {
-                target = Some((cid, eid));
-            }
-        }
-        if target.is_none() && shooter.fire_on {
-            target = pick_free_target(world, &shooter);
-        }
-        let Some((contact_id, target_id)) = target else { continue };
-        let Some(target_kind) = world.entity(target_id).map(|t| t.combat_kind()) else { continue };
+        // Resolve ordinary weapons lazily. A source torpedo must reach its
+        // own-contact/FCS executor before any hidden target-body predicate.
+        // Retain mount order and the recorded ordinary-weapon selection path.
+        let mut ordinary_target: Option<Option<(ContactId, EntityId, PlatformKind)>> = None;
         let policy_cap=world.entity(shooter.id).and_then(|s|s.ext.get("doctrine.max_in_flight")).copied().unwrap_or(0.0) as usize;
-        let committed=committed_air_rounds(world,shooter.side,target_id);
-        if matches!(target_kind,PlatformKind::Aircraft|PlatformKind::Missile) && policy_cap>0 && committed>=policy_cap {continue;}
-        if world.entity(shooter.id).is_some_and(|s|s.ext.get("doctrine.air_only")==Some(&1.0)) && !matches!(target_kind,PlatformKind::Aircraft|PlatformKind::Missile) {continue;}
 
         // Find the first weapon that can legally engage this target now.
         let mounts: Vec<(usize, WeaponDef, u8, u16, f64)> = {
@@ -93,21 +93,97 @@ pub fn fire_control_scan(world: &mut World) {
                 .enumerate()
                 .filter_map(|(i, m)| {
                     let def = world.db.weapons.get(&m.weapon)?.clone();
-                    if crate::rules::damage_runtime::active(world)&&crate::rules::damage_runtime::prh_generation(&def)>0&&crate::rules::damage_runtime::active_target_radar(world,target_id).is_none(){return None;}
                     Some((i, def, m.mounts, m.ammo, m.cooldown_s))
                 })
                 .collect()
         };
 
         for (idx, mut def, mounts_n, ammo, cooldown) in mounts {
-            if mounts_n==0 || ammo == 0 || cooldown > 0.0 {
+            if crate::rules::strafe2026::source_weapon(&def){continue;}
+            if crate::rules::asw_weapons2026::is_depth_charge_configured(world,shooter.id,&def.id){continue;}
+            if crate::rules::nuclear2026::release_gate(world,shooter.id,&def.id).is_err(){continue;}
+            if !crate::rules::expanded_damage2026::weapon_operational(world,shooter.id,&def.id).unwrap_or(false){continue;}
+            // Physical projector patterns have their own per-mount Tactical
+            // clock. A historical aggregate reload timer cannot freeze both.
+            if crate::rules::asw_weapons2026::is_projector_configured(world,shooter.id,&def.id) {
+                let cid=shooter.assigned.or_else(||shooter.fire_on.then(||world.sides[shooter.side.index()].contacts.values().filter(|c|!c.stale&&crate::rules::detection2026::known_category(world,shooter.side,c.about)==Some(PlatformKind::Sub)).min_by(|a,b|shooter.pos.range_to(a.estimate_at(world.tick)).total_cmp(&shooter.pos.range_to(b.estimate_at(world.tick)))).map(|c|c.id)).flatten());
+                if let Some(cid)=cid {if launch_source_projector(world,shooter.id,cid,&def.id,1).is_ok(){break;}}
                 continue;
             }
+            if mounts_n==0 || (ammo == 0 && !crate::rules::surface2026::gunnery::configured(world,shooter.id,&def.id)) || cooldown > 0.0 {
+                continue;
+            }
+            if source_antiship_domain(world,&def) {
+                let Some(cid)=source_antiship_contact(world,&shooter,&def) else {continue};
+                if let Some(result)=crate::rules::surface2026::antiship::fire_at_contact(world,shooter.id,cid,&def.id,1) {
+                    if result.is_ok(){break;}
+                    continue;
+                }
+            }
+            if crate::rules::aaw2026::active(world) && matches!(def.kind,WeaponKind::Torpedo|WeaponKind::Lwt) {
+                let Some(contact_id) = source_torpedo_contact(world, &shooter, &def) else { continue };
+                if source_torpedo_release(world,shooter.id,contact_id,idx,1,&def) { break; }
+                continue;
+            }
+            if crate::rules::asw_weapons2026::active(world)&&def.guidance==Guidance::AswBallistic {
+                let cid=shooter.assigned.or_else(||shooter.fire_on.then(||world.sides[shooter.side.index()].contacts.values().filter(|c|!c.stale&&crate::rules::detection2026::known_category(world,shooter.side,c.about)==Some(PlatformKind::Sub)).min_by(|a,b|shooter.pos.range_to(a.estimate_at(world.tick)).total_cmp(&shooter.pos.range_to(b.estimate_at(world.tick)))).map(|c|c.id)).flatten());
+                if let Some(cid)=cid {if launch_source_asw(world,shooter.id,cid,&def.id,1).is_ok(){break;}}
+                continue;
+            }
+            if ordinary_target.is_none() {
+                let mut target = shooter.assigned.and_then(|cid| {
+                    resolve_contact(world,shooter.side,cid).map(|id|(cid,id))
+                });
+                if target.is_none() && shooter.fire_on {
+                    target = pick_free_target(world,&shooter);
+                }
+                ordinary_target = Some(target.and_then(|(cid,id)| {
+                    world.entity(id).map(|t|(cid,id,t.combat_kind()))
+                }));
+            }
+            let Some((contact_id,target_id,target_kind)) = ordinary_target.flatten() else { continue };
+            if crate::rules::aaw2026::active(world) && def.kind==WeaponKind::Gun && target_kind==PlatformKind::Ship {
+                if crate::rules::surface2026::gunnery::prepare(world,shooter.side,shooter.id,contact_id,&def.id,1).is_ok(){break;}
+                continue;
+            }
+            let committed=committed_air_rounds(world,shooter.side,target_id);
+            if matches!(target_kind,PlatformKind::Aircraft|PlatformKind::Missile) && policy_cap>0 && committed>=policy_cap {continue;}
+            if world.entity(shooter.id).is_some_and(|s|s.ext.get("doctrine.air_only")==Some(&1.0)) && !matches!(target_kind,PlatformKind::Aircraft|PlatformKind::Missile) {continue;}
+            if crate::rules::damage_runtime::active(world)&&crate::rules::damage_runtime::prh_generation(&def)>0&&crate::rules::damage_runtime::active_target_radar(world,target_id).is_none(){continue;}
             if crate::rules::damage_runtime::active(world)&&world.entity(shooter.id).is_some_and(|e|e.kind==PlatformKind::Aircraft&&e.altitude_m<crate::rules::damage_runtime::minimum_release_altitude(&def)){continue;}
             // Weapon-target compatibility gate: a weapon only engages target
             // kinds its `targets` table admits (e.g. SLCM never shoots at
             // ships; SAM never at surface contacts).
             if !def.targets.accepts(target_kind) {
+                continue;
+            }
+            if let Err(reason)=crate::rules::torpedo2026::submerged_launch_gate(world,shooter.id,&def) {
+                crate::rules::aaw2026::blocked(world,shooter.id,"10.3.launch_blocked",&reason);continue;
+            }
+            if crate::rules::aaw2026::active(world)&&matches!(def.kind,WeaponKind::Bomb|WeaponKind::Rocket) {
+                crate::rules::aaw2026::blocked(world,shooter.id,"9.6.delivery_required","Use the source AirCombat SurfaceAttack action with an explicit delivery profile");continue;
+            }
+            if crate::rules::aaw2026::active(world)&&matches!(target_kind,PlatformKind::Ship|PlatformKind::Base|PlatformKind::Sub) {
+                if let Err(reason)=crate::rules::aircombat2026::surface_attack_gate(world,shooter.id) {
+                    crate::rules::aaw2026::blocked(world,shooter.id,"9.6.release_blocked",&reason);continue;
+                }
+            }
+            if crate::rules::aaw2026::active(world) && target_kind == PlatformKind::Base {
+                if let Err(reason) = source_land_launch_ready(world, shooter.id, target_id, &def) {
+                    crate::rules::aaw2026::blocked(world,shooter.id,"11.source_launch_blocked",&reason);
+                    continue;
+                }
+            }
+            if crate::rules::aaw2026::active(world)
+                && matches!(target_kind,PlatformKind::Aircraft|PlatformKind::Missile)
+                && matches!(def.kind,WeaponKind::Sam|WeaponKind::Aam|WeaponKind::Gun|WeaponKind::Ciws)
+            {
+                if crate::rules::detection2026::known_category(world,shooter.side,target_id).is_none(){continue;}
+                match crate::rules::aaw2026::fire_at(world,shooter.id,target_id,idx,def.salvo.max(1).min(2)) {
+                    Ok(n) if n>0 => break,
+                    Err(reason)=>crate::rules::aaw2026::blocked(world,shooter.id,"8.1.fire_blocked",&reason),
+                    _=>{}
+                }
                 continue;
             }
             let dist = shooter.pos.range_to(world.entity(target_id).map(|t| t.pos).unwrap_or_default());
@@ -169,15 +245,17 @@ pub fn fire_control_scan(world: &mut World) {
 
             // Rounds actually launched by this engagement; the magazine
             // deduction below must match it exactly.
-            let mut fired: u16 = 0;
+            let modern_magazine = crate::rules::operations::active(world);
+            let legal_salvo = |n: u8| if modern_magazine { n.min(ammo.min(u8::MAX as u16) as u8) } else { n };
+            let fired: u16;
             match def.kind {
                 WeaponKind::Gun => {
-                    let salvo = def.salvo.max(mounts_n.min(2));
+                    let salvo = legal_salvo(def.salvo.max(mounts_n.min(2)));
                     gun_salvo(world, shooter.id, contact_id, target_id, &def, salvo);
                     fired = salvo as u16;
                 }
                 WeaponKind::Sam | WeaponKind::Aam => {
-                    let mut salvo = def.salvo;
+                    let mut salvo = legal_salvo(def.salvo);
                     if policy_cap>0 {salvo=salvo.min(policy_cap.saturating_sub(committed) as u8);}
                     if def.kind == WeaponKind::Sam && def.directors > 0 {
                         // SAM fire-control channels (§6.1 SAM Salvo Summary;
@@ -230,7 +308,7 @@ pub fn fire_control_scan(world: &mut World) {
                                     .unwrap_or(std::cmp::Ordering::Equal)
                             })
                     });
-                    if let Some((_dist, friend_id)) = nearest_friend {
+                    if let Some((_dist, friend_id)) = nearest_friend.filter(|_| !modern_magazine) {
                         let mut rng = world.scope_rng(shooter.id, "friendly_fire");
                         if rng.chance(0.05) {
                             let mut half = def.clone();
@@ -264,7 +342,7 @@ pub fn fire_control_scan(world: &mut World) {
                     );
                 }
                 WeaponKind::Ascm | WeaponKind::Slcm => {
-                    let salvo = def.salvo;
+                    let salvo = legal_salvo(def.salvo);
                     for _ in 0..salvo {
                         launch(world, shooter.id, &def, Some(target_id), None);
                     }
@@ -275,14 +353,14 @@ pub fn fire_control_scan(world: &mut World) {
                     fired = 1;
                 }
                 WeaponKind::AswRocket => {
-                    let salvo = def.salvo;
+                    let salvo = legal_salvo(def.salvo);
                     for _ in 0..salvo {
                         launch(world, shooter.id, &def, Some(target_id), None);
                     }
                     fired = salvo as u16;
                 }
                 WeaponKind::Bomb | WeaponKind::Rocket => {
-                    let salvo = def.salvo.max(mounts_n.min(2));
+                    let salvo = legal_salvo(def.salvo.max(mounts_n.min(2)));
                     gun_salvo(world, shooter.id, contact_id, target_id, &def, salvo);
                     fired = salvo as u16;
                 }
@@ -292,15 +370,22 @@ pub fn fire_control_scan(world: &mut World) {
             // Consume ammo + start reload. SAM/AAM engagements launch up to
             // `salvo` interceptors, so the deduction must match the launch
             // count, not a fixed one-per-engagement.
+            // Frozen Legacy/v2 recordings predate the magazine repair. Do not
+            // reinterpret their recorded commands under changed ammunition
+            // semantics; the explicit v3 profile consumes actual launches.
+            let consumed = if crate::rules::operations::active(world) { fired }
+                else if def.kind == WeaponKind::Gun { def.salvo as u16 } else { 1 };
+            let reload = !crate::rules::operations::active(world) || fired > 0;
             let Some(e) = world.entity_mut(shooter.id) else { continue };
             let m = &mut e.weapons[idx];
-            m.ammo = m.ammo.saturating_sub(fired);
-            if fired > 0 {
+            m.ammo = m.ammo.saturating_sub(consumed);
+            if reload {
                 m.cooldown_s = def.reload_s;
             }
             break; // one engagement per shooter per scan
         }
     }
+    crate::rules::aam2026::after_fire_scan(world);
 }
 
 /// Live projectiles of one weapon type this shooter still has in flight.
@@ -323,6 +408,7 @@ fn in_flight_projectiles(world: &World, shooter: EntityId, weapon_id: &str) -> u
 
 pub fn resolve_contact(world: &World, side: Side, cid: ContactId) -> Option<EntityId> {
     let c = world.contact(side, cid)?;
+    if crate::rules::aaw2026::active(world)&&crate::rules::detection2026::known_category(world,side,c.about).is_none(){return None;}
     if c.stale {
         return None;
     }
@@ -333,11 +419,93 @@ pub fn resolve_contact(world: &World, side: Side, cid: ContactId) -> Option<Enti
     Some(e.id)
 }
 
+/// A v4 source torpedo is planned from this side's report. The internal about
+/// identifier associates reports and physical adjudication; it grants no live
+/// body/depth/class observation. The source executor still checks classified
+/// domain, aircraft/tube conditions and actual source FCS before release.
+fn source_torpedo_contact(world: &World, shooter: &ShooterCtx, def: &WeaponDef) -> Option<ContactId> {
+    let own = world.entity(shooter.id)?;
+    if own.ext.get("doctrine.air_only") == Some(&1.0) {
+        return None;
+    }
+    if let Some(cid) = shooter.assigned {
+        if let Some(c) = world.contact(shooter.side,cid).filter(|c| !c.stale) {
+            if crate::rules::detection2026::known_category(world,shooter.side,c.about).is_some() {
+                // Keep deliberate assignment priority. An unsuitable report
+                // is rejected by the source executor, not silently retargeted.
+                return Some(c.id);
+            }
+        }
+    }
+    if !shooter.fire_on {
+        return None;
+    }
+    let source = world.rules.torpedoes.as_ref()?.config.weapons.get(&def.id)?;
+    world.sides[shooter.side.index()].contacts.values()
+        .filter(|c| !c.stale && !c.bearing_only && c.quality > 0.25)
+        .filter(|c| {
+            let p=c.estimate_at(world.tick);
+            p.x.is_finite() && p.y.is_finite()
+        })
+        .filter(|c| match crate::rules::detection2026::known_category(world,shooter.side,c.about) {
+            Some(PlatformKind::Sub) => source.submarine,
+            Some(PlatformKind::Ship) => source.surface,
+            _ => false,
+        })
+        // This inherited weapons-free candidate-quality rule selects a
+        // report; it does not manufacture a Good/Fair/Poor firing solution.
+        .min_by(|a,b| {
+            shooter.pos.range_to(a.estimate_at(world.tick))
+                .total_cmp(&shooter.pos.range_to(b.estimate_at(world.tick)))
+                .then_with(|| a.id.cmp(&b.id))
+        })
+        .map(|c| c.id)
+}
+
+/// Select only an existing own plan. An automatic release never invents an
+/// enable point or uses the live enemy body to choose a firing solution.
+fn source_antiship_contact(world:&World,shooter:&ShooterCtx,def:&WeaponDef)->Option<ContactId>{
+    let own=world.entity(shooter.id)?;
+    if own.ext.get("doctrine.air_only")==Some(&1.0){return None;}
+    if let Some(cid)=shooter.assigned{return Some(cid);}
+    if !shooter.fire_on{return None;}
+    world.rules.aaw.as_ref()?.surface.antiship.plots.values()
+        .filter(|p|p.actor==shooter.id&&p.weapon==def.id)
+        .max_by_key(|p|(p.plotted_at,p.contact)).map(|p|p.contact)
+}
+
+fn source_antiship_domain(world:&World,def:&WeaponDef)->bool{
+    !crate::rules::pgm2026::source_weapon(def)
+        && crate::rules::surface2026::antiship::source_domain(world,def)
+}
+
+fn source_torpedo_release(world: &mut World, actor: EntityId, contact: ContactId, mount: usize, rounds: u8, def: &WeaponDef) -> bool {
+    if world.entity(actor).is_some_and(|e| e.kind==PlatformKind::Aircraft && e.altitude_m<crate::rules::damage_runtime::minimum_release_altitude(def)) {
+        return false;
+    }
+    if let Err(reason)=crate::rules::torpedo2026::submerged_launch_gate(world,actor,def) {
+        crate::rules::aaw2026::blocked(world,actor,"10.3.launch_blocked",&reason);
+        return false;
+    }
+    if let Err(reason)=crate::rules::aircombat2026::surface_attack_gate(world,actor) {
+        crate::rules::aaw2026::blocked(world,actor,"9.6.release_blocked",&reason);
+        return false;
+    }
+    match crate::rules::torpedo2026::fire_at_contact(world,actor,contact,mount,rounds) {
+        Ok(n)=>n>0,
+        Err(reason)=>{
+            crate::rules::aaw2026::blocked(world,actor,"10.source_fire_blocked",&reason);
+            false
+        }
+    }
+}
+
 fn pick_free_target(world: &World, shooter: &ShooterCtx) -> Option<(ContactId, EntityId)> {
     let mut candidates: Vec<(f64, ContactId, EntityId)> = world.sides[shooter.side.index()]
         .contacts
         .values()
         .filter(|c| !c.stale && c.quality > 0.25)
+        .filter(|c|!crate::rules::aaw2026::active(world)||crate::rules::detection2026::known_category(world,shooter.side,c.about).is_some())
         .filter(|c| {
             // A radar fire-control solution is required to shoot at aircraft:
             // bearing-only ESM fixes never authorize BVR shots (§6.3).
@@ -366,7 +534,8 @@ fn pick_free_target(world: &World, shooter: &ShooterCtx) -> Option<(ContactId, E
             if e.class == crate::rules::asw::SONOBUOY_CLASS {
                 return None;
             }
-            Some((shooter.pos.range_to(e.pos), c.id, e.id))
+            let range=if crate::rules::aaw2026::active(world){shooter.pos.range_to(c.estimate_at(world.tick))}else{shooter.pos.range_to(e.pos)};
+            Some((range, c.id, e.id))
         })
         .collect();
     candidates.sort_by(|a, b| a.0.partial_cmp(&b.0).unwrap_or(std::cmp::Ordering::Equal));
@@ -471,8 +640,25 @@ pub fn launch(
     target: Option<EntityId>,
     aim_override: Option<Vec2>,
 ) -> Option<EntityId> {
+    if source_antiship_domain(world,def){
+        crate::rules::aaw2026::blocked(world,shooter_id,"8.4.source_permit_required","Use an own plotted source firing solution; a naked launch has no release permit");
+        return None;
+    }
+    launch_impl(world,shooter_id,def,target,aim_override,None,None)
+}
+
+fn launch_impl(world:&mut World,shooter_id:EntityId,def:&WeaponDef,target:Option<EntityId>,aim_override:Option<Vec2>,permit:Option<&crate::rules::surface2026::antiship::ReleasePermit>,asw_permit:Option<&crate::rules::asw_weapons2026::ReleasePermit>)->Option<EntityId>{
+    if crate::rules::pgm2026::source_weapon(def)&&!crate::rules::pgm2026::launch_authorized(world,shooter_id,def){return None;}
+    if crate::rules::rocket2026::source_weapon(def){return None;}
+    if crate::rules::cluster2026::source_weapon(def){return None;}
+    if crate::rules::strafe2026::source_weapon(def){return None;}
+    if crate::rules::asw_weapons2026::active(world)&&def.guidance==Guidance::AswBallistic&&asw_permit.is_none(){return None;}
+    crate::rules::nuclear2026::release_gate(world,shooter_id,&def.id).ok()?;
+    if !crate::rules::unmanned2026::can_attack(world,shooter_id)||!crate::rules::expanded_damage2026::weapon_operational(world,shooter_id,&def.id).unwrap_or(false){return None;}
+    crate::rules::torpedo2026::submerged_launch_gate(world,shooter_id,def).ok()?;
     let shooter = world.entity(shooter_id)?;
-    if crate::rules::damage_runtime::active(world)&&!crate::rules::damage_runtime::weapons_operational(shooter){return None;}
+    if shooter.ext.get("nuclear.mission_abort")==Some(&1.){return None;}
+    if crate::rules::damage_runtime::active(world)&&!crate::rules::expanded_damage2026::platform_weapons_operational(world,shooter_id){return None;}
     if crate::rules::damage_runtime::active(world)&&shooter.kind==PlatformKind::Aircraft&&shooter.altitude_m<crate::rules::damage_runtime::minimum_release_altitude(def){return None;}
     let side = shooter.side;
     let torpedo_deep=shooter.ext.get(&format!("weapon.{}.deep",def.id))==Some(&1.0);
@@ -481,7 +667,7 @@ pub fn launch(
     }else{None};
     let start = shooter.pos;
     let aim = aim_override
-        .or(target.and_then(|t| world.entity(t)).map(|t| t.pos))
+        .or_else(||target.and_then(|t| world.entity(t)).map(|t| t.pos))
         .unwrap_or(start);
     let eid = world.allocate_id();
     let kind = if matches!(def.kind, WeaponKind::Torpedo | WeaponKind::Lwt) {
@@ -489,7 +675,7 @@ pub fn launch(
     } else {
         PlatformKind::Missile
     };
-    let course = start.bearing_to(aim);
+    let course = permit.map(|p|p.course_deg()).unwrap_or_else(||start.bearing_to(aim));
     let alt = if matches!(def.guidance, Guidance::SeaSkimmer) {
         if crate::rules::damage_runtime::active(world){crate::rules::damage_runtime::cruise_altitude(def)}else{8.0}
     } else if matches!(def.guidance, Guidance::HomingAir) {
@@ -507,7 +693,7 @@ pub fn launch(
         rule_data:None,
         name: def.name.clone(),
         kind,
-        pos: start.advanced(course, 0.03),
+        pos: if permit.is_some()||asw_permit.is_some(){start}else{start.advanced(course, 0.03)},
         course_deg: course,
         speed_kts: def.speed_kts,
         ordered_course_deg: course,
@@ -554,7 +740,16 @@ pub fn launch(
         }),
     };
     world.entities.insert(eid, e);
+    if let Some(p)=asw_permit {crate::rules::asw_weapons2026::register_launch(world,eid,p.clone()).expect("qualified ASW permit must match its immediately constructed carrier");}
+    // Freeze launch-time yield/authorization before any subsequent command.
+    crate::rules::nuclear2026::observe_flight(world,eid);
+    crate::rules::expanded_damage2026::record_weapon_expenditure(world,shooter_id,&def.id,1);
+    if let Some(p)=permit{crate::rules::surface2026::antiship::register_launch(world,eid,p);}
     world.stats.projectiles_launched += 1;
+    crate::rules::aviation2026::ordnance_released(world,shooter_id,&def.id,1);
+    if matches!(def.kind,WeaponKind::Torpedo|WeaponKind::Lwt) {
+        crate::rules::aircombat2026::air_torpedo_dropped(world,shooter_id,eid);
+    }
     world.emit(
         EventKind::WeaponsRelease {
             side,
@@ -565,49 +760,179 @@ pub fn launch(
         },
         Visibility::Side(side),
     );
-    // Launch plume: only radar-missile launches expose the shooter
-    // (rules §5.3/§5.8 — torpedo and rocket launches are silent).
+    crate::rules::detection2026::register_projectile_release(world,eid);
+    crate::rules::torpedo2026::register_release(world,eid);
+    // Preserve the old flash for recorded profiles. In v4 all visual/radar/
+    // sonar launch transients must pass actual eligible sensor adjudication.
     let silent = matches!(
         def.kind,
         WeaponKind::Torpedo | WeaponKind::Lwt | WeaponKind::AswRocket
     );
-    if !silent {
+    if !crate::rules::aaw2026::active(world)&&!silent {
         let is_big = matches!(def.kind, WeaponKind::Ascm | WeaponKind::Slcm);
         sensors::flash_detection(world, shooter_id, "launch flash", if is_big { 7.0 } else { 4.0 }, 0.45);
     }
     Some(eid)
 }
 
+/// The source module is the sole producer of this non-serializable permit.
+/// It validates the complete plan; this helper spends the physical mount once.
+pub(crate) fn launch_source_antiship(world:&mut World,permit:&crate::rules::surface2026::antiship::ReleasePermit)->Result<Vec<EntityId>,String>{
+    crate::rules::nuclear2026::release_gate(world,permit.actor(),permit.weapon())?;
+    if !crate::rules::unmanned2026::can_attack(world,permit.actor())||!crate::rules::expanded_damage2026::weapon_operational(world,permit.actor(),permit.weapon())?{return Err("source launcher physical control/equipment unavailable".into())}
+    let def=world.db.weapons.get(permit.weapon()).cloned().ok_or("source ASCM definition absent")?;
+    let actor=world.entity(permit.actor()).filter(|e|e.alive&&e.side==permit.side()).ok_or("source launcher unavailable")?;
+    if !crate::rules::expanded_damage2026::platform_weapons_operational(world,actor.id){return Err("source launcher disabled".into());}
+    crate::rules::torpedo2026::submerged_launch_gate(world,permit.actor(),&def)?;
+    if actor.kind==PlatformKind::Aircraft&&actor.altitude_m<crate::rules::damage_runtime::minimum_release_altitude(&def){return Err("source release altitude too low".into());}
+    let index=actor.weapons.iter().position(|m|m.weapon==permit.weapon()).ok_or("source physical mount absent")?;
+    let mount=&actor.weapons[index];
+    if permit.rounds()==0||mount.mounts==0||mount.ammo<u16::from(permit.rounds())||mount.cooldown_s>0.0{return Err("source physical ammunition or mount unavailable".into());}
+    let mut launched=Vec::new();
+    for _ in 0..permit.rounds(){
+        let id=launch_impl(world,permit.actor(),&def,Some(permit.reported_target()),Some(permit.own_aim()),Some(permit),None).expect("validated source release must remain physically available within its transaction");
+        launched.push(id);
+    }
+    let mount=&mut world.entity_mut(permit.actor()).unwrap().weapons[index];
+    mount.ammo-=u16::from(permit.rounds());mount.cooldown_s=def.reload_s;
+    Ok(launched)
+}
+/// A real stand-off launch is admitted from an own report and spends the
+/// carrier mount only. The physical torpedo payload never spends a second tube.
+pub fn launch_source_projector(world:&mut World,actor:EntityId,contact:ContactId,weapon:&str,rounds:u8)->Result<String,String>{
+    crate::rules::aircombat2026::surface_attack_gate(world,actor)?;
+    crate::rules::nuclear2026::release_gate(world,actor,weapon)?;
+    if !crate::rules::unmanned2026::can_attack(world,actor)
+        || !crate::rules::expanded_damage2026::platform_weapons_operational(world,actor)
+        || !crate::rules::expanded_damage2026::weapon_operational(world,actor,weapon)? {
+        return Err("8.5.3 source launcher unavailable".into());
+    }
+    let permit=crate::rules::asw_weapons2026::validate_projector(world,actor,contact,weapon,u32::from(rounds))?;
+    crate::rules::asw_weapons2026::commit_projector(world,permit)
+}
+pub fn launch_source_asw(world:&mut World,actor:EntityId,contact:ContactId,weapon:&str,rounds:u8)->Result<u8,String>{
+    let def=world.db.weapons.get(weapon).ok_or("8.5.2 carrier definition missing")?.clone();
+    if let Err(reason)=crate::rules::torpedo2026::submerged_launch_gate(world,actor,&def){
+        crate::rules::aaw2026::blocked(world,actor,"10.3.launch_blocked",&reason);
+        return Err(reason);
+    }
+    let permit=crate::rules::asw_weapons2026::validate_fire(world,actor,contact,weapon)?;
+    crate::rules::aircombat2026::surface_attack_gate(world,actor)?;
+    crate::rules::nuclear2026::release_gate(world,actor,weapon)?;
+    if !crate::rules::unmanned2026::can_attack(world,actor)||!crate::rules::expanded_damage2026::weapon_operational(world,actor,weapon)?{return Err("8.5.2 source launcher unavailable".into())}
+    let owner=world.entity(actor).ok_or("8.5.2 carrier owner missing")?;
+    let index=owner.weapons.iter().position(|m|m.weapon==weapon).ok_or("8.5.2 carrier mount missing")?;
+    let mount=&owner.weapons[index];
+    if rounds==0||mount.mounts==0||mount.ammo==0||mount.cooldown_s>0.{return Err("8.5.2 source mount empty or reloading".into())}
+    let count=rounds.min(mount.ammo.min(u16::from(u8::MAX)) as u8).min(def.salvo.max(1).saturating_mul(2));
+    for _ in 0..count {launch_impl(world,actor,&def,Some(permit.target()),Some(permit.aim()),None,Some(&permit)).ok_or("8.5.2 source carrier launch rejected")?;}
+    let mount=&mut world.entity_mut(actor).unwrap().weapons[index];mount.ammo-=u16::from(count);mount.cooldown_s=def.reload_s;
+    Ok(count)
+}
+
 /// Manual Fire command (routed from sim.rs command processing).
+pub fn source_ngfs_ready(world: &World, side: Side, unit: EntityId, contact: ContactId, weapon: &str, rounds: u8) -> Result<EntityId,String> {
+    if rounds != 1 { return Err("11.4 Fire declares one ship-gun attack; shells per attack belong to the explicit service".into()); }
+    let ship = world.entity(unit).filter(|e|e.alive && e.side==side && e.kind==PlatformKind::Ship)
+        .ok_or("11.4 requires a live own firing ship")?;
+    if !ship.weapons.iter().any(|m|m.weapon==weapon && m.mounts>0) {
+        return Err("11.4 actual gun mount unavailable".into());
+    }
+    if !world.db.weapons.get(weapon).is_some_and(|d|d.kind==WeaponKind::Gun) {
+        return Err("11.4 source service requires a naval gun".into());
+    }
+    let c = world.contact(side,contact).ok_or("11.4 requires an own declared target contact")?;
+    if crate::rules::detection2026::known_category(world,side,c.about)!=Some(PlatformKind::Base) {
+        return Err("11.4 requires own source knowledge of a land target".into());
+    }
+    crate::rules::ground2026::ngfs::validate_from_fire(world,unit,c.about,weapon)?;
+    Ok(c.about)
+}
+
 pub fn manual_fire(world: &mut World, side: Side, unit: EntityId, contact: ContactId, weapon_id: &str, rounds: u8) -> bool {
+    if crate::rules::asw_weapons2026::is_depth_charge_configured(world,unit,weapon_id){return false;}
+    if world.entity(unit).is_some_and(|e|e.ext.get("nuclear.mission_abort")==Some(&1.))||!crate::rules::unmanned2026::can_attack(world,unit)||crate::rules::nuclear2026::release_gate(world,unit,weapon_id).is_err()||!crate::rules::expanded_damage2026::weapon_operational(world,unit,weapon_id).unwrap_or(false){return false;}
     // A contact record is required. A stale record is usable only for a BOL
     // shot (§8.4.2); a normal fire-control solution needs a live target.
     let Some(contact_rec) = world.contact(side, contact).cloned() else { return false };
-    let Some(e) = world.entity(unit) else { return false };
-    if crate::rules::damage_runtime::active(world)&&!crate::rules::damage_runtime::weapons_operational(e){return false;}
+    let Some(e) = world.entity(unit).cloned() else { return false };
+    if crate::rules::damage_runtime::active(world)&&!crate::rules::expanded_damage2026::platform_weapons_operational(world,unit){return false;}
     if e.side != side {
         return false;
     }
     let Some(idx) = e.weapons.iter().position(|m| m.weapon == weapon_id) else { return false; };
+    if crate::rules::aaw2026::active(world) && world.db.weapons.get(weapon_id).is_some_and(|d|d.kind==WeaponKind::Gun)
+        && crate::rules::detection2026::known_category(world,side,contact_rec.about)==Some(PlatformKind::Ship) {
+        return match crate::rules::surface2026::gunnery::prepare(world,side,unit,contact,weapon_id,rounds) {
+            Ok(())=>true,Err(reason)=>{crate::rules::aaw2026::blocked(world,unit,"8.3.release_blocked",&reason);false}
+        };
+    }
+    if crate::rules::aaw2026::active(world)
+        && crate::rules::ground2026::ngfs::configured(world,unit,weapon_id)
+        && crate::rules::detection2026::known_category(world,side,contact_rec.about)==Some(PlatformKind::Base) {
+        return match source_ngfs_ready(world,side,unit,contact,weapon_id,rounds)
+            .and_then(|target| crate::rules::ground2026::ngfs::prepare_from_fire(world,unit,target,weapon_id)) {
+            Ok(())=>true,
+            Err(reason)=>{crate::rules::aaw2026::blocked(world,unit,"11.4.ngfs.blocked",&reason);false}
+        };
+    }
     let (ammo_ok, cooldown_ok, ammo) = {
         let m = &e.weapons[idx];
         (m.ammo > 0&&m.mounts>0, m.cooldown_s <= 0.0, m.ammo)
     };
-    if !ammo_ok || !cooldown_ok {
+    let projector=crate::rules::asw_weapons2026::is_projector_configured(world,unit,weapon_id);
+    if !ammo_ok || (!cooldown_ok && !projector) {
         return false;
+    }
+    let mut def = match world.db.weapons.get(weapon_id) {
+        Some(d) => d.clone(),
+        None => return false,
+    };
+    if crate::rules::strafe2026::source_weapon(&def){return false;}
+    if projector {return launch_source_projector(world,unit,contact,weapon_id,rounds).is_ok();}
+    if crate::rules::aaw2026::active(world) && matches!(def.kind,WeaponKind::Torpedo|WeaponKind::Lwt) {
+        return source_torpedo_release(world,unit,contact,idx,rounds,&def);
+    }
+    if crate::rules::asw_weapons2026::active(world)&&def.guidance==Guidance::AswBallistic {return launch_source_asw(world,unit,contact,weapon_id,rounds).is_ok();}
+    if let Some(result)=crate::rules::surface2026::antiship::fire_at_contact(world,unit,contact,weapon_id,rounds){
+        return result.is_ok();
     }
     let Some(target) = world.entity(contact_rec.about) else { return false };
     if !target.alive {
         return false;
     }
+    if crate::rules::aaw2026::active(world)&&crate::rules::detection2026::known_category(world,side,target.id).is_none(){return false;}
     let (eid, target_pos, target_kind) = (target.id, target.pos, target.combat_kind());
-    let mut def = match world.db.weapons.get(weapon_id) {
-        Some(d) => d.clone(),
-        None => return false,
-    };
     if crate::rules::damage_runtime::active(world)&&e.kind==PlatformKind::Aircraft&&e.altitude_m<crate::rules::damage_runtime::minimum_release_altitude(&def){return false;}
     if crate::rules::damage_runtime::active(world)&&crate::rules::damage_runtime::prh_generation(&def)>0&&crate::rules::damage_runtime::active_target_radar(world,eid).is_none(){return false;}
     if !def.targets.accepts(target_kind) {return false;}
+    if let Err(reason)=crate::rules::torpedo2026::submerged_launch_gate(world,unit,&def) {
+        crate::rules::aaw2026::blocked(world,unit,"10.3.launch_blocked",&reason);return false;
+    }
+    if crate::rules::aaw2026::active(world)&&matches!(def.kind,WeaponKind::Bomb|WeaponKind::Rocket) {
+        crate::rules::aaw2026::blocked(world,unit,"9.6.delivery_required","Use the source AirCombat SurfaceAttack action with an explicit delivery profile");return false;
+    }
+    if crate::rules::aaw2026::active(world)&&matches!(target_kind,PlatformKind::Ship|PlatformKind::Base|PlatformKind::Sub) {
+        if let Err(reason)=crate::rules::aircombat2026::surface_attack_gate(world,unit) {
+            crate::rules::aaw2026::blocked(world,unit,"9.6.release_blocked",&reason);return false;
+        }
+    }
+    if crate::rules::aaw2026::active(world) && target_kind == PlatformKind::Base {
+        if let Err(reason) = source_land_launch_ready(world, unit, eid, &def) {
+            crate::rules::aaw2026::blocked(world,unit,"11.source_launch_blocked",&reason);
+            return false;
+        }
+    }
+    if crate::rules::aaw2026::active(world)
+        && matches!(target_kind,PlatformKind::Aircraft|PlatformKind::Missile)
+        && matches!(def.kind,WeaponKind::Sam|WeaponKind::Aam|WeaponKind::Gun|WeaponKind::Ciws)
+    {
+        if crate::rules::detection2026::known_category(world,side,eid).is_none(){return false;}
+        return match crate::rules::aaw2026::fire_at(world,unit,eid,idx,rounds.min(2)) {
+            Ok(n)=>n>0,
+            Err(reason)=>{crate::rules::aaw2026::blocked(world,unit,"8.1.manual_fire_blocked",&reason);false}
+        };
+    }
 
     // Fire-control solution gate (§6.3.1 — a firing solution requires a
     // quality contact). Bearing-only launch (§6.3.6 / §8.4.2) is the
@@ -632,7 +957,9 @@ pub fn manual_fire(world: &mut World, side: Side, unit: EntityId, contact: Conta
     if crate::rules::operations::active(world)&&!crate::rules::operations::sam_pd_legal(&def,firing_range){return false;}
     if crate::rules::operations::active(world)&&!crate::rules::operations::sam_reaction_ready(world,unit,eid,&def){return false;}
 
-    let n = rounds.min((ammo as u8).min(def.salvo.max(1) * 2));
+    let n = if crate::rules::operations::active(world) {
+        rounds.min(ammo.min(u8::MAX as u16) as u8).min(def.salvo.max(1).saturating_mul(2))
+    } else { rounds.min((ammo as u8).min(def.salvo.max(1) * 2)) };
 
     if bol {
         // BOL is scoped to air-defense weapons with terminal homing fired at
@@ -688,6 +1015,9 @@ pub fn manual_fire(world: &mut World, side: Side, unit: EntityId, contact: Conta
         def.pk *= 1.15;
     }
 
+    let n = if crate::rules::aaw2026::active(world)
+        && matches!(def.kind,WeaponKind::Torpedo|WeaponKind::Lwt)
+        && world.entity(unit).is_some_and(|e|e.kind==PlatformKind::Aircraft) {n.min(1)}else{n};
     let mut fired = 0u16;
     for _ in 0..n {
         if def.kind.is_gun_like() {
@@ -721,6 +1051,9 @@ pub fn advance_projectiles(world: &mut World) {
         .collect();
 
     for id in ids {
+        crate::rules::nuclear2026::observe_flight(world,id);
+        if crate::rules::aaw2026::active(world)&&world.rules.pending_adjudications.contains_key(&id){continue;}
+        if crate::rules::pgm2026::advance(world,id){continue;}
         let Some(e) = world.entities.get(&id) else { continue };
         // An earlier projectile in this snapshot may already have intercepted it.
         if !e.alive { continue; }
@@ -735,6 +1068,21 @@ pub fn advance_projectiles(world: &mut World) {
             Guidance::BallisticGun => {}
         }
     }
+    if crate::rules::aaw2026::active(world) {
+        if !world.rules.in_batch {crate::rules::surface2026::flush_land_hits(world);}
+    }
+}
+
+fn source_land_launch_ready(world:&World, shooter:EntityId, target:EntityId, def:&WeaponDef)->Result<(),String> {
+    if !crate::rules::ground2026::operational(world,shooter) {
+        return Err("11.1 source launcher/gun facility disabled".into());
+    }
+    if !matches!(def.kind,WeaponKind::Slcm|WeaponKind::Ascm) {
+        return Err("11 source gunnery/air-ordnance executor not yet bound; legacy range-fraction Pk forbidden".into());
+    }
+    crate::rules::ground2026::source_target(world,target)?;
+    crate::rules::ground2026::source_missile(world,&def.id)?;
+    Ok(())
 }
 
 fn fly_toward(e: &mut Entity, aim: Vec2, dt: f64) {
@@ -758,6 +1106,7 @@ fn runout(world: &World, id:EntityId, def: &WeaponDef, data: &crate::world::Proj
 }
 
 fn remove_projectile(world: &mut World, id: EntityId) {
+    crate::rules::nuclear2026::removed(world,id,crate::rules::nuclear2026::Removal::Unresolved);
     let now = world.tick;
     if let Some(e) = world.entity_mut(id) {
         e.alive = false;
@@ -767,6 +1116,7 @@ fn remove_projectile(world: &mut World, id: EntityId) {
 }
 
 fn advance_sea_skimmer(world: &mut World, id: EntityId, def: WeaponDef, mut data: crate::world::ProjectileData) {
+    if matches!(crate::rules::surface2026::antiship::advance(world,id,&def,&data),crate::rules::surface2026::antiship::Dispatch::Handled){return;}
     let dt = TICK_SECONDS;
     data.live_s += dt;
     let prh=if crate::rules::damage_runtime::active(world){crate::rules::damage_runtime::prh_generation(&def)}else{0};
@@ -836,6 +1186,14 @@ fn advance_sea_skimmer(world: &mut World, id: EntityId, def: WeaponDef, mut data
     // --- defense chain (only vs live surface/base targets) ---
     let defendable = matches!(target.combat_kind(), PlatformKind::Ship | PlatformKind::Base);
 
+    if crate::rules::aaw2026::active(world) && target.kind == PlatformKind::Base && dist < 0.25 {
+        match crate::rules::surface2026::land_terminal(world,id,&def,&data) {
+            Ok(()) => remove_projectile(world,id),
+            Err(reason) => crate::rules::surface2026::defer_land(world,id,target_id,&reason),
+        }
+        return;
+    }
+
     if prh==0&&defendable && !data.chaff_checked && dist < 8.0 {
         data.chaff_checked = true;
         let t = world.entity(target_id).unwrap();
@@ -853,7 +1211,7 @@ fn advance_sea_skimmer(world: &mut World, id: EntityId, def: WeaponDef, mut data
         }
     }
 
-    if defendable && !data.ciws_checked && dist < 1.8 {
+    if !crate::rules::aaw2026::active(world) && defendable && !data.ciws_checked && dist < 1.8 {
         data.ciws_checked = true;
         // Auto-CIWS: one burst per incoming leaker.
         let ciws_idx = world.entity(target_id).and_then(|t| {
@@ -985,7 +1343,8 @@ fn advance_homing_air(world: &mut World, id: EntityId, def: WeaponDef, mut data:
     // triggers the automatic chaff dispenser, exactly as ships do against
     // sea-skimmers. Without this the aircraft `chaff` field was dead weight
     // and every fighter died without countermeasures.
-    if target.kind == PlatformKind::Aircraft
+    if !crate::rules::aaw2026::active(world)
+        && target.kind == PlatformKind::Aircraft
         && !def.ir
         && target.chaff > 0
         && target.auto_chaff
@@ -1003,6 +1362,10 @@ fn advance_homing_air(world: &mut World, id: EntityId, def: WeaponDef, mut data:
         );
     }
     if dist < 0.35 {
+        if crate::rules::aaw2026::active(world) {
+            source_air_terminal(world,id,&def,&data,target_id);
+            return;
+        }
         // Terminal roll; heavy salvo saturation (3+ in flight) lowers
         // per-missile Pk — two missiles stacking is the standard shot pair.
         let inbound = world
@@ -1069,7 +1432,9 @@ fn advance_homing_air(world: &mut World, id: EntityId, def: WeaponDef, mut data:
         );
         return;
     }
-    if runout(world, id, &def, &data) {
+    let mut flight_def=def.clone();
+    if crate::rules::aaw2026::active(world)&&def.kind==WeaponKind::Aam {if let Some(r)=world.entity(id).and_then(|e|e.ext.get("9.5.range_nm")){flight_def.range_nm=*r;}}
+    if runout(world, id, &flight_def, &data) {
         remove_projectile(world, id);
         return;
     }
@@ -1078,7 +1443,49 @@ fn advance_homing_air(world: &mut World, id: EntityId, def: WeaponDef, mut data:
     }
 }
 
+/// v4: one source-table D100 for the complete one/two-round SAM packet.
+fn source_air_terminal(world:&mut World,id:EntityId,def:&WeaponDef,data:&crate::world::ProjectileData,target:EntityId){
+    let Some(mut state)=world.rules.aaw.take()else{return};
+    let result=if def.kind==WeaponKind::Aam {crate::rules::aam2026::terminal(world,&mut state.aam,id)}else if crate::rules::aaw2026::friendly_restriction(world,data.launched_by,target){Err("8.1.8 guidance prohibited during final increment to another friendly ship".into())}else{crate::rules::aaw2026::terminal(world,&mut state,id)};
+    world.rules.aaw=Some(state);
+    match result {
+        Ok(outcome)=>{
+            let contact=world.find_contact(data.launched_by_side,target);
+            crate::rules::aaw2026::trace(world,data.launched_by,if def.kind==WeaponKind::Aam{"9.5.packet_terminal"}else{"8.1.1.packet_terminal"},serde_json::json!({"outcome":outcome}));
+            let nuclear_packet=outcome.consumed_projectiles.iter().any(|p|crate::rules::nuclear2026::is_nuclear_projectile(world,*p));
+            if nuclear_packet {for member in &outcome.consumed_projectiles{crate::rules::nuclear2026::terminal_with_target(world,*member,outcome.hit,outcome.hit.then_some(target));}}
+            if outcome.hit&&!nuclear_packet {
+                crate::rules::operations::intercept(world,target,data.launched_by,def);
+                if world.entity(target).is_some_and(|e|e.kind.is_projectile()) {
+                    // This target was actually destroyed by a conventional
+                    // defensive packet. Neutral retirements below remain
+                    // Unresolved; the nuclear hook is armed/terminal-once.
+                    crate::rules::nuclear2026::removed(world,target,crate::rules::nuclear2026::Removal::CarrierDestroyed);
+                    remove_projectile(world,target);
+                    world.sides[data.launched_by_side.index()].contacts.retain(|_,c|c.about!=target);
+                }else{
+                    let handled=crate::rules::expanded_damage2026::aircraft_hit(world,target,&outcome.identity);
+                    if !handled||world.entity(target).is_some_and(|e|e.hp<=0.){damage::sink(world,target);}
+                }
+            }
+            for member in &outcome.consumed_projectiles{remove_projectile(world,*member);}
+            world.emit(EventKind::Intercept{side:data.launched_by_side,contact,intercepted:outcome.hit&&!nuclear_packet},Visibility::Side(data.launched_by_side));
+        }
+        Err(reason)=>{
+            if let Some(projectile)=world.entity(id).cloned(){world.rules.pending_adjudications.entry(id).or_insert(crate::rules::damage_runtime::PendingAdjudication{evidence:vec![],tick:world.tick,rule:"8.1.SAM_packet".into(),target,projectile});}
+            crate::rules::aaw2026::blocked(world,data.launched_by,"8.1.terminal_pending",&reason);
+        }
+    }
+}
+
 fn advance_torpedo(world: &mut World, id: EntityId, def: WeaponDef, mut data: crate::world::ProjectileData) {
+    if crate::rules::aircombat2026::air_torpedo_interfered(world,id) { remove_projectile(world,id);return; }
+    if crate::rules::aaw2026::active(world) {
+        if let Err(reason)=crate::rules::torpedo2026::advance(world,id,&def) {
+            if let Some(target)=data.target {crate::rules::torpedo2026::defer(world,id,target,&reason);}
+        }
+        return;
+    }
     let dt = TICK_SECONDS;
     data.live_s += dt;
     let Some(target_id) = data.target else {
@@ -1199,6 +1606,7 @@ fn advance_torpedo(world: &mut World, id: EntityId, def: WeaponDef, mut data: cr
 }
 
 fn advance_asw_ballistic(world: &mut World, id: EntityId, def: WeaponDef, mut data: crate::world::ProjectileData) {
+    if crate::rules::asw_weapons2026::active(world){let _=crate::rules::asw_weapons2026::advance(world,id);return;}
     let dt = TICK_SECONDS;
     data.live_s += dt;
     {

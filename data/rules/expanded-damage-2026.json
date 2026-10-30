@@ -1,0 +1,895 @@
+{
+  "revision": "2026-10-28-wide-automatic-carrier-bomb-deck-3",
+  "automatic_carrier_bomb_deck": {
+    "rule_id": "HV2026-14.1.2-automatic-carrier-bomb-deck",
+    "source": "English2026 PDF129/14-3 automatic criticals; expanded Chinese2026 PDF7 aviation table footnote; visually verified2026-10-28",
+    "minimum_hang_weight_kg": 50,
+    "carrier_role": "aviation",
+    "bomb_weight_source_tables": ["aircombat-2026.surface_bombs", "pgm-2026.weapons"],
+    "effect": "flight_deck",
+    "penetration_required": true,
+    "occurrence_roll": null,
+    "location_roll": "existing flight_deck D6; independent once-hit identity"
+  },
+  "authority": {
+    "core_file": "14-2.HpnV_Rules_1_Jan_26.pdf",
+    "core_sha256": "8196ffc715bbcccd862d8597c607de7816dac5baee31fa659f89dfaf4323700c",
+    "core_pdf_pages": [
+      129,
+      134,
+      135,
+      136,
+      137
+    ],
+    "expanded_file": "3-2.（扩展损伤手册26版）Harpoon_V_Expanded_Critical_Hit_Tables_(Chinese_Language).pdf",
+    "expanded_sha256": "a2c3878ccfcbfcba02f714f11d5527573dee736a0deae092b9833977c52b32b5",
+    "expanded_pdf_pages": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "visual_status": "original source-linked full-page images independently viewed in this batch; no source PDF changed"
+  },
+  "critical_columns": {
+    "pre1955": [
+      {
+        "through": 30,
+        "effect": "weapon",
+        "armored": true
+      },
+      {
+        "through": 45,
+        "effect": "sensor",
+        "armored": false
+      },
+      {
+        "through": 50,
+        "effect": "cic",
+        "armored": false
+      },
+      {
+        "through": 60,
+        "effect": "engineering",
+        "armored": true
+      },
+      {
+        "through": 75,
+        "effect": "flooding",
+        "armored": true
+      },
+      {
+        "through": 90,
+        "effect": "fire",
+        "armored": false
+      },
+      {
+        "through": 95,
+        "effect": "bridge",
+        "armored": true
+      },
+      {
+        "through": 100,
+        "effect": "rudder",
+        "armored": true
+      }
+    ],
+    "surface": [
+      {
+        "through": 20,
+        "effect": "weapon",
+        "armored": false
+      },
+      {
+        "through": 35,
+        "effect": "sensor",
+        "armored": false
+      },
+      {
+        "through": 45,
+        "effect": "cic",
+        "armored": false
+      },
+      {
+        "through": 60,
+        "effect": "engineering",
+        "armored": true
+      },
+      {
+        "through": 75,
+        "effect": "flooding",
+        "armored": true
+      },
+      {
+        "through": 90,
+        "effect": "fire",
+        "armored": false
+      },
+      {
+        "through": 95,
+        "effect": "bridge",
+        "armored": false
+      },
+      {
+        "through": 100,
+        "effect": "rudder",
+        "armored": false
+      }
+    ],
+    "missile": [
+      {
+        "through": 10,
+        "effect": "weapon",
+        "armored": false
+      },
+      {
+        "through": 25,
+        "effect": "sensor",
+        "armored": false
+      },
+      {
+        "through": 40,
+        "effect": "cic",
+        "armored": false
+      },
+      {
+        "through": 65,
+        "effect": "engineering",
+        "armored": true
+      },
+      {
+        "through": 80,
+        "effect": "flooding",
+        "armored": true
+      },
+      {
+        "through": 95,
+        "effect": "fire",
+        "armored": false
+      },
+      {
+        "through": 100,
+        "effect": "bridge",
+        "armored": false
+      }
+    ],
+    "small_combatant": [
+      {
+        "through": 20,
+        "effect": "weapon",
+        "armored": false
+      },
+      {
+        "through": 30,
+        "effect": "sensor",
+        "armored": false
+      },
+      {
+        "through": 35,
+        "effect": "cic",
+        "armored": false
+      },
+      {
+        "through": 50,
+        "effect": "engineering",
+        "armored": true
+      },
+      {
+        "through": 60,
+        "effect": "personnel",
+        "armored": false
+      },
+      {
+        "through": 80,
+        "effect": "flotation",
+        "armored": false
+      },
+      {
+        "through": 95,
+        "effect": "fire",
+        "armored": false
+      },
+      {
+        "through": 100,
+        "effect": "bridge",
+        "armored": false
+      }
+    ],
+    "aviation": [
+      {
+        "through": 5,
+        "effect": "weapon",
+        "armored": false
+      },
+      {
+        "through": 25,
+        "effect": "flight_deck",
+        "armored": true
+      },
+      {
+        "through": 40,
+        "effect": "hangar",
+        "armored": true
+      },
+      {
+        "through": 45,
+        "effect": "ammo_fuel",
+        "armored": true
+      },
+      {
+        "through": 50,
+        "effect": "sensor",
+        "armored": false
+      },
+      {
+        "through": 55,
+        "effect": "cic",
+        "armored": false
+      },
+      {
+        "through": 65,
+        "effect": "engineering",
+        "armored": true
+      },
+      {
+        "through": 75,
+        "effect": "flooding",
+        "armored": true
+      },
+      {
+        "through": 90,
+        "effect": "fire",
+        "armored": false
+      },
+      {
+        "through": 95,
+        "effect": "bridge_airplot",
+        "armored": false
+      },
+      {
+        "through": 100,
+        "effect": "rudder",
+        "armored": false
+      }
+    ],
+    "underwater": [
+      {
+        "through": 15,
+        "effect": "weapon",
+        "armored": false
+      },
+      {
+        "through": 25,
+        "effect": "sensor",
+        "armored": false
+      },
+      {
+        "through": 30,
+        "effect": "cic",
+        "armored": false
+      },
+      {
+        "through": 50,
+        "effect": "engineering",
+        "armored": true
+      },
+      {
+        "through": 80,
+        "effect": "flooding",
+        "armored": true
+      },
+      {
+        "through": 90,
+        "effect": "fire",
+        "armored": false
+      },
+      {
+        "through": 95,
+        "effect": "bridge_airplot",
+        "armored": true
+      },
+      {
+        "through": 100,
+        "effect": "rudder",
+        "armored": false
+      }
+    ],
+    "airburst": [
+      {
+        "through": 20,
+        "effect": "weapon",
+        "armored": false
+      },
+      {
+        "through": 55,
+        "effect": "sensor",
+        "armored": false
+      },
+      {
+        "through": 60,
+        "effect": "engineering",
+        "armored": true
+      },
+      {
+        "through": 90,
+        "effect": "weapon_flightdeck",
+        "armored": true
+      },
+      {
+        "through": 95,
+        "effect": "flight_deck",
+        "armored": true
+      },
+      {
+        "through": 100,
+        "effect": "bridge_airplot",
+        "armored": false
+      }
+    ],
+    "merchant": [
+      {
+        "through": 10,
+        "effect": "weapon_cargo",
+        "armored": false
+      },
+      {
+        "through": 15,
+        "effect": "sensor",
+        "armored": false
+      },
+      {
+        "through": 25,
+        "effect": "engineering",
+        "armored": false
+      },
+      {
+        "through": 30,
+        "effect": "cic_cargo",
+        "armored": false
+      },
+      {
+        "through": 60,
+        "effect": "cargo",
+        "armored": false
+      },
+      {
+        "through": 75,
+        "effect": "flooding",
+        "armored": false
+      },
+      {
+        "through": 90,
+        "effect": "fire",
+        "armored": false
+      },
+      {
+        "through": 95,
+        "effect": "bridge",
+        "armored": false
+      },
+      {
+        "through": 100,
+        "effect": "rudder",
+        "armored": false
+      }
+    ],
+    "small_cargo": [
+      {
+        "through": 10,
+        "effect": "weapon_cargo",
+        "armored": false
+      },
+      {
+        "through": 15,
+        "effect": "sensor",
+        "armored": false
+      },
+      {
+        "through": 25,
+        "effect": "engineering",
+        "armored": false
+      },
+      {
+        "through": 35,
+        "effect": "personnel",
+        "armored": false
+      },
+      {
+        "through": 60,
+        "effect": "cargo",
+        "armored": false
+      },
+      {
+        "through": 80,
+        "effect": "flotation",
+        "armored": false
+      },
+      {
+        "through": 95,
+        "effect": "fire",
+        "armored": false
+      },
+      {
+        "through": 100,
+        "effect": "bridge",
+        "armored": false
+      }
+    ],
+    "sub_major": [
+      {
+        "through": 15,
+        "effect": "weapon",
+        "armored": false
+      },
+      {
+        "through": 20,
+        "effect": "sensor",
+        "armored": false
+      },
+      {
+        "through": 35,
+        "effect": "hull_penetration",
+        "armored": false
+      },
+      {
+        "through": 40,
+        "effect": "battery",
+        "armored": false
+      },
+      {
+        "through": 45,
+        "effect": "battery_engineering",
+        "armored": false
+      },
+      {
+        "through": 55,
+        "effect": "engineering",
+        "armored": false
+      },
+      {
+        "through": 70,
+        "effect": "flooding",
+        "armored": false
+      },
+      {
+        "through": 85,
+        "effect": "fire",
+        "armored": false
+      },
+      {
+        "through": 90,
+        "effect": "sensor",
+        "armored": false
+      },
+      {
+        "through": 95,
+        "effect": "control_major",
+        "armored": false
+      },
+      {
+        "through": 100,
+        "effect": "rudder",
+        "armored": false
+      }
+    ],
+    "sub_minor": [
+      {
+        "through": 15,
+        "effect": "weapon",
+        "armored": false
+      },
+      {
+        "through": 20,
+        "effect": "sensor",
+        "armored": false
+      },
+      {
+        "through": 35,
+        "effect": "hull_deformation",
+        "armored": false
+      },
+      {
+        "through": 40,
+        "effect": "battery",
+        "armored": false
+      },
+      {
+        "through": 45,
+        "effect": "battery_engineering",
+        "armored": false
+      },
+      {
+        "through": 55,
+        "effect": "engineering",
+        "armored": false
+      },
+      {
+        "through": 70,
+        "effect": "half_flooding",
+        "armored": false
+      },
+      {
+        "through": 85,
+        "effect": "half_fire",
+        "armored": false
+      },
+      {
+        "through": 90,
+        "effect": "sensor",
+        "armored": false
+      },
+      {
+        "through": 95,
+        "effect": "control_minor",
+        "armored": false
+      },
+      {
+        "through": 100,
+        "effect": "rudder",
+        "armored": false
+      }
+    ],
+    "cas_major": [
+      {
+        "through": 2,
+        "effect": "cas_main_director",
+        "armored": false
+      },
+      {
+        "through": 14,
+        "effect": "cas_main_mount",
+        "armored": true
+      },
+      {
+        "through": 15,
+        "effect": "cas_main_magazine",
+        "armored": true
+      },
+      {
+        "through": 17,
+        "effect": "cas_secondary_director",
+        "armored": false
+      },
+      {
+        "through": 24,
+        "effect": "cas_secondary_mount",
+        "armored": true
+      },
+      {
+        "through": 25,
+        "effect": "cas_secondary_magazine",
+        "armored": true
+      },
+      {
+        "through": 34,
+        "effect": "cas_other_weapon",
+        "armored": true
+      },
+      {
+        "through": 35,
+        "effect": "cas_other_explosion",
+        "armored": true
+      },
+      {
+        "through": 45,
+        "effect": "cas_light_weapons",
+        "armored": false
+      },
+      {
+        "through": 60,
+        "effect": "engineering",
+        "armored": true
+      },
+      {
+        "through": 75,
+        "effect": "flooding",
+        "armored": true
+      },
+      {
+        "through": 90,
+        "effect": "fire",
+        "armored": false
+      },
+      {
+        "through": 93,
+        "effect": "sensor",
+        "armored": false
+      },
+      {
+        "through": 94,
+        "effect": "communications",
+        "armored": false
+      },
+      {
+        "through": 97,
+        "effect": "bridge",
+        "armored": true
+      },
+      {
+        "through": 100,
+        "effect": "rudder",
+        "armored": false
+      }
+    ],
+    "cas_minor": [
+      {
+        "through": 2,
+        "effect": "cas_main_director",
+        "armored": false
+      },
+      {
+        "through": 14,
+        "effect": "cas_main_mount",
+        "armored": true
+      },
+      {
+        "through": 15,
+        "effect": "cas_main_magazine",
+        "armored": true
+      },
+      {
+        "through": 34,
+        "effect": "cas_other_weapon",
+        "armored": true
+      },
+      {
+        "through": 35,
+        "effect": "cas_other_explosion",
+        "armored": true
+      },
+      {
+        "through": 45,
+        "effect": "cas_light_weapons",
+        "armored": false
+      },
+      {
+        "through": 60,
+        "effect": "engineering",
+        "armored": false
+      },
+      {
+        "through": 75,
+        "effect": "flooding",
+        "armored": false
+      },
+      {
+        "through": 90,
+        "effect": "fire",
+        "armored": false
+      },
+      {
+        "through": 93,
+        "effect": "sensor",
+        "armored": false
+      },
+      {
+        "through": 94,
+        "effect": "communications",
+        "armored": false
+      },
+      {
+        "through": 97,
+        "effect": "bridge",
+        "armored": true
+      },
+      {
+        "through": 100,
+        "effect": "rudder",
+        "armored": false
+      }
+    ]
+  },
+  "column_pages": {
+    "pre1955": 3,
+    "surface": 4,
+    "missile": 5,
+    "small_combatant": 6,
+    "aviation": 7,
+    "underwater": 8,
+    "airburst": 9,
+    "merchant": 10,
+    "small_cargo": 11,
+    "sub_major": 12,
+    "sub_minor": 13,
+    "cas_major": 14,
+    "cas_minor": 15
+  },
+  "weapon_director_d100_max": {
+    "pre1955": 6,
+    "surface": 4,
+    "missile": 2,
+    "small_combatant": 4,
+    "aviation": 1,
+    "underwater": 3,
+    "airburst": 4,
+    "merchant": 2,
+    "small_cargo": 2,
+    "sub_major": 0,
+    "sub_minor": 0
+  },
+  "repair_hours": [
+    6,
+    12,
+    24,
+    48
+  ],
+  "repair_early_factors": [
+    0.5,
+    0.5,
+    1,
+    1
+  ],
+  "fire_restart_percent": [
+    10,
+    5,
+    2,
+    1
+  ],
+  "serviceability": {
+    "failure_percent": {
+      "first": 2,
+      "second": 5
+    },
+    "repair_percent": {
+      "first": [
+        30,
+        35,
+        40,
+        45
+      ],
+      "second": [
+        20,
+        25,
+        25,
+        25
+      ]
+    },
+    "forward_tender_bonus": 20,
+    "port_bonus": 30,
+    "land_aircraft_bonus": 10
+  },
+  "cargo": {
+    "ammunition_initial_burst_d10_min": 8,
+    "ammunition_later_burst_percent": 25,
+    "neighbor_burst_percent": 70,
+    "ammunition_nearby_dp_yards_divisor": [
+      [
+        500,
+        5
+      ],
+      [
+        1000,
+        25
+      ],
+      [
+        2000,
+        200
+      ]
+    ],
+    "oil_severity_modifiers": {
+      "crude_oil": 1,
+      "refined_oil": 2,
+      "aviation_fuel": 3
+    },
+    "troops_d10_loss_multipliers": [
+      1,
+      1,
+      1,
+      2,
+      2,
+      2,
+      3,
+      3,
+      3,
+      4
+    ],
+    "general_tons_per_dp": 0.5,
+    "vehicles_per_dp": 0.5,
+    "aircraft_per_dp": 0.2
+  },
+  "optional_aircraft": {
+    "d10_destroyed_max": 5,
+    "d10_critical_max": 6,
+    "d10_heavy_max": 8,
+    "d10_light_max": 10,
+    "light_d6": [
+      "pilot",
+      "engine",
+      "engine",
+      "structure",
+      "structure",
+      "offensive_weapons"
+    ],
+    "jettison_failure_percent": 50
+  },
+  "sar": {
+    "ship_d6_survivor_percent_multiplier": 10,
+    "catastrophic_d6_survivor_percent_multiplier": 1,
+    "alongside_yards": 250,
+    "alongside_bonus_percent": 20,
+    "drift_after_hours": 6,
+    "helicopter_per_tactical_turn": 2,
+    "helicopter_work_policy": "English2026 PDF137/14-11 requires a hovering helicopter. The existing fitted TS flight state, positive fueled Low-or-below altitude and admitted Hover throttle establish eligibility. Explicit RTS mapping:180 continuous eligible seconds at the actual declared station, resetting when ineligible; manual and automatic share one work balance and per-Tac allowance. A generic stationary aircraft or old remote order age grants no hoist progress. Station radius and capacity remain explicit scenario author inputs.",
+    "ship_groups_each": 10,
+    "flying_boat_max": 10,
+    "no_wake_range_multiplier": 0.5,
+    "tactical_turn_seconds": 180,
+    "loss_witness_scan_age_seconds": 1,
+    "sighting_profiles": [
+      {
+        "min": 1,
+        "max": 9,
+        "physical_size": 6,
+        "signature": 4,
+        "category": "less_than_ten"
+      },
+      {
+        "min": 10,
+        "max": 29,
+        "physical_size": 4,
+        "signature": 3,
+        "category": "ten_to_thirty"
+      },
+      {
+        "min": 31,
+        "max": 99,
+        "physical_size": 3,
+        "signature": 2,
+        "category": "thirty_to_one_hundred"
+      },
+      {
+        "min": 101,
+        "max": null,
+        "physical_size": 2,
+        "signature": 2,
+        "category": "one_hundred_or_more"
+      }
+    ]
+  },
+  "rts_policies": {
+    "resolved_critical_receipt": "A newly resolved expanded physical casualty emits the existing own-side CriticalHit receipt as well as its private detailed audit. A pending, absent or already-destroyed component never fabricates that receipt; no new die or physical effect is added.",
+    "battery_damage": "each D6*5% loss is measured against original source maximum capacity; cumulative losses cap at original max; charged/depleted cells shrink proportionally",
+    "critical_identity": "private original source identity; owner-visible IDs are unit-local opaque aliases",
+    "optional_modes": "all optional flags off unless explicit source scenario config; CaS replaces pre-1955 surface table only",
+    "same_physical_system_rehit": "preserve earlier dice/history, invalidate uncompleted repair session and require explicit new post-battle declaration; no quiet timer",
+    "manual_repair": "automatic assistance optional; original due-time HP ratio snapshots persist when player delays rolling",
+    "rounding": "retain fractional losses/rates unless source explicitly requires integer physical item counts; counts truncated only at actual removed objects; no light-caliber61-65 extension over English57-60 without explicit source",
+    "hull_depth_risk": "When an order chooses to remain below the source safe band, one originalD100 per Tactical Turn; no second-by-second reroll and no risk merely for obeying the mandatory ascent.",
+    "rescue_geometry": "Recovery station reach must be an explicit scenario_assumption fit, not an inferred hardware number. Direction candidates must be source/scenario geographic admissible headings; random choice is recorded.",
+    "survivor_boundaries": "Printed30 and100 endpoints overlap adjacent source classes; no automatic profile or native scan is selected at those exact counts. Integer persons floor only after source percentage.",
+    "alongside_survivors": "Increase survivor count by20percent (multiply1.2), not add20percentage points of original crew.",
+    "patch": "Recorded actual floodingDP only, recover half after explicit post-battle declaration; a popped aggregate unit patch restores thoseDP and original tracked flooding severity. This is an explicit aggregate continuous-time patch policy.",
+    "weapon_expenditure": "Native expenditure allocates to explicit ready physical component IDs in deterministic order; source original ammo distribution never inferred by dividing aggregate ammo.",
+    "sar_ship_continuity": "Explicit continuous-time RTS mapping of per-Tactical-Turn ship work: only a live actual surface ship, stationary within the declared source/scenario recovery station and upwind, earns continuous work. One180-second eligible interval earns at most one recovery attempt; invalid station time resets work, time away never banks, manual waiting cannot accumulate multiple attempts, and actual recovery (including zero people from sea-state subtraction) consumes one interval. This second-by-second mapping is not verbatim Harpoon text. Other rescue platform work mappings remain separate.",
+    "sar_old_reports": "An own survivor measurement remains a snapshot; no current private position fallback or live refresh when source current geography is unknown. Its recorded side, rather than a later present/dead observer lookup, governs durable ownership once explicitly recorded.",
+    "optional_repair_gate": "Manual and automatic breakdown/airframe repair require the same actual post-battle session, no renewed own combat/pending or active fire/flooding.",
+    "aircraft_rehit_repair": "An actual new aircraft hit archives earlier repair checks and requires a new explicit battle-end declaration; old elapsed checkpoints never repair a new casualty.",
+    "catastrophic_loss": "Actual belowdecks or main-magazine instantaneous destruction and qualified nuclear lethal effects retain a private catastrophic cause until native loss; ordinary sink cannot replace D6% with D6*10%.",
+    "sar_witness": "A real installed Visual lookout must successfully scan the original living platform in the current or immediately preceding one-second simulation phase, then pass the same source detector again at actual native loss. That measured loss position creates a durable side-owned survivor marker without a second survivor-size search. This phase-freshness mapping is explicit RTS policy, not a printed time limit. Friendly and enemy losses are eligible; stale Contacts, radar and current private survivor positions never substitute for visual evidence.",
+    "sar_victory": "14.8 prints no universal reward. Only actual committed pickups increment durable per-side rescue counts; an explicit scenario/source rescue_victory.points_per_survivor sets the additive reward. Absent a reward declaration the points are zero. This explicit pickup-time scoring policy does not assert later rescued-person attrition or campaign accounting."
+  },
+  "coverage_status": "Source tables visually verified; current execution and test status is recorded per declared subset in the batch evidence, never as whole-domain completion.",
+  "whole_domain_complete": false,
+  "english_authority_overrides": {
+    "weapon_director": "English2026 PDF135/14-9: choose actual weapon first; only its fitted director has independentD10 1-2. Translated sameD100 director subdivisions are retained as a source record but not executed.",
+    "light_caliber": "English2026 PDF129/14-3 explicitly57–60mm; no61–65mm row. Do not silently extend translation57–65.",
+    "cargo_ammunition": "1-2 AND3-7 both loseD100 percent of ammo, with3-7 additionally starting fire+1 and later25percent IT explosion."
+  },
+  "missing_source_gaps": [
+    "cargo self-explosion own-carrier DP is not given by the printed cargo row; nearby ships/adjacent holds resolved only",
+    "crush depth missing blocks involuntary downward sub movement only",
+    "closely parked direct-hit half probability requires original source attack modifiedPh",
+    "physical parked-individual native air-operation transfers require exact linkage, no guessing from aggregate class stock",
+    "post-battle50/50 aircraft attrition/campaign inventory integration remains distinct from immediate modes"
+  ]
+}

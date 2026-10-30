@@ -1,0 +1,9 @@
+{
+  "id": "RTS-FULL-PERSISTENT-DEATH-CLOCK-20261026",
+  "source": "Engine persistence contract: preserve the existing RTS cleanup lifetime across save/restore. This is not a new Harpoon combat rule.",
+  "scope": "hv2026-rts-v4 only; archived Legacy/v2/v3 cleanup and wire shape remain unchanged",
+  "death_clock_field": "rts.cleanup.death_tick",
+  "platform_linger_s": 120,
+  "projectile_linger_s": 0,
+  "missing_clock_policy": "A Full-profile native sink records its actual death tick. Other retired bodies acquire a persistent clock on first cleanup. Never use the skipped emission cache as authoritative saved state."
+}

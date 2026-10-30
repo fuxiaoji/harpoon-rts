@@ -1,0 +1,237 @@
+{
+  "source": {
+    "document_rules": "14-2.HpnV_Rules_1_Jan_26.pdf",
+    "document_annex_c": "6-3.（数据库）2025版Chinas_Navy_1_Dec_25.pdf",
+    "version": "2026-01-01 / data volume 2025-12-01",
+    "rules_sha256": "8196ffc715bbcccd862d8597c607de7816dac5baee31fa659f89dfaf4323700c",
+    "visual_review": [
+      "English2026 PDF91/8-11 (base chance + Gun Damage Multipliers + 2000yd/nm example)",
+      "English2026 PDF92/8-12 (Gunfire Hit Chance Modifiers)",
+      "English2026 PDF93/8-13 (overconcentration, point-blank, line of fire)",
+      "English2026 PDF116/11-1 (11.4 spotting and NGFS restrictions)",
+      "China's Navy PDF68/C-1 (Annex C - Naval Guns, PRC PJ-45A 130mm/70 row)",
+      "renders: artifacts/rules-book-wide-20261026/gunnery-next-root-20261028 and zcode-parallel-20261028/facility-next/china-annex-c-pdf68.png"
+    ],
+    "engine_contract_revision": "2026-10-28-shared-intent-and-once-only-land-concentration-v3"
+  },
+  "base_chance_by_standard_and_band": {
+    "bands_note": "columns are Short, Medium, Long, Extreme (printed 8-12)",
+    "Manual": [
+      0.5,
+      0.3,
+      0.1,
+      0.05
+    ],
+    "GS4": [
+      0.6,
+      0.4,
+      0.15,
+      0.05
+    ],
+    "GS5": [
+      0.7,
+      0.5,
+      0.2,
+      0.1
+    ],
+    "GS6": [
+      0.75,
+      0.55,
+      0.25,
+      0.15
+    ],
+    "ceiling": 0.9,
+    "band_scaling": {
+      "short_medium": 0.05,
+      "long_extreme": 0.03
+    },
+    "scaling_note": "the final modifier total is multiplied by 5% at Short/Medium and 3% at Long/Extreme, then added to the base chance"
+  },
+  "damage_multipliers_barrels_by_band": {
+    "columns": [
+      "Short",
+      "Medium",
+      "Long",
+      "Extreme"
+    ],
+    "rows": [
+      {
+        "barrels": "1-2",
+        "mult": [
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      {
+        "barrels": "3-4",
+        "mult": [
+          2,
+          2,
+          1,
+          1
+        ]
+      },
+      {
+        "barrels": "5-6",
+        "mult": [
+          3,
+          3,
+          2,
+          1
+        ]
+      },
+      {
+        "barrels": "7-8",
+        "mult": [
+          4,
+          3,
+          2,
+          1
+        ]
+      },
+      {
+        "barrels": "9-10",
+        "mult": [
+          5,
+          4,
+          3,
+          2
+        ]
+      },
+      {
+        "barrels": "11-12",
+        "mult": [
+          6,
+          4,
+          3,
+          2
+        ]
+      }
+    ],
+    "eleven_four_binding": "Size Class A-D land structures multiply the Annex C band damage; Size Class E and smaller take one single hit regardless of the number of guns (printed 11.4/PDF116)",
+    "barrel_counts_are_not_printed": "Annex C carries no barrel counts; service.barrels is an explicit scenario declaration and rounds above 12 are outside the printed rows"
+  },
+  "modifier_constants": {
+    "stationary_target": 2,
+    "firing_speed_above_30kts": -2,
+    "ship_not_under_fire": 1,
+    "visibility_20_or_less": -4,
+    "visibility_40_or_less": -2,
+    "point_blank_chance": 4,
+    "point_blank_damage_multiplier": 2,
+    "land_overconcentration_per_extra_ship": -2
+  },
+  "modifiers_relevant_to_11_4": {
+    "implemented_in_engine": {
+      "ship_spotting_shifts": "producer ground2026::source_spotting (+1 ship 3rd turn, +2 aerial/ground 2nd turn, +3 beacon, -4 map, -6 blind, multi-spotter penalty); first/second-turn penalty VALUES unprinted, not applied",
+      "land_overconcentration": "11.4/PDF117: -2*(N-1) for EACH firing ship. Allocate all actual targets first; canonical whole-window count replaces the historical spotting helper recent-ship term instead of doubling it.",
+      "necessary_inputs_pending": "visibility percent, sea state and under-fire state must be declared/observed; an unknown input pends the die instead of an implicit zero",
+      "land_target_no_radar_gfc_ignore": "a land NGFS target has no beacon/radar-GFC wording, so visibility modifiers are never ignored",
+      "kyds_to_nm": 0.5,
+      "kyds_note": "printed 8-11 example: 7800 yd short range is almost four nautical miles",
+      "sea_state_columns": "FIRING SHIP size A-B/C-D/E-G, never number of barrels; missing necessary source/author size at sea state >=3 pends the die; numeric penalties and NFP are consumed.",
+      "barrel_hit_modifier": "1-2:+0, 3-4:+1, 5-6:+2, 7-8:+3, 9-10:+4; 11-12 unprinted => pending hit modifier, not inferred from the separate damage multiplier."
+    },
+    "sea_state_table": {
+      "3": {
+        "AB": null,
+        "CD": null,
+        "EG": -2
+      },
+      "4": {
+        "AB": null,
+        "CD": -2,
+        "EG": -4
+      },
+      "5": {
+        "AB": -2,
+        "CD": -4,
+        "EG": "NFP"
+      },
+      "6": {
+        "AB": -4,
+        "CD": -6,
+        "EG": "NFP"
+      },
+      "no_fire_above": 6,
+      "NA_meaning": "printed NA = no modifier"
+    },
+    "unimplemented_pending_no_invention": {
+      "land_within_45deg_inside_fcr_range": "printed -1; engine has no verified land geometry, not applied",
+      "structure_aspect_columns": "no land binding printed; no modifier applied on top of stationary",
+      "dead_reckoning_blind_twilight_illumination": "printed values exist but engine inputs (visual loss turn, muzzle flash, starshell) are not bound; not applied",
+      "ship_spotting_first_two_turns_penalty": "wording printed, values not printed; not applied"
+    }
+  },
+  "guns": {
+    "cn_pj45a": {
+      "name": "PRC PJ-45A 130mm/70",
+      "shell": "HE",
+      "source": "China's Navy 1 Dec 25, Annex C - Naval Guns C-1 (PDF68 row visually verified 2026-10-28)",
+      "bands": [
+        {
+          "max_range_kyd": 8.5,
+          "belt_pen_cm": 2,
+          "damage": 25
+        },
+        {
+          "max_range_kyd": 19.1,
+          "belt_pen_cm": 1,
+          "damage": 21
+        },
+        {
+          "max_range_kyd": 25.4,
+          "belt_pen_cm": 1,
+          "deck_pen_cm": 1,
+          "damage": 19
+        },
+        {
+          "max_range_kyd": 31.8,
+          "belt_pen_cm": 1,
+          "deck_pen_cm": 1,
+          "damage": 17
+        }
+      ],
+      "aa_max_range_kyd": 16.4,
+      "aa_rating": 0.85,
+      "penetration_note": "Short/Medium print belt (vertical) penetration; Long/Extreme print the belt/deck pair; each value is checked against its own armor face",
+      "barrels": null,
+      "barrels_note": "not printed in Annex C; service.barrels must be declared by the scenario"
+    }
+  },
+  "eleven_four_scope": {
+    "self_spotted_destruction_fire": "Short/Medium and less than 10 kyds; aerial/observer spotting reaches Extreme (printed 11.4)",
+    "one_ship_per_target": "destruction fire precision restricts shooters to one ship per target (printed 11.4/PDF117)",
+    "reverse_hit": "11.6/11.7 whole-complex bombardment rolls ground2026::bombardment_target before resolution; empty space is an automatic miss",
+    "nonpenetration": "11.4 checks structure penetration without printing a land non-penetration damage rule; the engine records 11.4.nonpenetration_pending and applies no damage instead of borrowing the missile half-damage rule",
+    "neutralization": "Map/Blind remain source spotting producers; destructive DP execution is rejected until area and neutralization effects are separately qualified."
+  },
+  "wiring": {
+    "configuration": "context.ground_2026.ngfs (Configuration: source, guns, services)",
+    "state": "rules.ground.ngfs: services, jobs, resolutions, fired, diagnostics",
+    "phases": "Collect declarations, arbitrate conflicts and count all actually committed ships against their declared target before reverse-hit location, including empty/pending reverse outcomes. Component DP then uses one common LandHit.",
+    "weapons_entry": "weapons.rs Base-target Gun branch calls ngfs::prepare_from_fire; unregistered guns keep the registered NOT_BOUND rejection",
+    "own_view": "Pure own queued-order helper only; referee resolutions are not side observations. Full own entity observation attachment remains pending.",
+    "revision": "RTS-NGFS-20261030-01",
+    "d100_arithmetic": "Existing ULP-aware threshold comparator, no rule rounding: an original D10090 at printed90% hits."
+  },
+  "whole_book_complete": false,
+  "unresolved": [
+    "ship-spotting first/second-turn penalty values",
+    "structure aspect binding",
+    "land clutter geometry",
+    "unknown sea state",
+    "non-penetrating land damage rule"
+  ],
+  "execution": {
+    "shared_ship_gun_contract": {
+      "revision": "RTS-GUN-SHARED-20261030-01",
+      "source_distinction": "Existing RTS atomic-intent conversion, not a printed firing-rate or probability rule",
+      "cadence": "one declared ship-gun Tactical Turn slot shared by surface and NGFS",
+      "conflict": "same-phase surface/NGFS target conflicts reject before either debit, independent of command/provider order",
+      "physical_stock": "when explicit shells-per-attack tracking is enabled, debit actual aggregate and declared physical stock together"
+    }
+  }
+}

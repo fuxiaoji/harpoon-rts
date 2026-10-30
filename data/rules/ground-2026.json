@@ -1,0 +1,722 @@
+{
+  "aircraft_maintenance_policy": {
+    "revision":"2026-10-30-individual-aircraft-work-1",
+    "source":"English2026 PDF118 Generic Land Targets maintenance buildings: reduced repair rates; original visually checked2026-10-30. Section14.9 aircraft repair checkpoints unchanged.",
+    "execution":"Explicit per-aircraft provider, parked station distance and existing author-declared reduced rate; accumulate service work only during actual eligible non-battle repair sessions. Missing rate, destroyed/wrong-side provider, departed aircraft or unobserved start pauses without banked work. No universal multiplier inferred."
+  },
+  "weapon_function_policy": {
+    "revision": "2026-10-30-physical-ground-AA-1",
+    "source": "English2026 PDF116 section11.1 and PDF118 Generic Land Targets, AA Gun Emplacement: Gun lost; SAM/SSM launcher: Launcher destroyed. Original page118 visually verified2026-10-30.",
+    "consumer": "Configured disabled or destroyed facility cannot fire through autonomous AA/local-control paths; recheck before preview, ammunition or engagement budget. Component assignment remains explicit scenario input."
+  },
+  "runway_bomb_attack": {
+    "rule_id": "HV2026-11.5.1-concrete-runway-bomb",
+    "source": "English2026 PDF117/11-2 section11.5.1; PDF118/11-3 Generic Land Targets, visually verified2026-10-28",
+    "level_iron_above_m": 5000,
+    "bombs_per_salvo_factor": 4,
+    "minimum_salvo": 1,
+    "max_hits_per_salvo": 1,
+    "retarded_can_penetrate": false,
+    "current_level_selection": "permitted_salvo1_regardless_of_load"
+  },
+  "zero_dp_critical_policy": {
+    "source": "English2026 PDF116/11-1 section11.1.2 and PDF118/11-3 Generic Land Targets; source zero-DP gun critical9.6.9",
+    "eligible_hangar_templates": ["hangar_large", "hangar_medium", "hangar_small"],
+    "scope": "One actual penetrated critical at an unarmored printed Hangar applies its existing aircraft-loss Result without requiring invented direct DP; multiple-critical multiplicity remains specific pending",
+    "excluded": "No unverified gun penetration, protected HAS, Magazine, runway or custom casualty-result extension"
+  },
+  "source": {
+    "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+    "pdf_pages": [
+      116,
+      117,
+      118
+    ],
+    "printed_pages": [
+      "11-1",
+      "11-2",
+      "11-3"
+    ],
+    "visual_verified": [
+      117,
+      118
+    ],
+    "version": "2026-01-01"
+  },
+  "guidance_rows": [
+    "M1",
+    "M2",
+    "D1",
+    "D2",
+    "D2+",
+    "T1",
+    "T1+",
+    "T2"
+  ],
+  "size_columns": [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H"
+  ],
+  "ballistic": [
+    [
+      0.01,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0.02,
+      0.01,
+      0.01,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0.1,
+      0.05,
+      0.02,
+      0.01,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0.15,
+      0.1,
+      0.05,
+      0.02,
+      0.01,
+      0,
+      0,
+      0
+    ],
+    [
+      0.4,
+      0.3,
+      0.2,
+      0.1,
+      0.02,
+      0.01,
+      0,
+      0
+    ],
+    [
+      0.75,
+      0.75,
+      0.6,
+      0.45,
+      0.3,
+      0.1,
+      0.01,
+      0
+    ],
+    [
+      0.75,
+      0.75,
+      0.75,
+      0.75,
+      0.6,
+      0.35,
+      0.1,
+      0.01
+    ],
+    [
+      0.8,
+      0.8,
+      0.8,
+      0.8,
+      0.7,
+      0.45,
+      0.2,
+      0.01
+    ]
+  ],
+  "lacm": [
+    [
+      0.01,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0.07,
+      0.05,
+      0.02,
+      0.01,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0.4,
+      0.25,
+      0.15,
+      0.07,
+      0.02,
+      0,
+      0,
+      0
+    ],
+    [
+      0.75,
+      0.75,
+      0.65,
+      0.25,
+      0.07,
+      0.02,
+      0,
+      0
+    ],
+    [
+      0.75,
+      0.75,
+      0.7,
+      0.5,
+      0.3,
+      0.15,
+      0.01,
+      0
+    ],
+    [
+      0.8,
+      0.8,
+      0.7,
+      0.65,
+      0.45,
+      0.2,
+      0.02,
+      0
+    ],
+    [
+      0.8,
+      0.8,
+      0.75,
+      0.75,
+      0.6,
+      0.35,
+      0.1,
+      0.01
+    ],
+    [
+      0.85,
+      0.85,
+      0.8,
+      0.8,
+      0.7,
+      0.45,
+      0.2,
+      0.01
+    ]
+  ],
+  "ballistic_cep_m": [
+    [
+      500,
+      1000
+    ],
+    [
+      250,
+      499
+    ],
+    [
+      125,
+      249
+    ],
+    [
+      60,
+      124
+    ],
+    [
+      40,
+      59
+    ],
+    [
+      25,
+      39
+    ],
+    [
+      15,
+      24
+    ],
+    [
+      10,
+      14
+    ]
+  ],
+  "lacm_cep_m": [
+    [
+      500,
+      2000
+    ],
+    [
+      150,
+      499
+    ],
+    [
+      60,
+      149
+    ],
+    [
+      30,
+      59
+    ],
+    [
+      25,
+      29
+    ],
+    [
+      20,
+      24
+    ],
+    [
+      15,
+      19
+    ],
+    [
+      10,
+      14
+    ]
+  ],
+  "satnav_already_assumed": [
+    "D2+",
+    "T1+",
+    "T2"
+  ],
+  "runway_lengths_m": [
+    500,
+    1000,
+    2000,
+    3000,
+    4000,
+    5000
+  ],
+  "runway_use": [
+    [
+      "Small",
+      "Medium",
+      "Large",
+      "Large",
+      "Large",
+      "Large"
+    ],
+    [
+      "Small",
+      "Medium",
+      "Medium",
+      "Medium",
+      "Medium",
+      "Large"
+    ],
+    [
+      "STOL",
+      "Small",
+      "Medium",
+      "Medium",
+      "Medium",
+      "Medium"
+    ],
+    [
+      "STOL",
+      "Small",
+      "Small",
+      "Medium",
+      "Medium",
+      "Medium"
+    ],
+    [
+      "X",
+      "STOL",
+      "Small",
+      "Small",
+      "Small",
+      "Small"
+    ],
+    [
+      "X",
+      "STOL",
+      "STOL",
+      "Small",
+      "Small",
+      "Small"
+    ],
+    [
+      "X",
+      "X",
+      "STOL",
+      "STOL",
+      "STOL",
+      "STOL"
+    ],
+    [
+      "X",
+      "X",
+      "X",
+      "STOL",
+      "STOL",
+      "STOL"
+    ],
+    [
+      "X",
+      "X",
+      "X",
+      "X",
+      "STOL",
+      "STOL"
+    ],
+    [
+      "X",
+      "X",
+      "X",
+      "X",
+      "X",
+      "STOL"
+    ]
+  ],
+  "reverse_airbase": [
+    [
+      20,
+      "runways"
+    ],
+    [
+      40,
+      "aircraft_storage"
+    ],
+    [
+      50,
+      "buildings"
+    ],
+    [
+      55,
+      "taxiways"
+    ],
+    [
+      60,
+      "defenses"
+    ],
+    [
+      100,
+      "empty"
+    ]
+  ],
+  "reverse_port": [
+    [
+      30,
+      "berths"
+    ],
+    [
+      50,
+      "workshops_stores"
+    ],
+    [
+      70,
+      "accommodation_admin"
+    ],
+    [
+      80,
+      "drydock"
+    ],
+    [
+      90,
+      "defenses"
+    ],
+    [
+      100,
+      "empty"
+    ]
+  ],
+  "templates": {
+    "aircraft_open_tight": {
+      "size": "G",
+      "dp": null,
+      "armor": [
+        0,
+        0
+      ],
+      "effect": "aircraft_d6"
+    },
+    "aircraft_open_dispersed": {
+      "size": "G",
+      "dp": null,
+      "armor": [
+        0,
+        0
+      ],
+      "effect": "aircraft_d6_div3"
+    },
+    "aircraft_revetment": {
+      "size": "F",
+      "dp": 40,
+      "armor": [
+        6,
+        6
+      ],
+      "effect": "aircraft_one"
+    },
+    "has_nato": {
+      "size": "D",
+      "dp": 100,
+      "armor": [
+        5,
+        5
+      ],
+      "effect": "aircraft_all"
+    },
+    "has_reinforced": {
+      "size": "C",
+      "dp": 120,
+      "armor": [
+        10,
+        10
+      ],
+      "effect": "aircraft_all"
+    },
+    "hangar_large": {
+      "size": "C",
+      "dp": 150,
+      "armor": [
+        0,
+        0
+      ],
+      "effect": "aircraft_d6_div2"
+    },
+    "hangar_medium": {
+      "size": "D",
+      "dp": 100,
+      "armor": [
+        0,
+        0
+      ],
+      "effect": "aircraft_d6_div2"
+    },
+    "hangar_small": {
+      "size": "E",
+      "dp": 80,
+      "armor": [
+        0,
+        0
+      ],
+      "effect": "aircraft_d6_div3"
+    },
+    "control_tower": {
+      "size": "F",
+      "dp": 45,
+      "armor": [
+        3,
+        3
+      ],
+      "effect": "flight_rate_half"
+    },
+    "radar_tower": {
+      "size": "E",
+      "dp": 88,
+      "armor": [
+        3,
+        3
+      ],
+      "effect": "landing_half_visibility20"
+    },
+    "magazine_bunker": {
+      "size": "E",
+      "dp": 60,
+      "armor": [
+        16,
+        16
+      ],
+      "effect": "gun_ammo_only_d10_turns"
+    },
+    "maintenance_large": {
+      "size": "D",
+      "dp": 90,
+      "armor": [
+        0,
+        0
+      ],
+      "effect": "repair_reduced_scenario"
+    },
+    "maintenance_medium": {
+      "size": "E",
+      "dp": 75,
+      "armor": [
+        0,
+        0
+      ],
+      "effect": "repair_reduced_scenario"
+    },
+    "maintenance_small": {
+      "size": "F",
+      "dp": 50,
+      "armor": [
+        0,
+        0
+      ],
+      "effect": "repair_reduced_scenario"
+    },
+    "runway": {
+      "size": "A",
+      "dp": 100,
+      "armor": [
+        2,
+        2
+      ],
+      "effect": "runway_cut"
+    },
+    "taxiway": {
+      "size": "C",
+      "dp": null,
+      "armor": [
+        0,
+        0
+      ],
+      "effect": "taxiway_cut"
+    },
+    "aa_emplacement": {
+      "size": "F",
+      "dp": 45,
+      "armor": [
+        3,
+        0
+      ],
+      "effect": "gun_lost"
+    },
+    "ship_berth": {
+      "size": "B",
+      "dp": 400,
+      "armor": [
+        0,
+        0
+      ],
+      "effect": "no_alongside_resupply"
+    },
+    "drydock_pump": {
+      "size": "F",
+      "dp": 84,
+      "armor": [
+        3,
+        3
+      ],
+      "effect": "no_pump"
+    },
+    "drydock_gate": {
+      "size": "E",
+      "dp": 245,
+      "armor": [
+        9,
+        9
+      ],
+      "effect": "drydock_flooded"
+    },
+    "sam_ssm_launcher": {
+      "size": "G",
+      "dp": 2,
+      "armor": [
+        0,
+        0
+      ],
+      "effect": "launcher_destroyed"
+    },
+    "search_mfc_radar": {
+      "size": "G",
+      "dp": 20,
+      "armor": [
+        0,
+        0
+      ],
+      "effect": "radar_destroyed"
+    },
+    "command_bunker": {
+      "size": "E",
+      "dp": 225,
+      "armor": [
+        13,
+        13
+      ],
+      "effect": "no_gci"
+    },
+    "soft_vehicle": {
+      "size": "G",
+      "dp": null,
+      "armor": [
+        0,
+        0
+      ],
+      "effect": "destroyed"
+    },
+    "apc_sp_artillery": {
+      "size": "G",
+      "dp": 20,
+      "armor": [
+        2,
+        2
+      ],
+      "effect": "destroyed"
+    },
+    "tank_1955_80": {
+      "size": "G",
+      "dp": 45,
+      "armor": [
+        20,
+        5
+      ],
+      "effect": "destroyed"
+    },
+    "tank_1980_on": {
+      "size": "G",
+      "dp": 50,
+      "armor": [
+        80,
+        10
+      ],
+      "effect": "destroyed"
+    }
+  },
+  "adaptations": [
+    "Each source Tactical Turn is 180 continuous seconds; spotting counts continuous same-target fire windows, not command clicks.",
+    "Scenario authors explicitly configure physical facilities, stored-aircraft assignment, taxiway graph and repair resources; no default base performance is treated as Annex Z data.",
+    "Fractional D6/2 and D6/3 aircraft losses retain their die/divisor as pending adjudication when the division is nonintegral, rather than silently guessing a rounding rule.",
+    "Runway lengths between source columns and more than ten cuts remain blocked absent author-supplied adjudication; no unsupported interpolation.",
+    "Author-declared airfield launch intervals are measured from actual physical release after a runway closure; same-lane jobs cannot collapse into simultaneous launches. Physical lane clocks serialize with the queue."
+  ],
+  "engine_contract_revision": "2026-10-26-wide-gci-magazine-drydock-consumers",
+  "berth_services_contract": {
+    "source": "English2026 PDF116/11-1 structure function at halfDP or critical; PDF118/11-3 Ship Berth: cannot resupply alongside. The stock-transfer producer below is an explicit scenario/RTS contract, not printed logistics performance.",
+    "configuration": "Each actual unique own depot has one explicitly declared new independent weapon-stock ledger. Services bind exact own depot, source ship_berth facility, actual recipient Ship and aggregate mount/weapon. Capacity, initial stock, distance, allowed speed and seconds per round are explicit author inputs; no equipment fit or rate is inferred.",
+    "phase": "Collect requests during commands, then after movement, the common primary/secondary damage batch, nuclear effects and damage-over-time, cancel invalid/cancelled jobs, commit still-valid due jobs once, and sort new requests by stable recipient/service identity before reserving source stock and recipient capacity. Client interleaving cannot choose a competing reservation winner.",
+    "conflicts": "Exact duplicate starts coalesce. Differing start quantities for one service in one phase reject that service requests; explicit cancellation takes priority over new start in the same phase.",
+    "accounting": "Starting reserves source rounds and recipient free capacity without debit/credit; completion commits exact debit and credit together once. Invalid, dead, missing, foreign, damaged, departed or moving service cancels and releases reservations. No work/time banks across interruption.",
+    "unsupported": "No aggregate replenishment may pretend to reload a torpedo tube, LWT, ASW rocket/projector pattern or explicitly allocated physical component. These fits require their own sourced loading procedures.",
+    "scope": "Explicit experimental alongside transfer and source berth/magazine-loss consumers. Individual physical loading, fuel/AIP and real Annex logistics remain separate.",
+    "depot_scope": "Independent stock ledger remains forbidden on an unspecified Ground target. Explicit kind magazine_bunker must bind the exact Magazine Bunker template. Below structural halfDP, its actual per-critical original D10-turn restriction permits Gun/Ciws ammunition only; at halfDP or rubble no service is possible. Concurrent restrictions retain their latest expiry; timer never rebuilds structure.",
+    "event_ownership": "Private service events retain the original declared Service.owner, even if its recipient or facility subsequently changes side; a new owner never inherits the former side private order through a cancellation receipt."
+  },
+  "gci_services_contract": {
+    "source": "English2026 PDF118 Command Bunker no GCI; actual radio transport from6.3 explicit fitted source qualification",
+    "assignment": "Exact unique actual friendly Base controller and Command Bunker, assigned actual Aircraft and existing radio fit. Source or author assumption is explicit. No inferred radio range, warning, Contact or FCS.",
+    "phase": "Collect explicit single-course vectors, settle after committed damage, recheck controller/bunker/radio/aircraft/manual status. Exact duplicates coalesce; conflicting simultaneous vectors do not select a client. Normal navigation applies bridge delay and hardware control.",
+    "scope": "Actual GCI course-order consumer. Does not by itself establish chapter9 surprise eligibility, automatic interception or a standing air mission."
+  },
+  "drydock_contract": {
+    "source": "English2026 PDF118 Generic Land Targets: exact pumping station F/84DP/armor3 cannot pump out or flood; exact gate E/245DP/armor9 floods and makes drydock unusable. HalfDP and critical function gate fromPDF116.",
+    "configuration": "Unique actual same-side stationary Base controller, exact pump and gate, explicitly declared initial flooded state and positive seconds_per_cycle. The water cycle duration is an author operating assumption, not printed pump performance. No real facility dimensions, ship damage, repair bonus, docking transit or fuel rate are inferred.",
+    "execution": "Collect pump requests and resolve after committed damage. Actual pump casualty cancels an unfinished cycle and blocks both drain and flood without fabricating a water-state change. Actual gate casualty immediately floods the dock in that phase, cancels work and persists unusability; no arbitrary timer repairs it.",
+    "determinism": "Identical requests coalesce; simultaneous conflicting water-state requests reject. Cycle clock, current water state, original owner and gate cause serialize; missing/foreign/dead/rebound hardware cancels work.",
+    "limits": "Water-state operations and source casualty effects are actual consumers. Ship transit and structural drydock repair are separate mechanisms and not supplied by this service."
+  }
+}

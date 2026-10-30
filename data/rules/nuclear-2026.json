@@ -1,0 +1,304 @@
+{
+  "revision": "2026-10-26-wide-asw-primary-sam-hit-1",
+  "authority": {
+    "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+    "edition": "Harpoon V English Digital Update 2026-01-01",
+    "sha256": "8196ffc715bbcccd862d8597c607de7816dac5baee31fa659f89dfaf4323700c",
+    "section": "14.1.8 Nuclear Weapons Effects",
+    "table": "Nuclear Weapons Effects Table (ranges in nmi)",
+    "pdf_pages": [
+      131,
+      132
+    ],
+    "printed_pages": [
+      "14-5",
+      "14-6"
+    ],
+    "verification": "PDF pages 131 and 132 rendered from the SHA-verified original at 220 dpi and visually inspected; page 131 holds the complete table and footnotes; page 132 holds the complete §14.1.8 prose and adjacent §14.2.1 context."
+  },
+  "adopted_source_sha256": "9474a636b727f0413eeee4c57a1b8551331232681d53b61c386578bfb07e75fa",
+  "table_columns": [
+    "yield_kt",
+    "ship_sub_kill_nm",
+    "inflight_air_kill_nm",
+    "damage_nm"
+  ],
+  "rows": [
+    [
+      1,
+      0.19,
+      0.29,
+      0.46
+    ],
+    [
+      2,
+      0.24,
+      0.36,
+      0.58
+    ],
+    [
+      3,
+      0.27,
+      0.41,
+      0.66
+    ],
+    [
+      5,
+      0.32,
+      0.49,
+      0.78
+    ],
+    [
+      7,
+      0.36,
+      0.55,
+      0.88
+    ],
+    [
+      8,
+      0.38,
+      0.57,
+      0.92
+    ],
+    [
+      10,
+      0.41,
+      0.62,
+      0.99
+    ],
+    [
+      12,
+      0.43,
+      0.66,
+      1.05
+    ],
+    [
+      15,
+      0.47,
+      0.71,
+      1.13
+    ],
+    [
+      20,
+      0.51,
+      0.78,
+      1.25
+    ],
+    [
+      25,
+      0.55,
+      0.84,
+      1.34
+    ],
+    [
+      30,
+      0.59,
+      0.89,
+      1.43
+    ],
+    [
+      45,
+      0.67,
+      1.0,
+      1.62
+    ],
+    [
+      60,
+      0.74,
+      1.12,
+      1.8
+    ],
+    [
+      65,
+      0.76,
+      1.15,
+      1.85
+    ],
+    [
+      70,
+      0.78,
+      1.18,
+      1.89
+    ],
+    [
+      100,
+      0.88,
+      1.33,
+      2.13
+    ],
+    [
+      160,
+      1.03,
+      1.55,
+      2.49
+    ],
+    [
+      170,
+      1.05,
+      1.59,
+      2.54
+    ],
+    [
+      200,
+      1.11,
+      1.67,
+      2.68
+    ],
+    [
+      250,
+      1.19,
+      1.8,
+      2.89
+    ],
+    [
+      300,
+      1.27,
+      1.92,
+      3.07
+    ],
+    [
+      350,
+      1.33,
+      2.02,
+      3.23
+    ],
+    [
+      400,
+      1.39,
+      2.11,
+      3.38
+    ],
+    [
+      500,
+      1.5,
+      2.27,
+      3.64
+    ],
+    [
+      800,
+      1.75,
+      2.66,
+      4.26
+    ],
+    [
+      1000,
+      1.89,
+      2.86,
+      4.59
+    ],
+    [
+      1100,
+      1.95,
+      2.95,
+      4.74
+    ],
+    [
+      1200,
+      2.01,
+      3.04,
+      4.88
+    ],
+    [
+      1450,
+      2.14,
+      3.24,
+      5.19
+    ],
+    [
+      1500,
+      2.16,
+      3.28,
+      5.25
+    ],
+    [
+      1800,
+      2.3,
+      3.48,
+      5.58
+    ],
+    [
+      8900,
+      3.92,
+      5.93,
+      9.51
+    ],
+    [
+      9000,
+      3.93,
+      5.95,
+      9.55
+    ],
+    [
+      9500,
+      4.0,
+      6.06,
+      9.72
+    ],
+    [
+      50000,
+      6.96,
+      10.54,
+      16.91
+    ]
+  ],
+  "rules": {
+    "detonation_failure_d10": 10,
+    "armed_carrier_destroyed_probability": 0.5,
+    "miss_continue_seconds": 30,
+    "no_terminal_seeker_arming_tta_seconds": 60,
+    "ship_damage_original_dp_fraction_per_d6": 0.1,
+    "opposite_medium_range_factor": 0.5,
+    "blueout_range_nm": 75,
+    "blueout_base_hours": 6,
+    "blueout_additional_d6_hours": 1,
+    "blueout_sea_state": 8
+  },
+  "execution_policy": {
+    "id": "RTS-NUCLEAR-20261026-WIDE-01",
+    "exact_table_yield_only": true,
+    "radius_boundary": "inclusive_within",
+    "blueout_boundary": "inclusive_within",
+    "blast_range": "table game range in the map plane; air burst assumed at nominated target altitude; no real physics model",
+    "one_failure_roll_per_burst": true,
+    "one_d6_damage_roll_per_affected_surface_ship": true,
+    "blueout_duration": "one event D6, fixed affected sonar identities at burst time; no enemy current truth used to clear it",
+    "surface_ship_airburst": "Only an actual adjudicated Sam hit on a physical Ship qualifies note3 low-altitude surface-target effects; nomination or generic airburst remains pending.",
+    "sub_damage_outside_kill_radius": "not specified; no invented D6 surface-ship rule",
+    "ground_facility_nuclear_effects": "not specified; no invented DP or EMP/fallout",
+    "source_absence_is_not_completion": true,
+    "asw_primary": "Source8.5.2 placement governs the original submarine: unique kill/major/no-effect only; original-die gap/overlap remains pending. D6 true sub_major criticals consume individual source-column D100s. Bystanders use actual scatter GZ and qualified discrete radii; one nuclear function D10 suppresses all effects on failure.",
+    "primary_damage_provenance": "A non-deserializable PrimaryDamageEvidence is constructed only after nuclear ship DP commit, then consumed by shared signature logic; never represented as torpedo or mine damage."
+  },
+  "annex_yield_candidates": {
+    "us_air_mk57_b57_nuclear_depth_bomb_2025": {
+      "yield_kt": [
+        5,
+        10,
+        15,
+        20
+      ],
+      "source": "AmericasAircraft2025 Annex E PDF93/E-1 and H7 PDF112/H7-1; exact selectable rows; fit still required"
+    },
+    "prc_project_2923_nuclear_freefall_2025": {
+      "yield_kt": [
+        300
+      ],
+      "source": "China2025 Annex H7 PDF85/H-7; fit and availability not inferred"
+    },
+    "russia_ryu2_skat_8f59_nuclear_depth_bomb_2025": {
+      "yield_kt": [
+        20
+      ],
+      "source": "Russia2025 Annex E PDF65/E-1 exact RYu-2 Skat (8F59) row; exact game yield, fit still required"
+    }
+  },
+  "not_invented": [
+    "EMP",
+    "fallout",
+    "radiation",
+    "thermal physics",
+    "facility blast DP",
+    "yield interpolation",
+    "real-world weapon performance"
+  ]
+}

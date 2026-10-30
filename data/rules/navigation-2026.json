@@ -1,0 +1,383 @@
+{
+  "source": {
+    "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+    "version": "2026-01-01",
+    "pdf_pages": [
+      23,
+      24,
+      25,
+      28,
+      29,
+      30,
+      31,
+      32
+    ],
+    "visually_verified_tables": [
+      24,
+      25,
+      28,
+      32
+    ]
+  },
+  "turn_seconds": 180,
+  "crash_back": {
+    "rule_id": "HV2026-3.1.2",
+    "source": "English2026-01-01 PDF23 printed3-1 section3.1.2; normal speed rows PDF24 printed3-2; visually verified2026-10-24",
+    "deceleration_factor": 2,
+    "engineering_percent": 5,
+    "ignore_engineering_fire": true,
+    "all_ships_cavitate": true,
+    "risk_timing_policy": "Declared RTS maneuver: first actual deceleration performs one stable native D100; repeated enabled and crossing a tactical boundary do not redraw; cancellation retains all original trials; a later distinct maneuver gets a new identity. This timing and cancellation policy is an explicit continuous-time adaptation, not a quoted source phase rule.",
+    "scope": "Source-bound v4 forward ship/submarine braking to zero, before physical movement; no automatic sustained astern. Quiet/coasting/heave-to/astern and damaged steering combinations require explicit ending or adjudication. Physical collision/ramming rules remain separate and incomplete.",
+    "execution_revision": "crash-back-source-braking-1"
+  },
+  "astern": {
+    "rule_id": "HV2026-3.1.3",
+    "source": "English2026-01-01 PDF25 printed3-3 section3.1.3;PDF24 printed3-2 Ship Speed Change astern acceleration note; visually verified2026-10-24",
+    "surface_max_forward_fraction": 0.5,
+    "submarine_max_kts": 5,
+    "towed_body_loss_percent": 50,
+    "cable_foul_percent": 10,
+    "foul_critical": "engineering",
+    "trial_relationship": "independent checks using the pre-check deployed-body snapshot; fouling is not conditional on loss",
+    "execution_scope": "Opt-in v4 source navigation units: nonnegative speed and separate requested/actual reverse direction; brake through zero before changing direction; physical reverse swept-coast movement; single deployed source-bound sonar/VDS or actual towed ACM loss and independent Engineering critical. Reverse steering/casualties, multiple bodies, sweep gear and deployment/recovery cables preserve pending. Awaiting serialized joint validation, not chapter completion.",
+    "risk_timing_policy": "Explicit RTS: first actual successful reverse displacement per tick/180 window, then one originalD100 for each independent purpose; save and cache, no reroll on repeated order; no trial without an actual deployed body, for zero displacement or after swept coast rejects the segment.",
+    "maximum_policy": "First min(database capability with existing source damage/propulsion/depth caps, authored undamaged maximum, explicit surfaced-submarine cap). For surface astern halve that forward maximum; for submarine astern take min(forward maximum,5kt). Then independently min(source sea-state fraction times undamaged maximum, readiness and actual equipment limits). Do not multiply the weather fraction into a halved weather cap twice.",
+    "critical_policy": "Independent10% fouling uses the pre-check single deployed-body snapshot even when the50% body loss succeeds; root damage_runtime source Engineering critical, no ordinary hit/DP/BDA, no CrashBack fire exemption; original trials saved before unavailable metadata becomes pending."
+  },
+  "acceleration": {
+    "warship": {
+      "slow_a": [
+        4,
+        2,
+        6
+      ],
+      "fast_a": [
+        6,
+        3,
+        9
+      ],
+      "b": [
+        10,
+        5,
+        12
+      ],
+      "b_cpp": [
+        15,
+        8,
+        18
+      ],
+      "c_e": [
+        12,
+        6,
+        15
+      ],
+      "c_e_cpp": [
+        18,
+        9,
+        18
+      ],
+      "slow_fg": [
+        15,
+        8,
+        18
+      ],
+      "fast_fg": [
+        25,
+        12,
+        30
+      ]
+    },
+    "merchant": {
+      "a": [
+        4,
+        3,
+        8
+      ],
+      "b": [
+        6,
+        3,
+        10
+      ],
+      "c_e": [
+        8,
+        4,
+        12
+      ],
+      "fg": [
+        12,
+        6,
+        15
+      ]
+    },
+    "fast_threshold_kts": 25,
+    "high_speed_fraction": 0.75,
+    "coasting_factor": 0.5,
+    "turn45_factor": 0.5,
+    "quiet_submarine_factor": 0.5,
+    "astern_factor": 0.5
+  },
+  "turning": {
+    "warship": {
+      "a": [
+        400,
+        2,
+        300,
+        3
+      ],
+      "b": [
+        300,
+        2,
+        200,
+        3
+      ],
+      "c": [
+        300,
+        1,
+        200,
+        2
+      ],
+      "d_e": [
+        200,
+        1,
+        100,
+        2
+      ],
+      "slow_fg": [
+        100,
+        1,
+        50,
+        2
+      ],
+      "fast_fg": [
+        100,
+        0.5,
+        50,
+        1
+      ],
+      "submerged_sub": [
+        300,
+        1,
+        200,
+        2
+      ]
+    },
+    "merchant": {
+      "a": [
+        400,
+        4,
+        300,
+        5
+      ],
+      "b_c": [
+        300,
+        3,
+        200,
+        4
+      ],
+      "d_e": [
+        200,
+        2,
+        100,
+        3
+      ],
+      "fg": [
+        100,
+        1,
+        50,
+        2
+      ]
+    },
+    "maximum_loss_pivots": 4,
+    "hard_jam_percent": 5,
+    "jam_release_percent_per_turn": 25,
+    "pivot_deg": 45,
+    "waterjet_pivot_deg": 60,
+    "yards_to_nm": 0.0004937365010799136,
+    "partial_loss_policy": "rts_proportional_to_printed45deg",
+    "execution_scope": "Standard rudder only; actual advance after order, swept per-leg terrain guard, actual pivot then speed loss; no banked old straight travel. Four45degree-equivalent loss budget per180s. Waterjet60-degree pivot uses next source size; no invented smaller-thanG row. Hard-rudder risk/unjam/critical steering not completed."
+  },
+  "sea_state_speed": [
+    [
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    [
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    [
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    [
+      1,
+      1,
+      1,
+      1,
+      0.75
+    ],
+    [
+      1,
+      1,
+      1,
+      0.75,
+      0.5
+    ],
+    [
+      1,
+      1,
+      0.75,
+      0.5,
+      0.25
+    ],
+    [
+      0.75,
+      0.75,
+      0.5,
+      0.5,
+      null
+    ],
+    [
+      0.5,
+      0.5,
+      0.5,
+      0.25,
+      null
+    ],
+    [
+      0.25,
+      0.25,
+      0.25,
+      null,
+      null
+    ],
+    [
+      null,
+      null,
+      null,
+      null,
+      null
+    ]
+  ],
+  "heave_kts": [
+    3,
+    5
+  ],
+  "underway": {
+    "nonsteam": {
+      "a_b": [
+        "d10",
+        90
+      ],
+      "c_d": [
+        "d10",
+        60
+      ],
+      "e": [
+        "d10",
+        45
+      ],
+      "f_g": [
+        "d6",
+        60
+      ]
+    },
+    "steam": {
+      "a_b": [
+        "2d6",
+        600
+      ],
+      "c_d": [
+        "2d6",
+        300
+      ],
+      "e": [
+        "2d6",
+        200
+      ]
+    },
+    "nuclear_multiplier": 2,
+    "inport_multiplier": 0.5,
+    "inport_speed_fraction": 0.25
+  },
+  "depth_bands_max_m": [
+    25,
+    50,
+    100,
+    200,
+    300,
+    400,
+    500,
+    600,
+    750,
+    900,
+    1050,
+    1200
+  ],
+  "submarine_depth_change_bands_per_turn": [
+    [
+      5,
+      1
+    ],
+    [
+      10,
+      2
+    ],
+    [
+      20,
+      3
+    ],
+    [
+      30,
+      5
+    ],
+    [
+      null,
+      8
+    ]
+  ],
+  "adaptations": [
+    "Opt-in per-unit source/scenario propulsion fits; unknown CPP/waterjet/readiness/max speed is never inferred from class names.",
+    "The source acceleration limits per180-second Tactical Turn are distributed across continuous1-second movement; phase/impulse order is an explicit RTS adaptation.",
+    "Weather caps use undamaged maximum speed before damage/source equipment caps. Submerged submarines ignore sea-state caps; surfaced submarines use one size class larger.",
+    "Heave-to requires explicit wind direction and slows to the source3–5kt envelope. No unsupported timer or sinking probability is invented.",
+    "Underway dice produce exact seconds from printed fractions; do not round D10/3 or D6/3 to guessed whole turns.",
+    "Explicit RTS adaptation: submerged metre motion interpolates printed depth-band endpoints at printed bands/180s, with actual per-second speed and upper-bound fractional speed bracket. Surface/submerge and P-S/Shallow remain separate180s work; depth0 and surface speed are retained while submerging. Emergency Blow uses the next printed speed bracket, 31+ stays8; target and continuous minimum upward commitment are at least3 band coordinates. No zero-speed or VeryDeep rate is invented. Deep-to-surface/P-S requires Shallow first. CrashDive remains incomplete.",
+    "RTS normal turning: preserve complete printed advance before each pivot, split each1s path at the pivot point; non45degree final pivots and waterjet60degree pivots charge proportional printed45degree speed loss, capped at180degrees per Tactical Turn. This is declared movement adaptation, not a source partial-pivot rounding claim."
+  ],
+  "remaining": [
+    "Standard-rudder advance/pivot speed loss is opt-in production scope; hard-rudder jamming/release and casualty steering source procedures remain incomplete.",
+    "Astern reverse steering/casualties, multiple-body selection, sweep-gear loss and deployment/recovery cable exposure remain pending. CrashBack source braking is a separately verified subset. EmergencyBlow motion is a new narrow source implementation under validation; Loud and Blow-only extra cavitation combination, CrashDive/VeryDeep, batteries/AIP, collision/ramming and grounding are not completed.",
+    "Source tables/indexing alone do not complete chapter3."
+  ],
+  "execution_revision": "2026-10-24-emergency-blow-source-motion-v2",
+  "submarine": {
+    "rule_id": "HV2026-3.2.1",
+    "source": "English2026-01-01 PDF28 printed3-6; visually verified source depth/speed tables",
+    "minimum_water_m": 35,
+    "vsmall_minimum_water_m": 15,
+    "periscope_max_m": 25,
+    "shallow_max_m": 50,
+    "separate_operation_seconds": 180,
+    "continuous_policy": "Explicit RTS: interpolate source depth-band endpoints using actual speed and source bands per180s; fractional speed selects upper bracket. Surface/submerge/P-S shift remain separate180s. Zero-speed and VeryDeep are unimplemented, not source prohibitions. EmergencyBlow target must commit to at least3 continuous band coordinates upward, and may not be cancelled by ordinary depth orders before reaching that minimum. Actual manual takeover does not stop physical work. Immediate damage broach retains casualty priority; forced shallower operations follow completion of committed blow.",
+    "emergency_blow": {
+      "source": "English2026 PDF28 printed3-6 section3.2.1, physically reviewed2026-10-24",
+      "minimum_upward_bands": 3,
+      "speed_policy": "next printed bracket;31+ same8 bands/180s",
+      "acoustic_policy": "Source explicitly states passive Loud and cavitating. Existing independently qualified propeller/maneuver cavitation must remain. Whether Blow alone additionally forces+4 is unresolved; do not silently choose+6-only or+10 as complete adjudication.",
+      "scope": "Verified opt-in hull/water and depth>25 up to1200m, positive speed. Shallow endpoint then separate surface/P-S operation. No special AnnexA Blow capability gate; CrashDive and VeryDeep have separate source conditions. Continuous band coordinate and cancellation contract are explicit RTS adaptations."
+    }
+  },
+  "hazards_runtime_table": "navigation-hazards-2026.json (merged into tables/fingerprint)",
+  "hazards_scope": "Source3.3/3.4 explicit-hull/shore candidate after actual3red1control; current narrow implementation and unknown policies are registered separately, no wholechapter completion."
+}

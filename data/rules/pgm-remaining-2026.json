@@ -1,0 +1,141 @@
+{
+  "weapons": {
+    "lab_bgm71ab_tow": {
+      "name": "BGM-71A/B TOW",
+      "guidance": "Cmd/2",
+      "generation": 2,
+      "min_range_nm": 0.1,
+      "range_nm": 1.6,
+      "speed_kts": 542,
+      "flight_path": "Direct",
+      "hang_weight_kg": 19,
+      "damage_points": 8,
+      "additional_criticals": "",
+      "penetration_cm": 50,
+      "signature": "VSm",
+      "min_launch_altitude_m": null,
+      "source": "US Aircraft 2025-12 PDF101 H2-3 BGM-71A/B; N remark uninterpreted"
+    },
+    "lab_agm45a_shrike": {
+      "name": "AGM-45A Shrike",
+      "guidance": "PRH/1",
+      "generation": 1,
+      "min_range_nm": 2,
+      "range_nm": 7,
+      "speed_kts": 1320,
+      "flight_path": "Direct",
+      "hang_weight_kg": 182,
+      "damage_points": 0,
+      "additional_criticals": "",
+      "penetration_cm": 1,
+      "signature": "VSm",
+      "min_launch_altitude_m": null,
+      "source": "US Aircraft 2025-12 PDF99 H2-1 AGM-45A; direct range, loft separate",
+      "damage_roll": {
+        "sides": 6,
+        "add": 2
+      },
+      "automatic_radar_criticals": 1
+    },
+    "lab_bgm71c_itow": {
+      "name": "BGM-71C ITOW",
+      "guidance": "Cmd/2",
+      "generation": 2,
+      "min_range_nm": 0.1,
+      "range_nm": 1.6,
+      "speed_kts": 542,
+      "flight_path": "Direct",
+      "hang_weight_kg": 19,
+      "damage_points": 8,
+      "additional_criticals": "",
+      "penetration_cm": 69,
+      "signature": "VSm",
+      "min_launch_altitude_m": null,
+      "source": "US Aircraft 2025-12 PDF101 H2-3 BGM-71C ITOW; N remark uninterpreted"
+    }
+  },
+  "author_external_fits": {
+    "us_f18e": {
+      "source": "scenario_assumption: experimental TOW mounting, no historical fit claimed",
+      "weapons": {
+        "lab_bgm71ab_tow": {
+          "maximum_rounds": 2
+        },
+        "lab_agm45a_shrike": {
+          "maximum_rounds": 1
+        },
+        "lab_bgm71c_itow": {
+          "maximum_rounds": 2
+        }
+      }
+    }
+  },
+  "eoir_weapons": {
+    "lab_agm65d_maverick": {
+      "name": "AGM-65D Maverick",
+      "guidance": "IIRH/2",
+      "generation": 2,
+      "ordnance_kind": "guided_missile",
+      "min_range_nm": 0.5,
+      "range_nm": 11.0,
+      "speed_kts": 791,
+      "flight_path": "Direct",
+      "hang_weight_kg": 220,
+      "damage_points": 24,
+      "additional_criticals": "D6/2",
+      "penetration_cm": 139,
+      "signature": "VSm",
+      "min_launch_altitude_m": null,
+      "source": "US Aircraft 2025-12 PDF99 H2-1 AGM-65D IIRH/2"
+    },
+    "lab_agm65f_maverick": {
+      "name": "AGM-65F Maverick",
+      "guidance": "IIRH/3",
+      "generation": 3,
+      "ordnance_kind": "guided_missile",
+      "min_range_nm": 1.5,
+      "range_nm": 13.5,
+      "speed_kts": 791,
+      "flight_path": "Direct",
+      "hang_weight_kg": 307,
+      "damage_points": 34,
+      "additional_criticals": "D6/2",
+      "penetration_cm": 8,
+      "signature": "VSm",
+      "min_launch_altitude_m": null,
+      "source": "US Aircraft 2025-12 PDF99 H2-1 AGM-65F IIRH/3"
+    },
+    "lab_agm65g_maverick": {
+      "name": "AGM-65G Maverick",
+      "guidance": "IIRH/3",
+      "generation": 3,
+      "ordnance_kind": "guided_missile",
+      "min_range_nm": 1.5,
+      "range_nm": 13.5,
+      "speed_kts": 791,
+      "flight_path": "Direct",
+      "hang_weight_kg": 307,
+      "damage_points": 34,
+      "additional_criticals": "D6/2",
+      "penetration_cm": 8,
+      "signature": "VSm",
+      "min_launch_altitude_m": null,
+      "source": "US Aircraft 2025-12 PDF99 H2-1 AGM-65G IIRH/3"
+    }
+  },
+  "eoir_fits": {
+    "us_f18e": {
+      "weapons": {
+        "lab_agm65d_maverick": {
+          "maximum_rounds": 1
+        },
+        "lab_agm65f_maverick": {
+          "maximum_rounds": 1
+        },
+        "lab_agm65g_maverick": {
+          "maximum_rounds": 1
+        }
+      }
+    }
+  }
+}

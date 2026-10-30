@@ -1,0 +1,11 @@
+{
+  "source":{"book":"14-2.HpnV_Rules_1_Jan_26.pdf","version":"2026-01-01","pdf_pages":[106,107,108,116,130],"rule":"9.6.6/11.1/14.1.4","evidence":"artifacts/rules-book-wide-20261026/aviation-remaining/cluster-next/source-hook-contract.md"},
+  "laboratory_fits":{"lab_f18e_cluster200x2":{"base":"us_f18e","name":"LAB F18E airframe, author two200kg cluster bombs; not Annex fit","weapon":"lab_cluster200kg","rounds":2,"bombsight":"Manual","payload_kg":480,"empty_rack_kg":80,"source":"scenario_assumption: source F18E airframe only; author2*200kg bombs+80kg empty racks and Manual experiment sight, not Mk20/CBU/Belouga fit"}},
+  "laboratory_weapons":{"lab_cluster200kg":{"name":"LAB author200kg cluster/ground4DP; not an Annex weapon","hang_weight_kg":200,"ground_damage_points":4,"penetration_cm":0,"source":"scenario_assumption: author200kg and4DP per land hit; naval0DP/sourcecritical table; no bomblet density or real ordnance mass claim"}},
+  "hang_weight_limits_kg":[300,600],
+  "hit_modifier":{"AB":[[0.30,0.40],[0.30,0.50],[0.30,0.60]],"CE":[[0.20,0.30],[0.30,0.40],[0.30,0.60]],"FG":[[0.10,0.20],[0.20,0.30],[0.20,0.40]]},
+  "critical_counts":{"AB":["D6+2","2D6+1","2D6+4"],"CD":["D6+1","D6+2","D6+3"],"EH":["D6/2+1","D6/2+1","D6/2+1"]},
+  "deployment_dud_at_or_below_m":60,
+  "rts":{"source":"explicit RTS: one normal source defensive phase and common budget ticket; static complete author adjacency groups at one abstract anchor, no inferred radius; independent stream(release_tick,actor,9.6.6:cluster:target:bomb), D100 then sourcecriticaldice; source Low/VLow automatic dud commits real release without hit dice"},
+  "scope":"Single-bomb Level/Glide experiment, static author adjacency, source-complete printed Ph and integer critical counts only. Ground4DP is author input. No general footprints, real fit, odd fractional count rounding, High/Lob mapping, moving adjacency, or secondary-ship twelve-aircraft boundary closure."
+}

@@ -1,0 +1,632 @@
+{
+  "schema": 1,
+  "date": "2026-10-30",
+  "status": "source_verified_runtime_subset",
+  "source_distinction": "Annex L is Tactical Data Links, not a dedicated unmanned-control hardware table. Unmanned vehicle platform fits still need Annex A/B and remarks.",
+  "sources": {
+    "usn": {
+      "tag": "usn",
+      "document": "【20260405】鱼叉5（本体+中美俄数据库）\\5-4.Americas_Navy_1_Dec_25.pdf",
+      "pdf_page": 94,
+      "sha256": "189416d65b92d5e2fa50c59c99e309ca5715a5db287e5323295152034e61c5c8",
+      "visual_evidence": "root/tdl-source/usn-pdf94-upright.png",
+      "visual_review": "root personally viewed 2026-10-30",
+      "edition": "1 December 2025"
+    },
+    "cn": {
+      "tag": "cn",
+      "document": "【20260405】鱼叉5（本体+中美俄数据库）\\6-3.（数据库）2025版Chinas_Navy_1_Dec_25.pdf",
+      "pdf_page": 96,
+      "sha256": "9ff46ff0c91f323d48c37e9917df6d87583fbe0df337a6dd0bb40bc488d98b2c",
+      "visual_evidence": "root/tdl-source/cn-pdf96-upright.png",
+      "visual_review": "root personally viewed 2026-10-30",
+      "edition": "1 December 2025"
+    },
+    "ru": {
+      "tag": "ru",
+      "document": "【20260405】鱼叉5（本体+中美俄数据库）\\9-4.Russias_Navy_1_Dec_25.pdf",
+      "pdf_page": 104,
+      "sha256": "1420ac08b0db219c41ad52b1e87d7bb06cfd2b44e98d7ffb9e4dd462aea477c1",
+      "visual_evidence": "root/tdl-source/ru-pdf104-upright.png",
+      "visual_review": "root personally viewed 2026-10-30",
+      "edition": "1 December 2025"
+    }
+  },
+  "conventions": {
+    "raw_dash": "Retained literally; normalized numeric null does not authorize a missing range or SATCOM capability.",
+    "relay": "Coverage extension requires actual similarly equipped relay platforms, not infinite distance or free route.",
+    "fit": "A system row is not a platform fitting: no unit binding without independently verified platform record.",
+    "country_heading": "USN first column is printed Russia but its selected row values say USA; row values retained."
+  },
+  "rows": [
+    {
+      "id": "us_link_11",
+      "source_tag": "usn",
+      "country": "USA",
+      "printed_name": "Link 11",
+      "tdl_type": "NRT",
+      "printed_cells": {
+        "surface_los_nmi": 25,
+        "air_los_nmi": 150,
+        "beyond_los_nmi": 300,
+        "satcom": "--",
+        "jamming_resistance": 0
+      },
+      "surface_los_nm": 25,
+      "air_los_nm": 150,
+      "beyond_los_nm": 300,
+      "relay_printed": false,
+      "satcom_yes_printed": false,
+      "jamming_resistance": 0,
+      "ioc_printed": null,
+      "remarks": "",
+      "notes": [],
+      "source_status": "visually_verified_structured",
+      "printed_page": "L-1",
+      "warning_kind": "near_real_time",
+      "receive_only": false,
+      "dedicated_targeting_system": false,
+      "compatible_systems": [
+        "us_link_14",
+        "us_link_16"
+      ],
+      "single_ship_peer": false
+    },
+    {
+      "id": "us_link_14",
+      "source_tag": "usn",
+      "country": "USA",
+      "printed_name": "Link 14",
+      "tdl_type": "TL",
+      "printed_cells": {
+        "surface_los_nmi": 25,
+        "air_los_nmi": "--",
+        "beyond_los_nmi": "--",
+        "satcom": "--",
+        "jamming_resistance": 0
+      },
+      "surface_los_nm": 25,
+      "air_los_nm": null,
+      "beyond_los_nm": null,
+      "relay_printed": false,
+      "satcom_yes_printed": false,
+      "jamming_resistance": 0,
+      "ioc_printed": null,
+      "remarks": "Receive only. Compatible with Link 11.",
+      "notes": [],
+      "source_status": "visually_verified_structured",
+      "printed_page": "L-1",
+      "warning_kind": "time_late",
+      "receive_only": true,
+      "dedicated_targeting_system": false,
+      "compatible_systems": [
+        "us_link_11"
+      ],
+      "single_ship_peer": false
+    },
+    {
+      "id": "us_link_16",
+      "source_tag": "usn",
+      "country": "USA",
+      "printed_name": "Link 16",
+      "tdl_type": "RT",
+      "printed_cells": {
+        "surface_los_nmi": 25,
+        "air_los_nmi": 300,
+        "beyond_los_nmi": "Relay",
+        "satcom": "Yes",
+        "jamming_resistance": 12
+      },
+      "surface_los_nm": 25,
+      "air_los_nm": 300,
+      "beyond_los_nm": null,
+      "relay_printed": true,
+      "satcom_yes_printed": true,
+      "jamming_resistance": 12,
+      "ioc_printed": null,
+      "remarks": "LPI, Compatible with Link 11",
+      "notes": [],
+      "source_status": "visually_verified_structured",
+      "printed_page": "L-1",
+      "warning_kind": "real_time",
+      "receive_only": false,
+      "dedicated_targeting_system": false,
+      "compatible_systems": [
+        "us_link_11",
+        "us_madl"
+      ],
+      "single_ship_peer": false
+    },
+    {
+      "id": "us_cec",
+      "source_tag": "usn",
+      "country": "USA",
+      "printed_name": "CEC",
+      "tdl_type": "RT",
+      "printed_cells": {
+        "surface_los_nmi": 25,
+        "air_los_nmi": 300,
+        "beyond_los_nmi": "--",
+        "satcom": "--",
+        "jamming_resistance": "Remarks"
+      },
+      "surface_los_nm": 25,
+      "air_los_nm": 300,
+      "beyond_los_nm": null,
+      "relay_printed": false,
+      "satcom_yes_printed": false,
+      "jamming_resistance": null,
+      "ioc_printed": null,
+      "remarks": "USG-2A/3 clutter rejection is 15, USG-2B is 18.",
+      "notes": [
+        "The jamming-resistance cell literally says Remarks. Do not substitute clutter-rejection numbers for an unprinted universal jamming resistance."
+      ],
+      "source_status": "visually_verified_structured",
+      "printed_page": "L-1",
+      "warning_kind": "real_time",
+      "receive_only": false,
+      "dedicated_targeting_system": true,
+      "compatible_systems": [
+        "us_madl"
+      ],
+      "single_ship_peer": false
+    },
+    {
+      "id": "us_hawklink_arq_44",
+      "source_tag": "usn",
+      "country": "USA",
+      "printed_name": "Hawklink (ARQ-44)",
+      "tdl_type": "NRT",
+      "printed_cells": {
+        "surface_los_nmi": 100,
+        "air_los_nmi": "--",
+        "beyond_los_nmi": "--",
+        "satcom": "--",
+        "jamming_resistance": 8
+      },
+      "surface_los_nm": 100,
+      "air_los_nm": null,
+      "beyond_los_nm": null,
+      "relay_printed": false,
+      "satcom_yes_printed": false,
+      "jamming_resistance": 8,
+      "ioc_printed": null,
+      "remarks": "Can link with only one ship at a time.",
+      "notes": [],
+      "source_status": "visually_verified_structured",
+      "printed_page": "L-1",
+      "warning_kind": "near_real_time",
+      "receive_only": false,
+      "dedicated_targeting_system": false,
+      "compatible_systems": [],
+      "single_ship_peer": true
+    },
+    {
+      "id": "us_hawklink_arq_59",
+      "source_tag": "usn",
+      "country": "USA",
+      "printed_name": "Hawklink (ARQ-59)",
+      "tdl_type": "RT",
+      "printed_cells": {
+        "surface_los_nmi": 100,
+        "air_los_nmi": "--",
+        "beyond_los_nmi": "--",
+        "satcom": "--",
+        "jamming_resistance": 8
+      },
+      "surface_los_nm": 100,
+      "air_los_nm": null,
+      "beyond_los_nm": null,
+      "relay_printed": false,
+      "satcom_yes_printed": false,
+      "jamming_resistance": 8,
+      "ioc_printed": null,
+      "remarks": "Can link with only one ship at a time.",
+      "notes": [],
+      "source_status": "visually_verified_structured",
+      "printed_page": "L-1",
+      "warning_kind": "real_time",
+      "receive_only": false,
+      "dedicated_targeting_system": true,
+      "compatible_systems": [],
+      "single_ship_peer": true
+    },
+    {
+      "id": "us_ifdl",
+      "source_tag": "usn",
+      "country": "USA",
+      "printed_name": "IFDL",
+      "tdl_type": "RT",
+      "printed_cells": {
+        "surface_los_nmi": "--",
+        "air_los_nmi": 25,
+        "beyond_los_nmi": "--",
+        "satcom": "Yes",
+        "jamming_resistance": 12
+      },
+      "surface_los_nm": null,
+      "air_los_nm": 25,
+      "beyond_los_nm": null,
+      "relay_printed": false,
+      "satcom_yes_printed": true,
+      "jamming_resistance": 12,
+      "ioc_printed": null,
+      "remarks": "LPI, Not yet Link 16 compatible",
+      "notes": [],
+      "source_status": "visually_verified_structured",
+      "printed_page": "L-1",
+      "warning_kind": "real_time",
+      "receive_only": false,
+      "dedicated_targeting_system": false,
+      "compatible_systems": [],
+      "single_ship_peer": false
+    },
+    {
+      "id": "us_madl",
+      "source_tag": "usn",
+      "country": "USA",
+      "printed_name": "MADL",
+      "tdl_type": "RT",
+      "printed_cells": {
+        "surface_los_nmi": "--",
+        "air_los_nmi": 25,
+        "beyond_los_nmi": "--",
+        "satcom": "Yes",
+        "jamming_resistance": 12
+      },
+      "surface_los_nm": null,
+      "air_los_nm": 25,
+      "beyond_los_nm": null,
+      "relay_printed": false,
+      "satcom_yes_printed": true,
+      "jamming_resistance": 12,
+      "ioc_printed": null,
+      "remarks": "Stealthy (note1), Compatible with Link 16 and CEC",
+      "notes": [
+        "USN note1: F-35 directional MADL uses its stealthy detection treatment; Link16 transmission uses LPI detection rules. No numerical detectability was inferred."
+      ],
+      "source_status": "visually_verified_structured",
+      "printed_page": "L-1",
+      "warning_kind": "real_time",
+      "receive_only": false,
+      "dedicated_targeting_system": false,
+      "compatible_systems": [
+        "us_link_16",
+        "us_cec"
+      ],
+      "single_ship_peer": false
+    },
+    {
+      "id": "cn_dts_03",
+      "source_tag": "cn",
+      "country": "PRC",
+      "printed_name": "DTS-03 (note1)",
+      "tdl_type": "RT",
+      "printed_cells": {
+        "surface_los_nmi": 25,
+        "air_los_nmi": 250,
+        "beyond_los_nmi": "Relay",
+        "satcom": "Yes",
+        "jamming_resistance": 12
+      },
+      "surface_los_nm": 25,
+      "air_los_nm": 250,
+      "beyond_los_nm": null,
+      "relay_printed": true,
+      "satcom_yes_printed": true,
+      "jamming_resistance": 12,
+      "ioc_printed": "2020?",
+      "remarks": "Compatible with TJN-905 series/906",
+      "notes": [
+        "Note1 is a superscript footnote, not a terminal digit in the system name. Export designation; PLAN designation unknown.",
+        "All ranges estimated, note2."
+      ],
+      "source_status": "visually_verified_structured",
+      "printed_page": "K-3 (Annex L section)",
+      "warning_kind": "real_time",
+      "receive_only": false,
+      "dedicated_targeting_system": false,
+      "compatible_systems": [
+        "cn_tjn_905",
+        "cn_tjn_905_integrated_type_i",
+        "cn_tjn_906"
+      ],
+      "single_ship_peer": false
+    },
+    {
+      "id": "cn_hn_900",
+      "source_tag": "cn",
+      "country": "PRC",
+      "printed_name": "HN-900",
+      "tdl_type": "TL",
+      "printed_cells": {
+        "surface_los_nmi": 25,
+        "air_los_nmi": "--",
+        "beyond_los_nmi": "--",
+        "satcom": "--",
+        "jamming_resistance": 0
+      },
+      "surface_los_nm": 25,
+      "air_los_nm": null,
+      "beyond_los_nm": null,
+      "relay_printed": false,
+      "satcom_yes_printed": false,
+      "jamming_resistance": 0,
+      "ioc_printed": "1988",
+      "remarks": "",
+      "notes": [
+        "All ranges estimated, note2."
+      ],
+      "source_status": "visually_verified_structured",
+      "printed_page": "K-3 (Annex L section)",
+      "warning_kind": "time_late",
+      "receive_only": false,
+      "dedicated_targeting_system": false,
+      "compatible_systems": [],
+      "single_ship_peer": false
+    },
+    {
+      "id": "cn_jstids",
+      "source_tag": "cn",
+      "country": "PRC",
+      "printed_name": "JSTIDS",
+      "tdl_type": "RT",
+      "printed_cells": {
+        "surface_los_nmi": "--",
+        "air_los_nmi": 200,
+        "beyond_los_nmi": "--",
+        "satcom": "Yes",
+        "jamming_resistance": 8
+      },
+      "surface_los_nm": null,
+      "air_los_nm": 200,
+      "beyond_los_nm": null,
+      "relay_printed": false,
+      "satcom_yes_printed": true,
+      "jamming_resistance": 8,
+      "ioc_printed": "2012",
+      "remarks": "Similar to Link 16, also called JSIDLS. Separate from the TJN-906. Theater-level, not installed on every ship",
+      "notes": [
+        "All ranges estimated, note2."
+      ],
+      "source_status": "visually_verified_structured",
+      "printed_page": "K-3 (Annex L section)",
+      "warning_kind": "real_time",
+      "receive_only": false,
+      "dedicated_targeting_system": false,
+      "compatible_systems": [],
+      "single_ship_peer": false
+    },
+    {
+      "id": "cn_tjn_905",
+      "source_tag": "cn",
+      "country": "PRC",
+      "printed_name": "TJN-905",
+      "tdl_type": "NRT",
+      "printed_cells": {
+        "surface_los_nmi": 25,
+        "air_los_nmi": 100,
+        "beyond_los_nmi": 300,
+        "satcom": "--",
+        "jamming_resistance": 0
+      },
+      "surface_los_nm": 25,
+      "air_los_nm": 100,
+      "beyond_los_nm": 300,
+      "relay_printed": false,
+      "satcom_yes_printed": false,
+      "jamming_resistance": 0,
+      "ioc_printed": "2003",
+      "remarks": "Compatible with YJN-901/902/903. Similar to Link 11",
+      "notes": [
+        "All ranges estimated, note2."
+      ],
+      "source_status": "visually_verified_structured",
+      "printed_page": "K-3 (Annex L section)",
+      "warning_kind": "near_real_time",
+      "receive_only": false,
+      "dedicated_targeting_system": false,
+      "compatible_systems": [
+        "cn_dts_03",
+        "cn_tjn_906"
+      ],
+      "single_ship_peer": false
+    },
+    {
+      "id": "cn_tjn_905_integrated_type_i",
+      "source_tag": "cn",
+      "country": "PRC",
+      "printed_name": "TJN-905/Integrated Data Type I",
+      "tdl_type": "NRT",
+      "printed_cells": {
+        "surface_los_nmi": 25,
+        "air_los_nmi": 100,
+        "beyond_los_nmi": 300,
+        "satcom": "--",
+        "jamming_resistance": 0
+      },
+      "surface_los_nm": 25,
+      "air_los_nm": 100,
+      "beyond_los_nm": 300,
+      "relay_printed": false,
+      "satcom_yes_printed": false,
+      "jamming_resistance": 0,
+      "ioc_printed": "2004",
+      "remarks": "Modification of the TJN-905. Compatible with YJN-901/902/903",
+      "notes": [
+        "All ranges estimated, note2."
+      ],
+      "source_status": "visually_verified_structured",
+      "printed_page": "K-3 (Annex L section)",
+      "warning_kind": "near_real_time",
+      "receive_only": false,
+      "dedicated_targeting_system": false,
+      "compatible_systems": [
+        "cn_dts_03",
+        "cn_tjn_906"
+      ],
+      "single_ship_peer": false
+    },
+    {
+      "id": "cn_tjn_906",
+      "source_tag": "cn",
+      "country": "PRC",
+      "printed_name": "TJN-906",
+      "tdl_type": "RT",
+      "printed_cells": {
+        "surface_los_nmi": 25,
+        "air_los_nmi": 150,
+        "beyond_los_nmi": "Relay",
+        "satcom": "Yes",
+        "jamming_resistance": 8
+      },
+      "surface_los_nm": 25,
+      "air_los_nm": 150,
+      "beyond_los_nm": null,
+      "relay_printed": true,
+      "satcom_yes_printed": true,
+      "jamming_resistance": 8,
+      "ioc_printed": "2010",
+      "remarks": "Similar to Link 16. Compatible with TJN-905 series and YJN-901/902/903",
+      "notes": [
+        "All ranges estimated, note2."
+      ],
+      "source_status": "visually_verified_structured",
+      "printed_page": "K-3 (Annex L section)",
+      "warning_kind": "real_time",
+      "receive_only": false,
+      "dedicated_targeting_system": false,
+      "compatible_systems": [
+        "cn_dts_03",
+        "cn_tjn_905",
+        "cn_tjn_905_integrated_type_i"
+      ],
+      "single_ship_peer": false
+    },
+    {
+      "id": "ru_dozor_tulip",
+      "source_tag": "ru",
+      "country": "Russia",
+      "printed_name": "Dozor-Tulip",
+      "tdl_type": "RT",
+      "printed_cells": {
+        "surface_los_nmi": 10,
+        "air_los_nmi": "--",
+        "beyond_los_nmi": "--",
+        "satcom": "--",
+        "jamming_resistance": 0
+      },
+      "surface_los_nm": 10,
+      "air_los_nm": null,
+      "beyond_los_nm": null,
+      "relay_printed": false,
+      "satcom_yes_printed": false,
+      "jamming_resistance": 0,
+      "ioc_printed": null,
+      "remarks": "Transfers ASW FC solutions between ships",
+      "notes": [],
+      "source_status": "visually_verified_structured",
+      "printed_page": "L-1",
+      "warning_kind": "real_time",
+      "receive_only": false,
+      "dedicated_targeting_system": false,
+      "compatible_systems": [],
+      "single_ship_peer": false
+    },
+    {
+      "id": "ru_mineral",
+      "source_tag": "ru",
+      "country": "Russia",
+      "printed_name": "Mineral, Mineral-M",
+      "tdl_type": "RT",
+      "printed_cells": {
+        "surface_los_nmi": 16,
+        "air_los_nmi": "--",
+        "beyond_los_nmi": "--",
+        "satcom": "--",
+        "jamming_resistance": 0
+      },
+      "surface_los_nm": 16,
+      "air_los_nm": null,
+      "beyond_los_nm": null,
+      "relay_printed": false,
+      "satcom_yes_printed": false,
+      "jamming_resistance": 0,
+      "ioc_printed": null,
+      "remarks": "Compatible with Monolit",
+      "notes": [],
+      "source_status": "visually_verified_structured",
+      "printed_page": "L-1",
+      "warning_kind": "real_time",
+      "receive_only": false,
+      "dedicated_targeting_system": true,
+      "compatible_systems": [],
+      "single_ship_peer": false
+    }
+  ],
+  "whole_book_complete": false,
+  "whole_annex_l_complete": false,
+  "platform_fits_certified": false,
+  "next": "Add platform-level source bindings and typed source registry, then exercise real range/type/compatibility/relay/jamming consumers together. No source-only row may bypass current scenario-authoring safeguards.",
+  "rule_id": "HV2026-6.3.9-ANNEX-L-2025",
+  "revision": "20261030-01",
+  "runtime_scope": [
+    "printed type",
+    "endpoint source class fit",
+    "surface/air LOS caps plus authored horizon",
+    "numeric HF caps",
+    "explicit SATCOM availability",
+    "printed compatibility",
+    "receive-only",
+    "dedicated-targeting qualification"
+  ],
+  "pending": [
+    "actual TDL EW jamming consumer; JR Remarks is not numeric",
+    "physical multi-hop Relay topology",
+    "all platform fits beyond listed class bindings",
+    "all dated refit variants",
+    "dynamic single-ship Hawklink association",
+    "Ronald Reagan printed source fit: exact production platform record absent; generic Nimitz does not inherit it"
+  ],
+  "core_source": {
+    "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+    "sha256": "8196ffc715bbcccd862d8597c607de7816dac5baee31fa659f89dfaf4323700c",
+    "pdf_page": 74,
+    "printed_page": "6-6",
+    "section": "6.3.9"
+  },
+  "platform_bindings": {
+    "us_ford": {
+      "source": "USN2025 Annex A PDF7/A-4, Gerald R. Ford sensor line: Link 11, Link 16, USG-2B CEC; class-level as printed, no individual dated refit claim",
+      "source_tag": "usn",
+      "pdf_page": 7,
+      "printed_page": "A-4",
+      "systems": [
+        "us_link_11",
+        "us_link_16",
+        "us_cec"
+      ],
+      "variants": {
+        "us_cec": "USG-2B"
+      }
+    }
+  },
+  "source_platform_candidates": {
+    "Ronald Reagan CVN": {
+      "source": "USN2025 Annex A PDF7/A-4, Ronald Reagan sensor line: Link 4A, Link 11, Link 16, USG-2A CEC, ARQ-59 Hawklink; class-level as printed",
+      "source_tag": "usn",
+      "pdf_page": 7,
+      "printed_page": "A-4",
+      "systems": [
+        "us_link_11",
+        "us_link_16",
+        "us_cec",
+        "us_hawklink_arq_59"
+      ],
+      "variants": {
+        "us_cec": "USG-2A"
+      },
+      "database_binding_status": "pending: current consolidated database contains only generic us_nimitz, no exact Reagan platform ID; never inherit a specific printed variant from the generic class"
+    }
+  }
+}

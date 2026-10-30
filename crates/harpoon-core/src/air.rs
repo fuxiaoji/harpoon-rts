@@ -12,7 +12,9 @@ use crate::world::{DeckState, Entity, MissionState, World, TICK_SECONDS};
 pub fn update_air_ops(world: &mut World) {
     cycle_decks(world);
     crate::rules::operations::update(world);
+    crate::rules::aviation2026::safety_step(world);
     fly_missions(world);
+    crate::rules::aviation2026::post_flight_step(world);
 }
 
 fn cycle_decks(world: &mut World) {
@@ -101,7 +103,10 @@ fn launch_impl(
     if !carrier.alive {
         return Err("carrier destroyed".into());
     }
-    if crate::rules::damage_runtime::active(world)&&!crate::rules::damage_runtime::flight_operational(&carrier,true,world.tick) {
+    if crate::rules::expanded_damage2026::vtol_launch_fit(world,carrier_id,class).is_none() && !crate::rules::expanded_damage2026::flight_gear_operational(world,carrier_id,true)? {
+        return Err("launch unavailable: source-configured launch equipment disabled".into());
+    }
+    if crate::rules::damage_runtime::active(world)&&!crate::rules::expanded_damage2026::flight_launch_operational(world,carrier_id,class) {
         return Err("launch unavailable: flight deck, air plot, electrical power or severe damage (§14)".into());
     }
     let Some(deck) = carrier.deck.clone() else {
@@ -117,7 +122,15 @@ fn launch_impl(
     if ac_class.kind != PlatformKind::Aircraft {
         return Err(format!("{class} is not an aircraft"));
     }
+    crate::rules::unmanned2026::validate_launch(world,carrier.side,class,count)?;
+    if crate::rules::aviation2026::active(world) {
+        crate::rules::aviation2026::launch_gate(world,carrier_id,class,if completing{0}else{count})?;
+        crate::rules::aviation2026::mission_gate(world,carrier_id,class,mission,profile)?;
+    }
     if crate::rules::operations::active(world)&&!completing {
+        if crate::rules::aviation2026::active(world) && carrier.kind == PlatformKind::Base {
+            return crate::rules::ground2026::queue_launch(world,carrier_id,class,count,mission,profile);
+        }
         return crate::rules::operations::queue_launch(world,carrier_id,class,count,mission,profile);
     }
 
@@ -201,6 +214,10 @@ fn launch_impl(
         let mut e=e;
         if crate::rules::damage_runtime::marker(&carrier)&&carrier.ext.get("damage.magazines_flooded").copied().unwrap_or(0.0)>0.0{for m in &mut e.weapons{m.ammo=0;}}
         world.entities.insert(eid, e);
+        crate::rules::unmanned2026::register_launched(world,eid)?;
+        if crate::rules::aviation2026::active(world) {
+            crate::rules::aviation2026::launch_completed(world,carrier_id,class,eid)?;
+        }
     }
 
     let deck_mut = world.entity_mut(carrier_id).unwrap().deck.as_mut().unwrap();
@@ -241,13 +258,24 @@ fn fly_missions(world: &mut World) {
         .collect();
 
     for id in air_ids {
+        if crate::rules::aviation2026::waterborne::controls_water_motion(world,id){continue;}
+        if crate::rules::ground2026::is_parked_aircraft(world,id){continue;}
+        if world.entity(id).is_some_and(|e|e.ext.get("nuclear.mission_abort")==Some(&1.)) {
+            if let Some(e)=world.entity_mut(id){e.mission=Some(MissionState::Rtb);e.fire_on=false;e.assigned=None;}
+        }
         let Some(e) = world.entities.get(&id) else { continue };
         if !e.alive {
             continue;
         }
 
         // Endurance & ditching.
-        let endurance_left = e.endurance_s.unwrap_or(f64::INFINITY) - TICK_SECONDS*crate::rules::flight_profiles::fuel_rate(e,cruise_of_entity(e,&world.db));
+        let endurance_left = if crate::rules::aviation2026::active(world) {
+            match crate::rules::aviation2026::fuel_step(world,id) {
+                Ok(value)=>value,
+                Err(reason)=>{crate::rules::operations::blocked_once(world,id,"4.7.flight_data_blocked",&reason);continue;}
+            }
+        } else {e.endurance_s.unwrap_or(f64::INFINITY) - TICK_SECONDS*crate::rules::flight_profiles::fuel_rate(e,cruise_of_entity(e,&world.db))};
+        let e=world.entity(id).unwrap();
         let side = e.side;
         let name = e.name.clone();
         let return_time=world.entities.values().filter(|c|c.alive && c.side==side && c.deck.is_some() && compatible_recovery(world,id,c.id))
@@ -255,6 +283,11 @@ fn fly_missions(world: &mut World) {
         let low_fuel = endurance_left < if return_time.is_finite() {900.0_f64.max(return_time*1.3+300.0)}else{900.0};
         let out_of_fuel = endurance_left <= 0.0;
         let now = world.tick;
+        if out_of_fuel && crate::rules::operations::active(world) {
+            world.entity_mut(id).unwrap().endurance_s=Some(endurance_left);
+            crate::rules::operations::crash_aircraft(world,id);
+            continue;
+        }
         {
             let Some(e) = world.entity_mut(id) else { continue };
             e.endurance_s = Some(endurance_left);
@@ -273,8 +306,19 @@ fn fly_missions(world: &mut World) {
             );
             continue;
         }
+        if crate::rules::aviation2026::active(world)&&crate::rules::aircombat2026::in_dogfight(world,id) {continue;}
 
         let mission = world.entities.get(&id).and_then(|e| e.mission.clone());
+        // A mission-created hover owns this throttle only until the aircraft
+        // leaves its ASW station. Account the completed movement first, then
+        // restore transit power for the next integration step.
+        if crate::rules::aviation2026::active(world)
+            && !matches!(mission, Some(MissionState::Asw { .. }))
+            && world.entity(id).is_some_and(|e|e.ext.get("flight.asw_hover")==Some(&1.)) {
+            if crate::rules::aviation2026::apply(world,id,&crate::rules::aviation2026::Action::Throttle { setting: crate::rules::aviation2026::Throttle::Cruise }).is_ok() {
+                world.entity_mut(id).unwrap().ext.remove("flight.asw_hover");
+            }
+        }
         if !matches!(mission, Some(MissionState::Rtb)) && world.entity(id).is_some_and(|e|e.ext.get("air.manual_control")==Some(&1.0)) {
             continue;
         }
@@ -332,14 +376,25 @@ fn asw_station(world: &mut World, id: EntityId, area: Vec2, radius_nm: f64) {
             e.class_def(&world.db).map(|c| c.dipping_sonar).unwrap_or(false),
         )
     };
-    let hovering = dist < radius_nm;
+    let source = crate::rules::aviation2026::active(world);
+    let hovering = dist < radius_nm && (!source || world.entity(id).is_some_and(|e|e.altitude_m <= 2000.));
+    if source {
+        let setting = if hovering { crate::rules::aviation2026::Throttle::Hover } else { crate::rules::aviation2026::Throttle::Cruise };
+        if world.rules.aviation.as_ref().and_then(|s|s.flights.get(&id)).is_some_and(|f| f.throttle != setting) {
+            if let Err(reason) = crate::rules::aviation2026::apply(world,id,&crate::rules::aviation2026::Action::Throttle { setting }) {
+                crate::rules::operations::blocked_once(world,id,"4.3.asw_hover_blocked",&reason);
+                return;
+            }
+        }
+    }
     let Some(e) = world.entity_mut(id) else { return };
     if hovering {
         e.ordered_speed_kts = 0.0;
         e.speed_kts = 0.0;
-        e.altitude_m = 30.0;
+        if source {e.ext.insert("flight.asw_hover".into(),1.);}else{e.altitude_m = 30.0;}
         e.ordered_altitude_m = 30.0;
     } else {
+        if source {e.ext.remove("flight.asw_hover");}
         e.ordered_course_deg = e.pos.bearing_to(area);
         e.ordered_speed_kts = cruise;
         e.ordered_altitude_m = 500.0;
@@ -366,6 +421,21 @@ fn strike_run(world: &mut World, id: EntityId, contact: ContactId, released: boo
         return;
     }
     let side = world.entity(id).map(|e| e.side).unwrap_or(Side::Blue);
+    if crate::rules::aaw2026::active(world){
+        if released{try_recover(world,id);return;}
+        let source_mounts:Vec<String>=world.entity(id).into_iter().flat_map(|e|e.weapons.iter())
+            .filter(|m|m.ammo>0&&m.mounts>0)
+            .filter(|m|world.db.weapons.get(&m.weapon).is_some_and(|d|d.kind==WeaponKind::Ascm))
+            .map(|m|m.weapon.clone()).collect();
+        let mut handled=false;
+        for weapon in source_mounts{
+            if let Some(result)=crate::rules::surface2026::antiship::fire_at_contact(world,id,contact,&weapon,1){
+                handled=true;
+                if result.is_ok(){if let Some(e)=world.entity_mut(id){e.mission=Some(MissionState::Rtb);}return;}
+            }
+        }
+        if handled{return;}
+    }
     let Some(target_id) = crate::weapons::resolve_contact(world, side, contact) else {
         let Some(e) = world.entity_mut(id) else { return };
         e.mission = Some(MissionState::Rtb);
@@ -488,12 +558,14 @@ fn try_recover(world: &mut World, id: EntityId) {
         .map(|d| d.cycle_s)
         .unwrap_or(120.0);
     let now = world.tick;
-    let ready_at = if crate::rules::operations::active(world)
-        && crate::rules::operations::has_aircraft_data(&class)
-    {
-        // Generic wing classes (crimson_tide's "fighter"/"helo_asw") have no
-        // verified operations-v3 row; recovery_ready would fail forever, so
-        // they land on the legacy deck cycle instead.
+    let ready_at = if crate::rules::aviation2026::active(world) && world.entity(carrier_id).is_some_and(|e|e.kind == PlatformKind::Base) {
+        let Some(ready)=crate::rules::ground2026::recovery_ready(world,id,carrier_id) else {return};
+        ready
+    }else if crate::rules::operations::active(world) {
+        if crate::rules::aviation2026::operations_aircraft(world,&class).is_none() {
+            crate::rules::operations::blocked_once(world, carrier_id, "4.6.recovery_blocked", &format!("unverified aircraft operations: {class}"));
+            return;
+        }
         let Some(ready)=crate::rules::operations::recovery_ready(world,id,carrier_id) else {return};
         ready
     }else{now + (cycle_s as i64)};
@@ -507,6 +579,7 @@ fn try_recover(world: &mut World, id: EntityId) {
             deck.cycling.push((class, 1, ready_at));
         }
     }
+    crate::rules::aviation2026::recovery_completed(world,id,carrier_id);
     world.emit(
         EventKind::AirRecovered { side, carrier: carrier_id, class: class_name, count: 1 },
         Visibility::Side(side),
@@ -519,16 +592,15 @@ fn try_recover(world: &mut World, id: EntityId) {
 pub fn compatible_recovery(world: &World, aircraft: EntityId, carrier: EntityId) -> bool {
     let Some(a) = world.entity(aircraft) else {return false};
     let Some(c) = world.entity(carrier) else {return false};
+    if !crate::rules::expanded_damage2026::bridge_flight_operational(world,carrier) || !crate::rules::expanded_damage2026::flight_gear_operational(world,carrier,false).unwrap_or(false){return false;}
+    if crate::rules::aviation2026::active(world) && c.kind == PlatformKind::Base
+        && crate::rules::ground2026::runway_gate(world,carrier,&a.class).is_err() {return false;}
     if crate::rules::damage_runtime::active(world)&&!crate::rules::damage_runtime::flight_operational(c,false,world.tick){return false;}
     static CAPS:std::sync::OnceLock<serde_json::Value>=std::sync::OnceLock::new();
     let caps=CAPS.get_or_init(||serde_json::from_str(include_str!("../../../data/rules/deck-capabilities.json")).unwrap());
     let listed=|key:&str,class:&str|caps[key].as_array().is_some_and(|v|v.iter().any(|s|s.as_str()==Some(class)));
     let rotary=listed("rotary_wing",&a.class)||a.class_def(&world.db).is_some_and(|a|a.dipping_sonar);
-    // Scripted scenarios fly generic classes ("cvn" carrier, "fighter"
-    // wing) that the capabilities list does not name; a DB deck whose wing
-    // actually carries this class is arresting-capable by construction.
-    let wing_fits_deck = c.class_def(&world.db).and_then(|d|d.deck.as_ref()).is_some_and(|d|d.wing.iter().any(|f|f.class==a.class));
-    if c.kind!=PlatformKind::Base && !rotary && !listed("vtol",&a.class) && !listed("arresting_gear",&c.class) && !wing_fits_deck {return false;}
+    if c.kind!=PlatformKind::Base && !rotary && !listed("vtol",&a.class) && !listed("arresting_gear",&c.class) {return false;}
     let fits = world.context.air_wings.get(&c.name).map(|w|w.iter().any(|f|f.class==a.class))
         .unwrap_or_else(|| c.class_def(&world.db).and_then(|d|d.deck.as_ref()).is_some_and(|d|d.wing.iter().any(|f|f.class==a.class)));
     let stored: u32 = c.deck.as_ref().map(|d|d.ready.iter().map(|(_,n)|*n as u32).sum::<u32>() + d.cycling.iter().map(|(_,n,_)|*n as u32).sum::<u32>()).unwrap_or(u32::MAX);

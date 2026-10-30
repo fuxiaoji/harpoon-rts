@@ -1,0 +1,37 @@
+{
+  "fit": {
+    "source": "scenario_assumption: mechanism navigation inputs; no Annex A fit completeness claim",
+    "size": "C",
+    "merchant": false,
+    "passenger_liner": false,
+    "cpp": false,
+    "waterjet": false,
+    "undamaged_max_kts": 34.0,
+    "propulsion": "Nuclear",
+    "readiness": "Underway",
+    "submarine": {
+      "source": "scenario_assumption: water1000/surface12; maximum450 does not exceed current database us_virginia",
+      "maximum_depth_m": 450.0,
+      "surface_max_kts": 12.0,
+      "water_depth_m": 1000.0,
+      "very_small": false
+    }
+  },
+  "readiness": "Underway",
+  "ready_at": null,
+  "coasting": false,
+  "quiet": false,
+  "heave_to": false,
+  "window": 0,
+  "turn_degrees": 0.0,
+  "prior_course": 0.0,
+  "order_sequence": 0,
+  "underway_dice": [],
+  "last_motion": "{\"acceleration_per_s\":0.06666666666666667,\"cavitation\":false,\"changing_direction\":false,\"coasting\":false,\"deceleration_per_s\":0.08333333333333333,\"forward_maximum_kts\":34.0,\"heave_to\":false,\"high_speed_band\":false,\"maximum_kts\":34.0,\"moving_astern\":false,\"quiet\":false,\"rates_per_turn\":[12.0,6.0,15.0],\"readiness\":\"Underway\",\"sea_fraction\":1.0,\"sea_state\":0,\"size\":\"C\",\"source\":\"scenario_assumption: mechanism navigation inputs; no Annex A fit completeness claim\",\"turn_seconds\":180,\"turning45\":false}",
+  "turning": {
+    "window": 0,
+    "charged_degrees": 0.0,
+    "advanced_nm": 0.0,
+    "direction": 0
+  }
+}

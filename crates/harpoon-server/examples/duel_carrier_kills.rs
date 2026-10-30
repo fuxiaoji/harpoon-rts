@@ -24,7 +24,7 @@ impl SimpleTactical {
             match u.kind {
                 PlatformKind::Sub => {
                     for c in &obs.contacts {
-                        if c.category == PlatformKind::Ship && !c.stale && c.quality >= 0.4 {
+                        if c.category == Some(PlatformKind::Ship) && !c.stale && c.quality >= 0.4 {
                             cmds.push(Command::AssignTarget { unit: u.id, contact: c.id });
                             let d = ((u.pos.x - c.estimate.x).powi(2) + (u.pos.y - c.estimate.y).powi(2)).sqrt();
                             if d < 9.0 {
@@ -42,7 +42,7 @@ impl SimpleTactical {
                     // 防空：武器自由下自动交战
                     // 对海：指派最近接触
                     let nearest = obs.contacts.iter()
-                        .filter(|c| c.category == PlatformKind::Ship && !c.stale && c.quality > 0.3)
+                        .filter(|c| c.category == Some(PlatformKind::Ship) && !c.stale && c.quality > 0.3)
                         .min_by(|a, b| {
                             let da = (a.estimate.x - u.pos.x).powi(2) + (a.estimate.y - u.pos.y).powi(2);
                             let db = (b.estimate.x - u.pos.x).powi(2) + (b.estimate.y - u.pos.y).powi(2);
@@ -53,7 +53,7 @@ impl SimpleTactical {
                     }
                     // 对地：SLCM 打基地
                     let base = obs.contacts.iter()
-                        .find(|c| c.category == PlatformKind::Base && !c.stale && c.quality >= 0.25);
+                        .find(|c| c.category == Some(PlatformKind::Base) && !c.stale && c.quality >= 0.25);
                     if let Some(bc) = base {
                         let has_slcm = u.weapons.iter().any(|w| w.weapon == "slcm" && w.ammo > 0);
                         if has_slcm {
@@ -64,7 +64,7 @@ impl SimpleTactical {
                 PlatformKind::Aircraft => {
                     // CAP: 指派最近的空中接触
                     let air = obs.contacts.iter()
-                        .find(|c| c.category == PlatformKind::Aircraft && !c.stale && c.quality > 0.4);
+                        .find(|c| c.category == Some(PlatformKind::Aircraft) && !c.stale && c.quality > 0.4);
                     if let Some(c) = air {
                         cmds.push(Command::AssignTarget { unit: u.id, contact: c.id });
                     }
@@ -93,13 +93,13 @@ impl SimpleTactical {
             }
         }
         // 打击波次
-        let contact_ok = obs.contacts.iter().any(|c| c.category == PlatformKind::Ship && !c.stale && c.quality >= 0.4);
+        let contact_ok = obs.contacts.iter().any(|c| c.category == Some(PlatformKind::Ship) && !c.stale && c.quality >= 0.4);
         if contact_ok {
             for carrier in obs.units.iter().filter(|u| u.deck.is_some()) {
                 if let Some(deck) = &carrier.deck {
                     for (cls, n) in &deck.ready {
                         if *n > 0 && (cls.contains("striker") || cls.contains("bomber") || cls.contains("j15") || cls.contains("f18")) {
-                            if let Some(c) = obs.contacts.iter().find(|c| c.category == PlatformKind::Ship && !c.stale && c.quality >= 0.4) {
+                            if let Some(c) = obs.contacts.iter().find(|c| c.category == Some(PlatformKind::Ship) && !c.stale && c.quality >= 0.4) {
                                 cmds.push(Command::LaunchAircraft { profile: None,
                                     unit: carrier.id, class: cls.clone(), count: 2,
                                     mission: AirMission::Strike { contact: c.id },

@@ -3,6 +3,25 @@ const assert = require('node:assert/strict');
 const { firingState, ruleReport, traceZh, eventNote } = require('../web/combat-help.js');
 const { translateText } = require('../web/i18n.js');
 
+test('source radar and fitted gun labels do not show generic approximations as annex values',()=>{
+  const {sensorRangeText,weaponMountName}=require('../web/combat-help.js');
+  assert.match(sensorRangeText({vs_air:250,vs_surface:0,annex:{verified:true}}),/标称.*250.*特征.*杂波.*视距/);
+  assert.doesNotMatch(sensorRangeText({vs_air:185,annex:{verified:false}}),/185/);
+  assert.match(sensorRangeText({annex:{verified:false}},'en'),/blocked/);
+  assert.equal(weaponMountName({weapon:'ciws_30mm',source_caliber_mm:20},'30mm CIWS'),'近防炮（20毫米）');
+  assert.equal(weaponMountName({weapon:'ciws_30mm'},'30mm CIWS'),'30mm CIWS');
+});
+
+test('source operations distinguish reservations, accidents, fragments and blocked adjudication',()=>{
+  const report=(rule,d,lang)=>ruleReport({domain:'operations',rule,detail:JSON.stringify(d)},lang);
+  assert.match(report('4.6.launch_queued',{count:4,earliest:300}).meaning,/预留 4 架.*尚未实际起飞/);
+  assert.match(report('4.6.recovery_complete',{crash:true,d100:12,risk:.4}).meaning,/事故.*12.*40%/);
+  assert.match(report('8.1.5.fragment_roll',{struck:false,d100:95,probability:.9}).meaning,/95.*90%.*未发生.*不等于/);
+  assert.match(report('8.1.5.adjudication_blocked',{}).meaning,/来源数据不足.*未以估计/);
+  assert.match(report('4.6.launch_cancelled',{},'en').meaning,/remain in the hangar/);
+  assert.doesNotThrow(()=>ruleReport({domain:'operations',rule:'unknown',detail:'broken'}));
+});
+
 test('tactical orders have bilingual explanations and never claim execution',()=>{
   const event={domain:'tactical_ai',rule:'strike_ingress',detail:JSON.stringify({zh:'50米超低空突防',en:'50m VLow ingress'})};
   assert.match(ruleReport(event).title,/AI.*行动与复核/);

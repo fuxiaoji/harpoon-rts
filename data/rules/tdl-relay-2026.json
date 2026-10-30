@@ -1,0 +1,56 @@
+{
+  "schema": 1,
+  "date": "2026-10-30",
+  "status": "source_relay_leaf_not_engine_accepted_until_root_wiring",
+  "source": {
+    "relay_footnote": {
+      "text": "Relay: TDL coverage can be extended by using similarly equipped platforms to relay data to platforms over the horizon.",
+      "pages": [
+        {
+          "document": "5-4.Americas_Navy_1_Dec_25.pdf",
+          "pdf_page": 94,
+          "printed_page": "L-1",
+          "sha256": "189416d65b92d5e2fa50c59c99e309ca5715a5db287e5323295152034e61c5c8",
+          "viewed": "2026-10-30"
+        },
+        {
+          "document": "6-3.（数据库）2025版Chinas_Navy_1_Dec_25.pdf",
+          "pdf_page": 96,
+          "printed_page": "K-3",
+          "sha256": "9ff46ff0c91f323d48c37e9917df6d87583fbe0df337a6dd0bb40bc488d98b2c",
+          "viewed": "2026-10-30",
+          "note": "footnote wording identical; China-volume footnote 2 marks all DTS-03/TJN-906 ranges estimated"
+        }
+      ]
+    },
+    "rules_6_3_9": {
+      "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+      "pdf_page": 74,
+      "printed_page": "6-6",
+      "viewed": "2026-10-30",
+      "facts": "LOS / beyond-LOS(HF, ES-detectable) / SATCOM scopes; RT TDL conveys fire-control-quality solutions without degradation; receipt is the printed same-Detection-Phase / same-Increment rule already owned by existing exchange consumers",
+      "not_printed": "hop count limits, per-hop delay, refresh timing, relay probability"
+    },
+    "relay_enabled_registry": {
+      "file": "harpoon-rts/data/rules/tdl-annex-2025.json",
+      "rows": ["us_link_16", "cn_dts_03", "cn_tjn_906"],
+      "rule": "only rows whose Beyond-LOS cell literally prints Relay; hop caps are read live from that registry and are never duplicated here",
+      "never_relay": "us_link_11 beyond-LOS 300 is the printed HF numeric range (ES-detectable), not relay; us_cec and all other rows never relay"
+    }
+  },
+  "policy": {
+    "similarly_equipped": "every hop endpoint carries the same relay-enabled Annex L terminal id; cross-terminal or cross-protocol chains are not printed and stay pending",
+    "peer_graph": "the existing communications Configuration per-unit fits, directed peers and peer_fits are the fixed author peer graph; no reciprocal edge is inferred and absent names are dead edges",
+    "eligibility": "same side, alive, operational per hop; intermediates send+receive; the receiver only receives; enemy units are never considered",
+    "per_hop_qualification": "each hop passes the existing links::route: compatibility, Annex L platform binding and printed surface/air LOS caps, unmanned gate, CaS radio-pair room gate, declared LOS transport range and the author antenna horizon",
+    "purity": "relay conveys the sender snapshot unchanged: no new report, no new FCS, no quality rewrite, no die, no per-hop delay; find_path is a read-only deterministic BFS in unit-name order",
+    "determinism": "fewest hops first, exact unit-name order tie-break, identical result after save/restore"
+  },
+  "pending": [
+    "cross-generation/multi-protocol relay chains (e.g. Link16-Link11-Link16)",
+    "Reagan exact platform binding (no exact DB class; generic Nimitz inheritance forbidden)",
+    "relay refresh/retransmission timing and jamming interaction on relayed legs",
+    "SATCOM-relay combination beyond the printed SATCOM Yes cell",
+    "engine acceptance of this leaf until root wires pub mod relay and the delivery re-verification, then batch compile/test"
+  ]
+}

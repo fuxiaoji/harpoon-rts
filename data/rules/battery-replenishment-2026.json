@@ -1,0 +1,13 @@
+{
+  "source": "English2026 PDF29 / printed3-7, section3.2.5; original visually verified2026-10-29",
+  "aip_capacity_units": 2000,
+  "rule": "After AIP potential is depleted the submarine must return to port to replenish fuel and oxygen tanks.",
+  "execution": {
+    "revision": "RTS-AIP-PORT-20261029-01",
+    "authority": "scenario_assumption: explicit port/depot, distance, work time and paired charge-equivalent fuel/oxygen inventory; none is a printed logistics rate",
+    "eligibility": "Friendly physical port complex and operational child depot; live nonstowed surfaced stationary submarine, known AIP stock, AIP and charging off, no AIP casualty",
+    "reservation": "Deduplicate identical intents; reject conflicts, sort actor IDs before atomically reserving both finite supplies; reservation is not replenished AIP",
+    "completion": "Credit once after continuous qualified work. Abort/cancel refunds the original reservation to the same depot ledger. Provider damage blocks further use; repair consequences are not invented.",
+    "restart": "No automatic AIP restart, battery charging or battery credit"
+  }
+}

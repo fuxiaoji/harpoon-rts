@@ -143,7 +143,7 @@ impl CommandStaff for HeuristicStaff {
                 if let Some((cid, c)) = obs
                     .contacts
                     .iter()
-                    .filter(|c| c.category == PlatformKind::Ship && c.quality > 0.4)
+                    .filter(|c| c.category == Some(PlatformKind::Ship) && c.quality > 0.4)
                     .map(|c| (c.id, c))
                     .min_by(|a, b| a.1.quality.partial_cmp(&b.1.quality).unwrap())
                 {
@@ -165,7 +165,7 @@ impl CommandStaff for HeuristicStaff {
                 continue;
             }
             let torpedo_inbound = obs.contacts.iter().any(|c| {
-                c.category == PlatformKind::Torpedo
+                c.category == Some(PlatformKind::Torpedo)
                     && c.estimate.range_to(u.pos) < 4.0
             });
             if torpedo_inbound {
@@ -186,7 +186,7 @@ fn nearest_contact(
 ) -> Option<(ContactId, f64)> {
     obs.contacts
         .iter()
-        .filter(|c| !c.stale && c.quality > 0.3 && kinds.contains(&c.category))
+        .filter(|c| !c.stale && c.quality > 0.3 && c.category.is_some_and(|kind|kinds.contains(&kind)))
         .map(|c| (c.id, from.pos.range_to(c.estimate)))
         .min_by(|a, b| a.1.partial_cmp(&b.1).unwrap())
 }

@@ -18,7 +18,8 @@
 //!   `SensorKind::Magnetic` branch in `sensors.rs` cuts off below 60 m and
 //!   applies a fixed 0.5x range factor; no extra step logic is added here.
 //! - §3.2.4 Diesel Submarine Battery Endurance, p. 3-7 (PDF 29) and the
-//!   Battery Discharge Rates table on p. 3-8 (PDF 30).
+//!   Battery Discharge Rates table on p. 3-7 (PDF 29). The constant-rate
+//!   battery model below is historical v1-v3 only, not a source v4 executor.
 //!
 //! Hooks:
 //! - `propagation_modifier(observer, target)` — multiplies sonar effective
@@ -36,6 +37,13 @@ use crate::geom::Vec2;
 use crate::types::{ContactId, EntityId, PlatformKind, Side};
 use crate::world::{Entity, MissionState, SensorInstance, World};
 use std::collections::BTreeMap;
+
+pub fn battery_source_boundary_revision() -> &'static serde_json::Value {
+    static REVISION: std::sync::OnceLock<serde_json::Value> = std::sync::OnceLock::new();
+    REVISION.get_or_init(|| serde_json::from_str(include_str!(
+        "../../../../data/rules/battery-source-boundary-2026.json"
+    )).unwrap())
+}
 
 // --- Acoustic propagation constants -------------------------------------
 
@@ -181,7 +189,9 @@ pub fn step(world: &mut World) {
     update_towed_arrays(world);
     update_diesel_batteries(world);
     expire_sonobuoys(world);
-    deploy_sonobuoys(world);
+    if world.rules.profile != crate::rules::damage_runtime::RuleProfile::Rts2026Full {
+        deploy_sonobuoys(world);
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -304,6 +314,12 @@ fn is_diesel_sub(e: &Entity, db: &Database) -> bool {
 /// half of its current maximum speed; a `battery_low` RulesEvent is emitted
 /// once per boat.
 fn update_diesel_batteries(world: &mut World) {
+    // §3.2.4 needs an explicit AnnexA rating/technology/current charge and
+    // complete-turn average speed. Withdrawing legacy defaults leaves v4
+    // endurance unadjudicated; it does not grant zero-cost/unlimited energy.
+    if world.rules.profile == crate::rules::damage_runtime::RuleProfile::Rts2026Full {
+        return;
+    }
     let ids: Vec<EntityId> = world
         .entities
         .values()

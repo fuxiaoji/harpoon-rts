@@ -6,9 +6,9 @@
   <meta name="color-scheme" content="dark">
   <meta name="theme-color" content="#050d16">
   <title>HARPOON // Fleet Command</title>
-  <link rel="stylesheet" href="style.css?v=coast-20261020-3">
+  <link rel="stylesheet" href="style.css?v=search-nav-20261024-1">
   <link rel="stylesheet" href="theater.css?v=joint-ai-20261021-1">
-  <link rel="stylesheet" href="training.css?v=combat-20261018-1">
+  <link rel="stylesheet" href="training.css?v=search-nav-20261024-1">
   <link rel="stylesheet" href="fleet-command.css?v=fleet-20261022-2">
   <script defer src="saves.js?v=20261020-2"></script>
 </head>
@@ -223,8 +223,18 @@
               <div class="nav-grid">
                 <label>SPEED <input id="nav-speed" type="number" min="0" step="1" value="12"><button type="button" data-nav="speed">Apply</button></label>
                 <label>COURSE <input id="nav-course" type="number" min="0" max="359" step="1" value="90"><button type="button" data-nav="course">Apply</button></label>
-                <label>DEPTH <input id="nav-depth" type="number" min="10" step="1" value="60"><button type="button" data-nav="depth">Apply</button></label>
+                <label>DEPTH <input id="nav-depth" type="number" min="0" step="1" value="60"><button type="button" data-nav="depth">Apply</button></label>
                 <label>ALTITUDE <input id="nav-altitude" type="number" min="15" step="1" value="1000"><button type="button" data-nav="altitude">Apply</button></label>
+              </div>
+              <p id="nav-depth-source" class="nav-source-status" hidden></p>
+              <div id="nav-blow-controls" hidden>
+                <div class="nav-sonar"><span data-zh="紧急上浮 · 使用上方目标潜深" data-en="Emergency Blow · use depth above">紧急上浮 · 使用上方目标潜深</span><button type="button" data-nav="emergency-blow" data-zh="执行" data-en="Execute">执行</button></div>
+                <p id="nav-blow-status" class="nav-source-status" aria-live="polite"></p>
+              </div>
+              <div id="nav-hard-rudder-controls" hidden>
+                <div class="nav-sonar"><span data-zh="硬舵目标航向" data-en="Hard-rudder target course">硬舵目标航向</span><input id="nav-hard-course" type="number" min="0" max="359" step="1" value="90"><select id="nav-hard-side" aria-label="Hard rudder side"><option value="starboard" data-zh="右舷 / Starboard" data-en="Starboard">右舷 / Starboard</option><option value="port" data-zh="左舷 / Port" data-en="Port">左舷 / Port</option></select><button type="button" data-nav="hard-rudder" data-zh="打硬舵(5%卡舵)" data-en="Hard rudder (5% jam)">打硬舵(5%卡舵)</button></div>
+                <div class="nav-sonar"><span data-zh="解舵" data-en="Unjam">解舵</span><button type="button" data-nav="free-rudder" data-zh="授权下个结算(手动)" data-en="Authorize next Resolution (manual)">授权下个结算(手动)</button><label class="nav-hard-auto"><input id="nav-hard-auto" type="checkbox"><span data-zh="持续自动尝试" data-en="Automatic attempts">持续自动尝试</span></label></div>
+                <p id="nav-hard-status" class="nav-source-status" aria-live="polite"></p>
               </div>
               <div class="nav-sonar"><span>Active sonar</span><button type="button" data-nav="sonar-on">On</button><button type="button" data-nav="sonar-off">Off</button></div>
               <div class="nav-sonar"><span>雷达 / Radar</span><button type="button" data-nav="radar-on">On</button><button type="button" data-nav="radar-off">Off</button></div>
@@ -411,7 +421,7 @@
           <section class="panel" id="systems-panel" hidden>
             <div class="panel-head">
               <span class="kicker">SYSTEM STATUS</span>
-              <span class="panel-tag">DAMAGE CONTROL</span>
+              <span class="panel-tag">系统操作 / CONTROLS</span>
             </div>
             <div class="systems-list" id="systems-list"></div>
           </section>
@@ -468,10 +478,10 @@
   <script src="ai-supervision.js?v=ai-closure-20261021-1" defer></script>
   <script src="coastlines.js?v=joint-ai-20261021-1" defer></script>
   <script src="aircraft-roles.js?v=theater-20261019-1" defer></script>
-  <script src="combat-help.js?v=fleet-20261022-2" defer></script>
+  <script src="combat-help.js?v=search-nav-20261024-1" defer></script>
   <script src="contact-track.js?v=missiles-20261019-1" defer></script>
   <script src="navigation.js?v=20261020-2"></script>
-  <script src="app.js?v=fleet-20261022-2" defer></script>
+  <script src="app.js?v=submarine-annex-20261024-1" defer></script>
   <script src="fleet-command.js?v=fleet-20261022-2" defer></script>
   <script src="fleet-watch.js?v=fleet-20261022-2" defer></script>
   <script src="training-guide.js?v=rts-20261019-2" defer></script>

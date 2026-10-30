@@ -1,0 +1,156 @@
+{
+  "revision": "2026-10-26-source-collision-grounding-1",
+  "source": {
+    "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+    "edition": "2026-01-01",
+    "sha256": "8196ffc715bbcccd862d8597c607de7816dac5baee31fa659f89dfaf4323700c",
+    "pdf_pages": [
+      30,
+      31,
+      32,
+      111
+    ],
+    "printed_pages": [
+      "3-8",
+      "3-9",
+      "3-10",
+      "10-2"
+    ],
+    "visual_verified": true
+  },
+  "status": "production-candidate-after-real3red1control-root-validation-pending",
+  "yards_to_nm": 0.0004937365010799136,
+  "tactical_seconds": 180,
+  "intermediate_seconds": 1800,
+  "collision": {
+    "large_risk_yards": 250,
+    "small_risk_yards": 100,
+    "threshold": 16,
+    "periscope_max_m": 25,
+    "accidental": {
+      "low_visibility_percent": 20,
+      "low_visibility": 2,
+      "bridge_each": 2,
+      "rudder_each": 2,
+      "small_each": -1,
+      "large_each": 1,
+      "fast_threshold_kts": 20,
+      "fast_each": 1,
+      "formation_mobility_casualty": 2
+    },
+    "ram": {
+      "attempt": 2,
+      "submerged_visual_target": 1,
+      "target_bridge": 2,
+      "target_rudder": 2,
+      "rammer_rudder": -6,
+      "target_diw": 4,
+      "speed_ratio_rows": [
+        [
+          0.1,
+          4
+        ],
+        [
+          0.25,
+          3
+        ],
+        [
+          0.5,
+          2
+        ],
+        [
+          0.75,
+          1
+        ],
+        [
+          1.0,
+          0
+        ],
+        [
+          1.25,
+          -1
+        ],
+        [
+          1.5,
+          -2
+        ],
+        [
+          1.75,
+          -3
+        ],
+        [
+          2.0,
+          -4
+        ]
+      ],
+      "first_ratio_strictly_below": true,
+      "unrepaired_rammer_bridge": "forbidden"
+    },
+    "damage": {
+      "dice_count": 3,
+      "dice_sides": 10,
+      "percent_per_speed_step": 1,
+      "speed_step_kts": 5,
+      "armor_step_points": 5,
+      "armor_step_percent": 1,
+      "civilian_effective_dp_multiplier": 2,
+      "quarter_relative_multiplier": 0.75,
+      "bow_received_multiplier": 0.5,
+      "quarter_speed_loss_fraction": 0.25,
+      "size_loss_increment": 0.25,
+      "bow_maximum_fraction": 0.75,
+      "cut_speed_fraction": 0.75,
+      "joined_deceleration_multiplier": 2,
+      "narrow_half_angle_degrees": 20,
+      "broad_min_degrees": 60,
+      "broad_max_degrees": 120,
+      "stern_narrow_min_degrees": 160,
+      "illustrative_bow_angle_degrees": 30
+    },
+    "critical": "normal underwater ratio count, firstCollision critical replaced byFlooding only ifcount>0; no additional free critical",
+    "speed_ratio_resolution": "ceil printed row per published .67->.75 example; DIW target uses+4 and no ratio; zero rammer speed pending"
+  },
+  "grounding": {
+    "distance_rows_yards": [
+      [
+        0,
+        500,
+        30
+      ],
+      [
+        501,
+        1000,
+        20
+      ],
+      [
+        1001,
+        2000,
+        10
+      ]
+    ],
+    "size_modifiers": {
+      "A": 20,
+      "B": 10,
+      "C": 0,
+      "D": 0,
+      "E": -20,
+      "F": -20,
+      "G": -20
+    },
+    "free_d6_count": 2,
+    "damage_d6_count": 1,
+    "damage_speed_multiplier": 1,
+    "torpedo_protection_applies": false,
+    "deep_torpedo_immune": true
+  },
+  "rts_policies": [
+    "Per-second actual before/after motion sweeps; first entry opens one pair encounter, retained inside threshold without per-second retry. Source metrics/purpose/rolls remain referee-only.",
+    "Grounding exposure uses closest actual swept approach and actual movement speed, first actual exposure once per Tactical Turn. RNG identity is the stable window-end slot; the hit and original freeing clock start at actual exposure time. Explicit harbor/channel polygons exempt; shore geometry does not invent draft/bathymetry.",
+    "Percent damage retained in engine floatingDP precision; no universal integer damage rounding inferred from examples.",
+    "Joined common initial speed needs explicit scenario joined_speed_policy; otherwise only that pair motion pending, damage still committed. Repeated distinct bow-cap compounding not printed and stays pending after first permanent cap.",
+    "20deg referenced aspect versus30deg collision illustration remains pending only for affected classification. Explicit aspect_policy can select the cited10-2 or diagram30 interpretation.",
+    "Nonparallel/nonopposed glancing/quarter relative-speed interpretation and fractional5kt increments require explicit policy when needed; source-exact integer/parallel cases do not need invented interpolation.",
+    "Declared initial towing/DC-assist/replenishment relations are source-labelled initial activity only and expire on separation, death or side change. They do not claim generic service procedures; no class/station-name exemption is inferred."
+  ],
+  "whole_book_complete": false
+}

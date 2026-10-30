@@ -1,0 +1,10 @@
+{
+  "source":{"book":"14-2.HpnV_Rules_1_Jan_26.pdf","version":"2026-01-01","pdf_pages":[106,107,109,130],"annex":"4-4.Americas_Aircraft__1_Dec_25.pdf","annex_pages":[49],"evidence":"artifacts/rules-book-wide-20261026/aviation-remaining/strafe-next/source-hook-contract.md"},
+  "aircraft":{"us_f18e_mk82":{"gun":"us_m61a2_20mm_source_gun","gun_rating":4.2,"bombsight":"Advanced","source":"US Aircraft2025 PDF49/B44 same F18E airframe, M61A2 Vulcan20mm(4.2),Advanced; existing sixMk82 source fit remains unchanged"}},
+  "guns":{"us_m61a2_20mm_source_gun":{"name":"M61A2 Vulcan20mm, book abstract strafing pass","caliber_mm":20,"source":"US Aircraft2025 PDF49/B44 real M61A2 Vulcan20mm(4.2); English2026 9.6.9 abstract Salvo1 gun pass; physical round count, shell mass and H3 penetration not specified here"}},
+  "critical_expressions":{"up_to_15mm":"D6/2-2","up_to_25mm":"D6/2-1","26mm_or_more":"D6/2"},
+  "ammunition_model":"book_abstract_gun_rating",
+  "max_attack_altitude_m":2000,
+  "rts":{"source":"Explicit RTS mapping: captured actual straight overflight anchor, one source gun pass per shared Tactical Turn opportunity after actual SAM/guns; stream(release_tick,actor,9.6.9:strafe) draws D100 then D6, retained once. GunAction hits denotes successful source passes, never a physical20mm round count."},
+  "scope":"Source M61A2 caliber/rating and Low/VLow unarmored stationary naval/ground execution only. No invented ammunition mount, per-pass round count, shell-mass debit or penetration. Positive armor/CHP, fractional counts, moving interception and full terrain/NOE applicability remain specific pending; true Annex ammunition/penetration coverage is not closed."
+}

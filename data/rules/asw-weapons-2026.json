@@ -1,0 +1,361 @@
+{
+  "revision": "2026-10-26-wide-air-depth-contact-runtime-candidate",
+  "authority": {
+    "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+    "version": "2026-01-01 English digital update",
+    "sha256": "8196ffc715bbcccd862d8597c607de7816dac5baee31fa659f89dfaf4323700c",
+    "pdf_pages": [
+      98,
+      99,
+      100,
+      101,
+      109
+    ],
+    "printed_pages": [
+      "8-18",
+      "8-19",
+      "8-20",
+      "8-21",
+      "9-8"
+    ]
+  },
+  "standoff": {
+    "rule": "8.5.2",
+    "placement_quality": {
+      "Good": 9,
+      "Fair": 6,
+      "Poor": 3
+    },
+    "range_rows": [
+      [
+        0,
+        15,
+        0
+      ],
+      [
+        15.1,
+        20,
+        -1
+      ],
+      [
+        20.1,
+        25,
+        -2
+      ],
+      [
+        25.1,
+        30,
+        -3
+      ],
+      [
+        30.1,
+        35,
+        -4
+      ],
+      [
+        35.1,
+        45,
+        -5
+      ],
+      [
+        45.1,
+        55,
+        -6
+      ],
+      [
+        55.1,
+        65,
+        -7
+      ]
+    ],
+    "range_heading_gap_policy": "The printed decimal intervals are preserved. Values in the unprinted 0.1 nmi gaps require adjudication, not implicit rounding.",
+    "active_fcs_required_above_nm": 15,
+    "guided_modifier": 1,
+    "torpedo_anechoic_modifier": -2,
+    "tdl_modifiers": {
+      "near_real_time": 1,
+      "real_time": 2
+    },
+    "nuclear_yield_modifiers": [
+      [
+        0,
+        20,
+        1
+      ],
+      [
+        100,
+        200,
+        2
+      ]
+    ],
+    "nuclear_gap": "Yields strictly between 20 and 100 kt or above 200 kt have no listed modifier in this table.",
+    "miss_distance": {
+      "through_15_nm": "D6 / 2 nmi",
+      "above_15_nm": "D6 nmi",
+      "direction": "D6 * 60 degrees"
+    },
+    "successful_torpedo": "Automatically acquires the target; immediate attack via existing source homing chain, without another Placement die.",
+    "nuclear_pending": "Actual terminal Flight and original Placement D10 select kill, D6 major or no effect only when exactly one printed clause applies. Preserve gap/overlap outcomes pending with original die. Other units use actual scatter Ground Zero and independently qualified discrete nuclear rows; no primary radius substitution.",
+    "nuclear_execution": "Qualified native neutral ballistic FCS has no invented torpedo/ASCM seeker or speed modifier; passive through15nm and active above15nm. Matching authorized subsurface warhead is frozen at actual launch. No torpedo coating modifier, one original placement/scatter and one nuclear-function D10."
+  },
+  "projector": {
+    "rule": "8.5.3",
+    "paired": {
+      "authority": "English2026 PDF99/8-19 section8.5.3 whole-pattern pair paragraph; ChinaNavy2025 PDF75/E1 AnnexE3 noteC, visually verified2026-10-26",
+      "whole_pattern": "Exactly two explicitly bound original identical mounts form one combined pattern and one original D100. Each selected mount expends its real per-mount salvo token; full pair aggregate minus2, legitimate single member minus1. Listed per-hit DP does not multiply with the number of firing mounts.",
+      "one_member": "If both original members can actually fire using a qualified held measured solution, require both. Only when exactly one member is actually eligible may that member fire; Contact/Major/Minor Ph are all halved through the existing one_of_required_pair helper before final rounding. Listed DP per successful hit remains unchanged.",
+      "atomic_policy": "Validate the complete original aggregate/component/loaded/arc/FCS transaction before the first debit. Canonical selected members, exact duplicate coalescing and whole-system conflicts avoid partial/network-order allocation. Both full and half uses consume the source logical pair's one Planned pattern per Tactical Turn, not two independent half-attack budgets.",
+      "measurement_policy": "Determine eligible membership from actual source-qualified own native measured reports before comparing the requested subset. Any genuine complete-pair solution prevents voluntary one-member firing. If qualified measurements disagree about which sole member could fire, retain explicit source-pending rather than choose by sensor/physical ID.",
+      "scope": "Explicit authored scenario_assumption models only, one original pair of two identical mounts, even complete charge count, one attack/Tac and individually declared salvo allocation. Real complete Annex/carrier installation and four-plus-mount group mappings remain independently sourced; no automatic reserve reload, invented flight or true-target admission. Accepted singleton/dedicated-sonar/Hedgehog/common algorithms are reused."
+    },
+    "attack_sonar": {
+      "authority": "English2026 PDF100/8-20 section8.5.3.1 and acoustic FCS table PDF72/6-4; source pages visually verified2026-10-26",
+      "installation": "Optional exact named-unit/projector-line attack_sensor binds a real installed source active Gen1–3 device; unknown real slash/receiver hardware remains blocked. It does not turn every early search sonar into a precision director.",
+      "cannot_search": "The actual dedicated role can scan only the current own assigned located CID after ordinary native or actually delivered measured evidence has qualified. Before detection runtime is taken out of World, prepare_detection freezes that current-tick qualification; scan_gate validates original actual hardware/current receiver and assigned target. No initial CID or side-fused-only range is manufactured.",
+      "fcs": "Actual dedicated SensorReports still require source freshness, continuous same-receiver motion, elapsed contact time, original combat-system modifiers and the ordinary chapter6 acoustic table. Initial selection/sample is never automatically Good. The Gen4+ search-sonar route remains a separate existing rule, and a dedicated sensor may serve only its actually bound projector lines."
+    },
+    "advanced": {
+      "authority": "English2026 PDF99/8-19 section8.5.3, PDF100/8-20 sections8.5.3.2/.3; original English pages visually reviewed2026-10-26",
+      "tactical_seconds": 180,
+      "hedgehog_three_fraction": 0.25,
+      "hedgehog_two_fraction": 0.5,
+      "contact": "A real direct projectile contact inflicts its listed Contact DP and independently trials the actual four-size/design/year pressure-hull table. It never uses RBK pressure-success0DP/pressure-failureMinor semantics.",
+      "multiple": "Two attacks split one Planned/one Reaction; three split two Planned/one Reaction. One actual physical mount keeps its original same-Tactical-Turn FCS quality. Fresh physical range/arc/hardware/located native measurement is still required. Same-Tac retargeting with an unestablished quality priority remains blocked.",
+      "hedgehog": "Hedgehog/MBU200/600 one original pattern D100 at or below Contact chance gives one hit, at or below half two, at or below one-quarter three. Compare the fractions directly without rounding a new D100 cell. Each actual hit has listed DP and an independent source pressure opportunity.",
+      "rts_phase_policy": "Explicit original physical projector and Planned/Reaction declaration; per-mount source Tactical-Turn quota. First Reaction closes later Planned declarations. Same-physical same-tick differing phase/target proposals conflict as a set, exact duplicates coalesce; no invented90-second phase window or network-order winner. Distinct runtime ticks settle preceding common damage before a following declared phase.",
+      "unmanned_reaction_source": "English2026 section2.5 PDF22/2-6: HITL unmanned vehicles may conduct Tactical combat but cannot execute attacks in Reaction Fire. Explicit projector Reaction admission and runtime revalidation consume unmanned2026::can_reaction_fire before any physical debit; manned Planned/Reaction quotas remain unchanged. Original PDF21-22 and all three core retrievals: artifacts/rules-book-wide-20261026/comms-unmanned/unmanned-asw-reaction-contract-20261027.md.",
+      "source_boundary": "Optional strict experiment mechanics require model and every relevant source to say scenario_assumption. They exercise source algorithms and do not certify complete real Hedgehog/MBU/C&H equipment, paired mounts, early dedicated attack sonar, unprinted reload or flight hardware. Named authoritative H-only models retain their existing exact data and executor."
+    },
+    "sea_state_exclusive_upper": 7,
+    "fair_factor": 0.5,
+    "poor_automatic_miss": true,
+    "speed_rows": [
+      [
+        0,
+        5
+      ],
+      [
+        6,
+        10
+      ],
+      [
+        11,
+        15
+      ],
+      [
+        16,
+        20
+      ],
+      [
+        21,
+        25
+      ],
+      [
+        26,
+        30
+      ],
+      [
+        31,
+        null
+      ]
+    ],
+    "depth_columns": [
+      "Shallow/Int I",
+      "Int II/III",
+      "Int IV/V",
+      "Deep I"
+    ],
+    "modifiers": [
+      [
+        1,
+        0.75,
+        0.5,
+        0.25
+      ],
+      [
+        0.75,
+        0.5,
+        0.25,
+        0.15
+      ],
+      [
+        0.5,
+        0.25,
+        0.15,
+        0.1
+      ],
+      [
+        0.25,
+        0.15,
+        0.1,
+        0.05
+      ],
+      [
+        0.15,
+        0.1,
+        0.05,
+        null
+      ],
+      [
+        0.1,
+        0.05,
+        null,
+        null
+      ],
+      [
+        0.05,
+        null,
+        null,
+        null
+      ]
+    ],
+    "rounding": "Round each modified percent normally to nearest integer; positive x.5 rounds upward.",
+    "one_die_per_pattern": true,
+    "thresholds": "Compare one D100 successively with Contact, Major, Minor thresholds; do not add the three probabilities.",
+    "models": {
+      "rbu1000_rgb10": {
+        "source": "China's Navy 2025-12-01 PDF75/E-1 Annex E3 RGB10 and PDF16/A-9 956EM P/S(6)2 mount; English2026 PDF99-100/8-19-20 §8.5.3; expanded CN PDF12/13 Major/Minor",
+        "weapon_ids": [
+          "cn_rbu1000"
+        ],
+        "fuzing": "H",
+        "range_nm": 0.5,
+        "max_depth_band": "Int IV",
+        "max_depth_band_index": 5,
+        "barrels": 6,
+        "calibre_mm": 305,
+        "bombs": 6,
+        "contact_percent": null,
+        "major_percent": 11,
+        "minor_percent": 20,
+        "damage_contact": null,
+        "damage_major": 11,
+        "damage_minor": 6,
+        "ioc": 1961,
+        "remarks": [
+          "D"
+        ],
+        "requires_paired_mounts": false,
+        "physical_arcs": [
+          "P",
+          "S"
+        ],
+        "loaded_capacity_patterns": 1,
+        "attacks_per_tactical_turn": 1,
+        "reload_time_s": null,
+        "flight_speed_kts": null,
+        "flight_time_s": null,
+        "minimum_range_nm": null,
+        "stock_unit": "one explicitly allocated complete six-bomb pattern",
+        "allocation_policy": "Scenario source must allocate loaded/reserve for every physical mount and exactly equal existing aggregate stock; source w/4 salvoes does not establish this allocation.",
+        "reload_policy": "No automatic reload; unprinted source reload time remains pending. Reserve stock cannot generate a free loaded pattern.",
+        "phase_policy": "RTS-PROJECTOR-PHASE-01: accepted current-tick Planned pattern is resolved before the common current-tick damage batch closes; no invented ballistic body and no extra Reaction attack.",
+        "physical_result_policy": "Only after legal expenditure consult target actual speed/depth/life. Beyond source Int IV or impossible speed/depth yields no effect. Unprinted continuous speed row gaps retain the original die pending; no interpolation."
+      }
+    },
+    "runtime_scope": "Explicit H-only RGB10 physical pattern transaction; actual Gen4+ active native receiver and source CS, own measured aim/classified CID, source P/S arcs, exact loaded stock and physical epoch. Other projector models/contact fuze/hull penetration/multiple attacks remain pending."
+  },
+  "depth_charge": {
+    "rule": "8.5.4",
+    "sea_state_exclusive_upper": 7,
+    "base_percent_per_charge": 1,
+    "straight_line_factor": 0.5,
+    "major_threshold": "rounded base * speed/depth modifier",
+    "minor_threshold": "twice modified value",
+    "non_evading_d100_modifier": -10,
+    "one_die_per_pattern": true,
+    "physical_pending": "Explicit ship pattern runtime now consumes actual physical allocations, native own CID/datum, source250yd relative movement pass, original physical speed/depth and explicit evasion. Exact real DC damage/capacity fits remain independently sourced; aircraft DC release is not this ship procedure.",
+    "pass_yards": 250,
+    "yards_per_nm": 2025.3718285214347,
+    "rail_per_tactical_turn": 6,
+    "projector_per_tactical_turn": 2,
+    "reload_seconds": 1800,
+    "large_ship_reload_charges": 15,
+    "small_ship_reload_charges": 10,
+    "safety_tactical_seconds": 180,
+    "safety_minimum_speed_kts": 15,
+    "safety_low_speed_bands": [1, 2],
+    "safety_authority": "English2026 PDF101/8-21 section8.5.4.3: below15kt while dropping into Shallow/Intermediate I, own one-charge Major DP and Underwater criticals. Within one Tactical Turn, second and later ships attacking the same submarine suffer the first pattern's one-charge Major DP and Underwater criticals.",
+    "safety_runtime_policy": "Physical-debit release freezes original ship speed, weapon Major DP, target and180s source Tactical Turn. Gather all simultaneous releases before selecting an actual earlier first ship. Queue each certain own exposure before target hit/miss adjudication through typed common Underwater damage with no extra TPS/armor reduction. Preserve genuinely simultaneous first-ship ties, mixed simultaneous first charge types and overlapping low-speed/following stacking as explicit source-pending; never choose an EntityId/network-order winner. An actual following ship encounters the original first pattern once per target/Tactical Turn, without repeated polling or repeated own declarations manufacturing further DP.",
+    "matrix_deep_i_max_m": 600,
+    "authority": "English2026 PDF99/8-19 ASW Projector and DC Modifiers; PDF100/8-20 §§8.5.4–8.5.4.2, visually rechecked2026-10-26; global depth conversion uses source Deep I501–600m.",
+    "rounding": "Round base*speed-depth modifier once to nearest whole percent, halves upward; minor threshold is twice that rounded major threshold. Preserve unprinted continuous speed gaps and depths beyond Deep I as pending.",
+    "reload": "One ship-wide physical detail transfers at most15 charges for Size A-C or10 for D-G in one1800s interval. Explicitly select each actual rail/projector; central reserve debit and loaded/component credit happen once without changing aggregate total ammunition.",
+    "phase_policy": "RTS-DC-PHASE-20261026: collect commands, exact duplicates coalesce and different same-operation proposals reject as a set. Debit physical patterns in stable actor/weapon order after movement, compute actual relative segment pass using private phase origins, freeze original target depth/speed/evasion before one source die and common damage closure. Unknown evasion or nonprecision depth dialog waits without reroll/refund.",
+    "depth_dialogue": "Actual held Gen4+ active non-towed sonar or explicitly sourced native depth-determining sonar supplies precise depth evidence. Otherwise defender receives only an opaque per-own-unit attack alias and its own original pass depth, reports two adjacent true bands; original shooter then selects once from its own pending attack. No true target depth or real enemy identity enters admission, public reports or observation.",
+    "source_boundary": "Experimentally declared DP/source fits do not certify Mk11/BPS/real Annex equipment. No historical CW Pk/damage/reload/salvo, fictitious flight, aircraft release algorithm or unsourced collision probability is substituted.",
+    "localization": "A firing ship uses one fresh actual native measured report, a truly received live located report with original sender/sensor/transport provenance, or a qualified remote ASW solution aim. A side-fused CID alone supplies neither direction nor free range. Own native reports follow the existing firecontrol own_motion.report_freshness_s policy; no separate30s depth information lifetime is invented.",
+    "conflicts": "Exact physical allocation orders are canonicalized. All differing same-ship reload proposals in one phase conflict across weapon IDs because the source reload detail is ship-wide; no lexicographic weapon priority wins a reserve reservation. Unmanned firing also consumes its actual can_attack gate."
+  },
+  "air_depth_charge": {
+    "authority": "English2026 PDF101/8-21 section8.5.4.4; PDF109/9-8 section9.7.2; original pages visually reviewed2026-10-26",
+    "maximum_charges": 8,
+    "homing_gen1_multiplier": 3,
+    "homing_gen2_multiplier": 10,
+    "acoustic_countermeasure_factor": 0.5,
+    "rbk_percent_per_bomb": 2,
+    "rbk_max_bombs": 8,
+    "rbk_submunitions_per_bomb": 6,
+    "rbk_max_submunition_hits": 1,
+    "conventional": "Treat an aircraft attack as a dispersed pattern; no half-rail/half-projector split. Normally the defender provides three possible bands, containing the original true band, before the original aircraft selects once. Actual held Gen4+ active dipping sonar is the precise exception; actual visual/IR/radar contact supplies a Shallow datum.",
+    "homing": "No guessed fuze depth: search real bands through the explicitly sourced maximum. Gen1 uses3 times charge count, Gen2 uses10; actual effective acoustic countermeasures halve probability once. Apply speed/depth and final nearest-whole rounding once.",
+    "rbk_contact": "RBK100/PLAB10K uses2percent per bomb, at most8 bombs and at most one hitting submunition. The independent typed common ASW contact path rolls the source four-size/design/year pressure-hull table; success queues real hull effect, failure queues actual Minor DP/critical. No ordinary blast Major/Minor radius, mine or torpedo provenance is substituted.",
+    "physical_policy": "Exact original aircraft identity, Flight/fuel/load and source store binding; one exact surviving physical rack; whole actual stores/component/mass debit before true target applicability; own native or actually delivered raw located report only. Unique persistent pattern, explicit evasion, original D100 and three-band dialogue replay deterministically. Actual datum drift outside this zero-drift subset remains referee source-pending, never truth teleport.",
+    "release_policy": "Aircraft DC altitude/speed/drop geometry not supplied by9.7.1 torpedo restrictions. Every unknown release tolerance or hardware value is explicit scenario policy; zero store mass is accepted only for declared laboratory mechanism fixtures. No inferred real MH60R or PLAB/KAB/RBK Annex fit.",
+    "pending": "Real complete aircraft/store/mass/depth/release applicability; multiple physical rack allocation; PLAB-MK cassette/25bomblet D6/2 integer rounding and half-penetration combinations; datum-drift placement conversion. This branch does not close all aircraft ASW or all Annexes."
+  },
+  "annex_source_candidates": {
+    "us_pdf82_E1_E3_E4": {
+      "document": "5-4.Americas_Navy_1_Dec_25.pdf",
+      "version": "2025-12-01",
+      "sha256": "189416d65b92d5e2fa50c59c99e309ca5715a5db287e5323295152034e61c5c8",
+      "RUM-139C": {
+        "range_nm": [
+          2.5,
+          12
+        ],
+        "speed_kts": 660,
+        "payload_as_printed": "Mk54 torpedo",
+        "guidance_as_printed": "Inertial guidance",
+        "status": "source-only; no implicit live fit"
+      }
+    },
+    "cn_pdf75_E1_E3_E4": {
+      "document": "6-3.（数据库）2025版Chinas_Navy_1_Dec_25.pdf",
+      "version": "2025-12-01",
+      "sha256": "9ff46ff0c91f323d48c37e9917df6d87583fbe0df337a6dd0bb40bc488d98b2c",
+      "Yu-8": {
+        "range_nm": [
+          2.7,
+          16.2
+        ],
+        "speed_kts": 660,
+        "payload_as_printed": "Yu-7C/ET-60 torpedo",
+        "guided_modifier_status": "not inferred from name or blank remark"
+      },
+      "Yu-11": {
+        "range_nm": [
+          2.7,
+          32.4
+        ],
+        "speed_kts": 528,
+        "payload_as_printed": "Yu-7C/ET-60 torpedo",
+        "guided_modifier_status": "not inferred"
+      },
+      "RBU1000_RGB10": {
+        "range_nm": 0.5,
+        "max_depth_band": "Int IV",
+        "bombs": 6,
+        "contact_percent": null,
+        "major_percent": 11,
+        "minor_percent": 20,
+        "damage_contact": null,
+        "damage_major": 11,
+        "damage_minor": 6,
+        "status": "source-only, no exact platform/paired-mount runtime fit"
+      }
+    }
+  },
+  "default_live_weapon_fits": {},
+  "status": "implemented_unverified: standoff, explicit RGB10, source ship and experimental aircraft depth-charge runtime with typed RBK contact hook; no chapter/book/real Annex closure"
+}

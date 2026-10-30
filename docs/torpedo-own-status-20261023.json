@@ -1,0 +1,30 @@
+{
+  "profile": "hv2026-rts-v4",
+  "status": "domain_and_workspace_tests_passed_production_frozen_final_service_and_snapshot_pending",
+  "previous_batch": "823/0/5 frozen; no frozen artifact changed",
+  "source": {
+    "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+    "version": "2026-01-01",
+    "sections": ["7.5.4", "10.1"],
+    "pdf_pages": [79,80,110],
+    "evidence_root": "artifacts/rules-following-20261023/torpedo-status",
+    "rag": ["rag-wire.txt", "rag-tubes.txt"],
+    "visual": ["english-079.png", "english-080.png", "english-110.png"]
+  },
+  "rows": [
+    {"rule_id":"R-TORP-OWN-STATUS","Source":"verified_source","Data":"structured","Execution":"executable","Tests":"tested_red_then_green","calls":["weapons::launch->torpedo2026::register_release","observe::observe->torpedo2026::unreported_releases","torpedo2026::fire_at"]},
+    {"rule_id":"R-TORP-OWN-TUBE-LOG","Source":"verified_source","Data":"structured","Execution":"executable","Tests":"tested_red_then_green","calls":["observe::observe->torpedo2026::own_view","torpedo2026::apply","torpedo2026::step"]},
+    {"rule_id":"R-TORP-SHARED-PHYSICAL-TUBE","Source":"verified_source_ch10_shared_with_ch13","Data":"structured","Execution":"executable","Tests":"tested_three_direct_world_transactions_and_real_submarine_mine_row","calls":["tube_ready","mine_inventory","occupy_mine_tubes","mines2026::lifecycle"]}
+  ],
+  "test_target":"torpedo_2026",
+  "tests_total":40,
+  "passed_domain":40,
+  "failed_domain":0,
+  "passed_legacy_count_regression":4,
+  "workspace":{"targets":56,"passed":877,"failed":0,"ignored":5,"log":"artifacts/rules-following-20261023/validation/workspace.log"},
+  "green_log":"artifacts/rules-following-20261023/validation/workspace.log",
+  "red_logs":["artifacts/rules-following-20261023/validation/torpedo-status-red.log","artifacts/rules-following-20261023/validation/following-core-red-green.log","artifacts/rules-following-20261023/validation/mine-wire-boundary-red.log","artifacts/rules-following-20261023/validation/following-core-third.log"],
+  "wire_receipt_rts_adaptation":"An acknowledged own order is not a report of physical torpedo survival; secret cleanup cannot change receipt. Original source wire qualifications and break probabilities unchanged.39th red reproduced then green in following-core-third.",
+  "contact_association":"Saved release ContactId only. A new track cannot borrow referee EntityId association; historical no-ledger Flight keeps contact unknown in own platform release log.40th real red reproduced and fixed;40/0 passed in final workspace.",
+  "known_boundary":["DualWire exact report precision, sampling and freshness not implemented; no referee body/target coordinates projected","Unreported releases remain historical declarations with explicit unknown survival, not fake active weapons","Mine carrier stock must match loaded+reserve+reserved-reload inventory; exact physical tube IDs required","VLS source initial loads remain separate unfinished work","Wake source fit/offset/geometry and full runtime chain remain unfinished","Complete observed BDA and sinking/other-event audit remain partial; previous R049 automatic precise BDA path is already fixed"]
+}

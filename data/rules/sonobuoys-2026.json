@@ -1,0 +1,62 @@
+{
+  "id": "harpoon-v-2026-sonobuoys-minimum",
+  "revision": "2026-10-27-conventional-directional-passive-localization-2",
+  "authority": {
+    "document": "Harpoon V Rules 2026-01-01 digital update",
+    "pdf_sha256": "8196ffc715bbcccd862d8597c607de7816dac5baee31fa659f89dfaf4323700c",
+    "deployment": "PDF48 / 5-9 section5.4.4",
+    "localization_radio": "PDF53-54 / 5-14-15 section5.4.6.3",
+    "visual_review": "artifacts/rules-book-wide-20261026/comms-unmanned/sonobuoy-original-048.png;053.png;054.png"
+  },
+  "deployment": {
+    "minimum_altitude_m": 61.0,
+    "maximum_altitude_m": 7500.0,
+    "maximum_speed_kts": 325.0,
+    "tactical_turn_seconds": 180,
+    "starts_transmitting": "detection_phase_of_next_tactical_turn",
+    "unsupported_sea_state": 6,
+    "broken_release_consumes_item": true
+  },
+  "monitoring": {
+    "maximum_range_nm": 40.0,
+    "range_rule": "minimum_of_40nm_and_actual_radio_horizon",
+    "selected_channel_capacity": "explicit_installed_monitor_fit",
+    "same_tactical_turn_only": true,
+    "one_conventional_active_directional": "Fair",
+    "fair_uncertainty_description": "2-3nm; no invented exact scalar"
+  },
+  "passive_localization": {
+    "rule": "5.4.6.3 English2026 PDF53-54 /5-14-15",
+    "conventional_directional_counts": {"1":"NA","2":"Poor","3":"Good"},
+    "alerted_operator_modifier_percent": 15,
+    "prior_detection_tolerance_s": 720,
+    "prior_tolerance_policy": "existing four-Tactical-Turn source FCS loss tolerance; prior received detection is a separate operator snapshot, never raw float success",
+    "poor_uncertainty_description": "4-5nm radius circle; no invented exact scalar",
+    "good_uncertainty_description": "within1nm radius circle",
+    "fair_special_boundary": "two passive-directional Fair needs EER footnote; ordinary two stays Poor",
+    "layout": "3-5 passive directional buoys, triangle/square,0.75*modified50 spacing; physical layout is not an uncertainty radius",
+    "numerical_geometry_epsilon_nm": 0.000001,
+    "numerical_parallel_epsilon": 0.0000000001,
+    "geometry_policy": "only actual received forward-bearing intersections; third consistent original ray required; epsilon is numerical calculation tolerance, not sensor accuracy or a new game radius; nonunique/inconsistent/error-cone geometry stays pending"
+  },
+  "implementation_policy": {
+    "identity": "exact_original_body_and_class_binding",
+    "release_position": "actual_aircraft_XY; zero_ballistic_fall_time_author_RTS_mapping",
+    "lifetime": "exact_source_or_scenario_assumption_model_required; not_default_8h",
+    "selection": "field and purpose frozen for the actual Detection TacticalTurn; changed selection/purpose queues for next Plotting boundary; a command processed exactly on the180s boundary precedes Detection and can apply then; stop only disables reception and never refunds current processing capacity; repeating/resuming the same frozen field never earns another budget",
+    "sensor_reports": "native_float_measurements_private_until_actual_selected_receiver_in_RF_range",
+    "sensor_role": "noncombatant_physical_sensor_float; never_an_aircraft_native_report",
+    "supported_model": "explicit_Gen5_conventional_active_or_passive_directional",
+    "supported_monitor": "one_active_channel_or_one_search_plus2or3_passive_localization_channels_with_independent_declared_processing_limit",
+    "listen_purpose": "typed active/search/localization; defaultActive preserves original active command JSON",
+    "alert_consumer": "normal physical sonar probability consumes actually received prior Search from a qualified selected monitor before one original float/target/Tac die; no raw float history bonus; perreceiver receipt gate prevents another operator's bonus leaking to unqualified monitors",
+    "passive_source": "selected ordinary2Poor/3Good; original passive report remains range-free, aim uses only actual received bearing rays; no truth point or fabricated aircraft native FCS"
+  },
+  "pending": [
+    "real_Annex_K2_K3_aircraft_carriage_mass_channel_and_model_coverage",
+    "passive_search_line_aggregation_and_omnidirectional_localization_rows",
+    "EER_IEER_AEER_AQA7_explosive_source_and_processor_procedures",
+    "Gen6_7_GPS_bonus_or_adjustable_depth",
+    "replenishment_and_undeclared_hardware"
+  ]
+}

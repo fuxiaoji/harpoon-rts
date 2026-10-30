@@ -1,0 +1,1813 @@
+{
+  "schema": 2,
+  "date": "2026-10-25",
+  "profile": "hv2026-rts-v4",
+  "status": "tested_declared_subsets_only",
+  "final_signoff": true,
+  "whole_book_complete": false,
+  "whole_chapter_complete": false,
+  "all_mechanisms_complete": false,
+  "all_optional_rules_complete": false,
+  "all_real_annex_fits_complete": false,
+  "atomic_rule_denominator": null,
+  "coverage_percentage": null,
+  "evidence_root": "artifacts/rules-book-resume-20261025",
+  "authority": {
+    "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+    "version": "2026-01-01 English Digital Update",
+    "sha256": "8196ffc715bbcccd862d8597c607de7816dac5baee31fa659f89dfaf4323700c",
+    "precedence": "English authority; three Chinese core manuals are mandatory RAG/cross-check sources; no original PDF modified"
+  },
+  "definition": "Final signoff applies only to explicitly named branches and validation scopes. Source/data/execution/tests are separate; pure algorithms and successful pending guards do not close physical mechanisms.",
+  "validation": {
+    "rust": {
+      "log": "artifacts/rules-book-resume-20261025/final-workspace-1.log",
+      "targets": 119,
+      "passed": 1528,
+      "failed": 0,
+      "ignored": 5,
+      "counts_are_not_rule_coverage": true
+    },
+    "node": {
+      "log": "artifacts/rules-book-resume-20261025/final-node-1.log",
+      "passed": 81,
+      "failed": 0
+    },
+    "frozen_inputs": {
+      "before": "artifacts/rules-book-resume-20261025/final-candidate-1-inputs.json",
+      "after": "artifacts/rules-book-resume-20261025/after-acceptance-inputs.json",
+      "count": 330,
+      "byte_equal": true,
+      "sha256": "cfd0640cc2f337b0dd92f76cf5d1947c5670cb72c38c5f773adcbcff8cbc1eab",
+      "protected": "artifacts/rules-book-resume-20261025/protected-inputs-final.json",
+      "protected_count": 16,
+      "original_database_files": 14,
+      "old_tables": 2,
+      "all_unchanged": true
+    },
+    "binaries": {
+      "receipt": "artifacts/rules-book-resume-20261025/frozen-binaries-final-1.json",
+      "server_sha256": "c608303d35d4fa559c508504c8d568dbcd3b08030b6e4c4debdd93f1562c592c",
+      "mcp_sha256": "71c76d9711ea8bd7b46652c4779447efc4c2db3ee57ea9979e8055b2796d22d1"
+    },
+    "http": {
+      "validation": "artifacts/rules-book-resume-20261025/acceptance/runs/http-final-1/validation.json",
+      "ok": true,
+      "actual": true,
+      "pid": 64740,
+      "rejected": 7,
+      "legal_commands": 11,
+      "all_invalid_complete_payload_equal": true,
+      "paused_world_unchanged": true,
+      "terminal_tick": 202,
+      "verification": {
+        "command_batches": 12,
+        "events_verified": 174,
+        "world_fnv64": "89ff6e355a6738d0"
+      },
+      "scope": "Minimal source controls/authorization/links; no nuclear weapon release or full FCS claim"
+    },
+    "cross_process": {
+      "validation": "artifacts/rules-book-resume-20261025/acceptance/runs/cross-final-1/validation.json",
+      "ok": true,
+      "separate_pid": 51356,
+      "same_binary_sha": true,
+      "checkpoints": [
+        1,
+        7,
+        9
+      ],
+      "terminal_tick": 202,
+      "complete_world_equal": true,
+      "inbox_equal": true,
+      "world_fnv64": "89ff6e355a6738d0"
+    },
+    "mcp": {
+      "validation": "artifacts/rules-book-resume-20261025/acceptance/mcp-runs/mcp-final-1/validation.json",
+      "ok": true,
+      "actual_stdio": true,
+      "pid": 65696,
+      "rejected": 15,
+      "legal_operation_groups": 11,
+      "legal_commands": 12,
+      "terminal_tick": 207,
+      "scope": "Own observation/manual ownership/source controls; battery raise explicitly queues automation-off plus declaration; no nuclear release, FCS or full manual-warning claim"
+    },
+    "history": {
+      "validation": "artifacts/rules-book-resume-20261025/acceptance/history-runs/history-final-1/validation.json",
+      "ok": true,
+      "old_v4_refusals": 6,
+      "complete_payload_unchanged": true,
+      "original_v3": {
+        "tick": 299,
+        "events": 7,
+        "world_fnv64": "ab2ffcb9c57e6195"
+      },
+      "v3_continuation": {
+        "tick": 329,
+        "events": 15,
+        "world_fnv64": "933df72aebd01cdd"
+      },
+      "original_sol": {
+        "tick": 10800,
+        "command_batches": 360,
+        "events": 7505,
+        "world_fnv64": "22b2238739248f90"
+      },
+      "historical_archive_rewritten": false,
+      "new_llm_match": false
+    },
+    "ui": {
+      "validation": "artifacts/rules-book-resume-20261025/acceptance/ui/final-validation.json",
+      "ok": true,
+      "actual_browser": "CUA IAB",
+      "languages": [
+        "zh",
+        "en"
+      ],
+      "viewports": [
+        [
+          1600,
+          1000
+        ],
+        [
+          1024,
+          768
+        ]
+      ],
+      "legal_requests": 6,
+      "rejected_requests": 2,
+      "selection_and_yield_draft_complete_payload_equal": true,
+      "page_errors_observed": 0,
+      "ammunition_unchanged": true,
+      "authorization_final": false,
+      "terminal_tick": 208,
+      "verification": {
+        "command_batches": 18,
+        "events_verified": 186,
+        "world_fnv64": "7e2be22c5a4782a1"
+      },
+      "screenshots": "Displayed by CUA in the root conversation; no local screenshot file claimed",
+      "physical_tablet_test": false
+    }
+  },
+  "rows": [
+    {
+      "rule_id": "HV2026-3.2.4",
+      "branch_id": "battery-discharge-charging-policies",
+      "status": "tested_declared_branch",
+      "declared_tested_scope": "Actual Tactical/Intermediate discharge; source charge bands, explicit old10 table_literal15 versus prose_double20/IT policy, no normalized charge fallback.",
+      "source": {
+        "status": "verified_source_for_declared_subset",
+        "authority": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "pdf_pages": [
+          28,
+          29,
+          30
+        ],
+        "section": "3.2.1/3.2.4",
+        "evidence_basis": "Source/RAG/visual review records in the linked data authority and current batch domain audits"
+      },
+      "data": {
+        "status": "structured_for_declared_subset",
+        "paths": [
+          "harpoon-rts/data/rules/battery-2026.json",
+          "harpoon-rts/data/rules/battery-source-boundary-2026.json"
+        ]
+      },
+      "execution": {
+        "status": "executable_for_declared_subset",
+        "paths": [
+          "harpoon-rts/crates/harpoon-core/src/rules/battery2026.rs",
+          "harpoon-rts/crates/harpoon-core/src/rules/navigation2026.rs",
+          "harpoon-rts/crates/harpoon-core/src/movement.rs"
+        ]
+      },
+      "tests": {
+        "status": "tested_declared_subset",
+        "targets": [
+          "harpoon-rts/crates/harpoon-core/tests/battery_array_resume_20261025.rs",
+          "harpoon-rts/crates/harpoon-core/tests/battery_source_boundary_2026.rs"
+        ],
+        "final_log": "artifacts/rules-book-resume-20261025/final-workspace-1.log"
+      },
+      "fixture_contract": "Native clocks and source-state tests; laboratory initialization is explicit, not an inferred current charge.",
+      "explicit_rts_policy": "Named R-062 choice required; no silent resolution of conflicting old10 prose/table.",
+      "pending_or_excluded": [
+        "70–71% gap, unspecified full-speed denominator/chemistry, fractional/outside4–25kt speeds and automatic exhaustion behavior remain source blocked."
+      ],
+      "whole_section_complete": false
+    },
+    {
+      "rule_id": "HV2026-3.2.5",
+      "branch_id": "aip-active-seconds-reserved-potential",
+      "status": "tested_declared_branch",
+      "declared_tested_scope": "Source-supported4/5/9kt points, actual active seconds, limited reserve, shutdown/critical-disabled latch, IT settlement and full World continuation.",
+      "source": {
+        "status": "verified_source_for_declared_subset",
+        "authority": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "pdf_pages": [
+          29,
+          30
+        ],
+        "section": "3.2.5",
+        "evidence_basis": "Source/RAG/visual review records in the linked data authority and current batch domain audits"
+      },
+      "data": {
+        "status": "structured_for_declared_subset",
+        "paths": [
+          "harpoon-rts/data/rules/battery-2026.json"
+        ]
+      },
+      "execution": {
+        "status": "executable_for_declared_subset",
+        "paths": [
+          "harpoon-rts/crates/harpoon-core/src/rules/battery2026.rs"
+        ]
+      },
+      "tests": {
+        "status": "tested_declared_subset",
+        "targets": [
+          "harpoon-rts/crates/harpoon-core/tests/battery_array_resume_20261025.rs"
+        ],
+        "final_log": "artifacts/rules-book-resume-20261025/final-workspace-1.log"
+      },
+      "fixture_contract": "Native time and one explicitly adjudicated critical input; no claim of a natural weapon-hit producer.",
+      "explicit_rts_policy": "Actual powered seconds prorated; credit reserved once against demand, debited at IT even after shutdown.",
+      "pending_or_excluded": [
+        "General curve, >=20kt <10% conversion, automatic return/refuel and initial potential are not inferred."
+      ],
+      "whole_section_complete": false
+    },
+    {
+      "rule_id": "HV2026-ANNEX-A",
+      "branch_id": "exact-battery-annex-overlay",
+      "status": "tested_declared_branch",
+      "declared_tested_scope": "Existing eleven precise depth/surface IDs retained; source battery technology/rating/AIP facts only for cn_039a,cn_kilo,ru_kilo,ru_kilo_636.",
+      "source": {
+        "status": "verified_source_for_declared_subset",
+        "authority": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "pdf_pages": [
+          28,
+          29
+        ],
+        "section": "Annex A exact fields / 3.2.4–5",
+        "evidence_basis": "Source/RAG/visual review records in the linked data authority and current batch domain audits"
+      },
+      "data": {
+        "status": "structured_for_declared_subset",
+        "paths": [
+          "harpoon-rts/data/rules/submarine-annex-2025.json",
+          "harpoon-rts/data/rules/battery-2026.json"
+        ]
+      },
+      "execution": {
+        "status": "executable_for_declared_subset",
+        "paths": [
+          "harpoon-rts/crates/harpoon-core/src/rules/submarine_annex.rs",
+          "harpoon-rts/crates/harpoon-core/src/rules/battery2026.rs"
+        ]
+      },
+      "tests": {
+        "status": "tested_declared_subset",
+        "targets": [
+          "harpoon-rts/crates/harpoon-core/tests/submarine_annex_provenance_20261025.rs",
+          "harpoon-rts/crates/harpoon-core/tests/battery_array_resume_20261025.rs"
+        ],
+        "final_log": "artifacts/rules-book-resume-20261025/final-workspace-1.log"
+      },
+      "fixture_contract": "China2025 PDF12/A-5 and13/A-6; Russia2025 PDF23/A-20 exact rows; grouped variants only as printed.",
+      "explicit_rts_policy": null,
+      "pending_or_excluded": [
+        "No lithium/current-charge/snorkel/reserve inference; no all-platform Annex completion."
+      ],
+      "whole_section_complete": false
+    },
+    {
+      "rule_id": "HV2026-3.2.1",
+      "branch_id": "snorkel-reachable-real-movement",
+      "status": "tested_declared_branch",
+      "declared_tested_scope": "Actual raised-mast25m/15kt gates; fitted raise selects diesel, underwater retract stops charging/selects battery; own-only and illegal depth rejected.",
+      "source": {
+        "status": "verified_source_for_declared_subset",
+        "authority": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "pdf_pages": [
+          28,
+          29
+        ],
+        "section": "3.2.1/3.2.4",
+        "evidence_basis": "Source/RAG/visual review records in the linked data authority and current batch domain audits"
+      },
+      "data": {
+        "status": "structured_for_declared_subset",
+        "paths": [
+          "harpoon-rts/data/rules/battery-2026.json"
+        ]
+      },
+      "execution": {
+        "status": "executable_for_declared_subset",
+        "paths": [
+          "harpoon-rts/crates/harpoon-core/src/rules/battery2026.rs",
+          "harpoon-rts/crates/harpoon-core/src/rules/navigation2026/submarine.rs",
+          "harpoon-rts/crates/harpoon-core/src/movement.rs"
+        ]
+      },
+      "tests": {
+        "status": "tested_declared_subset",
+        "targets": [
+          "harpoon-rts/crates/harpoon-core/tests/battery_array_resume_20261025.rs"
+        ],
+        "final_log": "artifacts/rules-book-resume-20261025/final-workspace-1.log"
+      },
+      "fixture_contract": "Native orders/movement plus explicit source fitting.",
+      "explicit_rts_policy": "Raise/retract power transitions are explicit RTS atomics.",
+      "pending_or_excluded": [
+        "No universal physical mast fit, zero-charge stop or autonomous port replenishment."
+      ],
+      "whole_section_complete": false
+    },
+    {
+      "rule_id": "HV2026-5.4.2.1",
+      "branch_id": "optional-array-native-ambiguity-stabilization",
+      "status": "tested_declared_branch",
+      "declared_tested_scope": "Real streaming, native searches/reports, heading-axis mirrored alternatives, qualifying45–135deg maneuver, reacquisition, source short/long5/10/15+ cells, later kink and World continuation; fusion cannot restore suppressed coordinates.",
+      "source": {
+        "status": "verified_source_for_declared_subset",
+        "authority": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "pdf_pages": [
+          48
+        ],
+        "section": "5.4.2.1 optional",
+        "evidence_basis": "Source/RAG/visual review records in the linked data authority and current batch domain audits"
+      },
+      "data": {
+        "status": "structured_for_declared_subset",
+        "paths": [
+          "harpoon-rts/data/rules/towed-array-optional-2026.json"
+        ]
+      },
+      "execution": {
+        "status": "executable_for_declared_subset",
+        "paths": [
+          "harpoon-rts/crates/harpoon-core/src/rules/detection2026/array_optional.rs",
+          "harpoon-rts/crates/harpoon-core/src/rules/detection2026/array_optional_world.rs",
+          "harpoon-rts/crates/harpoon-core/src/rules/detection2026.rs",
+          "harpoon-rts/crates/harpoon-core/src/rules/firecontrol2026.rs",
+          "harpoon-rts/crates/harpoon-core/src/sensors.rs"
+        ]
+      },
+      "tests": {
+        "status": "tested_declared_subset",
+        "targets": [
+          "harpoon-rts/crates/harpoon-core/tests/battery_array_resume_20261025.rs"
+        ],
+        "final_log": "artifacts/rules-book-resume-20261025/final-workspace-1.log"
+      },
+      "fixture_contract": "Explicit laboratory sensor and target; no actual Annex hardware claim.",
+      "explicit_rts_policy": "Measured bearing mirrored around realized fore/aft axis; inclusive ready-at tick and floating heading tolerance are explicit RTS mappings.",
+      "pending_or_excluded": [
+        "Unprinted stabilization speeds/physical lengths/unknown K1 fit and all special later-recapture combinations remain pending."
+      ],
+      "whole_section_complete": false
+    },
+    {
+      "rule_id": "HV2026-6.3.9",
+      "branch_id": "tl-one-fifteen-point-search",
+      "status": "tested_declared_branch",
+      "declared_tested_scope": "One source-qualified TL submarine warning adds15 percentage points to the same actual receiver sonar trial; repeated/failed/late warnings do not stack, reroll or upgrade an already completed epoch search.",
+      "source": {
+        "status": "verified_source_for_declared_subset",
+        "authority": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "pdf_pages": [
+          74,
+          75
+        ],
+        "section": "6.3.9/6.3.10",
+        "evidence_basis": "Source/RAG/visual review records in the linked data authority and current batch domain audits"
+      },
+      "data": {
+        "status": "structured_for_declared_subset",
+        "paths": [
+          "harpoon-rts/data/rules/communications-2026.json"
+        ]
+      },
+      "execution": {
+        "status": "executable_for_declared_subset",
+        "paths": [
+          "harpoon-rts/crates/harpoon-core/src/rules/communications2026.rs",
+          "harpoon-rts/crates/harpoon-core/src/rules/communications2026/alerts.rs",
+          "harpoon-rts/crates/harpoon-core/src/sensors.rs",
+          "harpoon-rts/crates/harpoon-core/src/rules/detection2026.rs"
+        ]
+      },
+      "tests": {
+        "status": "tested_declared_subset",
+        "targets": [
+          "harpoon-rts/crates/harpoon-core/tests/communications_unmanned_batch_20261025.rs"
+        ],
+        "final_log": "artifacts/rules-book-resume-20261025/final-workspace-1.log"
+      },
+      "fixture_contract": "Native scan/D100/classification; receiver50% experimental1.4nm avoids an unresolved exact1.25nm row tie.",
+      "explicit_rts_policy": null,
+      "pending_or_excluded": [
+        "Voice alone grants no TL; no inferred real Annex L fitting or generic extra FCS."
+      ],
+      "whole_section_complete": false
+    },
+    {
+      "rule_id": "HV2026-6.3.9",
+      "branch_id": "rt-nrt-cues-and-aaw-original-roll",
+      "status": "tested_declared_branch",
+      "declared_tested_scope": "NRT+1/RT+2 domain-qualified Contact Track/cue; native own ES+1 and active sharedRadar reaction consume the same original2D6 with referee modtrace; source radar off invalidates cue while frozen receipt remains, fresh scan/new warning restores it.",
+      "source": {
+        "status": "verified_source_for_declared_subset",
+        "authority": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "pdf_pages": [
+          71,
+          72,
+          74,
+          84,
+          99
+        ],
+        "section": "6.3.9 / 8.1.1",
+        "evidence_basis": "Source/RAG/visual review records in the linked data authority and current batch domain audits"
+      },
+      "data": {
+        "status": "structured_for_declared_subset",
+        "paths": [
+          "harpoon-rts/data/rules/communications-2026.json",
+          "harpoon-rts/data/rules/firecontrol-2026.json"
+        ]
+      },
+      "execution": {
+        "status": "executable_for_declared_subset",
+        "paths": [
+          "harpoon-rts/crates/harpoon-core/src/rules/communications2026/exchange.rs",
+          "harpoon-rts/crates/harpoon-core/src/rules/firecontrol2026.rs",
+          "harpoon-rts/crates/harpoon-core/src/rules/operations.rs"
+        ]
+      },
+      "tests": {
+        "status": "tested_declared_subset",
+        "targets": [
+          "harpoon-rts/crates/harpoon-core/tests/communications_unmanned_batch_20261025.rs",
+          "harpoon-rts/crates/harpoon-core/tests/communications_shared_consumers_resume_20261025.rs"
+        ],
+        "final_log": "artifacts/rules-book-resume-20261025/final-workspace-1.log"
+      },
+      "fixture_contract": "Original source-CS platforms plus explicit laboratory communication/ES modes.",
+      "explicit_rts_policy": "Above printed2..12 reaction table use final row12; this is an explicit RTS ceiling.",
+      "pending_or_excluded": [
+        "Passive shared ES is not active AAW cue; no repeated raw die; real link/receiver variants remain explicit."
+      ],
+      "whole_section_complete": false
+    },
+    {
+      "rule_id": "HV2026-6.3.9",
+      "branch_id": "selected-own-fcs-transfer-and-pending-isolation",
+      "status": "tested_declared_branch",
+      "declared_tested_scope": "Transferred FCS quality/sensor/aim come from one selected native report; RT same quality/NRTGood→Fair orFair→Poor; remote unresolvedPoor cannot veto a nativeGood; automatic warning cannot consume later same-epoch FCS opportunity.",
+      "source": {
+        "status": "verified_source_for_declared_subset",
+        "authority": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "pdf_pages": [
+          72,
+          74,
+          75
+        ],
+        "section": "6.3.9",
+        "evidence_basis": "Source/RAG/visual review records in the linked data authority and current batch domain audits"
+      },
+      "data": {
+        "status": "structured_for_declared_subset",
+        "paths": [
+          "harpoon-rts/data/rules/communications-2026.json",
+          "harpoon-rts/data/rules/firecontrol-2026.json"
+        ]
+      },
+      "execution": {
+        "status": "executable_for_declared_subset",
+        "paths": [
+          "harpoon-rts/crates/harpoon-core/src/rules/communications2026/exchange.rs",
+          "harpoon-rts/crates/harpoon-core/src/rules/firecontrol2026.rs"
+        ]
+      },
+      "tests": {
+        "status": "tested_declared_subset",
+        "targets": [
+          "harpoon-rts/crates/harpoon-core/tests/comms_unmanned_resume_20261025.rs",
+          "harpoon-rts/crates/harpoon-core/tests/communications_shared_consumers_resume_20261025.rs",
+          "harpoon-rts/crates/harpoon-core/tests/communications_unmanned_batch_20261025.rs"
+        ],
+        "final_log": "artifacts/rules-book-resume-20261025/final-workspace-1.log"
+      },
+      "fixture_contract": "Real own tracks/motion; distantPoor versus closeGood earned with actual4kt target turn and second motion window.",
+      "explicit_rts_policy": null,
+      "pending_or_excluded": [
+        "NRTPoor lower mapping, Air-domain producer, mixed family/mode nonTDL computation remain unresolved."
+      ],
+      "whole_section_complete": false
+    },
+    {
+      "rule_id": "HV2026-6.3.10",
+      "branch_id": "non-tdl-two-original-observers",
+      "status": "tested_declared_branch",
+      "declared_tested_scope": "Two distinct received source reports produce all-passiveNA or all-activePoor, selected measured aim; no invented ContactTrack or silent upgrade from shared icon.",
+      "source": {
+        "status": "verified_source_for_declared_subset",
+        "authority": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "pdf_pages": [
+          75
+        ],
+        "section": "6.3.10",
+        "evidence_basis": "Source/RAG/visual review records in the linked data authority and current batch domain audits"
+      },
+      "data": {
+        "status": "structured_for_declared_subset",
+        "paths": [
+          "harpoon-rts/data/rules/communications-2026.json"
+        ]
+      },
+      "execution": {
+        "status": "executable_for_declared_subset",
+        "paths": [
+          "harpoon-rts/crates/harpoon-core/src/rules/communications2026/exchange.rs"
+        ]
+      },
+      "tests": {
+        "status": "tested_declared_subset",
+        "targets": [
+          "harpoon-rts/crates/harpoon-core/tests/communications_unmanned_batch_20261025.rs"
+        ],
+        "final_log": "artifacts/rules-book-resume-20261025/final-workspace-1.log"
+      },
+      "fixture_contract": "native production consumers plus explicitly declared laboratory fittings",
+      "explicit_rts_policy": null,
+      "pending_or_excluded": [
+        "Mixed active/passive or sensor-family computation remains pending; no guessed source precedence."
+      ],
+      "whole_section_complete": false
+    },
+    {
+      "rule_id": "HV2026-6.3.9/10",
+      "branch_id": "same-native-batch-close-and-source-live",
+      "status": "tested_declared_branch",
+      "declared_tested_scope": "detection_close after all native reports/FCS commits auto delivery in actual batch; next-tick consumers see cue; source physical/live gates preserve original report and frozen communicationA behavior.",
+      "source": {
+        "status": "verified_source_for_declared_subset",
+        "authority": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "pdf_pages": [
+          74,
+          75
+        ],
+        "section": "6.3.9–10",
+        "evidence_basis": "Source/RAG/visual review records in the linked data authority and current batch domain audits"
+      },
+      "data": {
+        "status": "structured_for_declared_subset",
+        "paths": [
+          "harpoon-rts/data/rules/communications-2026.json"
+        ]
+      },
+      "execution": {
+        "status": "executable_for_declared_subset",
+        "paths": [
+          "harpoon-rts/crates/harpoon-core/src/rules/communications2026.rs",
+          "harpoon-rts/crates/harpoon-core/src/rules/communications2026/exchange.rs",
+          "harpoon-rts/crates/harpoon-core/src/sensors.rs"
+        ]
+      },
+      "tests": {
+        "status": "tested_declared_subset",
+        "targets": [
+          "harpoon-rts/crates/harpoon-core/tests/comms_unmanned_resume_20261025.rs",
+          "harpoon-rts/crates/harpoon-core/tests/communications_shared_consumers_resume_20261025.rs"
+        ],
+        "final_log": "artifacts/rules-book-resume-20261025/final-workspace-1.log"
+      },
+      "fixture_contract": "Real original report production.",
+      "explicit_rts_policy": "One-second command slot=Plotting; pre-scan open/post-native close are declared RTS phase adapters.",
+      "pending_or_excluded": [
+        "No rescan or hidden new Contact for receiver; missing source setting remains pending."
+      ],
+      "whole_section_complete": false
+    },
+    {
+      "rule_id": "HV2026-5.3",
+      "branch_id": "installed-emitter-scenario-source-adapter",
+      "status": "tested_declared_branch",
+      "declared_tested_scope": "Explicit unit-name/source/sensor/role/LPI/range/height emitter schema, unique actual installedRadar validation, atomic initialize; each nativeES scan reads real radar_on/power/system/expanded damage; actual off/on stops/restores nativeES.",
+      "source": {
+        "status": "verified_source_for_declared_subset",
+        "authority": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "pdf_pages": [
+          45
+        ],
+        "section": "5.3 / printed5-6",
+        "evidence_basis": "Source/RAG/visual review records in the linked data authority and current batch domain audits"
+      },
+      "data": {
+        "status": "structured_for_declared_subset",
+        "paths": [
+          "harpoon-rts/data/rules/detection-2026.json"
+        ]
+      },
+      "execution": {
+        "status": "executable_for_declared_subset",
+        "paths": [
+          "harpoon-rts/crates/harpoon-core/src/rules/detection2026.rs",
+          "harpoon-rts/crates/harpoon-core/src/scenario.rs"
+        ]
+      },
+      "tests": {
+        "status": "tested_declared_subset",
+        "targets": [
+          "harpoon-rts/crates/harpoon-core/tests/communications_shared_consumers_resume_20261025.rs"
+        ],
+        "final_log": "artifacts/rules-book-resume-20261025/final-workspace-1.log"
+      },
+      "fixture_contract": "Existing installed radar_air_med with explicit scenario_assumption continuous targeting mode; no real F18 mode/parameter claim.",
+      "explicit_rts_policy": null,
+      "pending_or_excluded": [
+        "No metadata guessing or author emitting/success field; automatic true AI-guidance-mode producer is not claimed."
+      ],
+      "whole_section_complete": false
+    },
+    {
+      "rule_id": "HV2026-2.5",
+      "branch_id": "physical-control-capacity-and-handover",
+      "status": "tested_declared_branch",
+      "declared_tested_scope": "Actual source controller elements,1HITL/3autonomous capacity, Tactical handover, actual Intermediate autonomous mission, no reaction fire, actual loss/fuel fallback and independent control-cause latches.",
+      "source": {
+        "status": "verified_source_for_declared_subset",
+        "authority": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "pdf_pages": [
+          21,
+          22
+        ],
+        "section": "2.5.1–2",
+        "evidence_basis": "Source/RAG/visual review records in the linked data authority and current batch domain audits"
+      },
+      "data": {
+        "status": "structured_for_declared_subset",
+        "paths": [
+          "harpoon-rts/data/rules/unmanned-2026.json"
+        ]
+      },
+      "execution": {
+        "status": "executable_for_declared_subset",
+        "paths": [
+          "harpoon-rts/crates/harpoon-core/src/rules/unmanned2026.rs",
+          "harpoon-rts/crates/harpoon-core/src/sim.rs"
+        ]
+      },
+      "tests": {
+        "status": "tested_declared_subset",
+        "targets": [
+          "harpoon-rts/crates/harpoon-core/tests/communications_unmanned_batch_20261025.rs",
+          "harpoon-rts/crates/harpoon-core/tests/comms_unmanned_resume_20261025.rs"
+        ],
+        "final_log": "artifacts/rules-book-resume-20261025/final-workspace-1.log"
+      },
+      "fixture_contract": "Original bodies/stocks with explicitly authored unmanned laboratory conversion; interference APIs are trusted referee inputs.",
+      "explicit_rts_policy": null,
+      "pending_or_excluded": [
+        "Real platform console/link/SAT bandwidth/LOS/endurance fit and all natural EW/casualty combinations not complete."
+      ],
+      "whole_section_complete": false
+    },
+    {
+      "rule_id": "HV2026-2.5",
+      "branch_id": "uuv-basic-data-and-real-radio-establishment",
+      "status": "tested_declared_branch",
+      "declared_tested_scope": "Actual modem steering/vertical depth, position/one onboard report limits; physical motion/P-S/raisedmast/Tac radio delay, overt recall original roll and source signal; no bulk autonomous mission through modem.",
+      "source": {
+        "status": "verified_source_for_declared_subset",
+        "authority": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "pdf_pages": [
+          21,
+          22
+        ],
+        "section": "2.5.2",
+        "evidence_basis": "Source/RAG/visual review records in the linked data authority and current batch domain audits"
+      },
+      "data": {
+        "status": "structured_for_declared_subset",
+        "paths": [
+          "harpoon-rts/data/rules/unmanned-2026.json"
+        ]
+      },
+      "execution": {
+        "status": "executable_for_declared_subset",
+        "paths": [
+          "harpoon-rts/crates/harpoon-core/src/rules/unmanned2026.rs",
+          "harpoon-rts/crates/harpoon-core/src/rules/navigation2026/submarine.rs",
+          "harpoon-rts/crates/harpoon-core/src/sim.rs",
+          "harpoon-rts/crates/harpoon-core/src/sensors.rs"
+        ]
+      },
+      "tests": {
+        "status": "tested_declared_subset",
+        "targets": [
+          "harpoon-rts/crates/harpoon-core/tests/communications_unmanned_batch_20261025.rs",
+          "harpoon-rts/crates/harpoon-core/tests/comms_unmanned_resume_20261025.rs",
+          "harpoon-rts/crates/harpoon-core/tests/communications_shared_consumers_resume_20261025.rs"
+        ],
+        "final_log": "artifacts/rules-book-resume-20261025/final-workspace-1.log"
+      },
+      "fixture_contract": "native production consumers plus explicitly declared laboratory fittings",
+      "explicit_rts_policy": null,
+      "pending_or_excluded": [
+        "Real hardware/range/protocol-specific receiver fitting remains explicit; no complete video/bulk contact telemetry."
+      ],
+      "whole_section_complete": false
+    },
+    {
+      "rule_id": "HV2026-2.5",
+      "branch_id": "concealed-casualty-and-owner-telemetry",
+      "status": "tested_declared_branch",
+      "declared_tested_scope": "Lost full link preserves last full telemetry and known roster; actual sourceMk48 damage and14.3 sinking clock produce physical loss while owner damage/loss events and zero-valued kind keys stay hidden; real World losses remain, later explicit receipt discloses once; serialized conceal ledger persists.",
+      "source": {
+        "status": "verified_source_for_declared_subset",
+        "authority": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "pdf_pages": [
+          21,
+          22,
+          134,
+          135
+        ],
+        "section": "2.5 / owner disclosure contract",
+        "evidence_basis": "Source/RAG/visual review records in the linked data authority and current batch domain audits"
+      },
+      "data": {
+        "status": "structured_for_declared_subset",
+        "paths": [
+          "harpoon-rts/data/rules/unmanned-2026.json"
+        ]
+      },
+      "execution": {
+        "status": "executable_for_declared_subset",
+        "paths": [
+          "harpoon-rts/crates/harpoon-core/src/rules/unmanned2026.rs",
+          "harpoon-rts/crates/harpoon-core/src/damage.rs",
+          "harpoon-rts/crates/harpoon-core/src/world.rs",
+          "harpoon-rts/crates/harpoon-core/src/observe.rs"
+        ]
+      },
+      "tests": {
+        "status": "tested_declared_subset",
+        "targets": [
+          "harpoon-rts/crates/harpoon-core/tests/comms_unmanned_resume_20261025.rs",
+          "harpoon-rts/crates/harpoon-core/tests/communications_unmanned_batch_20261025.rs"
+        ],
+        "final_log": "artifacts/rules-book-resume-20261025/final-workspace-1.log"
+      },
+      "fixture_contract": "Adjudicated actual hit queue/physical sink; no HP/death/contact injection.",
+      "explicit_rts_policy": "Separate referee truth and received owner telemetry, including ongoing-count key suppression.",
+      "pending_or_excluded": [
+        "Loss-of-link trigger is explicit referee interference input, not a natural EW weapon encounter; complete global disclosure/endgame policy not generalized."
+      ],
+      "whole_section_complete": false
+    },
+    {
+      "rule_id": "HV2026-14.2–5",
+      "branch_id": "expanded-column-coverage-and-physical-components",
+      "status": "tested_declared_branch",
+      "declared_tested_scope": "Thirteen structured columns each1..100 have one source row; explicit physical mount/ammo/director/sensor/cargo/CaS bindings, idempotent source outcomes and source fingerprint mismatch rejection; English independent directorD10 overrides translated sameD100 subdivision.",
+      "source": {
+        "status": "verified_source_for_declared_subset",
+        "authority": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "pdf_pages": [
+          129,
+          134,
+          135,
+          136,
+          137
+        ],
+        "section": "14.2–5 + Chinese Expanded PDF2–15",
+        "evidence_basis": "Source/RAG/visual review records in the linked data authority and current batch domain audits"
+      },
+      "data": {
+        "status": "structured_for_declared_subset",
+        "paths": [
+          "harpoon-rts/data/rules/expanded-damage-2026.json"
+        ]
+      },
+      "execution": {
+        "status": "executable_for_declared_subset",
+        "paths": [
+          "harpoon-rts/crates/harpoon-core/src/rules/expanded_damage2026.rs",
+          "harpoon-rts/crates/harpoon-core/src/rules/damage_runtime.rs"
+        ]
+      },
+      "tests": {
+        "status": "tested_declared_subset",
+        "targets": [
+          "harpoon-rts/crates/harpoon-core/tests/expanded_damage_20261025.rs"
+        ],
+        "final_log": "artifacts/rules-book-resume-20261025/final-workspace-1.log"
+      },
+      "fixture_contract": "Mix of true native primary and clearly labeled adjudicated source_critical inputs; source inputs are not natural attack proof.",
+      "explicit_rts_policy": null,
+      "pending_or_excluded": [
+        "Coverage of source cells is not every natural result/concurrent casualty/real equipment fit; cargo self-explosion carrierDP and missing crush remain pending."
+      ],
+      "whole_section_complete": false
+    },
+    {
+      "rule_id": "HV2026-14.5",
+      "branch_id": "loss-of-power-exact-local-manual-surface-gun",
+      "status": "tested_declared_branch",
+      "declared_tested_scope": "Original engineering electricalD6 with native visualCID reaches actual manual surface gun and AssignTarget scan for exactlocal+manualGun fit; missing flag/physicalfit or actualreinforce_dc still blocks; alive/massive/doomed/personnel/crew hard gates retained.",
+      "source": {
+        "status": "verified_source_for_declared_subset",
+        "authority": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "pdf_pages": [
+          70,
+          134,
+          135
+        ],
+        "section": "6.2.3 / 14.5",
+        "evidence_basis": "Source/RAG/visual review records in the linked data authority and current batch domain audits"
+      },
+      "data": {
+        "status": "structured_for_declared_subset",
+        "paths": [
+          "harpoon-rts/data/rules/expanded-damage-2026.json"
+        ]
+      },
+      "execution": {
+        "status": "executable_for_declared_subset",
+        "paths": [
+          "harpoon-rts/crates/harpoon-core/src/rules/expanded_damage2026.rs",
+          "harpoon-rts/crates/harpoon-core/src/rules/damage_runtime.rs",
+          "harpoon-rts/crates/harpoon-core/src/weapons.rs",
+          "harpoon-rts/crates/harpoon-core/src/rules/aaw2026.rs"
+        ]
+      },
+      "tests": {
+        "status": "tested_declared_subset",
+        "targets": [
+          "harpoon-rts/crates/harpoon-core/tests/local_manual_power_resume_20261025.rs"
+        ],
+        "final_log": "artifacts/rules-book-resume-20261025/final-workspace-1.log"
+      },
+      "fixture_contract": "Original30mm/hull/stocks; explicit laboratory local/manual physical fitting and adjudicated engineering input.",
+      "explicit_rts_policy": null,
+      "pending_or_excluded": [
+        "No real Ford manual hardware assertion; actual AAW directed local mode and sourceNoLocal restrictions remain separate, not declared covered by surface tests."
+      ],
+      "whole_section_complete": false
+    },
+    {
+      "rule_id": "HV2026-14.9",
+      "branch_id": "optional-aircraft-native-consumers",
+      "status": "tested_declared_branch",
+      "declared_tested_scope": "Native optional damage and repeated-hit composition feed MR, speed/climb/descent, throttle, offensive/sensor/CM/jettison gates; real dogfight step uses source J15gun2.5/F35C25DP cell and survives via optional casualty.",
+      "source": {
+        "status": "verified_source_for_declared_subset",
+        "authority": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "pdf_pages": [
+          137
+        ],
+        "section": "14.9 / printed14-11",
+        "evidence_basis": "Source/RAG/visual review records in the linked data authority and current batch domain audits"
+      },
+      "data": {
+        "status": "structured_for_declared_subset",
+        "paths": [
+          "harpoon-rts/data/rules/expanded-damage-2026.json",
+          "harpoon-rts/data/rules/aircombat-2026.json",
+          "harpoon-rts/data/rules/aviation-2026.json"
+        ]
+      },
+      "execution": {
+        "status": "executable_for_declared_subset",
+        "paths": [
+          "harpoon-rts/crates/harpoon-core/src/rules/expanded_damage2026.rs",
+          "harpoon-rts/crates/harpoon-core/src/rules/aviation2026.rs",
+          "harpoon-rts/crates/harpoon-core/src/rules/aircombat2026.rs",
+          "harpoon-rts/crates/harpoon-core/src/rules/aam2026.rs",
+          "harpoon-rts/crates/harpoon-core/src/movement.rs"
+        ]
+      },
+      "tests": {
+        "status": "tested_declared_subset",
+        "targets": [
+          "harpoon-rts/crates/harpoon-core/tests/expanded_damage_20261025.rs",
+          "harpoon-rts/crates/harpoon-core/tests/expanded_damage_consumers_batch_resume_20261025.rs"
+        ],
+        "final_log": "artifacts/rules-book-resume-20261025/final-workspace-1.log"
+      },
+      "fixture_contract": "Actual primary and dogfight producer; one explicit decoy critical; original printed positive gun/DP cell.",
+      "explicit_rts_policy": null,
+      "pending_or_excluded": [
+        "MR2.25 vertical category and F18gun4.2/29DP intermediate printed-cell gaps remain source pending; explicit decoy loss case is adjudicated, not natural."
+      ],
+      "whole_section_complete": false
+    },
+    {
+      "rule_id": "HV2026-14.6",
+      "branch_id": "recorded-system-repair-and-48h-cap",
+      "status": "tested_declared_branch",
+      "declared_tested_scope": "Actual recorded exact systems/levels,6/12/24/48h checks,37% boundary18success19failure, manual due snapshot/original dice/World restore; failed48h cap persists across begin/reset and real rehit.",
+      "source": {
+        "status": "verified_source_for_declared_subset",
+        "authority": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "pdf_pages": [
+          136
+        ],
+        "section": "14.6 / printed14-10",
+        "evidence_basis": "Source/RAG/visual review records in the linked data authority and current batch domain audits"
+      },
+      "data": {
+        "status": "structured_for_declared_subset",
+        "paths": [
+          "harpoon-rts/data/rules/repairs-2026.json",
+          "harpoon-rts/data/rules/expanded-damage-2026.json"
+        ]
+      },
+      "execution": {
+        "status": "executable_for_declared_subset",
+        "paths": [
+          "harpoon-rts/crates/harpoon-core/src/rules/repairs2026.rs",
+          "harpoon-rts/crates/harpoon-core/src/rules/damage_runtime.rs",
+          "harpoon-rts/crates/harpoon-core/src/rules/expanded_damage2026.rs"
+        ]
+      },
+      "tests": {
+        "status": "tested_declared_subset",
+        "targets": [
+          "harpoon-rts/crates/harpoon-core/tests/repairs_2026.rs",
+          "harpoon-rts/crates/harpoon-core/tests/expanded_damage_20261025.rs"
+        ],
+        "final_log": "artifacts/rules-book-resume-20261025/final-workspace-1.log"
+      },
+      "fixture_contract": "native production consumers plus explicitly declared laboratory fittings",
+      "explicit_rts_policy": null,
+      "pending_or_excluded": [
+        "Old aggregate damage cannot invent historical critical identities; system repair restores no hull/ammo/cargo/aircraft."
+      ],
+      "whole_section_complete": false
+    },
+    {
+      "rule_id": "HV2026-14.7/8",
+      "branch_id": "optional-serviceability-and-explicit-rescue-contract",
+      "status": "tested_declared_branch",
+      "declared_tested_scope": "Opt-in daily serviceability/dedup and private survivor ledger/own labels; explicit successful sighting snapshot is the boundary for disclosure.",
+      "source": {
+        "status": "verified_source_for_declared_subset",
+        "authority": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "pdf_pages": [
+          136,
+          137
+        ],
+        "section": "14.7–8",
+        "evidence_basis": "Source/RAG/visual review records in the linked data authority and current batch domain audits"
+      },
+      "data": {
+        "status": "structured_for_declared_subset",
+        "paths": [
+          "harpoon-rts/data/rules/expanded-damage-2026.json"
+        ]
+      },
+      "execution": {
+        "status": "executable_for_declared_subset",
+        "paths": [
+          "harpoon-rts/crates/harpoon-core/src/rules/expanded_damage2026.rs"
+        ]
+      },
+      "tests": {
+        "status": "tested_declared_subset",
+        "targets": [
+          "harpoon-rts/crates/harpoon-core/tests/expanded_damage_20261025.rs"
+        ],
+        "final_log": "artifacts/rules-book-resume-20261025/final-workspace-1.log"
+      },
+      "fixture_contract": "Explicit sighting API and source/scenario rescue geometry; not a native search encounter.",
+      "explicit_rts_policy": null,
+      "pending_or_excluded": [
+        "No production caller for native survivor visual/IR sighting; full SAR discovery/parked-individual transfers/campaign50-50 inventory remain open."
+      ],
+      "whole_section_complete": false
+    },
+    {
+      "rule_id": "HV2026-14.1.8",
+      "branch_id": "nuclear-carrier-terminal-and-source-radii",
+      "status": "tested_declared_branch",
+      "declared_tested_scope": "Discrete yield/table boundaries, actual authorization release gate/snapshot, genuine terminal-state arming, miss delayed burst and World restore; nuclear fuze failure on actualSAM hit cannot fall through conventional kill; source blue-out.",
+      "source": {
+        "status": "verified_source_for_declared_subset",
+        "authority": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "pdf_pages": [
+          131,
+          132
+        ],
+        "section": "14.1.8 / printed14-5–6",
+        "evidence_basis": "Source/RAG/visual review records in the linked data authority and current batch domain audits"
+      },
+      "data": {
+        "status": "structured_for_declared_subset",
+        "paths": [
+          "harpoon-rts/data/rules/nuclear-2026.json"
+        ]
+      },
+      "execution": {
+        "status": "executable_for_declared_subset",
+        "paths": [
+          "harpoon-rts/crates/harpoon-core/src/rules/nuclear2026.rs",
+          "harpoon-rts/crates/harpoon-core/src/weapons.rs",
+          "harpoon-rts/crates/harpoon-core/src/damage.rs"
+        ]
+      },
+      "tests": {
+        "status": "tested_declared_subset",
+        "targets": [
+          "harpoon-rts/crates/harpoon-core/tests/nuclear_batch_resume_20261025.rs"
+        ],
+        "final_log": "artifacts/rules-book-resume-20261025/final-workspace-1.log"
+      },
+      "fixture_contract": "Source-bounded laboratory warhead/carrier declarations; terminal-input experiments are labeled, not a natural full nuclearFCS battle.",
+      "explicit_rts_policy": null,
+      "pending_or_excluded": [
+        "No default nuclear variant or guessed yield/interpolation; nuclear ASW placement/EMP/fallout/full facilities remain pending."
+      ],
+      "whole_section_complete": false
+    },
+    {
+      "rule_id": "HV2026-14.1.8",
+      "branch_id": "parked-versus-inflight-and-mission-abort",
+      "status": "tested_declared_branch",
+      "declared_tested_scope": "Actual facility-bound own parked identity,8psi surface destruction versus4psi in-flight;2psi ring actual missionabort for aircraft/missile while preserving aircraftHP; source surface-shipD6x10% never applied to parked aircraft.",
+      "source": {
+        "status": "verified_source_for_declared_subset",
+        "authority": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "pdf_pages": [
+          131,
+          132
+        ],
+        "section": "Table footnotes1/2 / 14.1.8",
+        "evidence_basis": "Source/RAG/visual review records in the linked data authority and current batch domain audits"
+      },
+      "data": {
+        "status": "structured_for_declared_subset",
+        "paths": [
+          "harpoon-rts/data/rules/nuclear-2026.json"
+        ]
+      },
+      "execution": {
+        "status": "executable_for_declared_subset",
+        "paths": [
+          "harpoon-rts/crates/harpoon-core/src/rules/nuclear2026.rs",
+          "harpoon-rts/crates/harpoon-core/src/rules/ground2026.rs",
+          "harpoon-rts/crates/harpoon-core/src/air.rs",
+          "harpoon-rts/crates/harpoon-core/src/weapons.rs"
+        ]
+      },
+      "tests": {
+        "status": "tested_declared_subset",
+        "targets": [
+          "harpoon-rts/crates/harpoon-core/tests/nuclear_parked_resume_20261025.rs"
+        ],
+        "final_log": "artifacts/rules-book-resume-20261025/final-workspace-1.log"
+      },
+      "fixture_contract": "Four source-controlled terminal-input cases with real stored_aircraft bindings.",
+      "explicit_rts_policy": null,
+      "pending_or_excluded": [
+        "2psi specific weapon/sensor damage, unbound height0 parking inference, facility nuclearDP and unqualified airburst remain pending."
+      ],
+      "whole_section_complete": false
+    },
+    {
+      "rule_id": "HV2026-11.5–7",
+      "branch_id": "facility-functions-and-land-air-service",
+      "status": "tested_declared_branch",
+      "declared_tested_scope": "Source facility damage cuts actual functions, runway repair requires explicit resources/no rubble restoration, real land service launch/lane spacing/queue/World restore, own-only runtime; enemy surface ship cannot masquerade as stored aircraft.",
+      "source": {
+        "status": "verified_source_for_declared_subset",
+        "authority": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "pdf_pages": [
+          116,
+          117,
+          118
+        ],
+        "section": "Chapter11 facilities / tables visually117–118",
+        "evidence_basis": "Source/RAG/visual review records in the linked data authority and current batch domain audits"
+      },
+      "data": {
+        "status": "structured_for_declared_subset",
+        "paths": [
+          "harpoon-rts/data/rules/ground-2026.json"
+        ]
+      },
+      "execution": {
+        "status": "executable_for_declared_subset",
+        "paths": [
+          "harpoon-rts/crates/harpoon-core/src/rules/ground2026.rs",
+          "harpoon-rts/crates/harpoon-core/src/air.rs",
+          "harpoon-rts/crates/harpoon-core/src/rules/aviation2026.rs",
+          "harpoon-rts/crates/harpoon-core/src/damage.rs"
+        ]
+      },
+      "tests": {
+        "status": "tested_declared_subset",
+        "targets": [
+          "harpoon-rts/crates/harpoon-core/tests/ground_2026.rs",
+          "harpoon-rts/crates/harpoon-core/tests/ground_storage_resume_20261025.rs"
+        ],
+        "final_log": "artifacts/rules-book-resume-20261025/final-workspace-1.log"
+      },
+      "fixture_contract": "native production consumers plus explicitly declared laboratory fittings",
+      "explicit_rts_policy": null,
+      "pending_or_excluded": [
+        "GCI and resupply helpers still lack production callers; repair_rate_factor is only a field/validation, no actual rate consumer; full port/airfield chain remains open."
+      ],
+      "whole_section_complete": false
+    },
+    {
+      "rule_id": "HV2026-8.5.2",
+      "branch_id": "native-standoff-carrier-to-immediate-torpedo",
+      "status": "tested_declared_branch",
+      "declared_tested_scope": "Native passiveSub classification plus independent active measuredFCS, real carrier flight, original single placementD10 then same-ID payload torpedo/immediate source initial attack, ammo/roundtrip/missingfit rejection and actual source6 submarine release-noise transient.",
+      "source": {
+        "status": "verified_source_for_declared_subset",
+        "authority": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "pdf_pages": [
+          98,
+          99,
+          100
+        ],
+        "section": "8.5.2 / Annex E1/E4",
+        "evidence_basis": "Source/RAG/visual review records in the linked data authority and current batch domain audits"
+      },
+      "data": {
+        "status": "structured_for_declared_subset",
+        "paths": [
+          "harpoon-rts/data/rules/asw-weapons-2026.json"
+        ]
+      },
+      "execution": {
+        "status": "executable_for_declared_subset",
+        "paths": [
+          "harpoon-rts/crates/harpoon-core/src/rules/asw_weapons2026.rs",
+          "harpoon-rts/crates/harpoon-core/src/rules/torpedo2026.rs",
+          "harpoon-rts/crates/harpoon-core/src/weapons.rs"
+        ]
+      },
+      "tests": {
+        "status": "tested_declared_subset",
+        "targets": [
+          "harpoon-rts/crates/harpoon-core/tests/asw_weapons_resume_20261025.rs"
+        ],
+        "final_log": "artifacts/rules-book-resume-20261025/final-workspace-1.log"
+      },
+      "fixture_contract": "Source-CS Ford surface / Virginia submerged experimental launcher; borrowed originalBurke VLA mount/stock is declared laboratory hardware. Active50=16nm avoids25nm row tie; passive16nm earns classification.",
+      "explicit_rts_policy": null,
+      "pending_or_excluded": [
+        "No actualBurke combat-system fit claim, no real Ford/Virginia VLA installation assertion; nuclear placement and all real variants remain pending."
+      ],
+      "whole_section_complete": false
+    },
+    {
+      "rule_id": "HV2026-8.5.3/4",
+      "branch_id": "projector-pure-source-calculation-only",
+      "status": "tested_pure_calculation_subset",
+      "declared_tested_scope": "Only printed projector pattern thresholds, source example integer rounding, Poor/sea7/Fair/speed/depth and source gaps checked by pure projector_thresholds computation.",
+      "source": {
+        "status": "verified_source_for_declared_subset",
+        "authority": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "pdf_pages": [
+          98,
+          99,
+          100
+        ],
+        "section": "8.5.3/4",
+        "evidence_basis": "Source/RAG/visual review records in the linked data authority and current batch domain audits"
+      },
+      "data": {
+        "status": "structured_for_declared_subset",
+        "paths": [
+          "harpoon-rts/data/rules/asw-weapons-2026.json"
+        ]
+      },
+      "execution": {
+        "status": "pure_function_only_runtime_open",
+        "paths": [
+          "harpoon-rts/crates/harpoon-core/src/rules/asw_weapons2026.rs"
+        ]
+      },
+      "tests": {
+        "status": "tested_declared_subset",
+        "targets": [
+          "harpoon-rts/crates/harpoon-core/tests/asw_weapons_resume_20261025.rs"
+        ],
+        "final_log": "artifacts/rules-book-resume-20261025/final-workspace-1.log"
+      },
+      "fixture_contract": "Two projector pure-calculation tests within four total pure ASW tests; no native projector encounter. Four other ASW tests cover native/guard standoff behavior.",
+      "explicit_rts_policy": null,
+      "pending_or_excluded": [
+        "No actual pattern release/ammo/arcs/depth/FCS/reload/250yd depth-charge runtime; guard/algorithm pass is not physical execution."
+      ],
+      "whole_section_complete": false
+    },
+    {
+      "rule_id": "HV2026-SHARED-CONTROLS",
+      "branch_id": "typed-authority-manual-and-user-controls",
+      "status": "tested_declared_branch",
+      "declared_tested_scope": "Complete public action shapes, four empty-struct battery variants reject extra fields, required fields/private source/retain_manual injections rejected; source-qualified apply alone commits player control; referenced own controller/recall and explicit resumeAI share authority gates.",
+      "source": {
+        "status": "verified_source_for_declared_subset",
+        "authority": "14-2.HpnV_Rules_1_Jan_26.pdf",
+        "pdf_pages": [
+          21,
+          22,
+          28,
+          29,
+          74,
+          75,
+          131,
+          132
+        ],
+        "section": "Shared implementation contract; underlying source domains above",
+        "evidence_basis": "Source/RAG/visual review records in the linked data authority and current batch domain audits"
+      },
+      "data": {
+        "status": "structured_for_declared_subset",
+        "paths": [
+          "harpoon-rts/data/rules/battery-2026.json",
+          "harpoon-rts/data/rules/communications-2026.json",
+          "harpoon-rts/data/rules/unmanned-2026.json",
+          "harpoon-rts/data/rules/nuclear-2026.json"
+        ]
+      },
+      "execution": {
+        "status": "executable_for_declared_subset",
+        "paths": [
+          "harpoon-rts/crates/harpoon-core/src/commands.rs",
+          "harpoon-rts/crates/harpoon-core/src/command_contract.rs",
+          "harpoon-rts/crates/harpoon-core/src/sim.rs",
+          "harpoon-rts/crates/harpoon-core/src/observe.rs"
+        ]
+      },
+      "tests": {
+        "status": "tested_declared_subset",
+        "targets": [
+          "harpoon-rts/crates/harpoon-core/tests/communications_shared_consumers_resume_20261025.rs"
+        ],
+        "final_log": "artifacts/rules-book-resume-20261025/final-workspace-1.log"
+      },
+      "fixture_contract": "Native minimal source-control scenario; HTTP/MCP/UI evidence has explicit experimental nuclear/TDL/unmanned fit.",
+      "explicit_rts_policy": null,
+      "pending_or_excluded": [
+        "Actual protocol executes selected commands only, not every discovered schema action; no nuclear release/FCS claim from control acceptance."
+      ],
+      "whole_section_complete": false
+    }
+  ],
+  "pending_rows": [
+    {
+      "rule_id": "HV2026-1/2",
+      "branch_id": "metarules-and-multirate-stages",
+      "status": "execution_open",
+      "declared_tested_scope": null,
+      "source": {
+        "status": "mixed_verified_and_unresolved",
+        "evidence": "artifacts/rules-book-resume-20261025/coverage-audit/coverage-delta.md",
+        "note": "Retained source/interpretation restrictions; not all underlying atomic source pages are signed off."
+      },
+      "data": {
+        "status": "incomplete_or_source_guarded",
+        "note": "Existing structured cells/pending values remain; no missing value converted to zero."
+      },
+      "execution": {
+        "status": "open",
+        "scope": "逐原子适用性、量纲及完整多编队阶段/多速率语义未四联签收；每秒RTS循环不是全原书回合证明。"
+      },
+      "tests": {
+        "status": "not_accepted_as_complete_mechanism",
+        "note": "A passing pending/refusal guard is not evidence that this mechanism executes."
+      },
+      "whole_section_complete": false
+    },
+    {
+      "rule_id": "HV2026-2.5",
+      "branch_id": "real-unmanned-fits-and-natural-link-failure",
+      "status": "source_blocked_and_execution_open",
+      "declared_tested_scope": null,
+      "source": {
+        "status": "mixed_verified_and_unresolved",
+        "evidence": "artifacts/rules-book-resume-20261025/coverage-audit/coverage-delta.md",
+        "note": "Retained source/interpretation restrictions; not all underlying atomic source pages are signed off."
+      },
+      "data": {
+        "status": "incomplete_or_source_guarded",
+        "note": "Existing structured cells/pending values remain; no missing value converted to zero."
+      },
+      "execution": {
+        "status": "open",
+        "scope": "实际控制台/LOS/SAT/带宽/声调制解调/耐力逐装备fit，以及所有天然EW/critical失联组合未闭。"
+      },
+      "tests": {
+        "status": "not_accepted_as_complete_mechanism",
+        "note": "A passing pending/refusal guard is not evidence that this mechanism executes."
+      },
+      "whole_section_complete": false
+    },
+    {
+      "rule_id": "HV2026-3.1",
+      "branch_id": "collision-ram-grounding",
+      "status": "execution_open",
+      "declared_tested_scope": null,
+      "source": {
+        "status": "mixed_verified_and_unresolved",
+        "evidence": "artifacts/rules-book-resume-20261025/coverage-audit/coverage-delta.md",
+        "note": "Retained source/interpretation restrictions; not all underlying atomic source pages are signed off."
+      },
+      "data": {
+        "status": "incomplete_or_source_guarded",
+        "note": "Existing structured cells/pending values remain; no missing value converted to zero."
+      },
+      "execution": {
+        "status": "open",
+        "scope": "碰撞/撞击实际几何、3D10×原始DP、方面角/舍入和搁浅海图水深仍缺完整原生链；不撤回此前已验水面硬舵/倒车子集。"
+      },
+      "tests": {
+        "status": "not_accepted_as_complete_mechanism",
+        "note": "A passing pending/refusal guard is not evidence that this mechanism executes."
+      },
+      "whole_section_complete": false
+    },
+    {
+      "rule_id": "HV2026-3.2",
+      "branch_id": "submarine-full-maneuvers-crush-and-blow",
+      "status": "source_blocked_and_execution_open",
+      "declared_tested_scope": null,
+      "source": {
+        "status": "mixed_verified_and_unresolved",
+        "evidence": "artifacts/rules-book-resume-20261025/coverage-audit/coverage-delta.md",
+        "note": "Retained source/interpretation restrictions; not all underlying atomic source pages are signed off."
+      },
+      "data": {
+        "status": "incomplete_or_source_guarded",
+        "note": "Existing structured cells/pending values remain; no missing value converted to zero."
+      },
+      "execution": {
+        "status": "open",
+        "scope": "CrashDive实际Annex许可、VeryDeep/低速、潜艇硬舵失深/并发伤/工程crush，Blow特有空化组合R-063仍未决；游戏深度带上界不等于工程压溃深度。"
+      },
+      "tests": {
+        "status": "not_accepted_as_complete_mechanism",
+        "note": "A passing pending/refusal guard is not evidence that this mechanism executes."
+      },
+      "whole_section_complete": false
+    },
+    {
+      "rule_id": "HV2026-3.2.4/5",
+      "branch_id": "battery-unprinted-and-real-initial-state",
+      "status": "source_blocked",
+      "declared_tested_scope": null,
+      "source": {
+        "status": "mixed_verified_and_unresolved",
+        "evidence": "artifacts/rules-book-resume-20261025/coverage-audit/coverage-delta.md",
+        "note": "Retained source/interpretation restrictions; not all underlying atomic source pages are signed off."
+      },
+      "data": {
+        "status": "incomplete_or_source_guarded",
+        "note": "Existing structured cells/pending values remain; no missing value converted to zero."
+      },
+      "execution": {
+        "status": "open",
+        "scope": "old10冲突仍要求明确政策；70–71%空隙/full-speed分母/化学、分数/表外速度、AIP一般曲线及>=20kt单位贡献、所有真实初值不猜。"
+      },
+      "tests": {
+        "status": "not_accepted_as_complete_mechanism",
+        "note": "A passing pending/refusal guard is not evidence that this mechanism executes."
+      },
+      "whole_section_complete": false
+    },
+    {
+      "rule_id": "HV2026-4",
+      "branch_id": "aviation-terrain-load-and-unprinted-categories",
+      "status": "source_blocked_and_execution_open",
+      "declared_tested_scope": null,
+      "source": {
+        "status": "mixed_verified_and_unresolved",
+        "evidence": "artifacts/rules-book-resume-20261025/coverage-audit/coverage-delta.md",
+        "note": "Retained source/interpretation restrictions; not all underlying atomic source pages are signed off."
+      },
+      "data": {
+        "status": "incomplete_or_source_guarded",
+        "note": "Existing structured cells/pending values remain; no missing value converted to zero."
+      },
+      "execution": {
+        "status": "open",
+        "scope": "NOE/TF/TA实际AGL/地形/云、所有外载与岸勤，4.2 ordnance-load60%分母不借4.7.5 maximum payload；MR2.25垂直类别与未印gun/DP格保pending。"
+      },
+      "tests": {
+        "status": "not_accepted_as_complete_mechanism",
+        "note": "A passing pending/refusal guard is not evidence that this mechanism executes."
+      },
+      "whole_section_complete": false
+    },
+    {
+      "rule_id": "HV2026-5",
+      "branch_id": "detection-remaining-native-producers",
+      "status": "source_blocked_and_execution_open",
+      "declared_tested_scope": null,
+      "source": {
+        "status": "mixed_verified_and_unresolved",
+        "evidence": "artifacts/rules-book-resume-20261025/coverage-audit/coverage-delta.md",
+        "note": "Retained source/interpretation restrictions; not all underlying atomic source pages are signed off."
+      },
+      "data": {
+        "status": "incomplete_or_source_guarded",
+        "note": "Existing structured cells/pending values remain; no missing value converted to zero."
+      },
+      "execution": {
+        "status": "open",
+        "scope": "广域MAD驻留/释放/回收、三次尾迹自然历史、浮标监视通道/实际深度设备、激光告警及全部EO/IR实际源参数未闭。"
+      },
+      "tests": {
+        "status": "not_accepted_as_complete_mechanism",
+        "note": "A passing pending/refusal guard is not evidence that this mechanism executes."
+      },
+      "whole_section_complete": false
+    },
+    {
+      "rule_id": "HV2026-5.4.2.1",
+      "branch_id": "optional-array-unprinted-stabilization",
+      "status": "source_blocked",
+      "declared_tested_scope": null,
+      "source": {
+        "status": "mixed_verified_and_unresolved",
+        "evidence": "artifacts/rules-book-resume-20261025/coverage-audit/coverage-delta.md",
+        "note": "Retained source/interpretation restrictions; not all underlying atomic source pages are signed off."
+      },
+      "data": {
+        "status": "incomplete_or_source_guarded",
+        "note": "Existing structured cells/pending values remain; no missing value converted to zero."
+      },
+      "execution": {
+        "status": "open",
+        "scope": "5/10/15+打印列外速度、未知K1阵长/物理长度、特殊世代/主动后续重捕获组合不插值或补真装配。"
+      },
+      "tests": {
+        "status": "not_accepted_as_complete_mechanism",
+        "note": "A passing pending/refusal guard is not evidence that this mechanism executes."
+      },
+      "whole_section_complete": false
+    },
+    {
+      "rule_id": "HV2026-6.3.9/10",
+      "branch_id": "tdl-real-annex-and-unresolved-mapping",
+      "status": "source_blocked_and_execution_open",
+      "declared_tested_scope": null,
+      "source": {
+        "status": "mixed_verified_and_unresolved",
+        "evidence": "artifacts/rules-book-resume-20261025/coverage-audit/coverage-delta.md",
+        "note": "Retained source/interpretation restrictions; not all underlying atomic source pages are signed off."
+      },
+      "data": {
+        "status": "incomplete_or_source_guarded",
+        "note": "Existing structured cells/pending values remain; no missing value converted to zero."
+      },
+      "execution": {
+        "status": "open",
+        "scope": "真实Annex L/兼容/HF-ES receiver、独立Air targeting producer、NRT Poor再降一级及混合非TDL模式/家族复算未决；不得把接收警告当自己原生观测。"
+      },
+      "tests": {
+        "status": "not_accepted_as_complete_mechanism",
+        "note": "A passing pending/refusal guard is not evidence that this mechanism executes."
+      },
+      "whole_section_complete": false
+    },
+    {
+      "rule_id": "HV2026-6.4",
+      "branch_id": "track-wire-and-channel-capacity",
+      "status": "source_blocked_and_execution_open",
+      "declared_tested_scope": null,
+      "source": {
+        "status": "mixed_verified_and_unresolved",
+        "evidence": "artifacts/rules-book-resume-20261025/coverage-audit/coverage-delta.md",
+        "note": "Retained source/interpretation restrictions; not all underlying atomic source pages are signed off."
+      },
+      "data": {
+        "status": "incomplete_or_source_guarded",
+        "note": "Existing structured cells/pending values remain; no missing value converted to zero."
+      },
+      "execution": {
+        "status": "open",
+        "scope": "源Cbt Sys Gen只支持相应FCS修正，不自动给6.4真实跟踪/导弹/线导容量；全部fit未签收。"
+      },
+      "tests": {
+        "status": "not_accepted_as_complete_mechanism",
+        "note": "A passing pending/refusal guard is not evidence that this mechanism executes."
+      },
+      "whole_section_complete": false
+    },
+    {
+      "rule_id": "HV2026-7",
+      "branch_id": "guidance-all-combinations",
+      "status": "source_blocked_and_execution_open",
+      "declared_tested_scope": null,
+      "source": {
+        "status": "mixed_verified_and_unresolved",
+        "evidence": "artifacts/rules-book-resume-20261025/coverage-audit/coverage-delta.md",
+        "note": "Retained source/interpretation restrictions; not all underlying atomic source pages are signed off."
+      },
+      "data": {
+        "status": "incomplete_or_source_guarded",
+        "note": "Existing structured cells/pending values remain; no missing value converted to zero."
+      },
+      "execution": {
+        "status": "open",
+        "scope": "PRH Gen3缺乘数、完整线导双线反馈/垂直/尾流圈；多声学机会优先级不套RF/IR/EO权重；同型3+、异深/交会终端未闭。"
+      },
+      "tests": {
+        "status": "not_accepted_as_complete_mechanism",
+        "note": "A passing pending/refusal guard is not evidence that this mechanism executes."
+      },
+      "whole_section_complete": false
+    },
+    {
+      "rule_id": "HV2026-8",
+      "branch_id": "surface-gun-bmd-and-missile-mr",
+      "status": "source_blocked_and_execution_open",
+      "declared_tested_scope": null,
+      "source": {
+        "status": "mixed_verified_and_unresolved",
+        "evidence": "artifacts/rules-book-resume-20261025/coverage-audit/coverage-delta.md",
+        "note": "Retained source/interpretation restrictions; not all underlying atomic source pages are signed off."
+      },
+      "data": {
+        "status": "incomplete_or_source_guarded",
+        "note": "Existing structured cells/pending values remain; no missing value converted to zero."
+      },
+      "execution": {
+        "status": "open",
+        "scope": "舰炮/8.3对陆全几何与集中/组件分配，真实AA directed local模式，BMD/ASBM全链及R-059 missile-target MR适用未决；Annex ATA不是目标MR。"
+      },
+      "tests": {
+        "status": "not_accepted_as_complete_mechanism",
+        "note": "A passing pending/refusal guard is not evidence that this mechanism executes."
+      },
+      "whole_section_complete": false
+    },
+    {
+      "rule_id": "HV2026-8.5.3/4",
+      "branch_id": "projector-and-depth-charge-physical-runtime",
+      "status": "execution_open",
+      "declared_tested_scope": null,
+      "source": {
+        "status": "mixed_verified_and_unresolved",
+        "evidence": "artifacts/rules-book-resume-20261025/coverage-audit/coverage-delta.md",
+        "note": "Retained source/interpretation restrictions; not all underlying atomic source pages are signed off."
+      },
+      "data": {
+        "status": "incomplete_or_source_guarded",
+        "note": "Existing structured cells/pending values remain; no missing value converted to zero."
+      },
+      "execution": {
+        "status": "open",
+        "scope": "projector_thresholds纯表已验但真实pattern发射/弹药/弧/深度/FCS/重装/250yd深弹通过链未接；核ASW专门placement仍拒绝实投。"
+      },
+      "tests": {
+        "status": "not_accepted_as_complete_mechanism",
+        "note": "A passing pending/refusal guard is not evidence that this mechanism executes."
+      },
+      "whole_section_complete": false
+    },
+    {
+      "rule_id": "HV2026-9",
+      "branch_id": "full-air-to-surface-sortie-causality",
+      "status": "execution_open",
+      "declared_tested_scope": null,
+      "source": {
+        "status": "mixed_verified_and_unresolved",
+        "evidence": "artifacts/rules-book-resume-20261025/coverage-audit/coverage-delta.md",
+        "note": "Retained source/interpretation restrictions; not all underlying atomic source pages are signed off."
+      },
+      "data": {
+        "status": "incomplete_or_source_guarded",
+        "note": "Existing structured cells/pending values remain; no missing value converted to zero."
+      },
+      "execution": {
+        "status": "open",
+        "scope": "非制导/PGM/炸弹/火箭/集束全投放、扫射、真实载荷/出动和设施源命中的完整因果链仍逐项开放。"
+      },
+      "tests": {
+        "status": "not_accepted_as_complete_mechanism",
+        "note": "A passing pending/refusal guard is not evidence that this mechanism executes."
+      },
+      "whole_section_complete": false
+    },
+    {
+      "rule_id": "HV2026-10",
+      "branch_id": "torpedo-complete-wire-vertical-hardkill",
+      "status": "source_blocked_and_execution_open",
+      "declared_tested_scope": null,
+      "source": {
+        "status": "mixed_verified_and_unresolved",
+        "evidence": "artifacts/rules-book-resume-20261025/coverage-audit/coverage-delta.md",
+        "note": "Retained source/interpretation restrictions; not all underlying atomic source pages are signed off."
+      },
+      "data": {
+        "status": "incomplete_or_source_guarded",
+        "note": "Existing structured cells/pending values remain; no missing value converted to zero."
+      },
+      "execution": {
+        "status": "open",
+        "scope": "既有螺旋/再攻/单机会/同步互扰窄域保留；多对象、全线导反馈/垂直捕获/硬杀伤引信及未给交会杀伤/声学优先级不能填值。"
+      },
+      "tests": {
+        "status": "not_accepted_as_complete_mechanism",
+        "note": "A passing pending/refusal guard is not evidence that this mechanism executes."
+      },
+      "whole_section_complete": false
+    },
+    {
+      "rule_id": "HV2026-11",
+      "branch_id": "gci-resupply-repair-rate-and-full-facilities",
+      "status": "execution_open",
+      "declared_tested_scope": null,
+      "source": {
+        "status": "mixed_verified_and_unresolved",
+        "evidence": "artifacts/rules-book-resume-20261025/coverage-audit/coverage-delta.md",
+        "note": "Retained source/interpretation restrictions; not all underlying atomic source pages are signed off."
+      },
+      "data": {
+        "status": "incomplete_or_source_guarded",
+        "note": "Existing structured cells/pending values remain; no missing value converted to zero."
+      },
+      "execution": {
+        "status": "open",
+        "scope": "gci_available/resupply_allowed全生产源中仍仅定义；repair_rate_factor是FacilityFit字段及校验，不是已接独立函数/实际速率；完整港口泊位/补给/维修开放。"
+      },
+      "tests": {
+        "status": "not_accepted_as_complete_mechanism",
+        "note": "A passing pending/refusal guard is not evidence that this mechanism executes."
+      },
+      "whole_section_complete": false
+    },
+    {
+      "rule_id": "HV2026-12",
+      "branch_id": "full-ew-fittings-and-combined-effects",
+      "status": "source_blocked_and_execution_open",
+      "declared_tested_scope": null,
+      "source": {
+        "status": "mixed_verified_and_unresolved",
+        "evidence": "artifacts/rules-book-resume-20261025/coverage-audit/coverage-delta.md",
+        "note": "Retained source/interpretation restrictions; not all underlying atomic source pages are signed off."
+      },
+      "data": {
+        "status": "incomplete_or_source_guarded",
+        "note": "Existing structured cells/pending values remain; no missing value converted to zero."
+      },
+      "execution": {
+        "status": "open",
+        "scope": "箔条走廊体积/风/事故、TALD全性能、所有真实jammer/decoy和EW天然损伤与TDL/控制组合未闭。"
+      },
+      "tests": {
+        "status": "not_accepted_as_complete_mechanism",
+        "note": "A passing pending/refusal guard is not evidence that this mechanism executes."
+      },
+      "whole_section_complete": false
+    },
+    {
+      "rule_id": "HV2026-13",
+      "branch_id": "mine-identification-and-full-lifecycle",
+      "status": "source_blocked_and_execution_open",
+      "declared_tested_scope": null,
+      "source": {
+        "status": "mixed_verified_and_unresolved",
+        "evidence": "artifacts/rules-book-resume-20261025/coverage-audit/coverage-delta.md",
+        "note": "Retained source/interpretation restrictions; not all underlying atomic source pages are signed off."
+      },
+      "data": {
+        "status": "incomplete_or_source_guarded",
+        "note": "Existing structured cells/pending values remain; no missing value converted to zero."
+      },
+      "execution": {
+        "status": "open",
+        "scope": "Type193M精确识别设备缺源；echo→分类→hunt、混合/空投/漂移布雷/扫雷具、全部引信/反应/目标组合未闭。"
+      },
+      "tests": {
+        "status": "not_accepted_as_complete_mechanism",
+        "note": "A passing pending/refusal guard is not evidence that this mechanism executes."
+      },
+      "whole_section_complete": false
+    },
+    {
+      "rule_id": "HV2026-14.1.8",
+      "branch_id": "nuclear-detailed-equipment-emp-fallout-asw",
+      "status": "source_blocked_and_execution_open",
+      "declared_tested_scope": null,
+      "source": {
+        "status": "mixed_verified_and_unresolved",
+        "evidence": "artifacts/rules-book-resume-20261025/coverage-audit/coverage-delta.md",
+        "note": "Retained source/interpretation restrictions; not all underlying atomic source pages are signed off."
+      },
+      "data": {
+        "status": "incomplete_or_source_guarded",
+        "note": "Existing structured cells/pending values remain; no missing value converted to zero."
+      },
+      "execution": {
+        "status": "open",
+        "scope": "已验表范围和missionabort不等于2psi具体weapon/sensor细伤；未合格burst、设施核DP、完整EMP/沉降/核ASW就位效果仍pending。"
+      },
+      "tests": {
+        "status": "not_accepted_as_complete_mechanism",
+        "note": "A passing pending/refusal guard is not evidence that this mechanism executes."
+      },
+      "whole_section_complete": false
+    },
+    {
+      "rule_id": "HV2026-14.2–9",
+      "branch_id": "all-expanded-outcomes-fits-concurrency",
+      "status": "source_blocked_and_execution_open",
+      "declared_tested_scope": null,
+      "source": {
+        "status": "mixed_verified_and_unresolved",
+        "evidence": "artifacts/rules-book-resume-20261025/coverage-audit/coverage-delta.md",
+        "note": "Retained source/interpretation restrictions; not all underlying atomic source pages are signed off."
+      },
+      "data": {
+        "status": "incomplete_or_source_guarded",
+        "note": "Existing structured cells/pending values remain; no missing value converted to zero."
+      },
+      "execution": {
+        "status": "open",
+        "scope": "十三列结构和实物消费者并非每结果/并发伤/全真实fit执行；cargo自爆本舰DP、crush缺值、原始modifiedPh/停机个体原生转移、战役50/50库存仍开放。"
+      },
+      "tests": {
+        "status": "not_accepted_as_complete_mechanism",
+        "note": "A passing pending/refusal guard is not evidence that this mechanism executes."
+      },
+      "whole_section_complete": false
+    },
+    {
+      "rule_id": "HV2026-14.8",
+      "branch_id": "native-survivor-discovery",
+      "status": "execution_open",
+      "declared_tested_scope": null,
+      "source": {
+        "status": "mixed_verified_and_unresolved",
+        "evidence": "artifacts/rules-book-resume-20261025/coverage-audit/coverage-delta.md",
+        "note": "Retained source/interpretation restrictions; not all underlying atomic source pages are signed off."
+      },
+      "data": {
+        "status": "incomplete_or_source_guarded",
+        "note": "Existing structured cells/pending values remain; no missing value converted to zero."
+      },
+      "execution": {
+        "status": "open",
+        "scope": "survivor_sighting_profile/record_survivor_sighting仅定义及显式测试调用；sensors对非战斗幸存者对象的原生视觉/IR发现producer仍未接。"
+      },
+      "tests": {
+        "status": "not_accepted_as_complete_mechanism",
+        "note": "A passing pending/refusal guard is not evidence that this mechanism executes."
+      },
+      "whole_section_complete": false
+    },
+    {
+      "rule_id": "HV2026-ANNEX-ALL",
+      "branch_id": "all-platform-equipment-era-fits",
+      "status": "source_blocked_and_execution_open",
+      "declared_tested_scope": null,
+      "source": {
+        "status": "mixed_verified_and_unresolved",
+        "evidence": "artifacts/rules-book-resume-20261025/coverage-audit/coverage-delta.md",
+        "note": "Retained source/interpretation restrictions; not all underlying atomic source pages are signed off."
+      },
+      "data": {
+        "status": "incomplete_or_source_guarded",
+        "note": "Existing structured cells/pending values remain; no missing value converted to zero."
+      },
+      "execution": {
+        "status": "open",
+        "scope": "catalog/原页/候选不等于所有平台、年代、设备、武器弹药和载荷装配完成；scenario_assumption只支持其明确实验。"
+      },
+      "tests": {
+        "status": "not_accepted_as_complete_mechanism",
+        "note": "A passing pending/refusal guard is not evidence that this mechanism executes."
+      },
+      "whole_section_complete": false
+    }
+  ],
+  "fixture_boundaries": [
+    "ASW positive surface launcher uses source-CS Ford with an explicitly experimental originalBurke VLA mount, not a sourcedBurke CS or realFord VLA fit; submerged case uses source-CSVirginia laboratory fit. Real active+passive native reports earn ranging andSub classification.",
+    "Expanded source_critical, survivor sighting and some terminal nuclear fixtures are explicitly adjudicated inputs; they are not counted as natural weapon/detection events.",
+    "MCP12 actual legal commands are11 operation groups because battery raise includes explicit automation-off; counts are not discovered schema tool count.",
+    "Protocol/browser controls do not prove actual nuclear release/FCS. No newLLM match, physical tablet or externalAFSIM/STK connection claimed."
+  ],
+  "historical_evidence_policy": "Prior frozen artifacts and manifests are immutable. Early batch logs/report metadata keep their original candidate/failure state; this new document signs off only what final logs and validation JSON prove.",
+  "future_priority_after_book": [
+    "headless parallel-training engine",
+    "Lua TCP AI interface",
+    "Monte Carlo experiment analysis",
+    "interactive independent simulation",
+    "plaintext scenario XML export",
+    "DIS connection with independently verified external tools"
+  ],
+  "littoral_and_cooperative_fsm": "Deferred until after whole-book completion and the six requested interfaces; no new completion claim."
+}

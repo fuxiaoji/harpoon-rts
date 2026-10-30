@@ -1,0 +1,49 @@
+{
+ "source": {
+  "rules": "14-2.HpnV_Rules_1_Jan_26.pdf SHA8196ffc715bbcccd862d8597c607de7816dac5baee31fa659f89dfaf4323700c, English 2026-01-01, PDF108/109 printed 9-7/9-8, 9.6.8 first-generation EO/IR bullet and Precision-Guided Munitions Attack Table",
+  "annex": "4-4.Americas_Aircraft__1_Dec_25.pdf PDF99/H2-1 exact AGM-62 Mk1 Walleye I row",
+  "evidence": [
+   "artifacts/rules-book-wide-20261026/pgm-controlled-next-root-20261028/english-2026-pdf108.png",
+   "artifacts/rules-book-wide-20261026/pgm-controlled-next-root-20261028/english-2026-pdf109.png",
+   "artifacts/rules-book-wide-20261026/zcode-parallel-20261028/eoir1/source-pages/english-pdf109-pgm-table-zoom.png",
+   "artifacts/rules-book-wide-20261026/zcode-parallel-20261028/eoir1/source-pages/annex-h2-pdf99-full.png"
+  ],
+  "chinese_cross_check": "core 9-7/9-8 and player handbook PDF36/printed35 identical row and bullet",
+  "probability_rule": "hit chance comes only from the shared aircombat2026::pgm_probability(PgmGuidance::Eoir, generation, vsmall, cm_generation, los_lost) over data/rules/aircombat-2026.json 'pgm' row 7; this file never duplicates probability cells"
+ },
+ "weapons": {
+  "lab_agm62_walleye1_eoird1": {
+   "name": "AGM-62 Walleye I Mk1 (source row; author mounting)",
+   "guidance": "EO (D)/1",
+   "generation": 1,
+   "ordnance_kind": "guided_bomb",
+   "min_range_nm": 1.0,
+   "range_nm": 16.0,
+   "speed_kts": 528,
+   "flight_path": "Ext. Glide",
+   "hang_weight_kg": 511,
+   "damage_points": 47,
+   "penetration_cm": 8,
+   "signature": "VSmall",
+   "min_launch_altitude_m": null,
+   "ordnance_note": "guided_bomb: damage resolves on the bomb path, never the antiship-missile damage column or automatic deck criticals",
+   "source": "US Aircraft2025-12-01 PDF99/H2-1 exact row 1-16nm/528kt/Ext.Glide/511kg/47DP/8cm/VSm/IOC1967; guidance string kept verbatim 'EO (D)/1', the (D) suffix has no annex legend in this task and its interpretation stays pending; no rail-launch mark is printed, so SSkim/NOE/VLow launch stays excluded"
+  }
+ },
+ "author_external_fits": {
+  "us_f18e": {
+   "source": "scenario_assumption: author experimental single-Walleye external mount for the mechanism experiment; not a claimed Annex loadout",
+   "weapons": {
+    "lab_agm62_walleye1_eoird1": {"maximum_rounds": 1}
+   }
+  }
+ },
+ "scope": "First shared controlled-guidance consumer: exact declared weapon/fit, read-only ready, actual post-release firing-aircraft LOS-to-impact sampling, declared smoke screen sensor geometry on the physical packet, original-die late-phase terminal. Stationary allocated points only; the parent target_data enforces the captured point. Moving-target tracking, (D) suffix meaning, rail-launch exceptions, terrain/vertical smoke geometry and generations 2-3 are separately named remainders.",
+ "pending": [
+  "EO (D) suffix abbreviation meaning (no annex legend on the verified pages)",
+  "2nd/3rd generation EO/IR LOS and smoke scope",
+  "printed smoke radius/TTL does not exist in 9.6.8; screen geometry is author-declared scenario_assumption only",
+  "terrain/vertical occlusion for the firing-aircraft LOS ray beyond aircraft loss; weather obscurants other than declared smoke",
+  "moving-target EO/IR attacks and rail-launch EO/IR rows"
+ ]
+}

@@ -29,6 +29,10 @@ pub struct Scenario {
 
 #[derive(Clone, Debug, Default, Serialize, Deserialize)]
 pub struct ScenarioContext {
+    #[serde(default, skip_serializing_if="Option::is_none")]
+    pub beached_2026: Option<crate::rules::beached2026::Configuration>,
+    #[serde(default, skip_serializing_if="Option::is_none")]
+    pub surface_gunnery_2026: Option<crate::rules::surface2026::gunnery::Configuration>,
     /// New scenarios default to the repaired RTS rules. Saved World state has
     /// its own profile, so loading old saves never silently changes the rules.
     #[serde(default,skip_serializing_if="Option::is_none")]
@@ -37,6 +41,58 @@ pub struct ScenarioContext {
     pub flight_environment: Option<crate::rules::operations::FlightEnvironment>,
     #[serde(default,skip_serializing_if="Option::is_none")]
     pub radar_land_clutter: Option<Vec<crate::rules::operations::LandClutterRegion>>,
+    #[serde(default,skip_serializing_if="Option::is_none")]
+    pub aviation_2026: Option<crate::rules::aviation2026::Configuration>,
+    #[serde(default,skip_serializing_if="Option::is_none")]
+    pub waterborne_2026: Option<crate::rules::aviation2026::waterborne::Configuration>,
+    #[serde(default,skip_serializing_if="Option::is_none")]
+    pub aircombat_2026: Option<crate::rules::aircombat2026::Configuration>,
+    #[serde(default,skip_serializing_if="Option::is_none")]
+    pub pgm_2026: Option<crate::rules::pgm2026::Configuration>,
+    #[serde(default,skip_serializing_if="Option::is_none")]
+    pub salh_2026: Option<crate::rules::pgm2026::salh::Configuration>,
+    #[serde(default,skip_serializing_if="Option::is_none")]
+    pub eoir_2026: Option<crate::rules::pgm2026::controlled::eoir1::Configuration>,
+    #[serde(default,skip_serializing_if="Option::is_none")]
+    pub command_sarh_2026: Option<crate::rules::pgm2026::controlled::command_sarh::Configuration>,
+    #[serde(default,skip_serializing_if="Option::is_none")]
+    pub controlled_pgm_los_2026: Option<crate::rules::pgm2026::controlled::LosConfiguration>,
+    #[serde(default,skip_serializing_if="Option::is_none")]
+    pub rocket_2026: Option<crate::rules::rocket2026::Configuration>,
+    #[serde(default,skip_serializing_if="Option::is_none")]
+    pub cluster_2026: Option<crate::rules::cluster2026::Configuration>,
+    #[serde(default,skip_serializing_if="Option::is_none")]
+    pub strafe_2026: Option<crate::rules::strafe2026::Configuration>,
+    #[serde(default,skip_serializing_if="Option::is_none")]
+    pub detection_2026: Option<crate::rules::detection2026::Configuration>,
+    #[serde(default,skip_serializing_if="Option::is_none")]
+    pub hf_es_2026: Option<crate::rules::communications2026::hf_es::Configuration>,
+    #[serde(default,skip_serializing_if="Option::is_none")]
+    pub ew_2026: Option<crate::rules::ew2026::Configuration>,
+    #[serde(default,skip_serializing_if="Option::is_none")]
+    pub torpedo_2026: Option<crate::rules::torpedo2026::Configuration>,
+    #[serde(default,skip_serializing_if="Option::is_none")]
+    pub navigation_2026: Option<crate::rules::navigation2026::Configuration>,
+    #[serde(default,skip_serializing_if="Option::is_none")]
+    pub communications_2026: Option<crate::rules::communications2026::Configuration>,
+    #[serde(default,skip_serializing_if="Option::is_none")]
+    pub unmanned_2026: Option<crate::rules::unmanned2026::Configuration>,
+    #[serde(default,skip_serializing_if="Option::is_none")]
+    pub battery_2026: Option<crate::rules::battery2026::Configuration>,
+    #[serde(default,skip_serializing_if="Option::is_none")]
+    pub nuclear_2026: Option<crate::rules::nuclear2026::Configuration>,
+    #[serde(default,skip_serializing_if="Option::is_none")]
+    pub expanded_damage_2026: Option<crate::rules::expanded_damage2026::Configuration>,
+    #[serde(default,skip_serializing_if="Option::is_none")]
+    pub asw_weapons_2026:Option<crate::rules::asw_weapons2026::Configuration>,
+    #[serde(default,skip_serializing_if="Option::is_none")]
+    pub antiship_2026: Option<crate::rules::surface2026::antiship::Configuration>,
+    #[serde(default,skip_serializing_if="Option::is_none")]
+    pub aaw_2026: Option<crate::rules::aaw2026::Configuration>,
+    #[serde(default,skip_serializing_if="Option::is_none")]
+    pub mines_2026: Option<crate::rules::mines2026::Configuration>,
+    #[serde(default,skip_serializing_if="Option::is_none")]
+    pub ground_2026: Option<crate::rules::ground2026::Configuration>,
     pub theater: Option<Theater>,
     pub area_denial: Option<crate::mission::AreaDenialConfig>,
     #[serde(default)]
@@ -158,6 +214,13 @@ pub fn load_scenario(sc: Scenario, mut db: Database) -> Result<World, String> {
     if sc.context.flight_environment.as_ref().is_some_and(|e|!e.valid()) {return Err("invalid flight wind conditions".into());}
     if sc.context.radar_land_clutter.as_ref().is_some_and(|rs|rs.iter().any(|r|!r.valid())) {return Err("invalid radar land-clutter region".into());}
     if sc.context.rules_profile!=Some(crate::rules::damage_runtime::RuleProfile::Legacy){crate::rules::damage_runtime::configure_database(&mut db);}
+    if sc.context.rules_profile==Some(crate::rules::damage_runtime::RuleProfile::Rts2026Full){crate::rules::aaw2026::configure_database(&mut db);}
+    if sc.context.rules_profile==Some(crate::rules::damage_runtime::RuleProfile::Rts2026Full){crate::rules::mines2026::configure_database(&mut db);}
+    if sc.context.rules_profile==Some(crate::rules::damage_runtime::RuleProfile::Rts2026Full){crate::rules::surface2026::antiship::configure_database(&mut db);}
+    if sc.context.rules_profile==Some(crate::rules::damage_runtime::RuleProfile::Rts2026Full){crate::rules::pgm2026::configure_database(&mut db);}
+    if sc.context.rules_profile==Some(crate::rules::damage_runtime::RuleProfile::Rts2026Full){crate::rules::rocket2026::configure_database(&mut db);}
+    if sc.context.rules_profile==Some(crate::rules::damage_runtime::RuleProfile::Rts2026Full){crate::rules::cluster2026::configure_database(&mut db);}
+    if sc.context.rules_profile==Some(crate::rules::damage_runtime::RuleProfile::Rts2026Full){crate::rules::strafe2026::configure_database(&mut db);}
     if sc.context.radar_environment.as_ref().is_some_and(|e|!e.valid()) {return Err("invalid radar sea-state/precipitation category".into());}
     db.validate().map_err(|e| e.to_string())?;
     validate_context(&sc, &db)?;
@@ -167,7 +230,16 @@ pub fn load_scenario(sc: Scenario, mut db: Database) -> Result<World, String> {
         rules: crate::rules::damage_runtime::Runtime {
             profile:sc.context.rules_profile.unwrap_or(crate::rules::damage_runtime::RuleProfile::Rts2026),
             table_fingerprint:(sc.context.rules_profile!=Some(crate::rules::damage_runtime::RuleProfile::Legacy)).then(||crate::rules::damage_runtime::fingerprint_for(sc.context.rules_profile.unwrap_or(crate::rules::damage_runtime::RuleProfile::Rts2026))),
-            operations:(sc.context.rules_profile==Some(crate::rules::damage_runtime::RuleProfile::Rts2026Operations)).then(Default::default),
+            operations:matches!(sc.context.rules_profile,Some(crate::rules::damage_runtime::RuleProfile::Rts2026Operations|crate::rules::damage_runtime::RuleProfile::Rts2026Full)).then(Default::default),
+            aviation:(sc.context.rules_profile==Some(crate::rules::damage_runtime::RuleProfile::Rts2026Full)).then(Default::default),
+            aaw:(sc.context.rules_profile==Some(crate::rules::damage_runtime::RuleProfile::Rts2026Full)).then(Default::default),
+            detection:(sc.context.rules_profile==Some(crate::rules::damage_runtime::RuleProfile::Rts2026Full)).then(||crate::rules::detection2026::State {config:sc.context.detection_2026.clone().unwrap_or_default(),..Default::default()}),
+            communications:(sc.context.rules_profile==Some(crate::rules::damage_runtime::RuleProfile::Rts2026Full)).then(||crate::rules::communications2026::State::new(sc.context.communications_2026.clone().unwrap_or_default())).transpose()?,
+            ew:(sc.context.rules_profile==Some(crate::rules::damage_runtime::RuleProfile::Rts2026Full)).then(||crate::rules::ew2026::State {config:sc.context.ew_2026.clone().unwrap_or_default(),..Default::default()}),
+            mines:(sc.context.rules_profile==Some(crate::rules::damage_runtime::RuleProfile::Rts2026Full)).then(Default::default),
+            aircombat:(sc.context.rules_profile==Some(crate::rules::damage_runtime::RuleProfile::Rts2026Full)).then(Default::default),
+            repairs:(sc.context.rules_profile==Some(crate::rules::damage_runtime::RuleProfile::Rts2026Full)).then(Default::default),
+            expanded_damage:(sc.context.rules_profile==Some(crate::rules::damage_runtime::RuleProfile::Rts2026Full)).then(||crate::rules::expanded_damage2026::State::new(sc.context.expanded_damage_2026.clone().unwrap_or_default())).transpose()?,
             ..Default::default()
         },
         tick: 0,
@@ -327,6 +399,29 @@ pub fn load_scenario(sc: Scenario, mut db: Database) -> Result<World, String> {
     }
 
     crate::exercise::initialize(&mut world)?;
+    crate::rules::communications2026::annex::initialize(&world)?;
+    crate::rules::aviation2026::initialize(&mut world)?;
+    crate::rules::aviation2026::waterborne::initialize(&mut world)?;
+    crate::rules::ew2026::initialize(&mut world)?;
+    crate::rules::aircombat2026::initialize(&mut world)?;
+    crate::rules::mines2026::initialize(&mut world)?;
+    crate::rules::ground2026::initialize(&mut world)?;
+    crate::rules::torpedo2026::initialize(&mut world)?;
+    crate::rules::navigation2026::initialize(&mut world)?;
+    crate::rules::battery2026::initialize(&mut world)?;
+    if let Some(config)=sc.context.unmanned_2026.clone(){crate::rules::unmanned2026::initialize(&mut world,config)?;}
+    crate::rules::nuclear2026::initialize(&mut world)?;
+    crate::rules::expanded_damage2026::initialize(&mut world)?;
+    crate::rules::detection2026::initialize_emissions(&mut world)?;
+    crate::rules::asw_weapons2026::initialize(&mut world)?;
+    crate::rules::surface2026::antiship::initialize(&mut world,sc.context.antiship_2026.clone())?;
+    crate::rules::surface2026::gunnery::initialize(&mut world)?;
+    crate::rules::pgm2026::initialize(&mut world)?;
+    crate::rules::rocket2026::initialize(&mut world)?;
+    crate::rules::cluster2026::initialize(&mut world)?;
+    crate::rules::strafe2026::initialize(&mut world)?;
+    crate::rules::unmanned2026::finalize_initial_stow(&mut world)?;
+    crate::rules::beached2026::initialize(&mut world)?;
     world.emit(
         EventKind::ScenarioStarted { name: sc.name },
         Visibility::All,
@@ -335,6 +430,7 @@ pub fn load_scenario(sc: Scenario, mut db: Database) -> Result<World, String> {
 }
 
 fn validate_context(sc: &Scenario, db: &Database) -> Result<(), String> {
+    if let Some(config)=&sc.context.aaw_2026 {crate::rules::aaw2026::validate_configuration(config)?;}
     crate::exercise::validate(sc,db)?;
     if let Some(t) = &sc.context.theater {
         if ![t.west, t.east, t.south, t.north, t.reference_lat].iter().all(|v| v.is_finite())

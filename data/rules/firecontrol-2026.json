@@ -1,0 +1,724 @@
+{
+  "version": "Harpoon V2026-01-01",
+  "platform_combat_systems": {
+    "us_virginia": {
+      "generation": 6,
+      "scope": "acoustic",
+      "source": "Americas Navy 2025-12-01 PDF16/A-13 Virginia(ii), Blocks I-IV: Cbt Sys Gen6 Automatic; Harpoon V2026-01-01 PDF72/6-4 Acoustic Fire Control: Gen6 passive +2, active +1",
+      "limits": "Only the existing us_virginia Blocks I-IV class mapping. This does not establish sonar hardware, a Good solution, section 6.4 track/wire capacities, Block V or other class aliases."
+    }
+  },
+  "execution_revision": {
+    "id": "v4-own-receiver-geometry-20261023",
+    "projector": {
+      "id": "HV2026-8.5.3-ACTIVE-SEARCH-INITIAL",
+      "source": "English2026 PDF100/8-20 8.5.3.1 and PDF72/6-4 acoustic table",
+      "scope": "Initial physical projector scope: actual Gen4+ active search sonar, same fresh measured report and continuous own motion. Passive search and dedicated earlier attack sonar remain outside this subset.",
+      "seeker": "No torpedo seeker is installed or inferred; no torpedo_seeker modifier or fictitious generation. Other weapon solvers are unchanged."
+    },
+    "source": "5.2.3 printed5-2/PDF41 and 6.3/6.3.3 printed6-2,6-5/PDF70,73; single-platform evidence cannot silently inherit undeclared TDL/crossfix",
+    "projection": "Each actual successful receiver report uses the same saved chapter5 angular die and measured-range eligibility as its public projection. A 1nm bearing-ray icon anchor is never measured range. No truth course/speed is read.",
+    "own_motion": {
+      "window_s": 180,
+      "maximum_sample_gap_s": 1,
+      "report_freshness_s": 1,
+      "rts_adaptation": "Continuous per-second measured positions from this observer/sensor form one 180s displacement estimate. A gap restarts its local geometry clock; completed estimates are held until next local window. Static targets yield known zero speed without invented heading. TDL and bearing-only localization remain blocked until explicitly sourced. Night AAM detection eligibility uses a separate fresh-success policy and does not require this movement window."
+    },
+    "ballistic_asw": {
+      "revision": "2026-10-26",
+      "source": "English2026 PDF99 §8.5.2 with chapter6 native FCS",
+      "scope": "Use actual same-sensor fresh position and continuous own motion. No fictional seeker slot. Passive/RF sources do not inherit the first projector Gen4-active-only limitation; release-specific15nm active requirement is checked by ASW consumer. Weapon-specific seeker and ASCM speed bonuses are omitted."
+    }
+  },
+  "source": {
+    "pdf_pages": [
+      70,
+      71,
+      72,
+      73,
+      74,
+      75
+    ],
+    "visual_verified": [
+      70,
+      71,
+      72
+    ],
+    "printed": "6-2..6-7"
+  },
+  "active_rf": [
+    [
+      -2,
+      "Poor",
+      "Poor",
+      "Poor",
+      "Poor",
+      "Poor"
+    ],
+    [
+      -1,
+      "Fair",
+      "Poor",
+      "Poor",
+      "Poor",
+      "Poor"
+    ],
+    [
+      0,
+      "Good",
+      "Fair",
+      "Fair",
+      "Fair",
+      "Poor"
+    ],
+    [
+      1,
+      "Good",
+      "Good",
+      "Fair",
+      "Fair",
+      "Fair"
+    ],
+    [
+      2,
+      "Good",
+      "Good",
+      "Good",
+      "Fair",
+      "Fair"
+    ],
+    [
+      3,
+      "Good",
+      "Good",
+      "Good",
+      "Good",
+      "Fair"
+    ],
+    [
+      4,
+      "Good",
+      "Good",
+      "Good",
+      "Good",
+      "Good"
+    ]
+  ],
+  "passive_rf": [
+    [
+      -2,
+      "Poor",
+      "Poor",
+      "NA",
+      "NA",
+      "NA"
+    ],
+    [
+      -1,
+      "Poor",
+      "Poor",
+      "Poor",
+      "NA",
+      "NA"
+    ],
+    [
+      0,
+      "Fair",
+      "Poor",
+      "Poor",
+      "Poor",
+      "NA"
+    ],
+    [
+      1,
+      "Good",
+      "Poor",
+      "Poor",
+      "Poor",
+      "Poor"
+    ],
+    [
+      2,
+      "Good",
+      "Fair",
+      "Poor",
+      "Poor",
+      "Poor"
+    ],
+    [
+      3,
+      "Good",
+      "Good",
+      "Fair",
+      "Poor",
+      "Poor"
+    ],
+    [
+      4,
+      "Good",
+      "Good",
+      "Fair",
+      "Fair",
+      "Poor"
+    ],
+    [
+      5,
+      "Good",
+      "Good",
+      "Good",
+      "Fair",
+      "Fair"
+    ],
+    [
+      6,
+      "Good",
+      "Good",
+      "Good",
+      "Fair",
+      "Fair"
+    ],
+    [
+      7,
+      "Good",
+      "Good",
+      "Good",
+      "Good",
+      "Fair"
+    ],
+    [
+      8,
+      "Good",
+      "Good",
+      "Good",
+      "Good",
+      "Fair"
+    ],
+    [
+      9,
+      "Good",
+      "Good",
+      "Good",
+      "Good",
+      "Good"
+    ]
+  ],
+  "active_acoustic": [
+    [
+      -2,
+      "Poor",
+      "Poor",
+      "Poor",
+      "Poor",
+      "NA",
+      "NA",
+      "NA"
+    ],
+    [
+      -1,
+      "Poor",
+      "Poor",
+      "Poor",
+      "Poor",
+      "Poor",
+      "NA",
+      "NA"
+    ],
+    [
+      0,
+      "Fair",
+      "Poor",
+      "Poor",
+      "Poor",
+      "Poor",
+      "Poor",
+      "NA"
+    ],
+    [
+      1,
+      "Good",
+      "Fair",
+      "Fair",
+      "Poor",
+      "Poor",
+      "Poor",
+      "Poor"
+    ],
+    [
+      2,
+      "Good",
+      "Good",
+      "Fair",
+      "Fair",
+      "Poor",
+      "Poor",
+      "Poor"
+    ],
+    [
+      3,
+      "Good",
+      "Good",
+      "Good",
+      "Fair",
+      "Fair",
+      "Poor",
+      "Poor"
+    ],
+    [
+      4,
+      "Good",
+      "Good",
+      "Good",
+      "Good",
+      "Fair",
+      "Fair",
+      "Poor"
+    ],
+    [
+      5,
+      "Good",
+      "Good",
+      "Good",
+      "Good",
+      "Good",
+      "Fair",
+      "Fair"
+    ],
+    [
+      6,
+      "Good",
+      "Good",
+      "Good",
+      "Good",
+      "Good",
+      "Good",
+      "Fair"
+    ],
+    [
+      7,
+      "Good",
+      "Good",
+      "Good",
+      "Good",
+      "Good",
+      "Good",
+      "Good"
+    ]
+  ],
+  "passive_acoustic": [
+    [
+      -2,
+      "Poor",
+      "Poor",
+      "NA",
+      "NA",
+      "NA",
+      "NA",
+      "NA",
+      "NA"
+    ],
+    [
+      -1,
+      "Poor",
+      "Poor",
+      "Poor",
+      "NA",
+      "NA",
+      "NA",
+      "NA",
+      "NA"
+    ],
+    [
+      0,
+      "Poor",
+      "Poor",
+      "Poor",
+      "Poor",
+      "NA",
+      "NA",
+      "NA",
+      "NA"
+    ],
+    [
+      1,
+      "Fair",
+      "Poor",
+      "Poor",
+      "Poor",
+      "Poor",
+      "NA",
+      "NA",
+      "NA"
+    ],
+    [
+      2,
+      "Good",
+      "Fair",
+      "Poor",
+      "Poor",
+      "Poor",
+      "Poor",
+      "NA",
+      "NA"
+    ],
+    [
+      3,
+      "Good",
+      "Good",
+      "Fair",
+      "Poor",
+      "Poor",
+      "Poor",
+      "Poor",
+      "NA"
+    ],
+    [
+      4,
+      "Good",
+      "Good",
+      "Fair",
+      "Fair",
+      "Poor",
+      "Poor",
+      "Poor",
+      "Poor"
+    ],
+    [
+      5,
+      "Good",
+      "Good",
+      "Good",
+      "Fair",
+      "Fair",
+      "Poor",
+      "Poor",
+      "Poor"
+    ],
+    [
+      6,
+      "Good",
+      "Good",
+      "Good",
+      "Fair",
+      "Fair",
+      "Poor",
+      "Poor",
+      "Poor"
+    ],
+    [
+      7,
+      "Good",
+      "Good",
+      "Good",
+      "Good",
+      "Fair",
+      "Fair",
+      "Poor",
+      "Poor"
+    ],
+    [
+      8,
+      "Good",
+      "Good",
+      "Good",
+      "Good",
+      "Fair",
+      "Fair",
+      "Fair",
+      "Poor"
+    ],
+    [
+      9,
+      "Good",
+      "Good",
+      "Good",
+      "Good",
+      "Good",
+      "Fair",
+      "Fair",
+      "Poor"
+    ],
+    [
+      10,
+      "Good",
+      "Good",
+      "Good",
+      "Good",
+      "Good",
+      "Fair",
+      "Fair",
+      "Fair"
+    ],
+    [
+      11,
+      "Good",
+      "Good",
+      "Good",
+      "Good",
+      "Good",
+      "Good",
+      "Fair",
+      "Fair"
+    ],
+    [
+      12,
+      "Good",
+      "Good",
+      "Good",
+      "Good",
+      "Good",
+      "Good",
+      "Fair",
+      "Fair"
+    ],
+    [
+      13,
+      "Good",
+      "Good",
+      "Good",
+      "Good",
+      "Good",
+      "Good",
+      "Good",
+      "Fair"
+    ],
+    [
+      14,
+      "Good",
+      "Good",
+      "Good",
+      "Good",
+      "Good",
+      "Good",
+      "Good",
+      "Fair"
+    ],
+    [
+      15,
+      "Good",
+      "Good",
+      "Good",
+      "Good",
+      "Good",
+      "Good",
+      "Good",
+      "Good"
+    ]
+  ],
+  "rf_limits_nm": [
+    25,
+    50,
+    100,
+    150,
+    null
+  ],
+  "acoustic_active_limits_nm": [
+    3,
+    6,
+    10,
+    15,
+    20
+  ],
+  "acoustic_passive_limits_nm": [
+    2,
+    4,
+    6,
+    8,
+    10,
+    12,
+    14,
+    16
+  ],
+  "combat_passive": [
+    -2,
+    -2,
+    -1,
+    0,
+    1,
+    2
+  ],
+  "combat_active": [
+    0,
+    0,
+    0,
+    0,
+    1,
+    1
+  ],
+  "speed_limits_kts": [
+    5,
+    10,
+    25,
+    35,
+    null
+  ],
+  "speed_passive": [
+    -2,
+    -1,
+    0,
+    -1,
+    -2
+  ],
+  "speed_active": [
+    -1,
+    0,
+    0,
+    0,
+    -1
+  ],
+  "ascm_seeker": [
+    -1,
+    0,
+    1,
+    1
+  ],
+  "torpedo_seeker": [
+    -1,
+    0,
+    1,
+    2
+  ],
+  "ascm_speed_limits_kts": [
+    500,
+    750,
+    1525,
+    2300,
+    3075,
+    4100,
+    5125,
+    null
+  ],
+  "ascm_speed": [
+    [
+      0,
+      -1,
+      -2,
+      -4,
+      -5
+    ],
+    [
+      0,
+      -1,
+      -2,
+      -3,
+      -4
+    ],
+    [
+      0,
+      0,
+      -1,
+      -2,
+      -2
+    ],
+    [
+      1,
+      0,
+      0,
+      -1,
+      -1
+    ],
+    [
+      1,
+      1,
+      0,
+      -1,
+      -1
+    ],
+    [
+      1,
+      1,
+      1,
+      0,
+      -1
+    ],
+    [
+      1,
+      1,
+      1,
+      0,
+      -1
+    ],
+    [
+      1,
+      1,
+      1,
+      1,
+      0
+    ]
+  ],
+  "non_oth_active": [
+    [
+      35,
+      "Good",
+      0
+    ],
+    [
+      50,
+      "Fair",
+      -1
+    ],
+    [
+      65,
+      "Poor",
+      -2
+    ],
+    [
+      null,
+      "NA",
+      null
+    ]
+  ],
+  "non_oth_passive": [
+    [
+      50,
+      "Good",
+      0
+    ],
+    [
+      65,
+      "Fair",
+      -1
+    ],
+    [
+      80,
+      "Poor",
+      -2
+    ],
+    [
+      null,
+      "NA",
+      null
+    ]
+  ],
+  "placement_quality": {
+    "Poor": 3,
+    "Fair": 6,
+    "Good": 9
+  },
+  "target_track_restart_seconds": 720,
+  "tactical_seconds": 180,
+  "cross_fix": {
+    "es_1_2": -1,
+    "es_3_4": 0,
+    "es_5_6": 1,
+    "dedicated": 0
+  },
+  "modifiers": {
+    "rf_aircraft_cs": 0,
+    "aircraft_rf_column_shift": -1,
+    "long_range_seeker": 1,
+    "scout_and_long_range": 2,
+    "nrt": 1,
+    "rt": 2,
+    "distraction_passive": -3,
+    "distraction_active": -2,
+    "mobile_passive": -3,
+    "mobile_active": -2,
+    "wavefront_array": 4,
+    "vertical_flank_array": 3,
+    "zig": -2,
+    "zig_course_deg": 20,
+    "zig_speed_kts": 5,
+    "passive_ranging_limit_nm": 12,
+    "direct_visual_ranging_column_shift": -1
+  }
+}

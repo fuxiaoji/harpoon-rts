@@ -1,0 +1,74 @@
+{
+  "date": "2026-10-24",
+  "profile": "hv2026-rts-v4",
+  "whole_chapter_complete": false,
+  "all_mechanisms_complete": false,
+  "source": [
+    "English2026 PDF74,76–78,94–95,119",
+    "America Navy2025 PDF7,77,79"
+  ],
+  "data": "data/rules/surface-2026.json",
+  "code": "crates/harpoon-core/src/rules/surface2026/antiship.rs",
+  "tests": [
+    "crates/harpoon-core/tests/antiship_2026.rs",
+    "crates/harpoon-core/tests/antiship_entrypoints_2026.rs"
+  ],
+  "validation": "docs/all-rules-antiship-20261024.md",
+  "rows": [
+    {
+      "rule_id": "6.3.8.ascm-placement",
+      "status": "tested_subset",
+      "scope": "Actual half-run Detection hook, same actor/exact type/180s turn shared D10/D6, one compatible plot quality/route; incompatible groups rejected"
+    },
+    {
+      "rule_id": "8.4.1.ic-lock-damage",
+      "status": "tested_subset",
+      "scope": "Exact no-popup IC, clear single intended source Ford, actual cone/range, .47 source ECM lock, independent native D100 and physical arrival into source damage"
+    },
+    {
+      "rule_id": "6.3.7.plotting",
+      "status": "tested_subset",
+      "scope": "Own selected CID and physical launch, source speed and enable >=half; current no-waypoint/no-popup only"
+    },
+    {
+      "rule_id": "8.4.1.ic-miss",
+      "status": "tested_subset",
+      "scope": "47/48 boundary, miss preserves actual course/range, no M reattack"
+    },
+    {
+      "rule_id": "8.1.3-5.ic-intercept",
+      "status": "tested_subset",
+      "scope": "Actual own contact CIWS native hit, independent fragment roll, real Flight Intercepted; save/restore500tick no later warhead damage"
+    },
+    {
+      "rule_id": "8.4.1.ic-incoming-size-mr",
+      "status": "blocked",
+      "scope": "Physical size and MR lack source; strict SAM and visual remain blocked, radar independent RCS/guns no-MR usable only real registered no-popup Flight"
+    },
+    {
+      "rule_id": "7.4.8.popup-waypoints",
+      "status": "partial",
+      "scope": "Source L/W3 retained; no execution for popup or route legs; request explicitly rejected"
+    },
+    {
+      "rule_id": "8.4.1.multi-ew-environment",
+      "status": "partial",
+      "scope": "Multiple/other ships, unknown/complex EW or clutter saved full referee pending, no guessed adjudication"
+    },
+    {
+      "rule_id": "8.4.1.reattack",
+      "status": "partial",
+      "scope": "IC no-M preserved; M-equipped models reattack not implemented by this subset"
+    },
+    {
+      "rule_id": "annex.full-fits",
+      "status": "partial",
+      "scope": "Exact IC line and Ford source profile are not complete hull carriage/rate/hardkill/launch-mode coverage"
+    },
+    {
+      "rule_id": "rts.player-ai-mcp-llm",
+      "status": "tested_subset",
+      "scope": "Shared37 schema, source precheck before takeover, own-only plans, single-round FSM helper, explicit human release count and durable takeover"
+    }
+  ]
+}

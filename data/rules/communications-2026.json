@@ -1,0 +1,80 @@
+{
+  "revision": "2026-10-26-wide-native-communications-C1",
+  "authority": {
+    "file": "14-2.HpnV_Rules_1_Jan_26.pdf",
+    "edition": "2026-01-01",
+    "sha256": "8196ffc715bbcccd862d8597c607de7816dac5baee31fa659f89dfaf4323700c",
+    "section": "6.3.10",
+    "pdf_page": 75,
+    "printed_page": "6-7",
+    "context_pages": [74, 72]
+  },
+  "enabled_scope": "native voice warnings; explicitly fitted TL/NRT/RT warning, cue and native surface/ASW FCS or typed RT air geometry exchange; declared nonTDL multi-observer composition",
+  "source_procedure": {
+    "send_phase": "Plotting",
+    "receive_phase": "Detection of the same Tactical Turn",
+    "payload_purpose": "presence warning",
+    "warning_is_own_fire_control": false,
+    "warning_creates_receiver_sensor_contact": false
+  },
+  "rts_policy": {
+    "id": "RTS-COMMS-20261025-A1",
+    "plotting_slot": "actual command execution tick",
+    "detection_slot": "batch delivery before the same tick native sensor pass",
+    "tactical_turn": "existing 180-second simulation window, floor(execution_tick / 180)",
+    "receiver_batch": "all receivers qualified before queue; any own route/source failure at delivery fails the whole batch once",
+    "native_report": "latest successful observer/sensor report with raw apparent category captured before side fusion",
+    "snapshot": "fixed geometry/category/report time; source CID is a label, never a new contact or live track",
+    "age": "no invented warning/report TTL; report time remains explicit, no truth-position extrapolation",
+    "fit_scope": "explicit scenario_assumption hardware and directed peer edges; exact protocol or explicitly authored compatible receiver terminal; no real Annex qualification inferred",
+    "source_identity": "stored and compared privately; no enemy Entity lookup for report validity",
+    "message_identity": "per-sender sequence; no enemy traffic leakage through global counter",
+    "manual_control": "player transport marks retain_manual; core retains sender only after successful apply, AI cannot request retention; receiver authority unchanged",
+    "historical_isolation": "Full bypasses legacy firectl crossfix/shadow rules; Legacy/v2/v3 keep their old 60/300-second and fractional-quality behavior"
+  },
+  "tdl_source": {
+    "authority_pdf_pages": [71,72,74,75,84,99],
+    "tl": "warning only; reported submarine permits one15-percentage-point alerted sonar search; no FCS/ContactTrack change",
+    "nrt_cue": 1,
+    "rt_cue": 2,
+    "cue_units": "RF/acoustic ContactTrack integer; AAW reaction increment/ASW placement modifiers separately consumed",
+    "aa_reaction_source": "8.1.1 PDF84: other platform in contact and sharing active sensor data",
+    "rt_transfer": "already formed native targeting-system FCS; compatible RT receives same quality",
+    "air_transfer": {
+      "source": "English2026 PDF74 section6.3.9 targeting-quality data, PDF84 section8.1.1 receiving combat-system reaction, PDF104-105 section9.5 native AAM envelope; not section6.3.8 ASCM/torpedo placement",
+      "receiver_kind": "real_time",
+      "increment_seconds": 30,
+      "quality_scale": null,
+      "native_source": "selected actual radar report, established air/missile category, measured position and native targeting-readiness; no Contact icon substitute",
+      "height": "capture at actual native radar commit only when fitted 3D/HF/AI/LD-SD measures height; unknown stays null",
+      "receiver_reaction": "receiver owns original combat-system 2D6 clock; repeated continuous RT packets update receipt without restarting or rerolling; actual source or route interruption breaks continuity",
+      "packet_lifetime_policy": "RTS mapping: usable in the actual delivery Increment and while the actual source scan and route remain valid; no hidden-target extrapolation",
+      "consumer": "SAM/AAM initial range, bearing and height geometry; original director, guidance, channel, reaction, weapon stock, fire budget and night onboard sensor gates remain"
+    },
+    "nrt_transfer": {"source":"English2026 PDF70 section6.3.1 lists Good/Fair/Poor/NA; PDF74 section6.3.9 reduces surface/ASW received quality by one level","surface_asw_only":true,"Good":"Fair","Fair":"Poor","Poor":"NA","NA":"NA"},
+    "non_tdl_composition": {"distinct_observers_minimum":2,"all_passive_quality":"NA","all_active_quality":"Poor","same_mode_cross_rf_acoustic":true,"mixed_active_passive":null}
+  },
+  "tdl_policy": {
+    "id":"RTS-COMMS-20261025-B1",
+    "fits":"warning_kind defaults voice; only explicit source scenario_assumption until exact Annex fit supplied; no class/radar inference",
+    "automatic":"TDL automatic by default; completed reports of this Tactical epoch may deliver at common Detection-open; first reports/current native FCS deliver at common Detection-close after the entire native batch; no receiver rescan or retroactive probability upgrade; manual override shares same source gates",
+    "tl_once":"whole-scenario receiver+private native target identity; repeats/CID changes do not reset",
+    "tl_epoch":"first eligible actual native sonar search epoch; prior same-epoch sonar trial defers to next; all arrays share immutable flag; Applied persists within that epoch",
+    "tl_merge":"ordinary alerted OR TL, once only; native success/failure/zero-probability trial consumes; readonly calls never consume",
+    "tl_ttl":null,
+    "cue_lifetime":"delivered current Tactical epoch plus typed source's current native successful scan; no invented report reliability or shadow-quality multipliers",
+    "existing_fcs":"actual own-world solver using a fitted source weapon and measured native report; frozen Solution and aim; no recursive remote FCS",
+    "composition":"explicit action,actual received voice reports,at least2distinct observers;same active/passive mode across RF/acoustic families; active aim chooses a real source report, no invented averaging/error model",
+    "radio_geometry":"explicit LOS equipment range and antenna heights limited by existing engine radar-horizon geometry; HF/SAT only explicit compatible transports",
+    "shared_source":"typed success/failure scan outcomes; no fusion icon or hidden enemy entity can supply live-contact proof"
+  },
+  "not_enabled": [
+    "real radio or Annex L hardware fit catalog (empty; scenario-assumption fittings remain explicit)",
+    "native HF ES interception consumer/source receiver parameters (typed committed HF transmission source is available; no radar-equivalent range guessed)",
+    "BMD RT targeting special cases beyond the current native radar SAM/AAM geometry consumer",
+    "mixed active/passive nonTDL fusion without a sourced procedure",
+    "optional Communications critical or repair consumer"
+  ],
+  "whole_section_complete": false,
+  "whole_book_complete": false
+}

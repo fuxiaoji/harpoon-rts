@@ -1,0 +1,310 @@
+{
+  "source": "Harpoon V2026-01-01 English PDF33–39; America Aircraft2025 PDF49/51/69/92; China Navy2025 PDF51",
+  "scope": "hv2026-rts-v4 only; source mechanisms and explicit blocking",
+  "rows": [
+    {
+      "rule_id": "4.0.1",
+      "mechanism": "30秒步进运动",
+      "status": "partial",
+      "detail": "连续1秒RTS已替代；低空30秒90度转向上限尚未接入",
+      "data": "data/rules/aviation-2026.json",
+      "execution": "crates/harpoon-core/src/rules/aviation2026.rs; air.rs; movement.rs",
+      "tests": "crates/harpoon-core/tests/aviation_2026.rs"
+    },
+    {
+      "rule_id": "4.1",
+      "mechanism": "缠斗运动",
+      "status": "tested_subset",
+      "detail": "第9章新模块已接真实60秒缠斗与源半径/先手/炮击/结束/返航，v4不走旧15秒估算；可选惊袭和部分武器分支仍未完成",
+      "data": "data/rules/aviation-2026.json",
+      "execution": "crates/harpoon-core/src/rules/aviation2026.rs; air.rs; movement.rs",
+      "tests": "crates/harpoon-core/tests/aircombat_2026.rs"
+    },
+    {
+      "rule_id": "4.2",
+      "mechanism": "速度/油门",
+      "status": "partial",
+      "detail": "源速度行、最低20%FMP、FMP/Reheat/Loiter/Hover及立即改速已执行；外挂60%音速门尚未完成",
+      "data": "data/rules/aviation-2026.json",
+      "execution": "crates/harpoon-core/src/rules/aviation2026.rs; air.rs; movement.rs",
+      "tests": "crates/harpoon-core/tests/aviation_2026.rs"
+    },
+    {
+      "rule_id": "4.3",
+      "mechanism": "悬停",
+      "status": "partial",
+      "detail": "已核MH60R源TS悬停及FMP等价时耗；浮空VTOL与碰撞规则还需来源平台",
+      "data": "data/rules/aviation-2026.json",
+      "execution": "crates/harpoon-core/src/rules/aviation2026.rs; air.rs; movement.rs",
+      "tests": "crates/harpoon-core/tests/aviation_2026.rs"
+    },
+    {
+      "rule_id": "4.4",
+      "mechanism": "转向",
+      "status": "partial",
+      "detail": "RTS既有连续转向；完整步进转向约束待接入",
+      "data": "data/rules/aviation-2026.json",
+      "execution": "crates/harpoon-core/src/rules/aviation2026.rs; air.rs; movement.rs",
+      "tests": "crates/harpoon-core/tests/aviation_2026.rs"
+    },
+    {
+      "rule_id": "4.5",
+      "mechanism": "高度/改变高度",
+      "status": "partial",
+      "detail": "原表全部推进类型结构化、源Low/High倍数/满载减半及现用机真实移动；地形与爬升窗口仍有限制",
+      "data": "data/rules/aviation-2026.json",
+      "execution": "crates/harpoon-core/src/rules/aviation2026.rs; air.rs; movement.rs",
+      "tests": "crates/harpoon-core/tests/aviation_2026.rs"
+    },
+    {
+      "rule_id": "4.5.1",
+      "mechanism": "陆地高程",
+      "status": "blocked",
+      "detail": "海岸不是DEM；现用低空越陆明确阻断，未录入的高程不得猜填",
+      "data": "data/rules/aviation-2026.json",
+      "execution": "crates/harpoon-core/src/rules/aviation2026.rs; air.rs; movement.rs",
+      "tests": null
+    },
+    {
+      "rule_id": "4.5.2",
+      "mechanism": "掠海高度",
+      "status": "partial",
+      "detail": "昼间/40%来源资格、速度上限、真实180秒风险/独立骰/转向与受击一次+2%已接；首次窗口RTS时序明确改编",
+      "data": "data/rules/aviation-2026.json",
+      "execution": "crates/harpoon-core/src/rules/aviation2026.rs; air.rs; movement.rs",
+      "tests": "crates/harpoon-core/tests/aviation_2026.rs"
+    },
+    {
+      "rule_id": "4.5.3",
+      "mechanism": "NOE",
+      "status": "blocked",
+      "detail": "已核低空事故表不等于NOE导航；需完整AGL、晴天百分比与FLIR/NVG/TF装配",
+      "data": "data/rules/aviation-2026.json",
+      "execution": "crates/harpoon-core/src/rules/aviation2026.rs; air.rs; movement.rs",
+      "tests": null
+    },
+    {
+      "rule_id": "4.5.4",
+      "mechanism": "Very Low",
+      "status": "partial",
+      "detail": "限FMP/650节已接；允许武器投放类型由武器绑定后续约束",
+      "data": "data/rules/aviation-2026.json",
+      "execution": "crates/harpoon-core/src/rules/aviation2026.rs; air.rs; movement.rs",
+      "tests": "crates/harpoon-core/tests/aviation_2026.rs"
+    },
+    {
+      "rule_id": "4.5.5",
+      "mechanism": "陆上VLow/TA/TF",
+      "status": "blocked",
+      "detail": "缺高程/雷达装配/晴天百分比时不采用旧近似",
+      "data": "data/rules/aviation-2026.json",
+      "execution": "crates/harpoon-core/src/rules/aviation2026.rs; air.rs; movement.rs",
+      "tests": null
+    },
+    {
+      "rule_id": "4.6",
+      "mechanism": "甲板重排",
+      "status": "tested_subset",
+      "detail": "显式停车数、12机14+D6分钟、独立骰、真实阻断起飞回收及完成；非12整倍数原书无舍入规则阻断",
+      "data": "data/rules/aviation-2026.json",
+      "execution": "crates/harpoon-core/src/rules/aviation2026.rs; air.rs; movement.rs",
+      "tests": "crates/harpoon-core/tests/aviation_2026.rs"
+    },
+    {
+      "rule_id": "4.6.1-4.6.4",
+      "mechanism": "甲板/弹射/飞离/垂直起降/海况",
+      "status": "partial",
+      "detail": "继承v3已验来源子集并增加v4停机门；未知跑道/新甲板/舰载机型继续阻断",
+      "data": "data/rules/aviation-2026.json",
+      "execution": "crates/harpoon-core/src/rules/aviation2026.rs; air.rs; movement.rs",
+      "tests": "crates/harpoon-core/tests/aviation_2026.rs"
+    },
+    {
+      "rule_id": "4.6.5",
+      "mechanism": "水面起降",
+      "status": "blocked",
+      "detail": "现库无经本批核验水上飞机/浮筒型配置；未用普通直升机替代",
+      "data": "data/rules/aviation-2026.json",
+      "execution": "crates/harpoon-core/src/rules/aviation2026.rs; air.rs; movement.rs",
+      "tests": null
+    },
+    {
+      "rule_id": "4.6.6",
+      "mechanism": "淹没",
+      "status": "structured",
+      "detail": "源概率/系泊/明示背风遮蔽函数已转录测试；无合法水上飞机实体状态入口，不能标执行完成",
+      "data": "data/rules/aviation-2026.json",
+      "execution": "crates/harpoon-core/src/rules/aviation2026.rs; air.rs; movement.rs",
+      "tests": null
+    },
+    {
+      "rule_id": "4.6.7",
+      "mechanism": "准备状态",
+      "status": "tested_subset",
+      "detail": "Ready库存物化单机身份、3600秒Alert+5上限、重新Alert原表时长、回收真实cycling时刻；未知机型阻断",
+      "data": "data/rules/aviation-2026.json",
+      "execution": "crates/harpoon-core/src/rules/aviation2026.rs; air.rs; movement.rs",
+      "tests": "crates/harpoon-core/tests/aviation_2026.rs"
+    },
+    {
+      "rule_id": "4.7.1-4.7.5",
+      "mechanism": "航程/外挂油/高度/油门/载荷",
+      "status": "tested_subset",
+      "detail": "显式来源Annex B容量与作者载荷、实飞nm扣油、>=50%/0.75、jet Low×2/FMP×3/Reheat×10/prop FMP×1.5/Loiter×.8；未录附件不猜",
+      "data": "data/rules/aviation-2026.json",
+      "execution": "crates/harpoon-core/src/rules/aviation2026.rs; air.rs; movement.rs",
+      "tests": "crates/harpoon-core/tests/aviation_2026.rs"
+    },
+    {
+      "rule_id": "4.7.6",
+      "mechanism": "出航预算",
+      "status": "tested_subset",
+      "detail": "实际起飞门用己方航迹估计、航路和返程检查；不够油拒飞，未来空中加油计划未知仍拒飞",
+      "data": "data/rules/aviation-2026.json",
+      "execution": "crates/harpoon-core/src/rules/aviation2026.rs; air.rs; movement.rs",
+      "tests": "crates/harpoon-core/tests/aviation_2026.rs"
+    },
+    {
+      "rule_id": "4.7.7",
+      "mechanism": "CAP/架次",
+      "status": "partial",
+      "detail": "CAP75分钟原例/单机每日2架次与大机1架次/8小时条件；CAP驻留时长自动编排UI尚未完成",
+      "data": "data/rules/aviation-2026.json",
+      "execution": "crates/harpoon-core/src/rules/aviation2026.rs; air.rs; movement.rs",
+      "tests": "crates/harpoon-core/tests/aviation_2026.rs"
+    },
+    {
+      "rule_id": "4.7.8",
+      "mechanism": "缠斗耗油",
+      "status": "tested_subset",
+      "detail": "真实第9章缠斗每tick扣来源FMP耗油；显式不机动保持原油门；真实sim测试及World保存续演一致",
+      "data": "data/rules/aviation-2026.json",
+      "execution": "crates/harpoon-core/src/rules/aviation2026.rs; air.rs; movement.rs",
+      "tests": "crates/harpoon-core/tests/aircombat_2026.rs"
+    },
+    {
+      "rule_id": "4.8-4.8.2",
+      "mechanism": "空中加油",
+      "status": "tested_subset",
+      "detail": "装备兼容/大型单中心线/槽位/伙伴禁大机/表时长/Annex Ba源rate计算/守恒/当前返程保留/中断/存档；实测F18伙伴到F18，following新增同机体Mk82接收5.2 alias、实际720秒/重载耗油/外挂不变/显式兼容回收翼表与完整World续演。其他Annex Ba组合仍需来源fit，未放宽返回储备门。",
+      "data": "data/rules/aviation-2026.json",
+      "execution": "crates/harpoon-core/src/rules/aviation2026.rs; air.rs; movement.rs",
+      "tests": "crates/harpoon-core/tests/aviation_2026.rs"
+    },
+    {
+      "rule_id": "4.9",
+      "mechanism": "HIFR",
+      "status": "tested_subset",
+      "detail": "真实MH60R—友航空舰同位同航向速度SSkim，900秒后100%；反复加油因未规定疲劳上限阻断，不造休息分钟",
+      "data": "data/rules/aviation-2026.json",
+      "execution": "crates/harpoon-core/src/rules/aviation2026.rs; air.rs; movement.rs",
+      "tests": "crates/harpoon-core/tests/aviation_2026.rs"
+    },
+    {
+      "rule_id": "4.10",
+      "mechanism": "导弹运动",
+      "status": "pending",
+      "detail": "由武器代理负责；本航空模块不以已有弹体移动代码宣称完整",
+      "data": "data/rules/aviation-2026.json",
+      "execution": "crates/harpoon-core/src/rules/aviation2026.rs; air.rs; movement.rs",
+      "tests": null
+    }
+  ],
+  "following_validation": {
+    "log": "artifacts/rules-following-20261023/validation/workspace.log",
+    "workspace_targets": 56,
+    "workspace_passed": 877,
+    "workspace_failed": 0,
+    "workspace_ignored": 5,
+    "own_test_counts": {
+      "aviation_2026": 21,
+      "surface_bombing_2026": 12,
+      "mk54_external_fit_2026": 4,
+      "airborne_asw_2026": 3,
+      "aircombat_2026": 8
+    },
+    "meaning": "Engineering test executions, not a rule denominator or full chapter completion. Source/data/tests frozen; HTTP/cross-process/historical replay coordinated separately by root."
+  },
+  "following_verified_subsets": [
+    {
+      "rule_id": "9.6.v4-own-admission",
+      "status": "tested_subset",
+      "source": "English Jan2026 PDF105-107 section9.6, PDF75/6-7 Assess and agent.md side-observation contract; existing visual source tables unchanged",
+      "data": "data/rules/aircombat-2026.json admission_projection; scenario SurfaceAimpoint allowed_sides default empty",
+      "execution": "aircombat2026::surface_attack commits own valid release before referee target properties; aviation2026::own_view exposes only side-authorized point declarations",
+      "tests": "surface_bombing_2026 12; initial4 red+NoAA1 red retained in following logs; workspace all green",
+      "remaining": "General uncertain-contact bombing, dynamic AA, unknown target damage/protected critical mapping remain pending; no guessed dispersion/armor/size."
+    },
+    {
+      "rule_id": "4.8.v4-f18-mk82-receiver",
+      "status": "tested_subset",
+      "source": "America Aircraft2025 PDF49/B44 same F18 airframe and PDF92/B83 receiver fuel rate5.2, visually verified",
+      "data": "data/rules/aviation-2026.json offload_fuel_rates.us_f18e_mk82",
+      "execution": "aviation2026::offload_factor/Refuel job/transfer_limits/return_cost; no new tanker capability",
+      "tests": "aviation_2026::real_mk82_variant_receives_source_buddy_fuel_without_changing_stores_and_replays, included21 green",
+      "remaining": "Other unverified tanker/receiver bindings remain blocked; explicit compatible recovery wing required."
+    },
+    {
+      "rule_id": "9.7.v4-mh60r-mk54x4-mass",
+      "status": "tested_subset",
+      "source": "America Aircraft2025 PDF69/B64 MH60R BlockI four Mk50/54 fit and PDF93/E1 AnnexF noteC285kg helo/292kg fixed-wing; visual in following aviation-draft",
+      "data": "data/rules/aviation-2026.json external_store_fits.us_mh60r_mk54x4 and aircombat-2026 source profile",
+      "execution": "Exact database fit; host-specific store_weight reused by initialize/ordnance_released/Jettison; air_torpedo_gate requires valid initialized Flight",
+      "tests": "mk54_external_fit_2026 4 green: physical Fire once, mass1140-to855, jettison, invalid/rejected fit/no-release, replay; prior mass2red and actualFire bypass1red retained",
+      "remaining": "Generic two-round host, fixed-wing/internal carriage, Mod2/HAAWC and other loadouts do not inherit weight. Airborne target alive/depth/class admission remains an explicit next-package gap."
+    }
+  ],
+  "after_following_validation": {
+    "log": "artifacts/rules-after-following-20261023/validation/contact-mine-green-wake-group-red-20261024.log",
+    "status": "mk54_eighteen_and_full_workspace_green",
+    "own_test_counts": {
+      "mk54_external_fit_2026": 18
+    },
+    "own_passed": 18,
+    "regression_test_counts": {
+      "torpedo_2026": 40
+    },
+    "earlier_domain_validation": {
+      "log": "artifacts/rules-after-following-20261023/validation/joint-source-red-green.log",
+      "own_test_counts": {
+        "mk54_external_fit_2026": 13,
+        "airborne_asw_2026": 3,
+        "aircombat_2026": 8,
+        "aam_2026": 12,
+        "surface_bombing_2026": 12
+      },
+      "own_passed": 48,
+      "meaning": "Earlier execution before the additional five cases. Do not relabel this log as a current five-target53 execution."
+    },
+    "new_asw_admission_cases": 9,
+    "new_contact_and_disclosure_cases": 5,
+    "contact_disclosure_red_log": "artifacts/rules-after-following-20261023/validation/contact-wake-timing-red-20261024.log",
+    "rule_id": "9.7.v4-own-report-source-admission",
+    "source": "English Jan2026 PDF109/printed9-8 section9.7.1, PDF73-74/6-5-6 source firing orders/placement and repository own-observation contract; visual artifacts in after-following/aviation",
+    "data": "aircombat-2026.json independent v4 executor_revision/airborne_asw own_evidence_admission and range_boundary",
+    "execution": "weapons manual early source branch and assigned/free selection preserve the exact ContactId through fire_at_contact eligibility, estimated aim and LaunchRecord. Compatibility fire_at rejects multiple eligible reports rather than merging by referee body. air_torpedo_gate keeps own Sub/Flight/envelope/clock; actual domain/acoustics remain post-release. Physical aerial torpedo interference changes referee state only; both_miss/other-count traces are Referee.",
+    "tests": "Original four exact-fit regressions, nine real manual/assigned/free hidden alive/depth/class and own-evidence/FCS cases, plus five selected stale/bearing report, assigned-without-free-fire, selected valid report position/identity and secret Red torpedo survival feedback cases. Each preserves real ammo/mass accounting and fullWorld restoration; secret prior torpedo comes from real Red Fire. Latest18 all green after new five were truly red.",
+    "remaining": "R-054 remains open: Airborne Search still shares initial_range/2 placement gate; same-tick entry placement/success-immediate attack per9.7.1 plus10.2.5 is not fixed by these18. Initial reported-target-center max-run refusal unverified, no new threshold. Other airborne depth charges, complete TDL/FCS and other source fits remain partial.",
+    "meaning": "Engineering executions for this domain only, not rule denominator, full chapter or whole-workspace completion. Latest joint log still contains a Wake-domain red case; full workspace/HTTP/historical acceptance pending. Following877 snapshot remains independent.",
+    "latest_workspace_log": "artifacts/rules-after-following-20261023/validation/workspace.log",
+    "latest_workspace": {
+      "targets": 59,
+      "passed": 933,
+      "failed": 0,
+      "ignored": 5
+    }
+  },
+  "latest_packet_validation": {
+    "date": "2026-10-24",
+    "status": "tested_declared_subsets_only",
+    "report": "docs/all-rules-after-following-20261023.md",
+    "log": "artifacts/rules-after-following-20261023/validation/workspace.log",
+    "workspace": {
+      "targets": 59,
+      "passed": 933,
+      "failed": 0,
+      "ignored": 5
+    },
+    "whole_chapter_complete": false
+  }
+}

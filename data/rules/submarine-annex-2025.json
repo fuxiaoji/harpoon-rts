@@ -1,0 +1,446 @@
+{
+  "revision": "2026-10-28-field-only-a19-battery-source",
+  "status": "source_bound_field_scopes_eleven_depth_surface_six_conventional_battery_fits",
+  "profile": "hv2026-rts-v4",
+  "scope": "Exactly eleven stable platform IDs: printed maximum game depth band normalized to approved game upper bound and undamaged surface-speed ceiling. Exactly six conventional battery IDs have verified Btry Rtng/technology/AIP facts. Each numeric consumer checks the separate per-field applicability registry. Historical database max_depth_m and v1-v3 semantics stay separate. No runtime navigation fit, water depth, initial charge, lithium chemistry, snorkel hardware or initial AIP reserve is created.",
+  "authorities": [
+    {
+      "id": "cn_navy_2025",
+      "document": "6-3.（数据库）2025版Chinas_Navy_1_Dec_25.pdf",
+      "version": "2025-12-01 Digital Update; cover also identifies 1 Oct 2021 Printing",
+      "sha256": "9ff46ff0c91f323d48c37e9917df6d87583fbe0df337a6dd0bb40bc488d98b2c",
+      "pdf_pages": [
+        12,
+        13
+      ],
+      "printed_pages": [
+        "A-5",
+        "A-6"
+      ],
+      "fields": [
+        "Btry Rtng",
+        "Damage & Speed Breakdown: undamaged Surf Speed",
+        "Max Depth",
+        "Propulsion",
+        "Remarks: AIP equipment/type"
+      ],
+      "parent_visual_review": true
+    },
+    {
+      "id": "ru_navy_2025",
+      "document": "9-4.Russias_Navy_1_Dec_25.pdf",
+      "version": "2025-12-01 Digital Update; cover also identifies June 2021 Printing",
+      "sha256": "1420ac08b0db219c41ad52b1e87d7bb06cfd2b44e98d7ffb9e4dd462aea477c1",
+      "pdf_pages": [
+        22,
+        23
+      ],
+      "printed_pages": [
+        "A-19",
+        "A-20"
+      ],
+      "fields": [
+        "Btry Rtng",
+        "Damage & Speed Breakdown: undamaged Surf Speed",
+        "Max Depth",
+        "Propulsion",
+        "Remarks: AIP equipment/type"
+      ],
+      "parent_visual_review": true
+    },
+    {
+      "id": "harpoon_v_rules_2026",
+      "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+      "version": "2026-01-01 Digital Update",
+      "sha256": "8196ffc715bbcccd862d8597c607de7816dac5baee31fa659f89dfaf4323700c",
+      "pdf_pages": [
+        28
+      ],
+      "printed_pages": [
+        "3-6"
+      ],
+      "section": "3.2.1 Depths and Depth Changes / Submarine Depth Bands",
+      "parent_visual_review": true
+    },
+    {
+      "id": "us_navy_2025",
+      "document": "5-4.Americas_Navy_1_Dec_25.pdf",
+      "version": "June 2021 Printing / 1 Dec 25 Digital Update",
+      "sha256": "189416d65b92d5e2fa50c59c99e309ca5715a5db287e5323295152034e61c5c8",
+      "pdf_pages": [
+        14,
+        15,
+        16
+      ],
+      "printed_pages": [
+        "A-11",
+        "A-12",
+        "A-13"
+      ],
+      "fields": [
+        "Max Depth",
+        "Damage & Speed Breakdown: undamaged Surf Speed"
+      ],
+      "parent_visual_review": true
+    },
+    {
+      "id": "harpoon_v_rules_2026_battery",
+      "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+      "version": "2026-01-01 English Digital Update",
+      "sha256": "8196ffc715bbcccd862d8597c607de7816dac5baee31fa659f89dfaf4323700c",
+      "pdf_pages": [
+        28,
+        29,
+        30,
+        134
+      ],
+      "printed_pages": [
+        "3-6",
+        "3-7",
+        "3-8",
+        "14-8"
+      ],
+      "fields": [
+        "Battery Discharge Rates",
+        "Battery Charge Rate",
+        "AIP",
+        "mast speed/depth gate",
+        "battery critical loss"
+      ],
+      "parent_visual_review": true,
+      "visual_pages_in_current_batch": [
+        "artifacts/rules-book-batch-20261025/battery-aip/source-pages/rules-2026-134.png"
+      ]
+    },
+    {
+      "id": "sweden_sitrep63_2022",
+      "document": "27.（数据库）瑞典海军2025（NSITREP_63_13_Nov_25）.pdf",
+      "version": "Naval SITREP #63 October2022 actual printed issue; original filename retained",
+      "sha256": "1b40b60e3e349abcc9a850f2a1bfa6c87fe54be71e13ed5f1131d927c70c9a87",
+      "pdf_pages": [
+        3
+      ],
+      "printed_pages": [
+        "Naval SITREP Page2"
+      ],
+      "fields": [
+        "Btry Rtng",
+        "Propulsion",
+        "Remarks: base AIP capacity"
+      ],
+      "parent_visual_review": true
+    }
+  ],
+  "qualified_input": {
+    "path": "artifacts/rules-battery-annex-20261024/peer/qualified-atoms.json",
+    "sha256": "8cf924e02f9d81bc5b2c589c670a8df152cdd725225641271d7e8f36ae50fdc6",
+    "consumption": "Only the four approved exact-ID printed depth bands and undamaged surface-speed cells are selected; no whole-candidate import."
+  },
+  "depth_band_conversion": {
+    "policy_id": "HV2026-ANNEX-A-DEPTH-BAND-UPPER-US5-20261024",
+    "source": "Harpoon V2026-01-01 PDF28 printed3-6 Submarine Depth Bands",
+    "printed_ranges_m": {
+      "Int IV": [
+        301,
+        400
+      ],
+      "Int V": [
+        401,
+        500
+      ],
+      "Deep I": [
+        501,
+        600
+      ]
+    },
+    "interpretation": "Parent-approved game interpretation: use the upper end of the printed maximum permitted game band as the continuous engine depth ceiling. The annex prints a band, not an independently measured engineering hull-depth limit.",
+    "rounding": "No interpolation, measurement estimate, extrapolation or battery-rating substitution; select the printed band upper end.",
+    "binding": "Exact platform ID lookup only; no prefix, display-name, country, construction-year or Kilo-family inference."
+  },
+  "platforms": {
+    "cn_039a": {
+      "maximum_depth_band_as_printed": "Int V",
+      "maximum_game_depth_m": 500,
+      "surface_max_kts": 13,
+      "source": "China's Navy2025-12-01 PDF12/A-5 Type039A/039B/039C [Yuan] shared row: Max Depth Int V; Damage & Speed Breakdown Surf Speed at Dam Pts0 is13kt.",
+      "conversion_policy": "HV2026-ANNEX-A-DEPTH-BAND-UPPER-20261024: English2026 PDF28/3-6 Int V401-500m maps to game upper500m; not a measured engineering limit.",
+      "battery_fit": {
+        "annex_row": "Type 039A/039B/039C [Yuan] SSP",
+        "authority": "cn_navy_2025",
+        "pdf_page": 12,
+        "printed_page": "A-5",
+        "type_as_printed": "SSP",
+        "propulsion_as_printed": "Diesel-Electric/AIP",
+        "rating_charge_units": 250,
+        "technology_as_printed": "new",
+        "chemistry": "TBD_not_marked_lithium_ion",
+        "aip_fit": true,
+        "aip_type_as_printed": "Chinese Stirling Engine",
+        "source_rule": "HV2026-3.2.5: AIP system and SSP markers; exact grouped row explicitly states propulsion Diesel-Electric/AIP and remarks Stirling engine.",
+        "mapping": "Exact current stable ID; grouped variant applicability limited to row Type 039A/039B/039C."
+      },
+      "aip_fit": true
+    },
+    "cn_kilo": {
+      "maximum_depth_band_as_printed": "Int IV",
+      "maximum_game_depth_m": 400,
+      "surface_max_kts": 11,
+      "source": "China's Navy2025-12-01 PDF13/A-6 Russian Project636/636M [Improved Kilo] row at lower left; its continued Damage & Speed Breakdown is at upper right: Max Depth Int IV, undamaged Surf Speed11kt.",
+      "conversion_policy": "HV2026-ANNEX-A-DEPTH-BAND-UPPER-20261024: English2026 PDF28/3-6 Int IV301-400m maps to game upper400m; not a measured engineering limit.",
+      "battery_fit": {
+        "annex_row": "Russian Project 636/636M [Improved Kilo] SS",
+        "authority": "cn_navy_2025",
+        "pdf_page": 13,
+        "printed_page": "A-6",
+        "type_as_printed": "SS",
+        "propulsion_as_printed": "Diesel-Electric",
+        "rating_charge_units": 200,
+        "technology_as_printed": "new",
+        "chemistry": "TBD_not_marked_lithium_ion",
+        "aip_fit": false,
+        "aip_type_as_printed": null,
+        "source_rule": "Exact Annex row says SS and Diesel-Electric; no AIP marker, and does not meet the source AIP-Electric/SSP qualification.",
+        "mapping": "Exact current stable ID Project 636/636M grouped row only."
+      },
+      "aip_fit": false
+    },
+    "ru_kilo": {
+      "maximum_depth_band_as_printed": "Int IV",
+      "maximum_game_depth_m": 400,
+      "surface_max_kts": 11,
+      "source": "Russia's Navy2025-12-01 PDF23/A-20 Project636.3 Varshavyanka [Improved Kilo] left-upper row: Max Depth Int IV; undamaged Surf Speed11kt. Exact ru_kilo is636.3, not a generic Kilo-family alias.",
+      "conversion_policy": "HV2026-ANNEX-A-DEPTH-BAND-UPPER-20261024: English2026 PDF28/3-6 Int IV301-400m maps to game upper400m; not a measured engineering limit.",
+      "battery_fit": {
+        "annex_row": "Project 636.3 Varshavyanka [Improved Kilo] SS",
+        "authority": "ru_navy_2025",
+        "pdf_page": 23,
+        "printed_page": "A-20",
+        "type_as_printed": "SS",
+        "propulsion_as_printed": "Diesel-Electric",
+        "rating_charge_units": 200,
+        "technology_as_printed": "new",
+        "chemistry": "TBD_not_marked_lithium_ion",
+        "aip_fit": false,
+        "aip_type_as_printed": null,
+        "source_rule": "Exact 636.3 row is SS and Diesel-Electric; no AIP-Electric/SSP qualification.",
+        "mapping": "Exact current stable ID Project 636.3 only; do not infer other Project 636 variants."
+      },
+      "aip_fit": false
+    },
+    "ru_kilo_636": {
+      "maximum_depth_band_as_printed": "Int IV",
+      "maximum_game_depth_m": 400,
+      "surface_max_kts": 11,
+      "source": "Russia's Navy2025-12-01 PDF23/A-20 Project636 Varshavyanka [Improved Kilo] left-lower row, continued text and Damage & Speed Breakdown at upper right: Max Depth Int IV; undamaged Surf Speed11kt. Not the following Project877 row.",
+      "conversion_policy": "HV2026-ANNEX-A-DEPTH-BAND-UPPER-20261024: English2026 PDF28/3-6 Int IV301-400m maps to game upper400m; not a measured engineering limit.",
+      "battery_fit": {
+        "annex_row": "Project 636 Varshavyanka [Improved Kilo] SS",
+        "authority": "ru_navy_2025",
+        "pdf_page": 23,
+        "printed_page": "A-20",
+        "type_as_printed": "SS",
+        "propulsion_as_printed": "Diesel-Electric",
+        "rating_charge_units": 200,
+        "technology_as_printed": "new",
+        "chemistry": "TBD_not_marked_lithium_ion",
+        "aip_fit": false,
+        "aip_type_as_printed": null,
+        "source_rule": "Exact 636 row is SS and Diesel-Electric; no AIP-Electric/SSP qualification.",
+        "mapping": "Exact current stable ID Project 636 only, distinct from 636.3 and unmapped 877EKM."
+      },
+      "aip_fit": false
+    },
+    "cn_039g": {
+      "maximum_depth_band_as_printed": "Int V",
+      "maximum_game_depth_m": 500,
+      "surface_max_kts": 12,
+      "source": "China's Navy2025-12-01 PDF12/A-5 Type039G1 right-bottom record continues PDF13/A-6 left-top before Type039/039G: its own DP74 table gives undamaged surface12kt; MaxDepth IntV is on A5. Not the neighboring DP73/150new row.",
+      "conversion_policy": "HV2026-ANNEX-A-DEPTH-BAND-UPPER-20261024: English2026 PDF28/3-6 Int V maps to game upper500m; not a measured engineering limit.",
+      "battery_fit": {
+        "annex_row": "Type 039G1 [Song Mod] SS",
+        "authority": "cn_navy_2025",
+        "pdf_page": 12,
+        "printed_page": "A-5; continuation A-6",
+        "type_as_printed": "SS",
+        "propulsion_as_printed": "Diesel-Electric",
+        "rating_charge_units": 165,
+        "technology_as_printed": "new",
+        "chemistry": "TBD_not_marked_lithium_ion",
+        "aip_fit": false,
+        "aip_type_as_printed": null,
+        "source_rule": "Exact Type039G1 SS/Diesel-Electric row has no AIP-Electric/SSP qualification.",
+        "mapping": "Exact current cn_039g stable ID is the already qualified Type039G1 alias, not neighboring Type039/039G150new; DP74 continuation only."
+      },
+      "aip_fit": false
+    },
+    "ru_lada": {
+      "maximum_depth_band_as_printed": "Int IV",
+      "maximum_game_depth_m": 400,
+      "surface_max_kts": 10,
+      "source": "Russia's Navy2025-12-01 PDF22/A-19 generic Project677 Lada right-lower record and own DP70 table: MaxDepth IntIV and undamaged surface10kt. Named B-585 submerged18 and two named future lithium500 variants are not generic data.",
+      "conversion_policy": "HV2026-ANNEX-A-DEPTH-BAND-UPPER-20261024: English2026 PDF28/3-6 Int IV maps to game upper400m; not a measured engineering limit.",
+      "battery_fit": {
+        "annex_row": "Project 677 [Lada] SS generic class",
+        "authority": "ru_navy_2025",
+        "pdf_page": 22,
+        "printed_page": "A-19",
+        "type_as_printed": "SS",
+        "propulsion_as_printed": "Diesel-Electric",
+        "rating_charge_units": 300,
+        "technology_as_printed": "new",
+        "chemistry": "TBD_not_marked_lithium_ion",
+        "aip_fit": false,
+        "aip_type_as_printed": null,
+        "source_rule": "Generic Project677 SS/Diesel-Electric; source explicitly distinguishes 677D without AIP. No AIP marker for this exact row.",
+        "mapping": "Generic current stable ID only. Named Kronshtadt B-586 and Velikiye Luki B-587 lithium500 estimate and named B-58518kt are not imported."
+      },
+      "aip_fit": false
+    },
+    "us_virginia": {
+      "maximum_depth_band_as_printed": "Int V",
+      "maximum_game_depth_m": 500,
+      "surface_max_kts": 15,
+      "source": "America's Navy 2025-12-01 PDF16/A-13 Virginia(ii) Blocks I-IV shared class row: Max Depth Int V; Damage & Speed Breakdown Surf Speed at Dam Pts0 is 15kt.",
+      "conversion_policy": "HV2026-ANNEX-A-DEPTH-BAND-UPPER-US5-20261024: English2026 PDF28/3-6 Int V 401-500m maps to game upper500m; not a measured engineering limit."
+    },
+    "us_virginia_blk5": {
+      "maximum_depth_band_as_printed": "Int V",
+      "maximum_game_depth_m": 500,
+      "surface_max_kts": 15,
+      "source": "America's Navy 2025-12-01 PDF16/A-13 Virginia(ii) Blocks V-VI subgroup shares the printed class Max Depth Int V and Surf Speed 15kt rows; Block V-VI DP rows are NOT imported.",
+      "conversion_policy": "HV2026-ANNEX-A-DEPTH-BAND-UPPER-US5-20261024: English2026 PDF28/3-6 Int V 401-500m maps to game upper500m; not a measured engineering limit."
+    },
+    "us_seawolf": {
+      "maximum_depth_band_as_printed": "Deep I",
+      "maximum_game_depth_m": 600,
+      "surface_max_kts": 18,
+      "source": "America's Navy 2025-12-01 PDF16/A-13 Seawolf(ii) S,C: Max Depth Deep I; Damage & Speed Breakdown Surf Speed at Dam Pts0 is 18kt (shared with JC subgroup; J/JC DP rows NOT imported).",
+      "conversion_policy": "HV2026-ANNEX-A-DEPTH-BAND-UPPER-US5-20261024: English2026 PDF28/3-6 Deep I501-600m maps to game upper600m; not a measured engineering limit."
+    },
+    "us_ohio_ssgn": {
+      "maximum_depth_band_as_printed": "Int V",
+      "maximum_game_depth_m": 500,
+      "surface_max_kts": 15,
+      "source": "America's Navy 2025-12-01 PDF15/A-12 Ohio SSGN right column: Max Depth Int V; own Damage & Speed Breakdown Surf Speed at Dam Pts0 is 15kt (Ethan Allen left-column row NOT borrowed).",
+      "conversion_policy": "HV2026-ANNEX-A-DEPTH-BAND-UPPER-US5-20261024: English2026 PDF28/3-6 Int V 401-500m maps to game upper500m; not a measured engineering limit."
+    },
+    "us_ohio_ssbn": {
+      "maximum_depth_band_as_printed": "Int V",
+      "maximum_game_depth_m": 500,
+      "surface_max_kts": 15,
+      "source": "America's Navy 2025-12-01 PDF14/A-11 Ohio SSBN: Max Depth Int V; Surf Speed 15kt in the right upper-column continuation before the Lafayette heading (PDF15 Lafayette Surf 16 NOT borrowed).",
+      "conversion_policy": "HV2026-ANNEX-A-DEPTH-BAND-UPPER-US5-20261024: English2026 PDF28/3-6 Int V 401-500m maps to game upper500m; not a measured engineering limit."
+    },
+    "se_ss_a19": {
+      "source": "Naval SITREP #63 October2022 PDF3/Page2 TypeA19 base; battery_fit field only.",
+      "battery_fit": {
+        "annex_row": "Type A19 SSP base row (Gotland, Uppland, Halland), named MLU excluded",
+        "authority": "sweden_sitrep63_2022",
+        "pdf_page": 3,
+        "printed_page": "Naval SITREP Page2",
+        "type_as_printed": "SSP",
+        "propulsion_as_printed": "AIP-Electric",
+        "rating_charge_units": 150,
+        "technology_as_printed": "new",
+        "chemistry": "TBD_not_marked_lithium_ion",
+        "aip_fit": true,
+        "aip_type_as_printed": "Stirling AIP",
+        "aip_potential_units_as_printed": 2000,
+        "source_rule": "HV2026-3.2.5; remark prints2000 charge units, corroborated by English2026 PDF30/3-8 Gotland150(new) example.",
+        "mapping": "Exact stable ID se_ss_a19 base TypeA19; named2015+ MLU2400-unit variant excluded; battery field only."
+      }
+    }
+  },
+  "excluded": [
+    "Every other platform ID, including the unmapped Chinese Project877EKM and ir_kilo",
+    "Full navigation equipment, runtime fit, water depth, initial or current depth and operation clock",
+    "Current battery charge, lithium-ion chemistry, typed snorkel fit/state, and initial AIP potential",
+    "Damaged speed curves, charging full-speed denominator, and unmapped Annex battery rows",
+    "Modification of historical database max_depth_m or operations-v3 data and fingerprints"
+  ],
+  "qualified_following_input": {
+    "path": "artifacts/rules-submarine-annex-following-20261024/peer/qualified-atoms.json",
+    "sha256": "722a637b6a9221674a71b9ff77b7558daf8903af9f55e00ae8c5a8976bad1969",
+    "parent_visual_review": true,
+    "source_red": "artifacts/rules-submarine-annex-20261024/integrated-four-before-following-two.log",
+    "consumption": "Only exact039G1 and generic677 original depth bands and undamaged surface cells, after parent and independent original-page review. Original Luna missing-continuation claims rejected; no battery or named-hull import."
+  },
+  "battery_scope": {
+    "rule_id": "HV2026-3.2.4",
+    "scope": "Conventional/diesel-electric submarine battery endurance: cn_039a,cn_kilo,ru_kilo,ru_kilo_636,cn_039g exact039G1,ru_lada generic677. US5Emerg nuclear emergency cells are a distinct applicability domain, not these fits.",
+    "runtime_state": "Scenario-only initial charge, current AIP reserve, device/mode, snorkel fit/state, and charge-rate assumptions are explicit; null remains unknown. Annex ratings are capacities, not initial charge.",
+    "unknowns": [
+      "lithium-ion chemistry unless explicitly marked",
+      "typed snorkel fit and state",
+      "full-speed denominator for charge speed threshold",
+      "current battery charge",
+      "current AIP remaining potential"
+    ],
+    "source_overlay_only": true
+  },
+  "unmapped_battery_annex_rows": [
+    {
+      "row": "Russian Project 877EKM [Kilo] SS",
+      "authority": "cn_navy_2025",
+      "pdf_page": 13,
+      "printed_page": "A-6",
+      "rating_charge_units": 200,
+      "technology_as_printed": "new",
+      "surface_speed_kts": 10,
+      "submerged_speed_kts": 17,
+      "stable_id": null,
+      "status": "TBD_unmapped_never_bind_to_ir_kilo_by-name"
+    },
+    {
+      "row": "Type 041 SSP",
+      "authority": "cn_navy_2025",
+      "pdf_page": 12,
+      "printed_page": "A-5",
+      "rating_charge_units": 250,
+      "technology_as_printed": "new",
+      "propulsion_as_printed": "Diesel-Electric/AIP",
+      "remarks": "micro-nuclear reactor",
+      "stable_id": null,
+      "status": "No current stable ID; do not transfer to cn_039a or assume standard Stirling AIP curve."
+    },
+    {
+      "row": "Project677 named Kronshtadt B-586 and Velikiye Luki B-587",
+      "authority": "ru_navy_2025",
+      "pdf_page": 22,
+      "printed_page": "A-19",
+      "rating_charge_units": 500,
+      "chemistry_as_printed": "Lithium battery; estimate",
+      "stable_id": null,
+      "status": "source_verified_named_variant_only; no exact current stable ID; not generic ru_lada"
+    },
+    {
+      "row": "Ohio SSBN/SSGN, Virginia(ii), Seawolf(ii) nuclear5(Emerg.)",
+      "authority": "us_navy_2025",
+      "pdf_pages": [
+        14,
+        15,
+        16
+      ],
+      "rating_charge_units": 5,
+      "role_as_printed": "Emerg.",
+      "stable_ids": [
+        "us_ohio_ssbn",
+        "us_ohio_ssgn",
+        "us_virginia",
+        "us_virginia_blk5",
+        "us_seawolf"
+      ],
+      "status": "source_verified_emergency_role_only; conventional executor not applicable; emergency procedure/fit not implemented"
+    }
+  ],
+  "field_applicability_registry": "annex-applicability-2026.json runtime_field_registry; exact class and per-field source_bound_exact_row only",
+  "wide_20261026_battery_additions": {
+    "source_contract": "artifacts/rules-book-wide-20261026/battery-annex/source-contract.md",
+    "source_red": "artifacts/rules-book-wide-20261026/source-red-combined-1.log",
+    "source_verified": [
+      "cn_039g165new exact039G1",
+      "ru_lada300new generic677"
+    ],
+    "runtime_acceptance": "pending root combined verification; no whole Annex or field-family completion claim"
+  }
+}

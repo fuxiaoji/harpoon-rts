@@ -15,6 +15,25 @@ use serde_json::{json, Value};
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 
+#[cfg(test)]
+#[path = "contract_tests.rs"]
+mod contract_tests;
+#[cfg(test)]
+#[path = "emergency_blow_contract.rs"]
+mod emergency_blow_contract;
+#[cfg(test)]
+#[path = "submarine_annex_contract.rs"]
+mod submarine_annex_contract;
+#[cfg(test)]
+#[path = "hard_rudder_contract.rs"]
+mod hard_rudder_contract;
+#[cfg(test)]
+#[path = "shared_extensions_resume_contract.rs"]
+mod shared_extensions_resume_contract;
+#[cfg(test)]
+#[path = "search_and_rescue_contract.rs"]
+mod search_and_rescue_contract;
+
 const DEFAULT_MAX_EVENTS: usize = 200;
 /// Upper bound for one `step` call, to keep a single MCP request bounded.
 const MAX_STEP_TICKS: i64 = 1_000_000;
@@ -31,6 +50,7 @@ pub struct Session {
     /// The MCP server is step-driven and never advances time on its own.
     speed: f64,
     scenario_dir: PathBuf,
+    database:Database,
 }
 
 impl Default for Session {
@@ -41,11 +61,25 @@ impl Default for Session {
 
 impl Session {
     pub fn new() -> Self {
+        Self::with_paths(PathBuf::from("scenarios"),Path::new("database/volumes"))
+    }
+    fn with_paths(scenario_dir:PathBuf,volumes_dir:&Path)->Self {
+        // Match the HTTP server's startup database: deterministic filename
+        // order, underscore drafts skipped, malformed volumes diagnosed.
+        // A live process retains this snapshot for new_game and selfplay.
+        let mut database=Database::built_in();
+        for path in json_paths(volumes_dir).unwrap_or_default().into_iter().filter(|p|!p.file_name().unwrap_or_default().to_string_lossy().starts_with('_')) {
+            match std::fs::read_to_string(&path).map_err(|e|e.to_string()).and_then(|t|Database::from_json(&t).map_err(|e|e.to_string())) {
+                Ok(volume)=>database=database.merged(&volume),
+                Err(error)=>eprintln!("db volume {path:?} FAILED to load: {error}"),
+            }
+        }
         Self {
             world: None,
             inbox: Vec::new(),
             speed: 60.0,
-            scenario_dir: PathBuf::from("scenarios"),
+            scenario_dir,
+            database,
         }
     }
 
@@ -106,7 +140,7 @@ impl Session {
         }
         // Build the world before touching the live session: a failed load must
         // not destroy the game already in progress.
-        let world = load_scenario(sc, Database::built_in())?;
+        let world = load_scenario(sc, self.database.clone())?;
         let summary = json!({
             "started": true,
             "scenario": world.scenario_id,
@@ -142,11 +176,24 @@ impl Session {
         let raw = args
             .get("command")
             .ok_or_else(|| "missing argument `command`".to_string())?;
-        let command: Command = serde_json::from_value(raw.clone())
+        let mut command: Command = serde_json::from_value(raw.clone())
             .map_err(|e| format!("invalid command: {e}"))?;
-        if self.world.is_none() {
-            return Err(no_game().into());
+        let world=self.world.as_ref().ok_or_else(no_game)?;
+        let own=observe(world,side,0,0);
+        if !own.units.iter().any(|u|u.id==command.unit_id()) && !(matches!(&command,Command::Unmanned{..}|Command::SetUnitAutomation{..})&&harpoon_core::observe::known_unmanned_unit(&own,command.unit_id())) {
+            return Err("issuing unit is not in this side's current observation".into());
         }
+        if command.manual_intent()==Some(true) {
+            return Err("manual control intent is assigned by the player transport".into());
+        }
+        command.validate_source(world,side)?;
+        if let Command::Antiship{unit,action}=&command {
+            harpoon_core::rules::surface2026::antiship::validate_plot(world,*unit,action)?;
+        }
+        if let Command::Torpedo{unit,action: action @ harpoon_core::rules::torpedo2026::Action::Plot{..}}=&command {
+            harpoon_core::rules::torpedo2026::validate_plot(world,side,*unit,action)?;
+        }
+        command.mark_player_intent();
         self.inbox.push((side, command));
         Ok(json!({"queued": true, "pending": self.inbox.len()}))
     }
@@ -232,7 +279,7 @@ impl Session {
             None => sc.duration_s.max(1).min(MAX_SELFPLAY_TICKS),
         };
         // Fully independent: the live session world is untouched.
-        selfplay(&sc, max_ticks)
+        selfplay(&sc, max_ticks,&self.database)
     }
 }
 
@@ -273,7 +320,7 @@ pub fn tool_definitions() -> Value {
         },
         {
             "name": "get_state",
-            "description": "Get the double-blind observation for one side (units, contacts with estimates, events tail). Enemy truth is never exposed.",
+            "description": "Get the double-blind observation for one side (units, estimated contacts, events). Own navigation.source_rules may include exact annex_capability game-band limits. A static capability supplies no water depth, movement fit or battery charge. Enemy truth is never exposed.",
             "inputSchema": {
                 "type": "object",
                 "properties": {
@@ -390,258 +437,23 @@ pub fn tool_definitions() -> Value {
 }
 
 fn command_schema() -> Value {
-    let unit = || json!({"type": "integer", "minimum": 1, "description": "Own unit id"});
-    let contact = || json!({"type": "integer", "minimum": 1, "description": "Contact id from get_state"});
-    let xy = |desc: &str| {
-        json!({
-            "type": "array",
-            "items": {"type": "number"},
-            "minItems": 2,
-            "maxItems": 2,
-            "description": desc
-        })
-    };
-    json!({
-        "type": "object",
-        "description": "One engine command; `cmd` selects the variant. Coordinates are nautical miles on a flat plane (+x east, +y north). Unit and contact ids are numbers.",
-        "properties": {
-            "cmd": {
-                "type": "string",
-                "enum": [
-                    "set_course", "set_speed", "set_depth", "set_altitude", "goto",
-                    "stop", "follow", "clear_station", "set_sonar", "set_weapons_free",
-                    "set_auto_chaff", "assign_target", "clear_target", "fire",
-                    "deploy_chaff", "launch_aircraft", "recover_aircraft"
-                ]
-            }
-        },
-        "required": ["cmd"],
-        "oneOf": [
-            {
-                "type": "object",
-                "properties": {
-                    "cmd": {"const": "set_course"},
-                    "unit": unit(),
-                    "course_deg": {"type": "number", "description": "Desired course, 0 = north"}
-                },
-                "required": ["cmd", "unit", "course_deg"]
-            },
-            {
-                "type": "object",
-                "properties": {
-                    "cmd": {"const": "set_speed"},
-                    "unit": unit(),
-                    "speed_kts": {"type": "number", "minimum": 0}
-                },
-                "required": ["cmd", "unit", "speed_kts"]
-            },
-            {
-                "type": "object",
-                "properties": {
-                    "cmd": {"const": "set_depth"},
-                    "unit": unit(),
-                    "depth_m": {"type": "number", "minimum": 10}
-                },
-                "required": ["cmd", "unit", "depth_m"]
-            },
-            {
-                "type": "object",
-                "properties": {
-                    "cmd": {"const": "set_altitude"},
-                    "unit": unit(),
-                    "altitude_m": {"type": "number", "minimum": 15}
-                },
-                "required": ["cmd", "unit", "altitude_m"]
-            },
-            {
-                "type": "object",
-                "properties": {
-                    "cmd": {"const": "goto"},
-                    "unit": unit(),
-                    "waypoints": {
-                        "type": "array",
-                        "items": xy("Waypoint [x, y] in nautical miles"),
-                        "description": "Ordered waypoints"
-                    }
-                },
-                "required": ["cmd", "unit", "waypoints"]
-            },
-            {
-                "type": "object",
-                "properties": {
-                    "cmd": {"const": "stop"},
-                    "unit": unit()
-                },
-                "required": ["cmd", "unit"]
-            },
-            {
-                "type": "object",
-                "properties": {
-                    "cmd": {"const": "follow"},
-                    "unit": unit(),
-                    "leader": {"type": "integer", "minimum": 1, "description": "Own unit id of the leader"},
-                    "bearing_rel_deg": {"type": "number"},
-                    "distance_nm": {"type": "number", "minimum": 0}
-                },
-                "required": ["cmd", "unit", "leader", "bearing_rel_deg", "distance_nm"]
-            },
-            {
-                "type": "object",
-                "properties": {
-                    "cmd": {"const": "clear_station"},
-                    "unit": unit()
-                },
-                "required": ["cmd", "unit"]
-            },
-            {
-                "type": "object",
-                "properties": {
-                    "cmd": {"const": "set_sonar"},
-                    "unit": unit(),
-                    "active": {"type": "boolean"}
-                },
-                "required": ["cmd", "unit", "active"]
-            },
-            {
-                "type": "object",
-                "properties": {
-                    "cmd": {"const": "set_weapons_free"},
-                    "unit": unit(),
-                    "free": {"type": "boolean"}
-                },
-                "required": ["cmd", "unit", "free"]
-            },
-            {
-                "type": "object",
-                "properties": {
-                    "cmd": {"const": "set_auto_chaff"},
-                    "unit": unit(),
-                    "on": {"type": "boolean"}
-                },
-                "required": ["cmd", "unit", "on"]
-            },
-            {
-                "type": "object",
-                "properties": {
-                    "cmd": {"const": "assign_target"},
-                    "unit": unit(),
-                    "contact": contact()
-                },
-                "required": ["cmd", "unit", "contact"]
-            },
-            {
-                "type": "object",
-                "properties": {
-                    "cmd": {"const": "clear_target"},
-                    "unit": unit()
-                },
-                "required": ["cmd", "unit"]
-            },
-            {
-                "type": "object",
-                "properties": {
-                    "cmd": {"const": "fire"},
-                    "unit": unit(),
-                    "contact": contact(),
-                    "weapon": {"type": "string", "description": "Weapon id, e.g. gun_5in or ascm_std"},
-                    "rounds": {"type": "integer", "minimum": 1, "maximum": 255}
-                },
-                "required": ["cmd", "unit", "contact", "weapon", "rounds"]
-            },
-            {
-                "type": "object",
-                "properties": {
-                    "cmd": {"const": "deploy_chaff"},
-                    "unit": unit()
-                },
-                "required": ["cmd", "unit"]
-            },
-            {
-                "type": "object",
-                "properties": {
-                    "cmd": {"const": "launch_aircraft"},
-                    "unit": unit(),
-                    "class": {"type": "string", "description": "Aircraft class id, e.g. fighter"},
-                    "count": {"type": "integer", "minimum": 1, "maximum": 255},
-                    "mission": mission_schema()
-                },
-                "required": ["cmd", "unit", "class", "count", "mission"]
-            },
-            {
-                "type": "object",
-                "properties": {
-                    "cmd": {"const": "recover_aircraft"},
-                    "unit": unit()
-                },
-                "required": ["cmd", "unit"]
-            }
-        ]
-    })
+    harpoon_core::commands::command_schema()
 }
 
+#[cfg(test)]
 fn mission_schema() -> Value {
-    let point = |desc: &str| {
-        json!({
-            "type": "array",
-            "items": {"type": "number"},
-            "minItems": 2,
-            "maxItems": 2,
-            "description": desc
-        })
-    };
-    json!({
-        "type": "object",
-        "description": "Aircraft mission (tagged by `mission`)",
-        "oneOf": [
-            {
-                "properties": {
-                    "mission": {"const": "cap"},
-                    "station": point("CAP station [x, y] in nautical miles"),
-                    "radius_nm": {"type": "number", "minimum": 0}
-                },
-                "required": ["mission", "station", "radius_nm"]
-            },
-            {
-                "properties": {
-                    "mission": {"const": "strike"},
-                    "contact": {"type": "integer", "minimum": 1}
-                },
-                "required": ["mission", "contact"]
-            },
-            {
-                "properties": {
-                    "mission": {"const": "asw"},
-                    "area": point("ASW search area center [x, y] in nautical miles"),
-                    "radius_nm": {"type": "number", "minimum": 0}
-                },
-                "required": ["mission", "area", "radius_nm"]
-            },
-            {
-                "properties": {
-                    "mission": {"const": "recon"},
-                    "point": point("Recon point [x, y] in nautical miles")
-                },
-                "required": ["mission", "point"]
-            },
-            {
-                "properties": {
-                    "mission": {"const": "rtb"}
-                },
-                "required": ["mission"]
-            }
-        ]
-    })
+    harpoon_core::commands::mission_schema()
 }
 
 // ---------------------------------------------------------------------------
 // Selfplay: deterministic heuristic staff for both sides
 // ---------------------------------------------------------------------------
 
-fn selfplay(sc: &Scenario, max_ticks: i64) -> Result<Value, String> {
+fn selfplay(sc: &Scenario, max_ticks: i64,database:&Database) -> Result<Value, String> {
     let scenario_id = sc.id.clone();
     let scenario_name = sc.name.clone();
     let seed = sc.seed;
-    let mut world = load_scenario(sc.clone(), Database::built_in())?;
+    let mut world = load_scenario(sc.clone(), database.clone())?;
     let mut commands_issued = 0u64;
 
     for tick in 0..max_ticks {
@@ -693,7 +505,7 @@ fn selfplay(sc: &Scenario, max_ticks: i64) -> Result<Value, String> {
 /// control picks targets), plus deliberate submarine torpedo attacks.
 fn heuristic(obs: &Observation) -> Vec<Command> {
     let mut cmds = Vec::new();
-    for u in &obs.units {
+    for u in obs.units.iter().filter(|u|!u.manual_control) {
         if !u.fire_on {
             cmds.push(Command::SetWeaponsFree {
                 unit: u.id,
@@ -701,11 +513,11 @@ fn heuristic(obs: &Observation) -> Vec<Command> {
             });
         }
     }
-    for u in obs.units.iter().filter(|u| u.kind == PlatformKind::Sub) {
+    for u in obs.units.iter().filter(|u| u.kind == PlatformKind::Sub && !u.manual_control) {
         let target = obs
             .contacts
             .iter()
-            .filter(|c| !c.stale && c.quality > 0.3 && c.category == PlatformKind::Ship)
+            .filter(|c| !c.stale && c.quality > 0.3 && c.category == Some(PlatformKind::Ship))
             .map(|c| (c.id, u.pos.range_to(c.estimate)))
             .min_by(|a, b| a.1.partial_cmp(&b.1).unwrap_or(std::cmp::Ordering::Equal));
         if let Some((contact, dist)) = target {

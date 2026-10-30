@@ -1,0 +1,33 @@
+{
+  "revision": "2026-10-28-hf-es-initial-root-tick-review",
+  "authority": "English Harpoon V 2026-01-01, PDF74/printed 6-6 section 6.3.9: Beyond LOS is the range for a TDL's high frequency (HF) radio transmissions that can be detected by ES systems.",
+  "source_pdf_sha256": "8196ffc715bbcccd862d8597c607de7816dac5baee31fa659f89dfaf4323700c",
+  "source_page_evidence": "artifacts/rules-book-wide-20261026/zcode-parallel-20261028/comms-unmanned-next/source-pages/hf-page-074.png",
+  "rts_policy": {
+    "scope": "committed TDL HF radio transmissions only; the printed sentence covers TDL data links, voice-over-HF stays pending null",
+    "receiver": "every HF-ES receiver is an explicit scenario_assumption fit (exact unit name + fitted sensor id + declared range_nm + bearing_error_deg); absent declaration means no HF-ES capability and no ES hardware is claimed to support HF by default",
+    "extent": "deterministic detection inside the declared receiver range_nm; the rule prints no chance/range, so no probability table exists or may be invented",
+    "currency": "strict actual current sending tick: an emission is an ES source only at queued_at == w.tick; a committed message is not continuous radiation, no 180-second window is implied, and a late receiver never detects a historical pulse",
+    "report": "bearing-only: true receiver-to-emission-position bearing plus the declared bearing_error_deg as reported uncertainty; no measured position, no fix, no category, no class, no FCS, no quality and no contact bonus are produced by this leaf; the public view carries bearing/error/observation time/own sensor only, while the emitter identity and message reference stay in the referee trace",
+    "hardware_gate": "the declared sensor must actually be fitted and undamaged on the receiver at the sample (real damage-runtime sensor gate rechecked every sample)",
+    "producer_dependency": "communications2026 Message.hf_emitter_position / hf_transmissions committed at queue time",
+    "wiring": "Context field, fingerprint, parent module declaration and the detection2026 Receiver::Es integration are root-owned; this leaf is pure over World + Configuration"
+  },
+  "scenario_assumption_receivers": [
+    {
+      "unit": "batch_lab_es",
+      "sensor": "batch_lab_es_sensor",
+      "range_nm": 60.0,
+      "bearing_error_deg": 2.0,
+      "source": "scenario_assumption: explicit batch experimental HF-ES receiver; no real Annex ES hardware HF claim"
+    }
+  ],
+  "pending_source": [
+    "voice-over-HF ES detectability",
+    "failed-delivery HF radiation for ES purposes",
+    "real ES hardware HF support (blocked: no real annex entry, no real ES HF fit in DB)",
+    "natural control-link jam producer (unmanned U6) and real unmanned vehicle fits (unmanned U5) remain null"
+  ],
+  "whole_section_complete": false,
+  "whole_book_complete": false
+}

@@ -1,0 +1,827 @@
+{
+  "schema": 1,
+  "date": "2026-10-30",
+  "status": "core80_wide_plus81_affected_passed_whole_book_incomplete",
+  "authority": "English Harpoon V 2026-01-01, three Chinese cores cross-checked",
+  "baseline_accepted_report": "harpoon-rts/docs/rules-facility-sar-continuation-20261026.json",
+  "whole_book_complete": false,
+  "whole_chapter_complete": false,
+  "all_optional_complete": false,
+  "all_real_annex_fits_complete": false,
+  "atomic_rule_denominator": null,
+  "coverage_percentage": null,
+  "remaining_list_is_exhaustive": false,
+  "scope_note": "Rows are implementation families and source subsets, not atomic rules. Passed means the named historical frozen input and core cases; active later edits are not retroactively signed off. Global havedone and final broad acceptance remain pending.",
+  "pending_after_rulebook": [
+    "headless parallel training engine",
+    "Lua TCP",
+    "Monte Carlo",
+    "interactive simulation",
+    "scenario XML",
+    "DIS",
+    "comprehensive csg_littoral scenario",
+    "cooperative expected-utility FSM"
+  ],
+  "rows": [
+    {
+      "id": "facility-gci",
+      "source": "11 Command Bunker",
+      "status": "implemented_core_passed",
+      "validation": "integration-5",
+      "execution": "Native controller/hardware/radio vector and damage stop",
+      "limits": "Full general ground C2 remains outside this subset"
+    },
+    {
+      "id": "facility-magazine",
+      "source": "11 Magazine Bunker",
+      "status": "implemented_core_passed",
+      "validation": "integration-5",
+      "execution": "Original D10 duration and gun/CIWS-specific unavailable stock path",
+      "limits": "No unknown replenishment rate inferred"
+    },
+    {
+      "id": "facility-drydock",
+      "source": "11 Dry Dock gate/pumps",
+      "status": "implemented_core_passed",
+      "validation": "integration-5",
+      "execution": "Real pump/gate and declared water-cycle work",
+      "limits": "No structural repair inferred"
+    },
+    {
+      "id": "unmanned-inventory",
+      "source": "2.5 UUV handling",
+      "status": "implemented_core_passed",
+      "validation": "integration-7",
+      "execution": "Same physical body finite stow/deploy and cable/control reset",
+      "limits": "Real ARS600 and other absent fits remain unverified"
+    },
+    {
+      "id": "battery-aip-consumers",
+      "source": "4.4 / source battery-AIP",
+      "status": "implemented_core_passed",
+      "validation": "integration-5",
+      "execution": "Physical energy/speed, source engineering and raised mast effects",
+      "limits": "Not all Annex operating modes/initial fuel values"
+    },
+    {
+      "id": "collision-grounding",
+      "source": "3 collision/ram/grounding",
+      "status": "implemented_core_passed",
+      "validation": "integration-5",
+      "execution": "Swept geometry, source dice, common DP/flood",
+      "limits": "Unprinted affected maneuver branches stay pending"
+    },
+    {
+      "id": "nuclear-asw-placement",
+      "source": "8.5.2 / 14.1.8",
+      "status": "implemented_core_passed",
+      "validation": "integration-5",
+      "execution": "Actual FCS/scatter/GZ then typed nuclear receiver",
+      "limits": "Unspecified component allocation and all delivery fits are not closed"
+    },
+    {
+      "id": "air-surprise",
+      "source": "9.4.7 optional",
+      "status": "implemented_core_passed",
+      "validation": "integration-8",
+      "execution": "Native source warning/sun/formation and real first-round restrictions",
+      "limits": "Multi-crew/priorities not printed remain named pending"
+    },
+    {
+      "id": "aam-launch-state",
+      "source": "8 AAM declaration",
+      "status": "implemented_core_passed",
+      "validation": "integration-7",
+      "execution": "Original when-fired maneuver condition persists through flight",
+      "limits": "Not all air-combat optional rules"
+    },
+    {
+      "id": "air-rf-geometry",
+      "source": "6.3 RF / air reactions",
+      "status": "implemented_core_passed",
+      "validation": "integration-11",
+      "execution": "True 3D range/native own motion and independent reaction clock",
+      "limits": "No invented RF solution from shared icon"
+    },
+    {
+      "id": "refuel-hifr",
+      "source": "4 refuel / HIFR",
+      "status": "implemented_core_passed",
+      "validation": "integration-11",
+      "execution": "Real slots/fuel and continuous noncombat HIFR work",
+      "limits": "Author proportional allocation is explicit RTS policy"
+    },
+    {
+      "id": "air-depth-charge",
+      "source": "8.5.4.4",
+      "status": "implemented_core_passed",
+      "validation": "integration-14",
+      "execution": "Ordinary/homing/RBK actual stock, depth and common pressure receiver",
+      "limits": "PLAB integer/half-pressure ambiguity and real aircraft fitting remain pending"
+    },
+    {
+      "id": "ship-depth-charge",
+      "source": "8.5.4.1-.2",
+      "status": "implemented_core_passed",
+      "validation": "integration-11",
+      "execution": "Physical rails/projectors/reserve/reload and real local/received datum",
+      "limits": "Not every hull/mount Annex installation"
+    },
+    {
+      "id": "dc-self-blast",
+      "source": "8.5.4.3",
+      "status": "implemented_core_passed",
+      "validation": "integration-14",
+      "execution": "Low-speed and chronological following-ship real Major DP",
+      "limits": "Tied first arrivals and extra overlapping blast priority pending"
+    },
+    {
+      "id": "asw-hull-receiver",
+      "source": "8.5 contact hull",
+      "status": "implemented_core_passed",
+      "validation": "asw-hull-common-17",
+      "execution": "Eight cells, strict pre1955, real hydrostatic/cluster receiver",
+      "limits": "Unknown physical hull traits never guessed"
+    },
+    {
+      "id": "hedgehog-contact",
+      "source": "8.5.3.3",
+      "status": "implemented_core_passed",
+      "validation": "integration-20",
+      "execution": "Natural 1/2/3 contacts, each true Contact DP and separate pressure trial",
+      "limits": "Experiments do not certify real Hedgehog/MBU Annex installation"
+    },
+    {
+      "id": "projector-multi-phase",
+      "source": "8.5.3.2",
+      "status": "implemented_core_passed",
+      "validation": "integration-18b",
+      "execution": "Same-turn same-FCS planned/reaction budgets",
+      "limits": "Only source-declared supported mount models"
+    },
+    {
+      "id": "attack-sonar",
+      "source": "8.5.3.1",
+      "status": "implemented_core_passed",
+      "validation": "integration-18b",
+      "execution": "Gen1-3 dedicated assigned tracking only after real location",
+      "limits": "Search receivers are not generically promoted to attack sonars"
+    },
+    {
+      "id": "projector-pair",
+      "source": "8.5.3 paired",
+      "status": "implemented_core_passed",
+      "validation": "integration-21b",
+      "execution": "Atomic two-salvo one-pattern and legal half-chance single member",
+      "limits": "Multiple independent pairs and all Annex fits not signed off"
+    },
+    {
+      "id": "shared-air-budget",
+      "source": "9.6",
+      "status": "implemented_core_passed",
+      "validation": "integration-20",
+      "execution": "All provider declarations/ready tickets and primary ship12 limit",
+      "limits": "Collateral cluster scope union still has a static unverified boundary"
+    },
+    {
+      "id": "mk82-native-defense",
+      "source": "9.6",
+      "status": "implemented_core_passed",
+      "validation": "integration-14",
+      "execution": "Native own Visual, real guns/SAM then physical release",
+      "limits": "Not a general all-store air attack implementation"
+    },
+    {
+      "id": "satnav1-pgm",
+      "source": "9.6.8",
+      "status": "implemented_core_passed",
+      "validation": "integration-17",
+      "execution": "Exact declared fit, physical flight/mass/DP, RF placement and cap",
+      "limits": "Failed placement consequences/section correlation/received ASCM modifiers/R059 not all closed"
+    },
+    {
+      "id": "rocket",
+      "source": "9.6.7",
+      "status": "implemented_core_passed",
+      "validation": "integration-17",
+      "execution": "8/12 real stores, pairs cap, 2D6 hits and actual AA",
+      "limits": "Lab stores; moving/protected/ground priority and real fits pending"
+    },
+    {
+      "id": "cluster-bomb",
+      "source": "9.6.6",
+      "status": "implemented_core_passed",
+      "validation": "integration-20",
+      "execution": "Static adjacency, real naval criticals, land DP, spent VLow dud",
+      "limits": "No invented footprint, odd-count rounding, F/G complete proof or all collateral cap"
+    },
+    {
+      "id": "mad-wide-native",
+      "source": "5.7.1-.2",
+      "status": "implemented_core_passed",
+      "validation": "integration-17",
+      "execution": "Actual IT exposure/search/report and earned next-Tac datum without truth refresh",
+      "limits": "Prelaid only; no real buoy laying claim or all ambiguous exposure policies"
+    },
+    {
+      "id": "soks-native",
+      "source": "5.7.3",
+      "status": "implemented_core_passed",
+      "validation": "integration-17",
+      "execution": "Historical same-band real crossings, three-cut rough course, no current enemy Contact",
+      "limits": "Author retrofit and explicit geometry; real Annex fits and all changing-track cases pending"
+    },
+    {
+      "id": "soks-critical-repair",
+      "source": "14.5 / 5.7.3",
+      "status": "implemented_core_passed",
+      "validation": "soks-common-casualty-17",
+      "execution": "Actual installed component participates in casualty choice and normal same-body repair",
+      "limits": "Already-adjudicated critical boundary, not a full weapon/critical-roll chain"
+    },
+    {
+      "id": "laser-native",
+      "source": "5.6.1-.5",
+      "status": "implemented_core_passed",
+      "validation": "integration-19",
+      "execution": "Actual beams, automatic LWS bearing, designation-only LST, actual LRMTS ranging",
+      "limits": "Author components; no all Annex laser fits or every weather/terrain case"
+    },
+    {
+      "id": "helicopter-sar",
+      "source": "14.8",
+      "status": "implemented_core_passed",
+      "validation": "integration-16",
+      "execution": "Actual fueled Hover plus continuous station work and source2 recovery",
+      "limits": "No whole flying-boat/aircraft Visual/FLIR closure"
+    },
+    {
+      "id": "salh",
+      "source": "9.6.8",
+      "status": "implemented_core_passed",
+      "validation": "integration-22 and integration-23",
+      "execution": "Actual GBU12 packet/current claimed live designation/source smoke count passed2; oldSATNAV4/policy2 passed",
+      "limits": "Original2 plus actual-casualty/cross-TT-pending2 passed; authored fit and unresolved smoke interval scope only"
+    },
+    {
+      "id": "nuclear-abort-airdc",
+      "source": "14.1.8",
+      "status": "implemented_core_passed",
+      "validation": "integration-25",
+      "execution": "Real mission-abort now blocks directAirDC readonly and runtime; original real report and aircraft persist",
+      "limits": "Explicit launch/terminal adjudication fixture boundary, not full nuclearSAM legality"
+    },
+    {
+      "id": "air-strafing",
+      "source": "9.6.9",
+      "status": "implemented_core_passed",
+      "validation": "integration-26b and integration-27",
+      "execution": "Ordinary/heavyAA both client orders passed; noAA source target was unarmed so two realWeapon criticals correctly ignored",
+      "limits": "Original2 and author F/G2 passed; real F/G Annex fits, oddD6 and H3 remain outside"
+    },
+    {
+      "id": "sonobuoy-native",
+      "source": "5.4.6.3",
+      "status": "implemented_core_passed",
+      "validation": "integration-24 and integration-25",
+      "execution": "Actual finite carriage/mass/deployment, broken losses, nextTac, private native data and selected RF receiver Fair through ordinaryFCS",
+      "limits": "Native2 and restore/lifecycle/mixed-load2 passed; full K2/K3/passive/EER still unclosed"
+    },
+    {
+      "id": "light-gun-composite",
+      "source": "14.1.3 / 9.6.9",
+      "status": "implemented_core_passed",
+      "validation": "integration-25",
+      "execution": "Actual20mm nonaviation Bridge D10096to100 suppressed before composite resolution; Full normalization order fixed",
+      "limits": "Actual Bridge/360s order-delay case passed; original flightdeck/airplot/armor restrictions retained"
+    },
+    {
+      "id": "zero-dp-hangar",
+      "source": "11.1.2 / Generic Land Targets / 9.6.9",
+      "status": "implemented_core_passed",
+      "validation": "integration-25",
+      "execution": "Native zeroDP one gun critical disabled Hangar but lost0 of source3; narrow single-critical aircraft-loss gate fixed",
+      "limits": "Actual one-critical stored-airframe loss passed; multiple-critical multiplicity and armored Magazine excluded"
+    },
+    {
+      "id": "planned-cluster-secondary-budget",
+      "source": "9.6.3 / 9.6.6",
+      "status": "implemented_core_passed",
+      "validation": "integration-26b",
+      "execution": "Known-secondary12 ledger empty and13 physical releases observed; shared multi-ship barriers and leaf known set implemented",
+      "limits": "Known complete planned coverage12/13 and oldcluster2 passed; unknown collateral precedence remains pending"
+    },
+    {
+      "id": "optional-graded-visual-id",
+      "source": "5.8.9",
+      "status": "implemented_core_passed",
+      "validation": "integration-26b",
+      "execution": "Basic control and explicit optional actual nativeVisual Ship-only class privacy source case registered",
+      "limits": "Low nativeShip-only/Basic control and restore passed; continuity safeguards static only, no whole5.8.9 claim"
+    },
+    {
+      "id": "hitl-explicit-asw-reaction",
+      "source": "2.5 / 8.5.3",
+      "status": "implemented_core_passed",
+      "validation": "integration-27",
+      "execution": "Actual planned release still allowed, readonly and runtimeReaction denied before physical ammo debit; manned control intact",
+      "limits": "No all unmanned/ASW modes or realfits claim"
+    },
+    {
+      "id": "native-optical-signaling",
+      "source": "5.8.11 / VisualSignalsRange PDF65",
+      "status": "implemented_core_passed",
+      "validation": "integration-28 and integration-29",
+      "execution": "Native optical4: current LOS/range/daynight/precipitation, board/Tac quota, conflict rejection, dedup, trustedmanual only actualTx, receiver-only mailbox/noRF/noFCS and Worldrestore",
+      "limits": "ASCII/author stations/clear native geometry; full casualty, nonASCII, interception, unprinted cells remain pending"
+    },
+    {
+      "id": "passive-directional-localization",
+      "source": "5.4.6.3",
+      "status": "implemented_core_passed",
+      "validation": "integration-30c and integration-31",
+      "execution": "Both actual2 Poor and3 Good cases passed: selected received original bearings, +15 original D100, no truth point, queued nextTac field freeze and expiry downgrade; pw01 weapon/category continuation separately pending",
+      "limits": "Strict field freeze, actual receiver prior search and ray geometry; full passive omni/EER/K2K3/actual weapon chain unclosed"
+    },
+    {
+      "id": "mobile-decoy-speed",
+      "source": "12.6.2",
+      "status": "implemented_core_passed",
+      "validation": "integration-30c and integration-31",
+      "execution": "Native normal speed orders alter actual displacement; independent lifetime2 changes, generation bounds, duplicate no-op and completeWorld restore passed",
+      "limits": "Generic combat SetSpeed not redirected; low-speed energy extension and native torpedo coupling unclosed"
+    },
+    {
+      "id": "explicit-mast-zero",
+      "source": "5.2.1 / native battery snorkel aggregate",
+      "status": "implemented_core_passed",
+      "validation": "integration-27",
+      "execution": "Known declared0 returns no detection, not missingsource; actual raised snorkel may still dominate and unknown exposure stayspending",
+      "limits": "Existing62 detection and14 battery cases passed; no additional unknown physical mast identities inferred"
+    },
+    {
+      "id": "mobile-decoy-native-mad",
+      "source": "12.6.2 original Gen1-4 table",
+      "status": "implemented_core_passed",
+      "validation": "integration-31",
+      "execution": "Actual Gen3 nativeMAD source red30c, original table corrected NoNoYesYes and shared sensor gate reads it; normal Gen1/2 negatives Gen3/4 positives and oldEW13 pass",
+      "limits": "No unknown real mobile simulator fit or all magnetic environment claim"
+    },
+    {
+      "id": "airborne-chaff-physical-corridor",
+      "source": "12.2 / English2026 PDF119",
+      "status": "implemented_core_passed",
+      "validation": "integration-35",
+      "execution": "Actual finite flown-nm/stock/physical cloud bands/width, radar LOS only and unchanged native ES, descent/fullwind/author lifetime, completeWorld restore passed2",
+      "limits": "Author fit/nm/exact life; engine cadence, unknown wind/vertical geometry and all real Annex unclosed"
+    },
+    {
+      "id": "floating-radar-raft-tow",
+      "source": "12.4 / English2026 PDF119",
+      "status": "implemented_core_passed",
+      "validation": "integration-34",
+      "execution": "Actual Deploy/finite stock/10kt follow/normal12kt ship order accepted/one cable break/previous-point halfwind drift/author release and author owner-loss/complete World restore all passed",
+      "limits": "Source10kt cable break; explicit author rigid cable geometry/release/loss policy, not real Annex or full missile distraction"
+    },
+    {
+      "id": "passive-float-classification-to-mk54",
+      "source": "5.4.6.3 / normal9.7 and Torpedo Plot",
+      "status": "implemented_core_passed",
+      "validation": "integration-35 and integration-36",
+      "execution": "Qualified actual native classification/receivedGood/normalLowHover/Plot/Fire, real4to3/285kg debit/launch Torpedo body and sameTick entry/placement/terminal/World restore pass; A/B real final release isolation passes",
+      "limits": "Actual received classification, real Mk54 release and A/B receiver isolation passed in the named narrow cases; full passive omni/EER/K2K3 and all real Annex fitting remain outside this subset"
+    },
+    {
+      "id": "waterborne-aircraft-procedures",
+      "source": "4.6.5 / 4.6.6 English2026 PDF36",
+      "status": "implemented_core_passed",
+      "validation": "integration-35",
+      "execution": "Same body actual water-air-water, FMP/max distinct source gates, normal motion/fuel; natural onceTac3 trials with explicit lee/mooring and actual common aircraft loss/restore passed2",
+      "limits": "Author Low-only seaplane card; no real Annex, taxi, unsafe sea, variable wind or partialTac universal rule claim"
+    },
+    {
+      "id": "high-level-conventional-release",
+      "source": "9.6.4 / 9.6.5 English2026 PDF105-107",
+      "status": "implemented_core_passed",
+      "validation": "integration-37",
+      "execution": "Actual6nm High Level Mk82 release through normal defense/budget, 241kg debit, originalD100/zeroPh/nohit, after-release free maneuver/normal turn and Worldrestore",
+      "limits": "Existing real F18E6Mk82 fit with authorized author range; no High nuclear, moving target dispersion, VeryHigh, HighGlide, Lob, entire9.6 or ballistic fall claim"
+    },
+    {
+      "id": "concrete-runway-normal-bomb-consumer",
+      "source": "11.5.1 English2026 PDF117/118",
+      "status": "implemented_core_passed",
+      "validation": "integration-39 source failure -> integration-40 Level green -> integration-41 all3 runway cases green",
+      "execution": "Actual6Mk82/1446kg source Level release, same original die, penetration-qualified common LandHit and cut; actual Glide multiple-hit cap; unrelated protected Base guard and complete World restore",
+      "limits": "Explicit authored C visual footprint separate from printed A attack area; Level chooses permittedSalvo1, not every load-size option; other protected targets, H6,100DP-vs-cut precedence and full airport/port remain open"
+    },
+    {
+      "id": "carrier-bomb-automatic-flight-deck",
+      "source": "14.1.2 English2026 PDF129/14-3; expanded2026 PDF7",
+      "status": "implemented_core_passed",
+      "validation": "integration-40 normal actual-hit source red -> integration-41 both2 cases green",
+      "execution": "Actual sourced241kgMk82 hit on cn_001 creates once-only additional deck critical, independent location die identity, real deck effect and World restore; real nonpenetrating Ford hit retains armor gate",
+      "limits": "Known exact bomb weight source registries only; unknown weights become explicit pending; no120mm+Long/Extreme automatic deck cadence or whole E00-E13 claim"
+    },
+    {
+      "id": "a19-battery-only",
+      "source": "3.2.4/3.2.5; Swedish base Type A19 row PDF3",
+      "status": "implemented_core_passed",
+      "validation": "integration-47; NGFS updated by source-red49 -> integration-50/51",
+      "execution": "Actual 150-unit new battery, base Stirling 2000 units, 4kt settlement and qualitative 20kt pending; independent field permission",
+      "limits": "No MLU2400, depth, surface-speed, sensor/weapon or real initial charge qualification"
+    },
+    {
+      "id": "hf-tdl-native-es",
+      "source": "6.3.9 English2026 PDF74",
+      "status": "implemented_core_passed",
+      "validation": "integration-47; NGFS updated by source-red49 -> integration-50/51",
+      "execution": "Current committed HF tick reaches real native ES bearing contact; undeclared/late/non-HF controls, hardware gate and World restore",
+      "limits": "Range/error and HF-band receiver are author declarations, not real Annex capability; damage input case is adjudicated"
+    },
+    {
+      "id": "eoir1-controlled-physical",
+      "source": "9.6.8 PDF108/109; US Aircraft H2-1",
+      "status": "implemented_core_passed",
+      "validation": "integration-47; NGFS updated by source-red49 -> integration-50/51",
+      "execution": "Actual Walleye I source release/flight; legal aircraft turn; actual 3-D bomb ray smoke, sticky quarter, original die and World restore",
+      "limits": "Stationary allocated points, first generation only; explicit author optical volume/loadout; later generations, moving targets and full terrain LOS remain open"
+    },
+    {
+      "id": "command1-controlled-physical",
+      "source": "9.6.8 PDF108; US Aircraft H2-1",
+      "status": "implemented_core_passed",
+      "validation": "integration-47; NGFS updated by source-red49 -> integration-50/51",
+      "execution": "Actual Bullpup A Cmd/1 release/flight, source .4/.1 original-die LOS result; 33 DP plus separate D6/2 and missile-kind path",
+      "limits": "Author mount on qualified F18E airframe; no real historical fit or SARH equipment closure, moving-target/channel/terrain scopes remain pending"
+    },
+    {
+      "id": "ngfs-native-source-gun",
+      "source": "8.3/11.4 PDF91-93/116-117; China Navy Annex C PDF68",
+      "status": "implemented_core_passed",
+      "validation": "integration-47; NGFS updated by source-red49 -> integration-50/51",
+      "execution": "PJ45A HE source four bands; native lookout/Spot/Fire; shared commit/ammo/common LandHit; actual dual-ship N-1 once-only penalty independent of command order",
+      "limits": "Source field scopes only: author gun/service declarations; complex bombardment, Neutralization, full geometry/modifiers/other gun rows and own queue observation attachment remain open"
+    },
+    {
+      "id": "nuclear-defensive-carrier-kill",
+      "source": "14.1.8 PDF132/14-6",
+      "status": "implemented_core_passed",
+      "validation": "integration-47; NGFS updated by source-red49 -> integration-50/51",
+      "execution": "Real conventional defense terminal destroying armed nuclear carrier calls CarrierDestroyed exactly once; unarmed control and existing nuclear effects/resume regressions",
+      "limits": "Defense packet is explicitly pre-adjudicated before real flight; not full natural detection/admission or a real nuclear equipment fit; original optional/nuclear gaps remain open"
+    },
+    {
+      "id": "cas-radio-link-consumer-boundary",
+      "source": "CaS-adjusted expanded manual PDF14/15 communications94",
+      "status": "implemented_adjudicated_boundary_passed",
+      "validation": "integration-61: cas_radio_qualification_20261029 10/0",
+      "execution": "Actual public TDL route consumes declared horizon heights and typed formation identity; long/short/aircraft disabled physical groups, repair and World restore",
+      "limits": "Explicit adjudicated disabled-room input boundary, not natural weapon-hit producer proof; real hardware antenna/formation and partial-room redundancy remain unqualified"
+    },
+    {
+      "id": "surface-gunnery-native-qualified-pj45a",
+      "source": "English2026 PDF91-93/8.3, PDF111 aspect; China2025 AnnexC PDF68 PJ45A HE",
+      "status": "implemented_core_passed",
+      "validation": "integration-61/62: surface_gunnery_20261029 4/0",
+      "execution": "Native own visual -> public Fire -> atomic gun intent/cadence/ammo -> source gun table -> shared damage; friendly fire cone rejection and restore",
+      "limits": "One gun row; hull/FCS/arcs/clear conditions explicitly authored in the laboratory; not real Type052D hull certification, all naval guns, full terrain/FCS or all8.3"
+    },
+    {
+      "id": "automatic-carrier-gun-deck-turn",
+      "source": "English2026 PDF129/14-3 section14.1.2",
+      "status": "implemented_core_passed",
+      "validation": "integration-61/62 native Long60 and Extreme70, latter original D10061..70",
+      "execution": "Actual source gun hit/penetration/deck armor proof -> one carrier-Tac occurrence die -> existing additional flight-deck critical, original ordinary damage dice retained",
+      "limits": "Mixed Long/Extreme in one carrier-turn remains source-pending with original D100. All armored-carrier permutations and all gun fits are not certified"
+    },
+    {
+      "id": "aip-port-finite-paired-supply",
+      "source": "English2026 PDF29/3-7 section3.2.5; explicit RTS-AIP-PORT-20261029-01 logistics contract",
+      "status": "implemented_core_passed",
+      "validation": "integration-61: aip_replenishment_20261029 4/0",
+      "execution": "Actual friendly Port child depot, surfaced stopped AIP submarine, sorted atomic paired fuel/oxygen reservation, work completion/cancel/movement abort, restore, own-side preflight; no automatic restart",
+      "limits": "2000 AIP potential/return to port are printed; logistics time/range/charge-equivalent supply stock are authored, not universal source rates; natural depot damage abort is not newly tested"
+    },
+    {
+      "id": "ngfs-complex-declared-target-and-reverse-hit",
+      "source": "English2026 PDF116-117/11-1,11-2 sections11.4,11.6,11.7",
+      "status": "implemented_core_passed",
+      "validation": "integration-61: ngfs_complex_20261029 7/0; source reds56/59/60 retained",
+      "execution": "Public whole-complex Spot, actual reverse component/common LandHit or final empty/pending result; declared-target N-1 includes empty-space firing ship; original D10090 at90% hits",
+      "limits": "Natural scenarios cover airfields; separate natural port case pending. Nonpenetrating land damage and Map/Blind neutralization consequences remain source-pending"
+    },
+    {
+      "id": "tdl-annex-source-terminal-subset",
+      "source": "English2026 6.3.9 PDF74; USN94/CN96/RU104 Annex L; Ford USN7/A4",
+      "status": "implemented_core_passed",
+      "validation": "integration64: TDL7/0, core wide253/0",
+      "execution": "native report/SendWarning actual delivery, source terminal type/range/transport/printed compatibility and Ford class binding, pure rejection, restore",
+      "limits": "16 structured rows not 16 qualified platform fits. Ford only actual exact DB class; Reagan candidate only. Relay/EW JR/more platform fits pending."
+    },
+    {
+      "id": "shared-surface-ngfs-physical-slot-stock-contract",
+      "source": "existing RTS surface-gunnery execution contract across English2026 8.3/11.4 consumers; explicit author stock allocation",
+      "status": "implemented_core_passed",
+      "validation": "integration63 three real reds -> integration64 NGFS10/0, surface4/0",
+      "execution": "actual public Fire aggregate/physical stock sync, cross-domain prior shot rejects, same-phase conflicting domains no expenditure independent of order",
+      "limits": "RTS consistency fix, not a new book firing rate or probability; does not increase a complete atomic-rule denominator"
+    },
+    {
+      "id": "ngfs-port-natural-source-subset",
+      "source": "English2026 PDF117/11-2 11.7 and Generic Land Targets PDF118; source port table31..50 workshop and91..100 empty",
+      "status": "implemented_core_passed",
+      "validation": "integration65 NGFS12/0; production unchanged from64 253/0",
+      "execution": "Actual declared Port native visual/Spot/Fire→component reverse→common25DP, ammo, final empty miss/no reroll, preflight read-only and actual-command World restoration",
+      "limits": "explicit author generic Base body/component layout and firing service. No complete port/parking/Neutralization/nonpenetration/real equipment claim"
+    },
+    {
+      "id": "cas-natural-radio-room-producer-subset",
+      "source": "Expanded PDF14/15 row94; English14.5",
+      "status": "implemented_core_passed",
+      "validation": "integration71 3/0,72 270/0",
+      "execution_and_limits": "3/0 actual native visual/Fire/PJ45A->ordinary ratio/critical D10094->group D6/physical room->real TDL refusal/public restore and delivery; hull/year/HP/radio configuration are pre-World authored laboratory inputs, not a historical hull certification. Pure RNG prefilter, bounded actual worlds; no HP/contact/die/disabled injection."
+    },
+    {
+      "id": "nuclear-source-gun-armed-kill-subset",
+      "source": "English14.1.8 PDF132; existing source gun",
+      "status": "implemented_core_passed",
+      "validation": "integration71 3/0,72 270/0",
+      "execution_and_limits": "3/0 exact IC physical launch/flight->actual source Gun/CIWS kill; armed original D10050/function D10 and real common burst, unarmed no burst; submarine radius helper boundary. Attack/defense contacts and FCS are explicitly pre-adjudicated controlled inputs; fictional nuclear payload on conventional RGM84D, no real nuclear equipment claim or full natural radar chain. seeker_activated first-arm trace now once, no new probability."
+    },
+    {
+      "id": "taxiway-author-parking-route-consumers",
+      "source": "English11-3 Taxiway isolate function; explicit author deployment routes",
+      "status": "implemented_core_passed",
+      "validation": "integration70 5/0,72 270/0",
+      "execution_and_limits": "5/0 author-declared base/class/all-airframes route through actual child parking area and taxiway cut; same-side/parent isolation eligibility; queue admission, real launch retry and recovery recheck before mutations; restore. Cuts enter through explicitly adjudicated public apply_damage boundary, not claimed natural bombardment; no dynamic individual-airframe movement or real-site fit."
+    },
+    {
+      "id": "mq4c-mq25a-annex-control-fields",
+      "source": "AmericasAircraft2025 PDF70-72/B65-67",
+      "status": "implemented_core_passed",
+      "validation": "integration69 4/0,72 270/0",
+      "execution_and_limits": "4/0 actual DB MQ4C/MQ25A printed control-field qualification: SATCOM, MQ25A150nm LOS; init/runtime/launch/stow qualification, actual tactical order/bandwidth loss/public one-Tac TakeControl/restore. Initial mode/controller/national bandwidth/antenna/workload endurance remain author inputs; autonomy true and modem unknown rejected, no payload/full equipment/endurance qualification."
+    },
+    {
+      "id": "tdl-physical-relay-actual-delivery",
+      "source": "English2026 PDF74; USN2025 PDF94 Annex L Relay",
+      "status": "implemented_core_passed",
+      "validation": "integration79",
+      "execution_and_limits": "Same printed terminal/link kind, directed (entity,fit) BFS, all actual hops qualify source/class/side/alive/CaS/unmanned/range/horizon. Final fit used for queue, automatic FCS and delivery. Actual native report/SendWarning/40nm two-hop delivery, queued restore and adjudicated damage rejection. No new FCS/quality/cross-protocol/JR inference.",
+      "tests": "tdl_relay_20261030 6/0"
+    },
+    {
+      "id": "micro-uav-live-hitl-low-flight-exemption",
+      "source": "English2026 PDF34/4-2",
+      "status": "implemented_core_passed",
+      "validation": "integration79",
+      "execution_and_limits": "Author micro class plus actual established HITL/live link/day/40..100% visibility skips actual low-flight crash roll. Lost link restores original roll. No real MQ/F18 micro claim or full terrain/NOE certification.",
+      "tests": "micro predicates3/0 and actual safety runtime1/0"
+    },
+    {
+      "id": "pgm-command2-and-iirh2-source-subset",
+      "source": "English2026 PDF108/109; AmericasAircraft2025 PDF99/101",
+      "status": "implemented_core_passed",
+      "validation": "integration79",
+      "execution_and_limits": "BGM71A/B Cmd2 and AGM65D IIRH2 source rows consumed by registration/release/physical flight/original dice/LOS/smoke. Experimental F18 external fits, stationary points only; moving targets, SARH/higher generations/full equipment remain open.",
+      "tests": "pgm_remaining_20261030 4/0"
+    },
+    {
+      "id": "annex-c-five-additional-he-source-guns",
+      "source": "AmericasNavy2025 PDF75; ChinasNavy2025 PDF68",
+      "status": "implemented_core_passed",
+      "validation": "integration79",
+      "execution_and_limits": "Unique-ID merge cw_5in_mk45,us_mk110,cn_pj26,cn_pj87,cn_pj33b; printed four range/damage/armor bands used by actual native Visual/Fire/original die/common damage/stock. Explicit trial hull/mount/conditions, no AAW or historical platform-fit certification.",
+      "tests": "gun_annex_extra_20261030 2/0 across five gun trials"
+    },
+    {
+      "id": "nuclear-asw-actual-gz-guidance-and-half-radius",
+      "source": "English2026 PDF99/131/132 sections8.5.2/14.1.8",
+      "status": "implemented_core_passed",
+      "validation": "integration79",
+      "execution_and_limits": "Existing consumers exercised by actual native sonar classification/Fair FCS/release/placement miss/scatter/36-bystander full radius; actual miss30s, acquired-target destruction/lost lock, surface burst/submerged half-radius. Fictional payloads; antiship Contact/FCS/awareness explicitly pre-adjudicated, not natural ISR. Sub detail damage/EMP/fallout remain pending.",
+      "tests": "nuclear remaining5/0 and old native ASW1/0"
+    },
+    {
+      "id": "tdl-two-additional-exact-platform-bindings",
+      "source": "USN2025 PDF33/A30 and34/A31",
+      "status": "implemented_core_passed",
+      "validation": "80 tdl_platform_extra1/0",
+      "execution_and_limits": "Class-exact BurkeIIA Link11/16 and Zumwalt Link11/16/USG2B CEC. Runtime class/source qualification and restore, incorrect-system rejection; Burke CEC variant-specific not enabled, ARQ59 not guessed. No all-equipment or actual packet-per-class claim."
+    },
+    {
+      "id": "three-additional-exact-battery-fits",
+      "source": "Sweden SITREP63 PDF3/p2; Commonwealth2025 PDF8/A4 and20/A16",
+      "status": "implemented_core_passed",
+      "validation": "80 battery_annex_extra2/0",
+      "execution_and_limits": "se_ss_a17s battery150new/AIP; au_collins240new and ca_victoria150new diesel-electric. Unified per-field permission/source lookup, actual initialization/public AIP/charging and stow helper. No lithium/depth/full equipment claim. A17S raw2400 conflicts with English2026 generic2000; runtime capped2000, >2000 source_pending, refill contract unchanged."
+    },
+    {
+      "id": "iirh-third-generation-source-subset",
+      "source": "English2026 PDF109; AmericasAircraft2025 PDF99/H2-1",
+      "status": "implemented_core_passed",
+      "validation": "80 and81 pgm_remaining8/0 including prior4 and new4",
+      "execution_and_limits": "AGM65F/G IIRH3 source rows plus actual release/flight/turning/smoke and printed generation3 probability. Author experimental carrier fits; stationary allocated targets only. SARH Petrel physical cruise/torpedo/unknown minimum range not invented."
+    },
+    {
+      "id": "prh-radar-target-source-consumer-subset",
+      "source": "English2026 PDF109/9-8; AmericasAircraft2025 PDF99/H2-1 AGM45A Direct",
+      "status": "implemented_core_passed",
+      "validation": "81 prh4/0 plus PGM/SALH/aircombat related30/0",
+      "execution_and_limits": "Actual PRH1 registration/release/flight, CmdSARH left-column probability regardless size, separate original D6+2 and one precise radar critical in shared damage window. Only one exact source radar Base supported. Own allocated emitter briefing, not natural ES proof; live emitter checks referee-only, public admission ignores enemy private state. Shutdown memory/multiradar/ship scopes pending; no invented chance or loft range. Public GuidedSurfaceAttack now invokes read-only PGM ready validation."
+    }
+  ],
+  "active_source_batch": {
+    "started": "2026-10-28",
+    "status": "five_native_owned_production_leaves_and_root_shared_assembly_in_progress",
+    "whole_book_signoff": false,
+    "atomic_rule_denominator": null,
+    "coverage_percentage": null,
+    "native_mcp": "http://127.0.0.1:18879/mcp",
+    "model": "GLM-5.3-Flash/high",
+    "source_dispatch_manifest": "artifacts/rules-book-wide-20261026/zcode-parallel-20261028/dispatch-manifest.json",
+    "native_sessions": [
+      {
+        "session_id": "sess_3a6eb362-4aad-4cd8-bb17-a67d510d5fc8",
+        "title": "Command SARH source candidates",
+        "task_file": "D:\\desktop\\鱼叉\\artifacts\\rules-book-wide-20261026\\zcode-parallel-20261028\\command-sarh-task.md",
+        "accepted_is_not_completion": true
+      },
+      {
+        "session_id": "sess_17ca454a-fa9d-4286-8af4-c8c1107c2c4d",
+        "title": "EO IR generation 1 source candidates",
+        "task_file": "D:\\desktop\\鱼叉\\artifacts\\rules-book-wide-20261026\\zcode-parallel-20261028\\eoir1-task.md",
+        "accepted_is_not_completion": true
+      },
+      {
+        "session_id": "sess_63fa2486-c2be-4106-88ed-00ab5144d711",
+        "title": "Expanded damage E00 E13 atoms",
+        "task_file": "D:\\desktop\\鱼叉\\artifacts\\rules-book-wide-20261026\\zcode-parallel-20261028\\expanded-atoms-task.md",
+        "accepted_is_not_completion": true
+      },
+      {
+        "session_id": "sess_c9622201-7b96-420f-a3b7-ebea81d4bd86",
+        "title": "TDL and unmanned remaining source branches",
+        "task_file": "D:\\desktop\\鱼叉\\artifacts\\rules-book-wide-20261026\\zcode-parallel-20261028\\comms-unmanned-next-task.md",
+        "accepted_is_not_completion": true
+      },
+      {
+        "session_id": "sess_1acca6b7-93e7-4240-8465-4ea049f524ab",
+        "title": "Battery AIP and exact Annex applicability",
+        "task_file": "D:\\desktop\\鱼叉\\artifacts\\rules-book-wide-20261026\\zcode-parallel-20261028\\battery-annex-next-task.md",
+        "accepted_is_not_completion": true
+      },
+      {
+        "session_id": "sess_36792cf0-27fc-44b3-bb39-3c2441e1dc65",
+        "title": "Facilities remaining source branches",
+        "task_file": "D:\\desktop\\鱼叉\\artifacts\\rules-book-wide-20261026\\zcode-parallel-20261028\\facility-next-task.md",
+        "accepted_is_not_completion": true
+      },
+      {
+        "session_id": "sess_ffae69f9-7551-4542-882e-1d20cbd41d6d",
+        "title": "Nuclear game rules remaining source branches",
+        "task_file": "D:\\desktop\\鱼叉\\artifacts\\rules-book-wide-20261026\\zcode-parallel-20261028\\nuclear-next-task.md",
+        "accepted_is_not_completion": true
+      }
+    ],
+    "root_ready": [
+      "artifacts/rules-book-wide-20261026/runway-next-root-20261028/READY.json"
+    ],
+    "original_source_index": "artifacts/rules-book-wide-20261026/source-census-20261028/source-clause-census.json",
+    "source_index_is_not_atomic_denominator": true,
+    "test_policy": "New source cases precede owned new-feature leaves; existing-rule bugs keep their actual failing proof. Finish owned production in parallel, then root combined compile/behavior checks. No per-leaf UI/old-long-history/global repetition.",
+    "latest_normal_source_batch": {
+      "id": 51,
+      "inputs": 492,
+      "sha256": "7f7200aeac3896ac6e5b724bc8b8895cbeeb83e7b99f05282f46679093f9931e",
+      "targets": 2,
+      "tests": 13,
+      "passed": 13,
+      "failed": 0,
+      "wide_regressions": "integration47:18 targets76/0; only changed NGFS/HF-CaS consumers rerun after source-red49"
+    },
+    "owned_production_abi": "artifacts/rules-book-wide-20261026/pgm-controlled-next-root-20261028/production-hook-abi.md",
+    "post41_unrun_changes": [],
+    "native_status": "quota1308, 0 running; seven actual source tasks and five owned production lanes delivered partial files; root integrated, no whole-book closure",
+    "integration_report": "artifacts/rules-book-wide-20261026/zcode-root-integration-20261028.json",
+    "latest_report": "artifacts/rules-book-wide-20261026/zcode-root-integration-20261030.json",
+    "latest_core_validation": "integration61:17targets242/0; integration62:affected4/0, test-only difference",
+    "native_current_work": {
+      "status": "provider_quota_exhausted_no_active_model_turns",
+      "code": "1308",
+      "provider_reset_local": "2026-10-30 16:43:30 Asia/Shanghai",
+      "automatic_retry": false,
+      "source_only_root_takeover": "16 actual Annex L TDL rows personally visually verified/structured; not unmanned control/platform fittings"
+    },
+    "whole_book_complete": false,
+    "annex_l_candidates": {
+      "path": "artifacts/rules-book-wide-20261026/zcode-parallel-20261029/unmanned/annex-l-candidates.json",
+      "rows": 16,
+      "status": "source_verified_structured_not_engine_accepted",
+      "real_unmanned_fits": false
+    }
+  },
+  "current_work_20261030": {
+    "status": "91_frozen_source_affected_cohort_in_progress_not_full_book_acceptance",
+    "last_wholly_green_source_batch": 81,
+    "last_wide_attempt": {
+      "batch": 90,
+      "exit_code": 101,
+      "integration_targets": [
+        "aaw_2026",
+        "aaw_observation_privacy_2026",
+        "aip_replenishment_20261029",
+        "aircraft_maintenance_20261030",
+        "battery_annex_extra_20261030",
+        "battery_annex_next_20261028",
+        "battery_annex_registry_wide_20261026",
+        "beached_20261030",
+        "carrier_bomb_auto_deck_source_20261028",
+        "carrier_bridge_flight_20261030",
+        "cas_natural_damage_20261030",
+        "cas_radio_qualification_20261029",
+        "comms_unmanned_next_candidates_20261028",
+        "communications_unmanned_wide_20261026",
+        "crew_transfer_20261030",
+        "e05_fueled_20261030",
+        "echo_ranging_20261030",
+        "expanded_damage_20261025",
+        "expanded_damage_consumers_batch_resume_20261025",
+        "facility_ngfs_behavior_20261028",
+        "facility_ngfs_executor_witness_20261028",
+        "gun_annex_extra_20261030",
+        "micro_uav_low_flight_20261030",
+        "micro_uav_runtime_20261030",
+        "navigation_2026",
+        "navigation_observation",
+        "navigation_turning_2026",
+        "ngfs_complex_20261029",
+        "nuclear_asw_remaining_20261030",
+        "nuclear_asw_wide_20261026",
+        "nuclear_batch_resume_20261025",
+        "nuclear_carrier_destroyed_source_20261028",
+        "nuclear_hit_ship_effects_source_20261028",
+        "nuclear_parked_resume_20261025",
+        "nuclear_remaining_20261030",
+        "parking_routes_20261030",
+        "passive_sonobuoy_localization_source_20261027",
+        "passive_sonobuoy_receiver_isolation_source_20261027",
+        "pgm_base_extra_pending_20261030",
+        "pgm_eoir_moving_20261030",
+        "pgm_moving_20261030",
+        "pgm_remaining_20261030",
+        "pgm_sections_20261030",
+        "prh_20261030",
+        "salh3_20261030",
+        "salh_boundaries_source_20261026",
+        "salh_source_20261026",
+        "sonobuoy_boundaries_source_20261027",
+        "sonobuoy_deploy_monitor_source_20261026",
+        "squalls_20261030",
+        "starshell_20261030",
+        "surface_gunnery_20261029",
+        "tdl_annex_20261030",
+        "tdl_platform_extra_20261030",
+        "tdl_relay_20261030",
+        "unmanned_annex_control_20261030",
+        "unmanned_asw_reaction_source_20261027",
+        "vtol_deck_20261030"
+      ],
+      "library": true,
+      "kind": "behavior",
+      "inputs": 557,
+      "inputs_sha256": "ccfa008a78b0da9a4afcb351fd1f7fa9f180a8d88e465402710268c659e29dad",
+      "log_sha256": "f98499447a6a9690ae74dcfd52eac78456f2b9bf247a4d0c46f214094a484666",
+      "changed_during_run": [],
+      "source_snapshot": "artifacts\\rules-book-wide-20261026\\integration-90-source-snapshot",
+      "live_changes_after_snapshot": [
+        "harpoon-rts/crates/harpoon-core/src/rules/expanded_damage2026.rs",
+        "harpoon-rts/crates/harpoon-core/src/rules/ground2026/ngfs.rs",
+        "harpoon-rts/crates/harpoon-core/src/rules/pgm2026/placement.rs",
+        "harpoon-rts/crates/harpoon-core/tests/ngfs_complex_20261029.rs",
+        "harpoon-rts/crates/harpoon-core/tests/pgm_sections_20261030.rs",
+        "harpoon-rts/crates/harpoon-core/tests/starshell_20261030.rs",
+        "harpoon-rts/data/rules/pgm-2026.json"
+      ],
+      "targets_with_results": 59,
+      "passed": 422,
+      "failed": 3
+    },
+    "current_batch": 91,
+    "snapshot": "artifacts/rules-book-wide-20261026/integration-91-source-snapshot",
+    "source_policy": "Immutable source evidence and stable build cache; live agent changes are distinct from checked snapshot inputs.",
+    "next": "Finish91, fix only actual failures, archive verified source and update accepted narrow scopes; continue all source clauses. Do not stop at this checkpoint.",
+    "parallel": [
+      "Terra PGM section shared placement",
+      "Terra starshell physical mount and NGFS",
+      "Terra expanded criticals; root maintenance leaf and global integration",
+      "3 native ZCode artifact source lanes, exact snapshots and pending requests in manifest"
+    ],
+    "whole_book_complete": false,
+    "all_optional_complete": false,
+    "all_real_annex_fits_complete": false,
+    "coverage_percentage": null,
+    "updated_utc": "2026-10-30T15:41:42.199075+00:00"
+  }
+}

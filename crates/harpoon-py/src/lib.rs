@@ -200,29 +200,7 @@ fn advance_cursor(cursor: &mut u64, observation: &Observation) {
 
 /// Every `Command` carries a `unit`, which determines command ownership.
 fn command_unit(command: &Command) -> EntityId {
-    match command {
-        Command::SetCourse { unit, .. }
-        | Command::SetUnitAutomation{unit,..}
-        | Command::SetSpeed { unit, .. }
-        | Command::SetDepth { unit, .. }
-        | Command::SetTorpedoRun {unit,..}
-        | Command::SetAltitude { unit, .. }
-        | Command::Goto { unit, .. }
-        | Command::Stop { unit }
-        | Command::Follow { unit, .. }
-        | Command::ClearStation { unit }
-        | Command::SetSonar { unit, .. }
-        | Command::SetWeaponsFree { unit, .. }
-        | Command::SetAutoChaff { unit, .. }
-        | Command::AssignTarget { unit, .. }
-        | Command::ClearTarget { unit }
-        | Command::Fire { unit, .. }
-        | Command::DeployChaff { unit }
-        | Command::LaunchAircraft { unit, .. }
-        | Command::RecoverAircraft { unit }
-        | Command::ReturnToBase {unit} => *unit,
-        Command::SetRadar {unit, ..} | Command::SetJamming {unit,..} | Command::SetThrottle {unit,..} | Command::DamageControl {unit,..} | Command::RetaskAircraft {unit, ..} | Command::SetEngagementPolicy {unit, ..} => *unit,
-    }
+    command.unit_id()
 }
 
 fn to_json<T: Serialize>(value: &T) -> PyResult<String> {

@@ -1,0 +1,65 @@
+{
+  "schema": 1,
+  "title": "Very-small HITL UAV low-flight exemption source (rules chapter 4.5.2/4.5.3)",
+  "authority": {
+    "file": "【20260405】鱼叉5（本体+中美俄数据库）/14-2.HpnV_Rules_1_Jan_26.pdf",
+    "sha256": "8196ffc715bbcccd862d8597c607de7816dac5baee31fa659f89dfaf4323700c",
+    "pdf_page": 34,
+    "printed_pages": ["4-2"],
+    "sections": ["4.5.2 Sea-skimming Altitude", "4.5.3 Nap-of-the-Earth Altitude"],
+    "visual_review": "2026-10-30 native batch; render at artifacts/rules-book-wide-20261026/zcode-parallel-20261030-next/micro/source-pages/rules-p34-sec452-453.png"
+  },
+  "source_values": {
+    "clear_weather_min_visibility_percent": {
+      "value": 40.0,
+      "class": "source_printed",
+      "raw": "Manned aircraft cannot fly at SSkim altitude at night or less than clear weather (40% visibility or more).",
+      "section": "4.5.2",
+      "note": "the page's printed clear-weather boundary; the parent movement_limits gate (:461) already encodes the same printed threshold for the order gate"
+    },
+    "daylight": {
+      "value": "day",
+      "class": "source_printed",
+      "raw": "Very small, HITL UAVs (drones) can fly at SSkim/NOE during daylight and clear weather without restrictions.",
+      "note": "engine day/night is a printed two-state input (Altitude Bands page companion text; DayNight::Day)"
+    },
+    "sskim_noe_band_max_m": {
+      "value": 20.0,
+      "class": "source_printed",
+      "raw": "SSkim/NOE 0 - 20 (Altitude Bands, printed page 4-3)",
+      "note": "documented reference; the <=20 m branch already exists in parent safety_step, this leaf does not re-check altitude"
+    }
+  },
+  "sentences": {
+    "exemption": {
+      "raw": "Very small, HITL UAVs (drones) can fly at SSkim/NOE during daylight and clear weather without restrictions.",
+      "section": "4.5.3"
+    },
+    "larger_uavs": {
+      "raw": "Larger UAVs must roll on the SSkim/NOE table every Tactical Turn.",
+      "section": "4.5.3",
+      "note": "parent safety_step already rolls every Tactical Turn for every non-exempt low aircraft; no change or duplicate implementation"
+    },
+    "bans": {
+      "sskim": "UAVs cannot fly at SSkim altitude. (4.5.2)",
+      "noe": "Unmanned aerial vehicles (UAVs) cannot fly at NOE altitude. (4.5.3)"
+    }
+  },
+  "policy": {
+    "eligibility_requires_all": [
+      "author_micro: explicit scenario-author micro qualification for the exact class id; never inferred from model name, unmanned label or automation",
+      "actual_unmanned: actual rules §2.5 unmanned hardware fit configured",
+      "hitl_live_link: established HITL with a live control link (covers lost link, autonomous mode, one-turn transitions and loss states via the existing can_control gate)",
+      "daylight: DayNight::Day",
+      "clear_weather: declared visibility_percent >= printed 40"
+    ],
+    "none_config": "no Configuration (or class not declared micro): unchanged legacy low-flight roll for every aircraft",
+    "no_new_probability": "this table and leaf restate no crash table, no percentage and no rounding; the printed SSkim/NOE Crash Chance table remains solely in the parent tables/low_flight data",
+    "no_real_platform_micro_claim": "no real DB class (including us_mq4c/us_mq25a) is declared micro; experimental micro airframes are explicit scenario_assumption laboratory declarations"
+  },
+  "pre_ruling_boundary": "The 4.5.2 flat SSkim/NOE UAV bans and the 4.5.3 very-small-HITL exemption plus larger-UAV roll paragraph are a printed tension. Batch ruling applied here: the exemption sentence grants explicit day+clear permission ('without restrictions'); larger UAVs keep the every-Tactical-Turn roll; None/incomplete keeps the legacy roll. Reconciliation beyond this is not claimed.",
+  "cross_reference": {
+    "unmanned_control_source": "real control-link facts for us_mq4c/us_mq25a live in data/rules/unmanned-annex-2025.json and the root Annex L registry; those certify control fits, not micro eligibility",
+    "unmanned_public_gates_used": "is_configured / can_control (unmanned2026) and the set_satellite_available referee producer; no state poking"
+  }
+}

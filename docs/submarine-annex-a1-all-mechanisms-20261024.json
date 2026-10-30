@@ -1,0 +1,1022 @@
+{
+  "schema": 1,
+  "date": "2026-10-24",
+  "status": "tested_declared_subsets_only",
+  "profile": "hv2026-rts-v4",
+  "whole_book_complete": false,
+  "whole_chapter_complete": false,
+  "all_mechanisms_complete": false,
+  "final_signoff": true,
+  "scope": "Six exact Annex game-band upper bounds and undamaged surface ceilings; narrow A1 unique radial opportunity/once first attack and native defender precommand reaction; no full navigation/battery/torpedo chapter claim.",
+  "source_authorities": {
+    "cn_navy_2025": {
+      "document": "6-3.（数据库）2025版Chinas_Navy_1_Dec_25.pdf",
+      "version": "2025-12-01 Digital Update",
+      "sha256": "9ff46ff0c91f323d48c37e9917df6d87583fbe0df337a6dd0bb40bc488d98b2c",
+      "pdf_pages": [
+        12,
+        13
+      ]
+    },
+    "ru_navy_2025": {
+      "document": "9-4.Russias_Navy_1_Dec_25.pdf",
+      "version": "2025-12-01 Digital Update",
+      "sha256": "1420ac08b0db219c41ad52b1e87d7bb06cfd2b44e98d7ffb9e4dd462aea477c1",
+      "pdf_pages": [
+        22,
+        23
+      ]
+    },
+    "harpoon_v_rules_2026": {
+      "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+      "version": "2026-01-01 Digital Update",
+      "sha256": "8196ffc715bbcccd862d8597c607de7816dac5baee31fa659f89dfaf4323700c",
+      "pdf_pages": [
+        28,
+        74,
+        79,
+        80,
+        113,
+        114
+      ]
+    }
+  },
+  "actual_targeted_validation": {
+    "status": "read_actual_root_log",
+    "evidence": "integrated-v15-targeted.log",
+    "sha256": "87408ba8e73c7e5f334629daf6520afa4daf7e9cdf95a4d52f1f496e21c22d9e",
+    "targets": 5,
+    "passed": 44,
+    "failed": 0,
+    "ignored": 0,
+    "breakdown": {
+      "submarine_annex_depth_2026": 18,
+      "torpedo_initial_acquisition_2026": 12,
+      "torpedo_acquisition_evasion_2026": 1,
+      "torpedo_helical_2026": 11,
+      "torpedo_wire_privacy_2026": 2
+    },
+    "note": "Counts are actual test runs, not rules; oldH1/wire13 are regressions and two FullWorld checkpoints stay one reaction case."
+  },
+  "earlier_source_reds": [
+    {
+      "evidence": "source-red-first.log",
+      "target": "submarine_annex_depth_2026",
+      "passed": 4,
+      "failed": 9,
+      "note": "Original13 before strengthened admission; source-red-original13 retained."
+    },
+    {
+      "evidence": "controller-source-red-server.log",
+      "target": "server local common interfaces",
+      "passed": 0,
+      "failed": 4
+    },
+    {
+      "evidence": "controller-source-red-mcp.log",
+      "target": "MCP local source admission",
+      "passed": 0,
+      "failed": 2
+    },
+    {
+      "evidence": "../rules-torpedo-search-following-20261024/initial-acquisition-source-red.log",
+      "target": "initial A1",
+      "passed": 3,
+      "failed": 7
+    },
+    {
+      "evidence": "integrated-six-and-vertical-source-red.log",
+      "target": "A1 source depth and entry",
+      "passed": 9,
+      "failed": 2
+    },
+    {
+      "evidence": "acquisition-evasion-source-red-first.log",
+      "target": "native active defender reaction",
+      "passed": 0,
+      "failed": 1,
+      "note": "Actual wrong20.5kt/10deg baseline gave Ph.80 D10079 hit; no dice overwritten."
+    },
+    {
+      "evidence": "acquisition-reaction-integrated-and-domain-source-red.log",
+      "target": "A1 surface completion domain",
+      "passed": 11,
+      "failed": 1,
+      "note": "Real Surface179->180 / DepthMotion50->0 reached whole-pending assertion; native reaction separately green."
+    }
+  ],
+  "excluded_error_accounting": [
+    "Compilation/Option/import failures are not source reds",
+    "Earlier WeaponsRelease displayed-name vsID fixture mismatch is not a privacy production red",
+    "Historical four-ID/13case implementation note remains a historical snapshot, not final six-ID coverage",
+    "No transport/schema sample is counted as full adjudication"
+  ],
+  "rows": [
+    {
+      "id": "ANNEX-CAP-cn_039a",
+      "status": "tested_declared_subset",
+      "source": {
+        "authority": "cn_navy_2025",
+        "page": "PDF12/A5 039A/B/C shared row",
+        "printed_band": "Int V",
+        "interpretation": "Parent-approved printed-band upper bound for continuous game model, not engineering/crush measurement"
+      },
+      "data": {
+        "path": "harpoon-rts/data/rules/submarine-annex-2025.json",
+        "platform_id": "cn_039a",
+        "maximum_game_depth_m": 500,
+        "surface_max_kts": 13,
+        "historical_db_depth_m_preserved": 250
+      },
+      "execution": {
+        "path": "harpoon-rts/crates/harpoon-core/src/rules/submarine_annex.rs",
+        "consumers": [
+          "navigation fit/admission",
+          "actual movement",
+          "own static capability"
+        ],
+        "profile": "hv2026-rts-v4",
+        "entity_kind": "Sub",
+        "binding": "exact ID only"
+      },
+      "test": {
+        "target": "submarine_annex_depth_2026",
+        "case": "cn_039a_real_set_depth_reaches_int_v_game_upper_500_without_rewriting_250",
+        "evidence": "integrated-v15-targeted.log",
+        "status": "tested_declared_subset",
+        "actual_http": {
+          "platform_id": "cn_039a",
+          "game_cap": 500,
+          "historical_db_max_unchanged": 250,
+          "checkpoint": "1792845042975-39796-300",
+          "checkpoint_tick": 300,
+          "checkpoint_depth_m": 333.3333333333319,
+          "after": "1792845043178-39796-450",
+          "after_tick": 450,
+          "local_repeat": "1792845043410-39796-450",
+          "complete_world_local_equal": true,
+          "verification": {
+            "command_batches": 1,
+            "events_verified": 46,
+            "tick": 450,
+            "verified": true,
+            "world_fnv64": "6a32d010aa2df85c"
+          }
+        }
+      },
+      "remaining": [
+        "Full Navfit/water input",
+        "Full battery/current/typed snorkel/AIP",
+        "Crush depth and damaged curves",
+        "Other or named variants"
+      ]
+    },
+    {
+      "id": "ANNEX-CAP-cn_kilo",
+      "status": "tested_declared_subset",
+      "source": {
+        "authority": "cn_navy_2025",
+        "page": "PDF13/A6 636/636M continued right upper",
+        "printed_band": "Int IV",
+        "interpretation": "Parent-approved printed-band upper bound for continuous game model, not engineering/crush measurement"
+      },
+      "data": {
+        "path": "harpoon-rts/data/rules/submarine-annex-2025.json",
+        "platform_id": "cn_kilo",
+        "maximum_game_depth_m": 400,
+        "surface_max_kts": 11,
+        "historical_db_depth_m_preserved": 200
+      },
+      "execution": {
+        "path": "harpoon-rts/crates/harpoon-core/src/rules/submarine_annex.rs",
+        "consumers": [
+          "navigation fit/admission",
+          "actual movement",
+          "own static capability"
+        ],
+        "profile": "hv2026-rts-v4",
+        "entity_kind": "Sub",
+        "binding": "exact ID only"
+      },
+      "test": {
+        "target": "submarine_annex_depth_2026",
+        "case": "cn_kilo_real_set_depth_reaches_int_iv_game_upper_400_without_rewriting_200",
+        "evidence": "integrated-v15-targeted.log",
+        "status": "tested_declared_subset",
+        "actual_http": {
+          "platform_id": "cn_kilo",
+          "game_cap": 400,
+          "historical_db_max_unchanged": 200,
+          "checkpoint": "1792845044378-39796-240",
+          "checkpoint_tick": 240,
+          "checkpoint_depth_m": 266.6666666666656,
+          "after": "1792845044549-39796-360",
+          "after_tick": 360,
+          "local_repeat": "1792845044741-39796-360",
+          "complete_world_local_equal": true,
+          "verification": {
+            "command_batches": 1,
+            "events_verified": 40,
+            "tick": 360,
+            "verified": true,
+            "world_fnv64": "587c80d6b13d5436"
+          }
+        }
+      },
+      "remaining": [
+        "Full Navfit/water input",
+        "Full battery/current/typed snorkel/AIP",
+        "Crush depth and damaged curves",
+        "Other or named variants"
+      ]
+    },
+    {
+      "id": "ANNEX-CAP-ru_kilo",
+      "status": "tested_declared_subset",
+      "source": {
+        "authority": "ru_navy_2025",
+        "page": "PDF23/A20 exact636.3",
+        "printed_band": "Int IV",
+        "interpretation": "Parent-approved printed-band upper bound for continuous game model, not engineering/crush measurement"
+      },
+      "data": {
+        "path": "harpoon-rts/data/rules/submarine-annex-2025.json",
+        "platform_id": "ru_kilo",
+        "maximum_game_depth_m": 400,
+        "surface_max_kts": 11,
+        "historical_db_depth_m_preserved": 240
+      },
+      "execution": {
+        "path": "harpoon-rts/crates/harpoon-core/src/rules/submarine_annex.rs",
+        "consumers": [
+          "navigation fit/admission",
+          "actual movement",
+          "own static capability"
+        ],
+        "profile": "hv2026-rts-v4",
+        "entity_kind": "Sub",
+        "binding": "exact ID only"
+      },
+      "test": {
+        "target": "submarine_annex_depth_2026",
+        "case": "ru_kilo_6363_real_set_depth_reaches_int_iv_game_upper_400_without_rewriting_240",
+        "evidence": "integrated-v15-targeted.log",
+        "status": "tested_declared_subset",
+        "actual_http": {
+          "platform_id": "ru_kilo",
+          "game_cap": 400,
+          "historical_db_max_unchanged": 240,
+          "checkpoint": "1792845045653-39796-270",
+          "checkpoint_tick": 270,
+          "checkpoint_depth_m": 299.99999999999864,
+          "after": "1792845045809-39796-360",
+          "after_tick": 360,
+          "local_repeat": "1792845046011-39796-360",
+          "complete_world_local_equal": true,
+          "verification": {
+            "command_batches": 1,
+            "events_verified": 36,
+            "tick": 360,
+            "verified": true,
+            "world_fnv64": "2352e558d1bd31d9"
+          }
+        }
+      },
+      "remaining": [
+        "Full Navfit/water input",
+        "Full battery/current/typed snorkel/AIP",
+        "Crush depth and damaged curves",
+        "Other or named variants"
+      ]
+    },
+    {
+      "id": "ANNEX-CAP-ru_kilo_636",
+      "status": "tested_declared_subset",
+      "source": {
+        "authority": "ru_navy_2025",
+        "page": "PDF23/A20 636 continued right upper",
+        "printed_band": "Int IV",
+        "interpretation": "Parent-approved printed-band upper bound for continuous game model, not engineering/crush measurement"
+      },
+      "data": {
+        "path": "harpoon-rts/data/rules/submarine-annex-2025.json",
+        "platform_id": "ru_kilo_636",
+        "maximum_game_depth_m": 400,
+        "surface_max_kts": 11,
+        "historical_db_depth_m_preserved": 200
+      },
+      "execution": {
+        "path": "harpoon-rts/crates/harpoon-core/src/rules/submarine_annex.rs",
+        "consumers": [
+          "navigation fit/admission",
+          "actual movement",
+          "own static capability"
+        ],
+        "profile": "hv2026-rts-v4",
+        "entity_kind": "Sub",
+        "binding": "exact ID only"
+      },
+      "test": {
+        "target": "submarine_annex_depth_2026",
+        "case": "ru_kilo_636_real_set_depth_reaches_int_iv_game_upper_400_without_rewriting_200",
+        "evidence": "integrated-v15-targeted.log",
+        "status": "tested_declared_subset",
+        "actual_http": {
+          "platform_id": "ru_kilo_636",
+          "game_cap": 400,
+          "historical_db_max_unchanged": 200,
+          "checkpoint": "1792845046821-39796-250",
+          "checkpoint_tick": 250,
+          "checkpoint_depth_m": 277.7777777777767,
+          "after": "1792845047011-39796-360",
+          "after_tick": 360,
+          "local_repeat": "1792845047200-39796-360",
+          "complete_world_local_equal": true,
+          "verification": {
+            "command_batches": 1,
+            "events_verified": 36,
+            "tick": 360,
+            "verified": true,
+            "world_fnv64": "9682b6269440508e"
+          }
+        }
+      },
+      "remaining": [
+        "Full Navfit/water input",
+        "Full battery/current/typed snorkel/AIP",
+        "Crush depth and damaged curves",
+        "Other or named variants"
+      ]
+    },
+    {
+      "id": "ANNEX-CAP-cn_039g",
+      "status": "tested_declared_subset",
+      "source": {
+        "authority": "cn_navy_2025",
+        "page": "PDF12/A5 right bottom -> PDF13/A6 left top exact039G1 DP74",
+        "printed_band": "Int V",
+        "interpretation": "Parent-approved printed-band upper bound for continuous game model, not engineering/crush measurement"
+      },
+      "data": {
+        "path": "harpoon-rts/data/rules/submarine-annex-2025.json",
+        "platform_id": "cn_039g",
+        "maximum_game_depth_m": 500,
+        "surface_max_kts": 12,
+        "historical_db_depth_m_preserved": 165
+      },
+      "execution": {
+        "path": "harpoon-rts/crates/harpoon-core/src/rules/submarine_annex.rs",
+        "consumers": [
+          "navigation fit/admission",
+          "actual movement",
+          "own static capability"
+        ],
+        "profile": "hv2026-rts-v4",
+        "entity_kind": "Sub",
+        "binding": "exact ID only"
+      },
+      "test": {
+        "target": "submarine_annex_depth_2026",
+        "case": "exact_039g1_continued_a6_row_supports_int_v_500_and_surface12_without_borrowing_039g",
+        "evidence": "integrated-v15-targeted.log",
+        "status": "tested_declared_subset",
+        "actual_http": {
+          "platform_id": "cn_039g",
+          "game_cap": 500,
+          "historical_db_max_unchanged": 165,
+          "checkpoint": "1792845048021-39796-210",
+          "checkpoint_tick": 210,
+          "checkpoint_depth_m": 233.33333333333252,
+          "after": "1792845048226-39796-450",
+          "after_tick": 450,
+          "local_repeat": "1792845048428-39796-450",
+          "complete_world_local_equal": true,
+          "verification": {
+            "command_batches": 1,
+            "events_verified": 40,
+            "tick": 450,
+            "verified": true,
+            "world_fnv64": "73bfbb7efbce9261"
+          }
+        }
+      },
+      "remaining": [
+        "Full Navfit/water input",
+        "Full battery/current/typed snorkel/AIP",
+        "Crush depth and damaged curves",
+        "Other or named variants"
+      ]
+    },
+    {
+      "id": "ANNEX-CAP-ru_lada",
+      "status": "tested_declared_subset",
+      "source": {
+        "authority": "ru_navy_2025",
+        "page": "PDF22/A19 generic677 DP70; no named-hull battery import",
+        "printed_band": "Int IV",
+        "interpretation": "Parent-approved printed-band upper bound for continuous game model, not engineering/crush measurement"
+      },
+      "data": {
+        "path": "harpoon-rts/data/rules/submarine-annex-2025.json",
+        "platform_id": "ru_lada",
+        "maximum_game_depth_m": 400,
+        "surface_max_kts": 10,
+        "historical_db_depth_m_preserved": 300
+      },
+      "execution": {
+        "path": "harpoon-rts/crates/harpoon-core/src/rules/submarine_annex.rs",
+        "consumers": [
+          "navigation fit/admission",
+          "actual movement",
+          "own static capability"
+        ],
+        "profile": "hv2026-rts-v4",
+        "entity_kind": "Sub",
+        "binding": "exact ID only"
+      },
+      "test": {
+        "target": "submarine_annex_depth_2026",
+        "case": "generic_lada_a19_supports_int_iv_400_and_surface10_without_named_boat_battery_assumptions",
+        "evidence": "integrated-v15-targeted.log",
+        "status": "tested_declared_subset",
+        "actual_http": {
+          "platform_id": "ru_lada",
+          "game_cap": 400,
+          "historical_db_max_unchanged": 300,
+          "checkpoint": "1792845049452-39796-330",
+          "checkpoint_tick": 330,
+          "checkpoint_depth_m": 366.6666666666651,
+          "after": "1792845049639-39796-360",
+          "after_tick": 360,
+          "local_repeat": "1792845049857-39796-360",
+          "complete_world_local_equal": true,
+          "verification": {
+            "command_batches": 1,
+            "events_verified": 40,
+            "tick": 360,
+            "verified": true,
+            "world_fnv64": "f8b3a81069a65b19"
+          }
+        }
+      },
+      "remaining": [
+        "Full Navfit/water input",
+        "Full battery/current/typed snorkel/AIP",
+        "Crush depth and damaged curves",
+        "Other or named variants"
+      ]
+    },
+    {
+      "id": "ANNEX-SHARED-BOUNDS-AND-HISTORY",
+      "status": "tested_declared_subset",
+      "source": {
+        "authority": "harpoon_v_rules_2026",
+        "page": "PDF28/3-6 plus exact Annex atoms"
+      },
+      "data": {
+        "path": "harpoon-rts/data/rules/submarine-annex-2025.json",
+        "policy": "HV2026-ANNEX-A-DEPTH-BAND-UPPER-20261024"
+      },
+      "execution": {
+        "paths": [
+          "navigation2026.rs",
+          "navigation2026/submarine.rs",
+          "sim.rs",
+          "movement.rs"
+        ],
+        "scope": "source cap, shallower fit and actual author water are independent; reject invalid initial/order before mutation; v1-v3/old database unchanged"
+      },
+      "test": {
+        "target": "submarine_annex_depth_2026",
+        "evidence": "integrated-v15-targeted.log",
+        "status": "tested_declared_subset",
+        "cases": [
+          "source_band_upper_fit_limit_and_actual_water_each_remain_independent_admission_bounds",
+          "unfitted_exact_ids_reject_native_depth_orders_above_the_source_game_band",
+          "known_annex_game_band_rejects_an_illegal_initial_depth_without_a_silent_first_tick_teleport",
+          "above_old_depth_full_world_restore_keeps_native_operation_and_identical_continuation",
+          "historical_database_and_operations_v3_raw_bytes_stay_frozen_across_source_motion"
+        ]
+      },
+      "remaining": [
+        "No fit does not imply full source motion",
+        "All other navigation combinations"
+      ]
+    },
+    {
+      "id": "ANNEX-OWN-COMMON-ENTRY-MANUAL-LLM-UI",
+      "status": "tested_declared_subset",
+      "source": {
+        "basis": "Exact static Annex capabilities and common ownership/source admission contract"
+      },
+      "data": {
+        "own_path": "units[].navigation.source_rules.annex_capability",
+        "unknown_charge": null
+      },
+      "execution": {
+        "paths": [
+          "observe.rs",
+          "navigation2026::own_view",
+          "harpoon-server main.rs/agent.rs",
+          "harpoon-mcp tools.rs",
+          "web/app.js"
+        ],
+        "scope": "Own cap only; no invented runtime fit. HTTP auto takeover only after valid command; MCP manual explicit; AI preflight before reservation; bilingual prompt game-band distinction; UI static consumer"
+      },
+      "test": {
+        "status": "tested_declared_subset",
+        "core_evidence": "integrated-v15-targeted.log",
+        "earlier_local_server": {
+          "evidence": "controller-integrated-server.log",
+          "passed": 4
+        },
+        "earlier_local_mcp": {
+          "evidence": "controller-integrated-mcp.log",
+          "passed": 2
+        },
+        "real_http_stdio_status": "actual_native_accepted",
+        "actual_ui_status": "normal_input_accepted",
+        "live_llm_status": "not_proven",
+        "actual_protocol_run": "artifacts/rules-submarine-annex-20261024/http/acceptance-3",
+        "ui": {
+          "invalid_depth_input_max": "400",
+          "invalid_no_queue": true,
+          "invalid_no_manual": true,
+          "invalid_depth_unchanged": true,
+          "actual_unfitted_400m": true,
+          "legal_manual_persisted": true,
+          "explicit_allow_ai": true,
+          "legal_retake_after_allow_ai": true,
+          "source039a_500_input": true,
+          "fit_water_visible": true,
+          "actual_fitted500": true,
+          "shallower_fit_and_water": true,
+          "nonsub_cap_hidden": true,
+          "nonsub_blow_hidden": true,
+          "unfitted_no_blow": true,
+          "unknown_charge_not_created": true,
+          "static_cap_no_fit": true,
+          "unknown_water_visible": true,
+          "no_horizontal_overflow": true
+        }
+      },
+      "remaining": [
+        "Real LLM match",
+        "All other interface/observation combinations"
+      ]
+    },
+    {
+      "id": "A1-UNIQUE-RADIAL-EPOCH-AND-ENTRY-INSTANT",
+      "status": "tested_declared_subset",
+      "source": {
+        "authority": "harpoon_v_rules_2026",
+        "pages": [
+          74,
+          79,
+          80,
+          113,
+          114
+        ],
+        "sections": [
+          "6.3.8",
+          "7.5.3",
+          "7.5.6",
+          "7.5.7",
+          "10.2.4"
+        ],
+        "rts_policy": "Current1s epoch, whole candidate review, continued end-of-epoch eligibility; true zero-time entry uses current point only"
+      },
+      "data": {
+        "path": "harpoon-rts/data/rules/torpedo-2026.json",
+        "policy_id": "A1-single-opportunity-radial-coplanar-swept-domain-next-tick-fast-precommand-reaction-v4"
+      },
+      "execution": {
+        "paths": [
+          "torpedo2026/initial_acquisition.rs::select",
+          "torpedo2026/helical.rs::advance"
+        ],
+        "scope": "Real failed aerial Placement; nonwire enable0, source-complete coplanar radial unique other Sub; original excluded; unknown/multiple/transient pending"
+      },
+      "test": {
+        "status": "tested_declared_subset",
+        "target": "torpedo_initial_acquisition_2026",
+        "evidence": "integrated-v15-targeted.log",
+        "cases": [
+          "native_failed_entry_acquires_only_the_unique_coplanar_opportunity_and_resolves_one_real_hit",
+          "multiple_qualified_candidates_keep_the_whole_epoch_pending_without_nearest_or_id_selection",
+          "an_unknown_acoustic_candidate_preserves_complete_pending_and_never_borrows_default_signature",
+          "a_proven_horizontal_cone_exclusion_keeps_real_radial_search_moving_without_a_false_hit_or_hold",
+          "losing_the_excluded_original_after_real_failed_entry_does_not_veto_the_other_capture"
+        ],
+        "actual_positive_http_reference": "artifacts\\rules-submarine-annex-20261024\\http\\acceptance-3\\acquisition-http-validation.json",
+        "http_reaction_branch_proven": false
+      },
+      "remaining": [
+        "Full180s candidate window",
+        "Multiple target selection weighting",
+        "General vertical/circle search"
+      ]
+    },
+    {
+      "id": "A1-COMPLETE-DEPTH-COMPETITOR",
+      "status": "tested_declared_subset",
+      "source": {
+        "authority": "harpoon_v_rules_2026",
+        "scope": "Do not discard an unresolved same-epoch candidate using only final depth; no new vertical capture rule"
+      },
+      "data": {
+        "path": "harpoon-rts/data/rules/torpedo-2026.json",
+        "field": "execution_revision.initial_acquisition_a1.epoch_boundaries"
+      },
+      "execution": {
+        "path": "torpedo2026/initial_acquisition.rs",
+        "scope": "Native finite matching DepthMotion must prove full epoch beyond weapon max to exclude;599->602 across Mk54 max600 remains competitor pending"
+      },
+      "test": {
+        "status": "tested_declared_subset",
+        "target": "torpedo_initial_acquisition_2026",
+        "case": "a_native_depth_crossing_beyond_weapon_maximum_cannot_hide_an_unknown_competitor_and_select_another",
+        "red": "integrated-six-and-vertical-source-red.log",
+        "green": "integrated-v15-targeted.log",
+        "actual_positive_http_reference": "artifacts\\rules-submarine-annex-20261024\\http\\acceptance-3\\acquisition-http-validation.json",
+        "http_reaction_branch_proven": false
+      },
+      "remaining": [
+        "General3D capture/pursuit",
+        "Seabed handling",
+        "Missing-history adjudication beyond conservative pending"
+      ]
+    },
+    {
+      "id": "A1-COMPLETE-SUB-SURFACE-DOMAIN-COMPETITOR",
+      "status": "tested_declared_subset",
+      "source": {
+        "authority": "harpoon_v_rules_2026",
+        "scope": "Retain partial underwater epoch; automatic capture remains narrow Sub-only"
+      },
+      "data": {
+        "path": "harpoon-rts/data/rules/torpedo-2026.json",
+        "field": "execution_revision.initial_acquisition_a1.domain_sweep",
+        "mk54_surface_capability_changed": false
+      },
+      "execution": {
+        "path": "torpedo2026/initial_acquisition.rs",
+        "scope": "Native Surface179->180 and DepthMotion50->0 cannot hide underwater competitor at end-domainShip; whole epoch remains pending"
+      },
+      "test": {
+        "status": "tested_declared_subset",
+        "target": "torpedo_initial_acquisition_2026",
+        "case": "native_source_surface_completion_cannot_hide_a_same_epoch_submarine_competitor_and_select_another",
+        "red": "acquisition-reaction-integrated-and-domain-source-red.log",
+        "green": "integrated-v15-targeted.log",
+        "actual_positive_http_reference": "artifacts\\rules-submarine-annex-20261024\\http\\acceptance-3\\acquisition-http-validation.json",
+        "http_reaction_branch_proven": false
+      },
+      "remaining": [
+        "No surface attack newly authorized",
+        "All mixed-domain automatic capture",
+        "Full arbitrary depth trajectories"
+      ]
+    },
+    {
+      "id": "A1-SLOW-CAPTURE-NEXT-FAST-FUEL",
+      "status": "tested_declared_subset",
+      "source": {
+        "authority": "harpoon_v_rules_2026",
+        "sections": [
+          "7.5.7"
+        ],
+        "rts_policy": "Whole capture tick old setting, next tick fastest; retained spent endurance fraction"
+      },
+      "data": {
+        "path": "harpoon-rts/data/rules/torpedo-2026.json",
+        "example_settings": [
+          {
+            "speed_kts": 30,
+            "range_nm": 8
+          },
+          {
+            "speed_kts": 45,
+            "range_nm": 6
+          }
+        ]
+      },
+      "execution": {
+        "paths": [
+          "torpedo2026/helical.rs::advance",
+          "torpedo2026/initial_acquisition.rs::advance"
+        ],
+        "scope": "Actual physical motion and source endurance; no retroactive fast movement or fuel reset"
+      },
+      "test": {
+        "status": "tested_declared_subset",
+        "target": "torpedo_initial_acquisition_2026",
+        "case": "slow_search_pays_its_full_capture_tick_then_next_tick_uses_fast_range_without_resetting_fuel",
+        "evidence": "integrated-v15-targeted.log",
+        "actual_positive_http_reference": "artifacts\\rules-submarine-annex-20261024\\http\\acceptance-3\\acquisition-http-validation.json",
+        "http_reaction_branch_proven": false
+      },
+      "remaining": [
+        "Other speed/profile combinations",
+        "All acquisition paths"
+      ]
+    },
+    {
+      "id": "A1-PRIVATE-ACTIVE-TARGET-FIRST-ATTACK-LEDGER",
+      "status": "tested_declared_subset",
+      "source": {
+        "authority": "harpoon_v_rules_2026",
+        "sections": [
+          "6.3.8",
+          "10.2.4",
+          "10.2.5"
+        ],
+        "privacy_basis": "Referee-only physical target, mode and raw adjudication; own release remains visible unknown"
+      },
+      "data": {
+        "private_records": [
+          "AcquisitionRecord",
+          "FirstAttack"
+        ],
+        "original_ledger_and_placement_preserved": true
+      },
+      "execution": {
+        "paths": [
+          "torpedo2026/initial_acquisition.rs",
+          "torpedo2026.rs"
+        ],
+        "scope": "Active other target distinct from original CID/order/Placement/pass; actual projectile owner saved; capture no added die; first arrival hit changes actual other HP, miss retains one D100/Past pending; nonwire physics independent of launcher manual/removal"
+      },
+      "test": {
+        "status": "tested_declared_subset",
+        "target": "torpedo_initial_acquisition_2026",
+        "evidence": "integrated-v15-targeted.log",
+        "cases": [
+          "complete_world_restore_before_and_after_capture_preserves_the_same_native_first_attack",
+          "actual_launcher_takeover_or_removal_does_not_stop_the_released_nonwire_capture_or_attack",
+          "actual_capture_and_terminal_evidence_stay_referee_while_own_release_and_ammunition_remain_visible",
+          "native_failed_entry_acquires_only_the_unique_coplanar_opportunity_and_resolves_one_real_hit"
+        ],
+        "actual_positive_http_reference": "artifacts\\rules-submarine-annex-20261024\\http\\acceptance-3\\acquisition-http-validation.json",
+        "http_reaction_branch_proven": false
+      },
+      "remaining": [
+        "Full reattack/Past continuation",
+        "Red-launch mirror not proven by Blue fixture",
+        "All BDA/ACM combinations",
+        "MCP private physics not claimed"
+      ]
+    },
+    {
+      "id": "A1-NATIVE-DETECTION-PRECOMMAND-DEFENDER-REACTION",
+      "status": "tested_declared_subset",
+      "source": {
+        "authority": "harpoon_v_rules_2026",
+        "page": 114,
+        "section": "10.2.5",
+        "probability_table_changed": false
+      },
+      "data": {
+        "path": "harpoon-rts/data/rules/torpedo-2026.json",
+        "field": "execution_revision.initial_acquisition_a1.defender_reaction",
+        "source_g4_base_ph": 0.8,
+        "source_g4_evasion_only_ph": 0.64
+      },
+      "execution": {
+        "paths": [
+          "sim.rs::tick before process_commands",
+          "torpedo2026.rs::begin",
+          "torpedo2026/initial_acquisition.rs"
+        ],
+        "scope": "Actual Red sonar detection/category -> separate active-target20kt/0deg baseline before reaction -> real25kt/45deg; no postmovement20.5kt/10deg late baseline; detected-but-missing baseline holds pending"
+      },
+      "test": {
+        "status": "tested_declared_subset",
+        "target": "torpedo_acquisition_evasion_2026",
+        "case": "native_classified_opportunity_reaction_uses_precommand_pose_and_the_source_evasion_column",
+        "red": "acquisition-evasion-source-red-first.log",
+        "green": "integrated-v15-targeted.log",
+        "native_d100": 79,
+        "red_result": {
+          "wrong_baseline_speed": 20.5,
+          "wrong_baseline_course": 10,
+          "ph": 0.8,
+          "hit": true
+        },
+        "green_result": {
+          "baseline_speed": 20,
+          "baseline_course": 0,
+          "ph": 0.64,
+          "hit": false,
+          "hp_unchanged": true
+        },
+        "world_checkpoints": {
+          "ticks": [
+            360,
+            361
+          ],
+          "counted_as_test_cases": 1,
+          "full_world_equality": true
+        },
+        "scenario_assumptions": [
+          "AuthorGood isolates airborne launch; not native aircraftFCS",
+          "Synthetic source receivers/signatures/environment",
+          "Explicit author movement performance"
+        ],
+        "actual_positive_http_reference": "artifacts\\rules-submarine-annex-20261024\\http\\acceptance-3\\acquisition-http-validation.json",
+        "http_reaction_branch_proven": false
+      },
+      "remaining": [
+        "Final real HTTP reaction branch not proven",
+        "Full detector/ACM/evasion combinations",
+        "All-source64cell matrix not newly reverified",
+        "Full reattack"
+      ]
+    },
+    {
+      "id": "PRIOR-H1-REGRESSION",
+      "status": "tested_declared_subset",
+      "source": {
+        "authority": "harpoon_v_rules_2026",
+        "page": 79,
+        "section": "7.5.3",
+        "scope": "Prior frozen H1 declared subset retained"
+      },
+      "data": {
+        "path": "harpoon-rts/data/rules/torpedo-2026.json",
+        "field": "execution_revision.helical_h1"
+      },
+      "execution": {
+        "path": "torpedo2026/helical.rs",
+        "scope": "Prior empty search/depth/endurance/native swept Motion/old pending retained"
+      },
+      "test": {
+        "status": "tested_declared_subset",
+        "target": "torpedo_helical_2026",
+        "passed": 11,
+        "evidence": "integrated-v15-targeted.log",
+        "new_rule_count_claimed": 0
+      },
+      "remaining": [
+        "Same-type5000yd",
+        "Complete opportunity/vertical/circle capture",
+        "Seabed/next search cycle/fullR054"
+      ]
+    },
+    {
+      "id": "PRIOR-WIRE-PRIVACY-REGRESSION",
+      "status": "tested_declared_subset",
+      "source": {
+        "basis": "Prior referee-only raw wire/source quality contract"
+      },
+      "data": {
+        "scope": "No new qualified wire feedback inferred"
+      },
+      "execution": {
+        "path": "torpedo2026.rs source_launch/wire_check",
+        "scope": "Private wire/author quality retained; public own release preserved"
+      },
+      "test": {
+        "status": "tested_declared_subset",
+        "target": "torpedo_wire_privacy_2026",
+        "passed": 2,
+        "evidence": "integrated-v15-targeted.log",
+        "new_rule_count_claimed": 0
+      },
+      "remaining": [
+        "Complete qualified DualWire reports",
+        "All BDA/observation audit",
+        "No nonwire remote control added"
+      ]
+    }
+  ],
+  "remaining_global": [
+    "Full R054 multiple/5000yd/vertical/reattack/seabed/search lifecycle",
+    "Full battery/Fit/charge/snorkel/AIP/crush/fullNavfit",
+    "All other unmapped Annex IDs, named variants and damaged curves",
+    "R062/R063/R064 and all other full-book/optional/expanded-critical unresolved atoms",
+    "Final HTTP/MCP/UI/old-save proof pending",
+    "Nearshore comprehensive scenario and improved FSM remain later planning after full-book acceptance"
+  ],
+  "prepared_by_subagent": {
+    "mutations": [
+      "report-draft.md",
+      "mechanisms-draft.json"
+    ],
+    "production_changed": false,
+    "tests_changed": false,
+    "protocol_tools_changed_by_report_task": false,
+    "separately_authorized_a1_helper_revision": {
+      "old_bytes_preserved_in": "http/helper-history/first-prepare-acquisition.py and first-verify-acquisition.py",
+      "prepare_sha256": "069773d31d6c688a106ae4cd41137a98b63a2065510f3d04cc76bab722a04e09",
+      "verify_sha256": "e7e1eacca6b9ebc3318657e28321a99b92b3a500fc2b02830e5e165aa43742e5",
+      "native_accel_kts_per_s": 0.4,
+      "preparation_ticks": 25,
+      "entry_clearance_nm": 0.005,
+      "seed": 2,
+      "projectile": 6,
+      "engine_or_database_changed": false,
+      "actual_second_run": "pending root"
+    },
+    "cargo_run": false,
+    "services_started": false
+  },
+  "final_signoff_scope": "Only the stated16 source/data/execution/test rows; no whole chapter/book completion",
+  "counts_are_executions_not_rule_coverage": true,
+  "latest_packet_validation": {
+    "date": "2026-10-24",
+    "status": "tested_declared_subsets_only",
+    "report": "docs/all-rules-submarine-annex-20261024.md",
+    "log": "artifacts/rules-submarine-annex-20261024/workspace-final.log",
+    "workspace": {
+      "targets": 76,
+      "passed": 1240,
+      "failed": 0,
+      "ignored": 5
+    },
+    "whole_chapter_complete": false
+  },
+  "actual_validation": {
+    "workspace": {
+      "workspace": {
+        "targets": 76,
+        "passed": 1240,
+        "failed": 0,
+        "ignored": 5
+      },
+      "new_unique_test_names": 37,
+      "removed_unique_test_names": 0,
+      "added": [
+        "a_native_depth_crossing_beyond_weapon_maximum_cannot_hide_an_unknown_competitor_and_select_another",
+        "a_proven_horizontal_cone_exclusion_keeps_real_radial_search_moving_without_a_false_hit_or_hold",
+        "above_old_depth_full_world_restore_keeps_native_operation_and_identical_continuation",
+        "actual_capture_and_terminal_evidence_stay_referee_while_own_release_and_ammunition_remain_visible",
+        "actual_launcher_takeover_or_removal_does_not_stop_the_released_nonwire_capture_or_attack",
+        "agent::submarine_annex_contract_20261024::annex_llm_and_player_observation_validators_enforce_the_same_known_game_cap",
+        "agent::submarine_annex_contract_20261024::annex_llm_receives_real_own_game_band_cap_and_unknown_charge_in_both_languages",
+        "an_author_fit_cannot_raise_even_a_qualified_id_above_its_source_band",
+        "an_unknown_acoustic_candidate_preserves_complete_pending_and_never_borrows_default_signature",
+        "cn_039a_real_set_depth_reaches_int_v_game_upper_500_without_rewriting_250",
+        "cn_kilo_real_set_depth_reaches_int_iv_game_upper_400_without_rewriting_200",
+        "complete_world_restore_before_and_after_capture_preserves_the_same_native_first_attack",
+        "exact_039g1_continued_a6_row_supports_int_v_500_and_surface12_without_borrowing_039g",
+        "four_exact_annex_ids_also_bound_real_unfitted_v4_movement_without_inventing_a_runtime_fit",
+        "generic_lada_a19_supports_int_iv_400_and_surface10_without_named_boat_battery_assumptions",
+        "historical_database_and_operations_v3_raw_bytes_stay_frozen_across_source_motion",
+        "known_annex_game_band_rejects_an_illegal_initial_depth_without_a_silent_first_tick_teleport",
+        "legacy_v2_and_operations_v3_keep_all_four_historical_database_depths",
+        "losing_the_excluded_original_after_real_failed_entry_does_not_veto_the_other_capture",
+        "main_submarine_annex_contract::annex_ai_batch_cannot_create_a_task_for_a_depth_above_its_own_source_band",
+        "main_submarine_annex_contract::annex_player_depth_above_source_band_is_refused_before_queue_or_manual_takeover",
+        "multiple_qualified_candidates_keep_the_whole_epoch_pending_without_nearest_or_id_selection",
+        "native_classified_opportunity_reaction_uses_precommand_pose_and_the_source_evasion_column",
+        "native_failed_entry_acquires_only_the_unique_coplanar_opportunity_and_resolves_one_real_hit",
+        "native_source_surface_completion_cannot_hide_a_same_epoch_submarine_competitor_and_select_another",
+        "own_static_annex_capability_is_disclosed_without_fit_and_never_exposes_enemy_capability",
+        "ru_kilo_6363_real_set_depth_reaches_int_iv_game_upper_400_without_rewriting_240",
+        "ru_kilo_636_real_set_depth_reaches_int_iv_game_upper_400_without_rewriting_200",
+        "slow_search_pays_its_full_capture_tick_then_next_tick_uses_fast_range_without_resetting_fuel",
+        "source_band_upper_fit_limit_and_actual_water_each_remain_independent_admission_bounds",
+        "sourced_surface_13_or_11_is_not_replaceable_by_a_higher_submerged_speed",
+        "the_four_sourced_undamaged_surface_ceilings_apply_to_actual_unfitted_surface_motion",
+        "tools::submarine_annex_contract::annex_mcp_legal_manual_depth_crosses_the_old_scalar_without_inventing_source_motion_fit",
+        "tools::submarine_annex_contract::annex_mcp_source_limit_is_checked_before_inbox_or_any_world_mutation",
+        "unfitted_exact_ids_reject_native_depth_orders_above_the_source_game_band",
+        "unknown_or_prefix_similar_ids_and_unmapped_ir_kilo_do_not_inherit_qualified_atoms",
+        "vertical_unknown_or_surface_domain_mismatch_cannot_copy_enemy_depth_or_create_a_hit"
+      ],
+      "removed": [],
+      "node_passed": 70,
+      "counts_are_not_rule_coverage": true
+    },
+    "protocol_run": "artifacts/rules-submarine-annex-20261024/http/acceptance-3",
+    "protocol_files": [
+      "acquisition-cross-process-validation",
+      "acquisition-http-validation",
+      "annex-cross-process-validation",
+      "annex-http-validation",
+      "annex-mcp-validation",
+      "compatibility-validation",
+      "cross-process-validation",
+      "emergency-cross-process-validation",
+      "emergency-http-validation",
+      "emergency-mcp-validation",
+      "helical-cross-process-validation",
+      "helical-http-validation",
+      "helical-mcp-validation",
+      "http-validation",
+      "mcp-validation"
+    ],
+    "ui": "artifacts/rules-submarine-annex-20261024/ui/ui-validation.json",
+    "final_unchanged_inputs": 210,
+    "server_sha256": "37792c1f5d68f578d89ace2d1360bfbbfa43df694aa4e092a61b63649dc794c8",
+    "mcp_sha256": "0af435d969d41d0a6f48f19f459903f00f045a513e7f2433618c6e23a3b4049d",
+    "prior_evidence_verified_unchanged": 809,
+    "source_candidates_not_whole_imported": true
+  },
+  "source_candidate_boundaries": [
+    "Six exact Chinese/Russian source atoms selected only after parent and peer original-page review; no battery context whole import.",
+    "Future US5 candidate contains known OhioSSBN source-page and validation-field errors; future peer corrects exact atoms, no runtime adoption here.",
+    "Future hard-rudder and comprehensive-nearshore work remains source/planning, not this runtime signoff."
+  ]
+}

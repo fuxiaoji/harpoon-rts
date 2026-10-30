@@ -192,6 +192,7 @@ struct PendingEvent {
 }
 
 pub fn update_sensors(world: &mut World) {
+    if world.rules.profile==crate::rules::damage_runtime::RuleProfile::Rts2026Full {update_sensors_v4(world);return;}
     if !crate::rules::operations::active(world)&&world.tick % SENSOR_INTERVAL_TICKS != 0 {
         return;
     }
@@ -643,12 +644,14 @@ fn apply_detections(
 fn decay_contacts(world: &mut World, side: Side) -> Vec<PendingEvent> {
     let mut out = Vec::new();
     let mut lost: Vec<ContactId> = Vec::new();
+    let mad_datums=crate::rules::detection2026::wide_mad::retained_contact_targets(world,side);
     {
         let state = &mut world.sides[side.index()];
         for c in state.contacts.values_mut() {
             if c.stale {
                 continue;
             }
+            if mad_datums.contains(&c.about) {continue;}
             let scanned_this_pass = (world.tick - c.last_update_tick) < SENSOR_INTERVAL_TICKS * 2;
             if !scanned_this_pass {
                 c.quality -= 0.10;
@@ -725,4 +728,168 @@ pub fn nominal_ranges(db: &Database, o: &crate::world::Entity, inst: &crate::wor
         sb = Some(v);
     }
     (a, sf, sb)
+}
+/// v4 owns a separate source-based scan/projection path. The historical branch
+/// above remains byte-for-byte unchanged. Referee dice and blocked metadata never
+/// enter side visibility; bearing-only receivers never copy truth range/course.
+fn update_sensors_v4(world:&mut World) {
+    use crate::rules::detection2026 as d;
+    crate::rules::communications2026::detection_open(world);
+    let exchanged_reports=crate::rules::unmanned2026::take_basic_data_reports(world);
+    crate::rules::asw_weapons2026::projector::attack_sonar::prepare_detection(world);
+    for sender in d::visual_signaling::begin_detection(world){crate::sim::commit_manual(world,sender);}
+    d::sonobuoys::begin_detection(world);
+    let Some(mut state)=world.rules.detection.take() else{return};
+    // EW objects are materialized for this scan only, never combat or victory.
+    let virtual_targets=crate::rules::ew2026::sensor_targets(world);
+    let virtual_ids:Vec<_>=virtual_targets.iter().map(|e|e.id).collect();
+    for target in virtual_targets{world.entities.insert(target.id,target);}
+    let observers:Vec<_>=world.entities.values().filter(|o|o.alive&&!o.kind.is_projectile()&&!crate::rules::ew2026::is_object(world,o.id)).map(|o|o.id).collect();
+    let mut results:BTreeMap<(usize,EntityId),(EntityId,String,d::ScanDecision,d::SensorReport)>=BTreeMap::new();
+    let mut candidates=Vec::new();let mut traces=Vec::new();let mut successful_scans=Vec::new();let mut bearing_traces=Vec::new();
+    let mut onboard_reports=Vec::new();let mut scan_outcomes=Vec::new();let mut sonar_attempts=Vec::new();let mut sonar_successes=Vec::new();
+    let lifecycle=d::update_lifecycle(world,&mut state);
+    for oid in observers {
+        if !d::sonobuoys::observer_allowed(world,&state,oid){continue;}
+        if !crate::rules::unmanned2026::detection_allowed(world,oid){continue;}
+        let o=world.entities[&oid].clone();
+        let targets:Vec<_>=world.entities.values().filter(|t|t.alive&&t.side!=o.side).map(|t|t.id).collect();
+        for inst in &o.sensors {
+            d::array_optional_world::before_scan(world,&mut state,oid,&inst.sensor);
+            let Some(def)=world.db.sensors.get(&inst.sensor) else{continue};
+            if def.kind==SensorKind::SonarActive&&!inst.active{continue}
+            for tid in &targets {
+                let t=&world.entities[tid];
+                if o.kind==PlatformKind::Ship&&t.kind==PlatformKind::Ship&&matches!(def.kind,SensorKind::Radar|SensorKind::Visual|SensorKind::Ir)&&world.context.terrain.as_ref().is_some_and(|chart|chart.blocked(o.pos,t.pos)){continue}
+                if def.kind==SensorKind::Radar {
+                    if d::radar_range_world(world,&state,&o,def,t).is_ok_and(|r|r>0.0&&r>=o.pos.range_to(t.pos))&&matches!(t.kind,PlatformKind::Aircraft|PlatformKind::Missile){candidates.push((oid,inst.sensor.clone(),*tid));}
+                }
+                let mut outcome=d::evaluate_world(world,&mut state,oid,&inst.sensor,*tid);
+                if let Ok(scan)=&mut outcome{d::visual_id::apply(world,&mut state,oid,&inst.sensor,*tid,scan);}
+                if let Ok(scan)=&mut outcome{d::sonobuoys::after_evaluate(world,&mut state,oid,&inst.sensor,*tid,scan);}
+                scan_outcomes.push((oid,inst.sensor.clone(),*tid,world.tick,outcome.as_ref().is_ok_and(|s|s.detected)));
+                if let Ok(scan)=&outcome {if let Some(attempt)=scan.sonar_attempt {sonar_attempts.push(attempt);if scan.detected {sonar_successes.push((oid,*tid,world.tick));}}}
+                let details=match &outcome {Ok(scan)=>scan.trace.clone(),Err(reason)=>serde_json::json!({"blocked":reason})};
+                let trace_key=format!("{}:{}:{}",oid.0,inst.sensor,tid.0);
+                let window=world.tick.div_euclid(180);
+                let identity_trace=details.get("visual_identification").map(|v|serde_json::json!({"original":v.get("original"),"status":v.get("status"),"reason":v.get("reason"),"earned_level":v.get("earned_level")}));
+                let marker=serde_json::json!({"blocked":details.get("blocked"),"rule":details.get("rule"),"probability":details.get("probability"),"d100":details.get("d100"),"visual_identification":identity_trace,"detected":outcome.as_ref().ok().map(|s|s.detected)}).to_string();
+                if !state.reported.get(&trace_key).is_some_and(|(w,m)|*w==window&&*m==marker){
+                    state.reported.insert(trace_key,(window,marker));
+                    traces.push((oid,inst.sensor.clone(),*tid,details));
+                }
+                let Ok(mut scan)=outcome else{continue};if !scan.detected{continue}
+                // Fusing the side picture must not discard another successful
+                // observer or receiver. Only actual successful scans earn this
+                // evidence; held/shared contacts alone never create a track.
+                let (mut report,bearing_trace)=d::project_report(world,&mut state,&o,t,&inst.sensor,&scan);
+                d::array_optional_world::apply_report(world,&state,oid,&inst.sensor,*tid,&mut report);
+                if d::sonobuoys::capture_native(world,&mut state,&report,&scan){continue;}
+                // Optional bearing ambiguity/stabilization changes what was
+                // measured; side fusion must not restore the suppressed fix.
+                scan.range_known=report.measured_position.is_some();
+                scan.bearing_only=!scan.range_known;
+                if let Some(detail)=bearing_trace{bearing_traces.push((oid,detail));}
+                onboard_reports.push((report.clone(),scan.known_category));
+                if !crate::rules::unmanned2026::allow_side_projection(world,oid){continue;}
+                successful_scans.push((report.clone(),scan.known_category));
+                let key=(o.side.index(),*tid);
+                let rank=|s:&d::ScanDecision|(u8::from(s.range_known),u8::from(s.identify_class));
+                if let Some((_,_,prior,_))=results.get_mut(&key){
+                    let identified=prior.identify_class||scan.identify_class;
+                    let category=prior.known_category.or(scan.known_category);
+                    let class_label=prior.class_label.clone().or(scan.class_label.clone());
+                    if rank(&scan)>rank(prior){scan.identify_class=identified;scan.known_category=category;scan.class_label=class_label;results.insert(key,(oid,inst.sensor.clone(),scan,report));}
+                    else{prior.identify_class=identified;prior.known_category=category;prior.class_label=class_label;}
+                }else{results.insert(key,(oid,inst.sensor.clone(),scan,report));}
+            }
+        }
+    }
+    // Survivor groups remain noncombat physical points. Only this actual
+    // source-qualified lookout scan may mint a side SAR snapshot/alias.
+    let wide_mad_reports=d::wide_mad::scan_world(world,&mut state);
+    for (mut scan,report) in wide_mad_reports {
+        let Some(observer)=world.entity(report.observer) else{continue};
+        let category=scan.known_category;
+        onboard_reports.push((report.clone(),category));
+        if !crate::rules::unmanned2026::allow_side_projection(world,report.observer){continue;}
+        successful_scans.push((report.clone(),category));
+        let key=(observer.side.index(),report.target);
+        if let Some((_,_,prior,_))=results.get_mut(&key) {
+            let category=prior.known_category.or(scan.known_category);
+            if scan.range_known&&!prior.range_known {
+                scan.identify_class|=prior.identify_class;
+                scan.class_label=prior.class_label.clone().or(scan.class_label);
+                scan.known_category=category;
+                results.insert(key,(report.observer,report.sensor.clone(),scan,report));
+            } else {prior.known_category=category;}
+        } else {results.insert(key,(report.observer,report.sensor.clone(),scan,report));}
+    }
+    // An earned MAD fix belongs to the receiver that actually succeeded.
+    // Received communications and held side contacts never create this clock.
+    for (report,_) in &onboard_reports {
+        if report.sensor_kind==SensorKind::Magnetic {
+            d::wide_mad::record_success(world,&mut state,report);
+        }
+    }
+    let survivor_scans=crate::rules::expanded_damage2026::sar_native::scan_world(world,&mut state);
+    // Acoustic modem/basic-data exchange forwards exactly the admitted onboard
+    // report. No rescan, truth position, new classification or automatic bulk dump.
+    for (report,category) in exchanged_reports {
+        let Some(observer)=world.entity(report.observer) else{continue};
+        let scan=d::ScanDecision{source_point:None,sonar_attempt:None,detected:true,known_category:category,group:None,bearing_only:report.measured_position.is_none(),identify_class:false,class_label:None,range_known:report.measured_position.is_some(),bearing_error_deg:report.bearing_error_deg,fix_quality:None,trace:serde_json::Value::Null};
+        results.entry((observer.side.index(),report.target)).or_insert((report.observer,report.sensor.clone(),scan,report));
+    }
+    world.rules.detection=Some(state);
+    d::wide_mad::commit_traces(world);
+    crate::rules::expanded_damage2026::sar_native::commit(world,survivor_scans);
+    for (observer,sensor,target,at,detected) in scan_outcomes {crate::rules::communications2026::record_scan_outcome(world,observer,&sensor,target,at,detected);}
+    crate::rules::communications2026::commit_sonar_attempts(world,&sonar_attempts);
+    d::record_sonar_successes(world,&sonar_successes);
+    for (report,category) in onboard_reports {crate::rules::unmanned2026::record_onboard_report(world,&report,category);}
+    for (unit,detail) in lifecycle{world.emit(EventKind::RulesEvent{domain:"detection2026".into(),rule:"5.lifecycle".into(),side:None,unit:Some(unit),contact:None,detail:detail.to_string()},Visibility::Referee);}
+    for (unit,detail) in bearing_traces{world.emit(EventKind::RulesEvent{domain:"detection2026".into(),rule:"5.bearing_RTS_projection".into(),side:None,unit:Some(unit),contact:None,detail:detail.to_string()},Visibility::Referee);}
+    for (oid,sensor,truth,details) in traces {
+        world.emit(EventKind::RulesEvent{domain:"detection2026".into(),rule:"5.scan".into(),side:None,unit:Some(oid),contact:None,detail:serde_json::json!({"sensor":sensor,"truth_target":truth,"result":details,"source":"HarpoonV2026 chapter5"}).to_string()},Visibility::Referee);
+    }
+    crate::rules::operations::radar_clocks(world,&candidates);
+    let mut positions_by_side:[Vec<EntityId>;2]=[Vec::new(),Vec::new()];
+    let mut shown_groups=std::collections::BTreeSet::new();
+    for ((side_index,tid),(_oid,sensor,scan,report)) in results {
+        let side=[Side::Blue,Side::Red][side_index];
+        if let Some(group)=scan.group.as_ref().filter(|_|!scan.identify_class){
+            let group_key=format!("{side_index}:{group}");
+            if !shown_groups.insert(group_key.clone()){continue}
+            if let Some(old)=world.rules.detection.as_mut().unwrap().group_representatives.insert(group_key,tid) {
+                if old!=tid {if let Some(c)=world.sides[side_index].contacts.values_mut().find(|c|c.about==old&&!c.stale&&c.class_name.is_none()){c.about=tid;}}
+            }
+        }
+        if let Some(category)=scan.known_category {world.rules.detection.as_mut().unwrap().categories.insert(format!("{}:{}",side_index,tid.0),category);}
+        let t=world.entities.get(&tid).cloned();
+        // Ranging and angular precision are independent. Gen5 AIR supplies a
+        // range within 12nm, but keeps its printed ±3degree bearing accuracy.
+        let estimate=report.plot_position();
+        // 1nm is an icon anchor for a bearing ray, explicitly NOT a measured range.
+        let class_name=if scan.identify_class{scan.class_label.clone().or_else(||t.as_ref().and_then(|t|world.db.platforms.get(&t.class)).map(|p|p.name.clone()))}else{None};
+        let private_category=t.as_ref().map(|t|if t.kind==PlatformKind::Sub&&sensor.contains("radar"){PlatformKind::Ship}else{t.combat_kind()}).or(scan.known_category).unwrap_or(PlatformKind::Ship);
+        let state=&mut world.sides[side.index()];
+        let existing=state.contacts.values().find(|c|c.about==tid&&!c.stale).map(|c|c.id);
+        let cid=if let Some(id)=existing{id}else{state.next_contact+=1;let id=ContactId(state.next_contact);state.contacts.insert(id,Contact{id,about:tid,category:private_category,class_name:None,estimate,est_course_deg:0.0,est_speed_kts:0.0,bearing_only:!scan.range_known,quality:if scan.range_known{1.0}else{0.25},last_update_tick:world.tick,first_tick:world.tick,stale:false,sensors:Vec::new(),offset:Vec2::zero(),announced:false});id};
+        let c=state.contacts.get_mut(&cid).unwrap();let newly_identified=c.class_name.is_none()&&class_name.is_some();
+        c.estimate=estimate;c.last_update_tick=world.tick;c.bearing_only=!scan.range_known;c.quality=if scan.range_known{1.0}else{0.25};
+        if !c.sensors.contains(&sensor){c.sensors.push(sensor.clone())}
+        if let Some(name)=class_name{c.class_name=Some(name)}
+        if scan.range_known{positions_by_side[side.index()].push(tid)}else{c.est_course_deg=0.0;c.est_speed_kts=0.0;}
+        if existing.is_none(){world.emit(EventKind::Detection{side,contact:cid,category:scan.known_category.map_or_else(||"unknown".into(),|kind|kind.category().to_string()),pos_hint:estimate,sensor:sensor.clone()},Visibility::Side(side));}
+        if newly_identified{let name=world.contact(side,cid).and_then(|c|c.class_name.clone()).unwrap();world.emit(EventKind::ContactIdentified{side,contact:cid,class_name:name},Visibility::Side(side));}
+    }
+    for side in [Side::Blue,Side::Red]{crate::rules::operations::update_radar_motion(world,side,&positions_by_side[side.index()]);for ev in decay_contacts(world,side){world.emit(ev.kind,ev.vis);}}
+    for (report,category) in successful_scans{
+        crate::rules::communications2026::record_detection(world,&report,category);
+        crate::rules::firecontrol2026::record_detection(world,&report);
+    }
+    crate::rules::communications2026::detection_close(world);
+    d::sonobuoys::end_detection(world);
+    d::visual_signaling::deliver(world);
+    for id in virtual_ids{world.entities.remove(&id);}
 }

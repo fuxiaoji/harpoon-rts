@@ -1,0 +1,27 @@
+{
+  "source": {
+    "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+    "pdf_pages": [118],
+    "printed_pages": ["11-3"],
+    "visual_verified": [118],
+    "visual_verified_dates": ["2026-10-28 root render review", "2026-10-30 parking-route leaf review"],
+    "version": "2026-01-01",
+    "note": "English2026 Generic Land Targets table, Taxiways row; render artifacts/rules-book-wide-20261026/runway-next-root-20261028/english-2026-pdf118.png"
+  },
+  "taxiway_isolation": {
+    "printed_row": {
+      "target_type": "Taxiways",
+      "size_class": "C",
+      "damage_points": null,
+      "armor": 0,
+      "result": "Cut isolates aircraft from runways"
+    },
+    "scope": "the printed table gives the isolation function only; which parking area serves which base/class is an explicit scenario author declaration (ground_2026.parking routes), never inferred from the book",
+    "not_printed": [
+      "isolation duration",
+      "area geometry or distances",
+      "any probability or die",
+      "per-airframe relocation while isolated (dynamic rerouting stays pending)"
+    ]
+  }
+}

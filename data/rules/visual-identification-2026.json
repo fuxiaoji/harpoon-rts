@@ -1,0 +1,125 @@
+{
+  "rule_id": "HV2026-5.8.9-optional-native-visual-identification",
+  "source": {
+    "book": "14-2.HpnV_Rules_1_Jan_26.pdf",
+    "version": "2026-01-01",
+    "pdf_pages": [
+      67,
+      68
+    ],
+    "printed_pages": [
+      "5-28",
+      "5-29"
+    ],
+    "evidence": "artifacts/rules-book-wide-20261026/visual-id-next-20261027/source-contract-1.md",
+    "table_authority": "Personally visually verified English table; example modified4 conflicts and is held pending"
+  },
+  "epoch_seconds": 180,
+  "rng_key_prefix": "5.8.9.visual",
+  "detection_roll_upper": [
+    10,
+    25,
+    50,
+    75,
+    100
+  ],
+  "detection_modifiers": [
+    -3,
+    -2,
+    -1,
+    0,
+    1
+  ],
+  "hull_down": [
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    2,
+    2,
+    3,
+    3
+  ],
+  "hull_up": [
+    0,
+    0,
+    1,
+    1,
+    2,
+    2,
+    3,
+    3,
+    4,
+    4
+  ],
+  "surface_horizon_kyd": [
+    21,
+    19,
+    17,
+    15,
+    10,
+    7,
+    4
+  ],
+  "close_contact": {
+    "range_nm_exclusive": 4,
+    "range_kyd_exclusive": 8,
+    "minimum_visibility_percent": 60,
+    "modifier": 2
+  },
+  "environment_visibility": [
+    {
+      "maximum_percent": 20,
+      "modifier": -3
+    },
+    {
+      "maximum_percent": 40,
+      "modifier": -2
+    }
+  ],
+  "knowledge_levels": [
+    [
+      "ship"
+    ],
+    [
+      "ship",
+      "size"
+    ],
+    [
+      "ship",
+      "size",
+      "type"
+    ],
+    [
+      "ship",
+      "size",
+      "type",
+      "nationality"
+    ],
+    [
+      "ship",
+      "size",
+      "type",
+      "class",
+      "nationality"
+    ]
+  ],
+  "rts_policy": "First actual native Visual success freezes the original detectionD100, independent originalD10, geometry and initial180s epoch. Same-epoch continuous repeated scans/save reuse that snapshot. Identity is bound to the original visible ContactID (first native receipt birth when projection has not yet created it). Lost native continuity, changed alias/physical owner/body, changed visibility/hull/close-contact eligibility or a later epoch remains sticky specificpending; no old earned class is newly assigned through hidden EntityId. Existing independently earned side-contact class is not erased.",
+  "scope": "Enabled native surface-ship Visual against a surface Ship. Basic disabled and other actual sensor rights are preserved. Daylight table/modifiers/horizon and explicit exact named-unit identity metadata only. Missing identity labels never fall back to target truth/class prefix. Own view is measured ContactID and earned labels only. Source-qualified starshell illumination on firing ship adds native night Visual ship identification.",
+  "pending": [
+    "HullUp modified4 example/table conflict",
+    "modifiedD10 outside1..10; no guessed clamp",
+    "airborne/land observer horizon mapping",
+    "missing exact sourced physical size/type/nationality/class label",
+    "changed observer/owner/target physical identity within a stored track",
+    "cross-epoch, actual native loss, changed original ContactID or identification-condition changes; no automatic identity transfer or retry",
+    "EOIR and silhouette identification qualification beyond explicitly illuminated source target remain pending"
+  ],
+  "conversion": {
+    "yards_per_nm": 2025.3718285,
+    "yards_per_kyd": 1000
+  },
+  "night_illuminated_modifier": -1
+}

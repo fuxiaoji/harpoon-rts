@@ -29,6 +29,14 @@ use harpoon_core::types::{ContactId, EntityId, PlatformKind, Side};
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 
+#[cfg(test)]
+#[path = "tactical/antiship_contract.rs"]
+mod antiship_controller_20261024;
+
+#[cfg(test)]
+#[path = "tactical/torpedo_plot_contract.rs"]
+mod torpedo_plot_controller_20261024;
+
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
 #[serde(default)]
 pub struct Params {
@@ -44,10 +52,14 @@ pub struct Params {
     /// Massed-raid doctrine: ASCM rounds per shooter per salvo, the minimum
     /// spacing between that shooter's salvos, and the in-flight ceiling per
     /// target contact above which shooters hold fire.
+    #[serde(default = "legacy_surface_rounds", skip_serializing_if = "is_legacy_surface_rounds")]
     pub surface_salvo_rounds: u16,
+    #[serde(default = "legacy_surface_interval", skip_serializing_if = "is_legacy_surface_interval")]
     pub surface_salvo_interval_s: i64,
+    #[serde(default = "legacy_surface_cap", skip_serializing_if = "is_legacy_surface_cap")]
     pub surface_inflight_cap: u32,
     /// Aircraft per anti-ship strike wave.
+    #[serde(default = "legacy_strike_wave", skip_serializing_if = "is_legacy_strike_wave")]
     pub strike_wave_size: u32,
     pub strike_altitude_m: f64,
     pub strike_assembly_s: i64,
@@ -61,6 +73,17 @@ pub struct Params {
 }
 
 fn default_policy_timer(value: &i64) -> bool { *value == 180 }
+// Absent fields belong to the pre-massed-raid controller. Preserve both its
+// behavior on resume and its serialized bytes/checksum. New controllers still
+// use Params::default(), which writes their explicit new policy into the save.
+fn legacy_surface_rounds() -> u16 { 2 }
+fn is_legacy_surface_rounds(v: &u16) -> bool { *v == legacy_surface_rounds() }
+fn legacy_surface_interval() -> i64 { 60 }
+fn is_legacy_surface_interval(v: &i64) -> bool { *v == legacy_surface_interval() }
+fn legacy_surface_cap() -> u32 { 8 }
+fn is_legacy_surface_cap(v: &u32) -> bool { *v == legacy_surface_cap() }
+fn legacy_strike_wave() -> u32 { 4 }
+fn is_legacy_strike_wave(v: &u32) -> bool { *v == legacy_strike_wave() }
 
 impl Default for Params {
     fn default() -> Self {
@@ -123,6 +146,26 @@ enum State {
     Retreat,
 }
 
+/// The seven fields projected by core own_status::own_view, rather than the
+/// Referee Weapon configuration whose private fit fields are not disclosed.
+#[derive(Deserialize)]
+struct OwnTorpedoWeaponProfile {
+    source: String,
+    guidance: harpoon_core::rules::torpedo2026::Guidance,
+    #[serde(rename="generation")]
+    _generation: usize,
+    settings: Vec<harpoon_core::rules::torpedo2026::Setting>,
+    max_depth_m: f64,
+    surface: bool,
+    submarine: bool,
+}
+
+struct SourceTorpedoChoice {
+    contact: ContactId,
+    weapon: String,
+    retain_wire: bool,
+}
+
 #[derive(Clone, Copy, Serialize, Deserialize)]
 struct UnitMind {
     role: Role,
@@ -175,6 +218,25 @@ fn contact_pos(
 
 fn controllable(u: &UnitObs) -> bool {
     !u.manual_control && !u.kind.is_projectile() && u.class != harpoon_core::rules::asw::SONOBUOY_CLASS
+        && !u.detection.as_ref().is_some_and(|d|d["sensor_float"].as_bool()==Some(true))
+}
+fn source_blow_in_progress(obs:&Observation,u:&UnitObs)->bool {
+    obs.rules_profile==harpoon_core::rules::damage_runtime::RuleProfile::Rts2026Full
+        && u.kind==PlatformKind::Sub
+        && u.navigation.as_ref().and_then(|n|n.source_rules.as_ref())
+            .is_some_and(|n|n["depth_operation"]["kind"].as_str()==Some("EmergencyBlow"))
+}
+/// An actual own hard-rudder plan/turn/jam episode owns the ship's steering.
+/// The FSM keeps the actor's standing orders and any authorized crew recovery
+/// running; it never substitutes a new route, clears stations, or re-orders
+/// hard rudder from an enemy-contact guess.
+fn source_hard_rudder_hold(obs:&Observation,u:&UnitObs)->bool {
+    obs.rules_profile==harpoon_core::rules::damage_runtime::RuleProfile::Rts2026Full
+        && u.navigation.as_ref().and_then(|n|n.source_rules.as_ref())
+            .and_then(|n|n["steering"].as_object())
+            .is_some_and(|steering| {
+                matches!(steering["mode"].as_str(), Some("planned"|"turning"|"jammed"))
+            })
 }
 
 fn known_sensor_contact(c: &harpoon_core::observe::ContactObs) -> bool {
@@ -210,7 +272,9 @@ impl TacticalStaff {
                 if harpoon_core::rules::electronic_warfare::capability(&u.class).is_some() {Role::Ew}
                 else if is_aew(u) {
                     Role::Aew
-                } else if is_helo(u) {
+                } else if is_helo(u) || (u.mission.as_deref()==Some("asw")
+                    && u.aviation.as_ref().is_some_and(|v|v["profile"]=="hv2026-rts-v4"
+                        && v.pointer("/aircombat/aerial_torpedo_release").is_some_and(serde_json::Value::is_object))) {
                     Role::AswScreen
                 } else if u.mission.as_deref()==Some("recon") {
                     Role::Scout
@@ -383,6 +447,79 @@ impl TacticalStaff {
         best
     }
 
+    /// This is an assistant policy over own orders, not a fire-control verdict.
+    /// The engine independently validates the actual source release.
+    fn source_antiship_order_allowed(&self, obs:&Observation, u:&UnitObs, contact:ContactId, weapon:&str)->bool {
+        if obs.rules_profile!=harpoon_core::rules::damage_runtime::RuleProfile::Rts2026Full {return true;}
+        if weapon!=harpoon_core::rules::surface2026::antiship::EXACT_IC_ID {return false;}
+        let Some(target)=obs.contacts.iter().find(|c|c.id==contact) else {return false;};
+        if target.stale||target.bearing_only||target.category!=Some(PlatformKind::Ship)
+            ||!target.estimate.x.is_finite()||!target.estimate.y.is_finite()
+            ||!target.quality.is_finite()||target.quality<self.params.strike_min_q
+            ||target.own_in_flight.is_none()||!self.supervision.target_allowed(contact,obs.tick) {return false;}
+        let Some(own)=u.antiship.as_ref().filter(|v|v["profile"]=="hv2026-rts-v4"&&v["execution"]=="source_executor") else {return false;};
+        own["plots"].as_array().is_some_and(|plots|plots.iter().any(|p| {
+            p["actor"]==serde_json::json!(u.id)&&p["side"]==serde_json::json!(u.side)
+                &&p["contact"]==serde_json::json!(contact)&&p["weapon"]==weapon
+                &&p["course_deg"].as_f64().is_some_and(f64::is_finite)
+                &&p["speed_kts"].as_f64().is_some_and(|v|v.is_finite()&&v>0.)
+                &&p["enable_run_nm"].as_f64().is_some_and(|v|v.is_finite()&&v>=0.)
+                &&p["waypoints"].as_array().is_some_and(Vec::is_empty)&&p["popup"]==false
+        }))
+    }
+
+    fn plotted_surface_target(&self,obs:&Observation,u:&UnitObs)->Option<(ContactId,(String,f64,u16))> {
+        let plots=u.antiship.as_ref()?["plots"].as_array()?;
+        for plot in plots {
+            let contact:ContactId=serde_json::from_value(plot["contact"].clone()).ok()?;
+            let weapon=plot["weapon"].as_str()?;
+            if !self.source_antiship_order_allowed(obs,u,contact,weapon) {continue;}
+            let target=obs.contacts.iter().find(|c|c.id==contact)?;
+            let mount=u.weapons.iter().find(|m|m.weapon==weapon&&m.operational&&m.ammo>0&&m.cooldown_s<=0.);
+            let Some(mount)=mount else {continue;};
+            let range=self.range_of(weapon);
+            if self.kind_of(weapon)==Some(WeaponKind::Ascm)&&u.pos.range_to(target.estimate)<=range*0.95 {
+                return Some((contact,(weapon.into(),range,mount.ammo)));
+            }
+        }
+        None
+    }
+
+    /// Conservative assistance over own declarations and carried source data.
+    /// This never reads an authoritative Flight or supplies an FCS verdict.
+    fn source_torpedo_choice(&self,obs:&Observation,u:&UnitObs)->Option<SourceTorpedoChoice> {
+        if obs.rules_profile!=harpoon_core::rules::damage_runtime::RuleProfile::Rts2026Full
+            ||u.manual_control||!u.pos.x.is_finite()||!u.pos.y.is_finite() {return None;}
+        let own=u.torpedoes.as_ref()?;
+        for value in own["plans"].as_array()? {
+            let Ok(plan)=serde_json::from_value::<harpoon_core::rules::torpedo2026::Plan>(value.clone()) else {continue;};
+            if plan.actor!=u.id||plan.side!=u.side {continue;}
+            let Some(mount)=u.weapons.iter().find(|m|m.weapon==plan.weapon&&m.ammo>0&&m.operational&&m.cooldown_s<=0.) else {continue;};
+            if !matches!(self.kind_of(&mount.weapon),Some(WeaponKind::Torpedo|WeaponKind::Lwt)) {continue;}
+            let Some(value)=own["weapon_profiles"].get(&plan.weapon) else {continue;};
+            let Ok(profile)=serde_json::from_value::<OwnTorpedoWeaponProfile>(value.clone()) else {continue;};
+            let Some(setting)=profile.settings.get(plan.speed_index) else {continue;};
+            if profile.source.trim().is_empty()||!setting.speed_kts.is_finite()||setting.speed_kts<=0.
+                ||!setting.range_nm.is_finite()||setting.range_nm<=0.||!profile.max_depth_m.is_finite()
+                ||!plan.depth_m.is_finite()||plan.depth_m<0.||plan.depth_m>profile.max_depth_m
+                ||!plan.enable_run_nm.is_finite()||plan.enable_run_nm<0.||plan.enable_run_nm>setting.range_nm
+                ||plan.bearing_deg.is_some_and(|v|!v.is_finite()||!(0. ..360.).contains(&v))
+                ||plan.spread_deg.len()>255||plan.spread_deg.iter().any(|v|!v.is_finite()||!(-180. ..=180.).contains(v)) {continue;}
+            let wired=matches!(profile.guidance,harpoon_core::rules::torpedo2026::Guidance::Wire|harpoon_core::rules::torpedo2026::Guidance::DualWire);
+            if plan.cut_wire&&!wired {continue;}
+            let Some(target)=obs.contacts.iter().find(|c|c.id==plan.contact) else {continue;};
+            if target.stale||target.bearing_only||!target.quality.is_finite()||target.quality<self.params.strike_min_q
+                ||!target.estimate.x.is_finite()||!target.estimate.y.is_finite()
+                ||target.own_in_flight.is_none_or(|n|n>=4)||!self.supervision.target_allowed(plan.contact,obs.tick)
+                ||!match target.category {Some(PlatformKind::Ship)=>profile.surface,Some(PlatformKind::Sub)=>profile.submarine,_=>false}
+                ||u.pos.range_to(target.estimate)>setting.range_nm {continue;}
+            if u.kind!=PlatformKind::Aircraft && (own["verified"]!=true
+                ||!own["tubes"].as_array().is_some_and(|tubes|tubes.iter().any(|t|t["loaded"]==plan.weapon&&t["servicing"]==false))) {continue;}
+            return Some(SourceTorpedoChoice{contact:plan.contact,weapon:plan.weapon,retain_wire:wired&&!plan.cut_wire});
+        }
+        None
+    }
+
     fn has_kind(&self, class: &str, kind: WeaponKind) -> bool {
         let Some(db) = &self.db else { return false };
         db.platforms
@@ -456,7 +593,7 @@ impl TacticalStaff {
             .contacts
             .iter()
             .filter(|c| {
-                c.category == PlatformKind::Ship
+                c.category == Some(PlatformKind::Ship)
                     && !self.sensor_contact(c)
                     && !c.stale
                     && !c.bearing_only
@@ -483,7 +620,7 @@ impl TacticalStaff {
                 !c.stale
                     && self.supervision.target_allowed(c.id,obs.tick)
                     && c.quality >= self.params.strike_min_q
-                    && c.category == PlatformKind::Base
+                    && c.category == Some(PlatformKind::Base)
             })
             .map(|c| (c.id, shooter.pos.range_to(c.estimate)))
             .min_by(|a, b| a.1.partial_cmp(&b.1).unwrap_or(std::cmp::Ordering::Equal))
@@ -496,7 +633,7 @@ impl TacticalStaff {
             if c.stale
                 || c.bearing_only
                 || c.quality < 0.4
-                || c.category != PlatformKind::Ship
+                || c.category != Some(PlatformKind::Ship)
                 || c.bda_hp_fraction == Some(0.0)
                 || self.sensor_contact(c)
                 || !self.supervision.target_allowed(c.id,obs.tick)
@@ -538,7 +675,10 @@ impl TacticalStaff {
     fn best_sub_target(&self, obs: &Observation, shooter: &UnitObs) -> Option<(ContactId, f64)> {
         obs.contacts
             .iter()
-            .filter(|c| !c.stale && c.quality > 0.4 && c.category == PlatformKind::Sub)
+            .filter(|c| !c.stale && c.quality > 0.4 && c.category == Some(PlatformKind::Sub)
+                && (obs.rules_profile!=harpoon_core::rules::damage_runtime::RuleProfile::Rts2026Full
+                    || (!c.bearing_only && c.estimate.x.is_finite() && c.estimate.y.is_finite()
+                        && shooter.pos.x.is_finite() && shooter.pos.y.is_finite())))
             .map(|c| (c.id, shooter.pos.range_to(c.estimate)))
             .min_by(|a, b| a.1.partial_cmp(&b.1).unwrap_or(std::cmp::Ordering::Equal))
     }
@@ -611,10 +751,22 @@ impl CommandStaff for TacticalStaff {
         let mut cmds=Vec::new();
         self.manage_aviation(obs, &mut cmds);
         for u in obs.units.iter().filter(|u|controllable(u)) {
-            cmds.push(Command::SetEngagementPolicy {unit:u.id,air_only:u.kind!=PlatformKind::Sub,max_in_flight:if obs.contacts.iter().any(|c|c.category==PlatformKind::Missile && !c.stale && u.pos.range_to(c.estimate)<8.0){4}else{2}});
+            if source_blow_in_progress(obs,u) {
+                self.note(u.id,None,"source_emergency_blow_hold",
+                    format!("{}：保持正在执行的本方紧急上浮及现有指挥，T{}复核；不推断敌探测结果",u.name,obs.tick+30),
+                    format!("{}: retain own ongoing Emergency Blow and standing orders; review at T{}; enemy detection outcome remains unknown",u.name,obs.tick+30));
+                continue;
+            }
+            if source_hard_rudder_hold(obs,u) {
+                self.note(u.id,None,"source_hard_rudder_hold",
+                    format!("{}：硬舵程序持有本舰操舵，保持现有指挥与已授权解舵程序，下个结算窗复核；不推断敌情",u.name),
+                    format!("{}: hard rudder owns the helm; retain standing orders and any authorized crew recovery, review next Resolution; no enemy inference",u.name));
+                continue;
+            }
+            cmds.push(Command::SetEngagementPolicy {unit:u.id,air_only:u.kind!=PlatformKind::Sub,max_in_flight:if obs.contacts.iter().any(|c|c.category==Some(PlatformKind::Missile) && !c.stale && u.pos.range_to(c.estimate)<8.0){4}else{2}});
             if matches!(self.role_for(u),Role::GunScreen|Role::Carrier) {
                 let aew_cover=obs.units.iter().any(|a|self.role_for(a)==Role::Aew && a.sensors.iter().any(|s|s.active && s.vs_air.is_some()));
-                let imminent=obs.contacts.iter().any(|c|!c.stale && matches!(c.category,PlatformKind::Missile|PlatformKind::Aircraft) && u.pos.range_to(c.estimate)<45.0);
+                let imminent=obs.contacts.iter().any(|c|!c.stale && matches!(c.category,Some(PlatformKind::Missile)|Some(PlatformKind::Aircraft)) && u.pos.range_to(c.estimate)<45.0);
                 let duty=(u.id.0 as i64%2)==(obs.tick/300%2);
                 cmds.push(Command::SetRadar {unit:u.id,active:!aew_cover||imminent||duty});
             }
@@ -627,7 +779,7 @@ impl CommandStaff for TacticalStaff {
         for u in obs
             .units
             .iter()
-            .filter(|u| u.kind != PlatformKind::Aircraft && controllable(u))
+            .filter(|u| u.kind != PlatformKind::Aircraft && controllable(u) && !source_blow_in_progress(obs,u) && !source_hard_rudder_hold(obs,u))
         {
             let Some(mut mind) = self.minds.get(&u.id).cloned() else {
                 continue;
@@ -680,7 +832,7 @@ impl CommandStaff for TacticalStaff {
                     // Keep the fleet at stand-off rather than close a detected
                     // airborne contact as if it were the enemy fleet center.
                     let threatened = obs.contacts.iter().any(|c| {
-                        c.category == PlatformKind::Ship
+                        c.category == Some(PlatformKind::Ship)
                             && !self.sensor_contact(c)
                             && !c.stale
                             && c.quality > 0.25
@@ -716,6 +868,22 @@ impl CommandStaff for TacticalStaff {
                         unit: u.id,
                         free: false,
                     });
+                    if obs.rules_profile==harpoon_core::rules::damage_runtime::RuleProfile::Rts2026Full {
+                        if let Some(plan)=self.source_torpedo_choice(obs,u).filter(|_|obs.tick-mind.last_salvo_tick>=self.params.salvo_min_interval_s.max(30)) {
+                            cmds.push(Command::Fire{unit:u.id,contact:plan.contact,weapon:plan.weapon,rounds:1});
+                            if !plan.retain_wire {
+                                cmds.push(Command::SetCourse{unit:u.id,course_deg:(u.course_deg+110.)%360.});
+                                cmds.push(Command::SetSpeed{unit:u.id,speed_kts:18.});
+                                mind.state=State::Withdraw;
+                            }else{mind.state=State::OnStation;}
+                            mind.last_salvo_tick=obs.tick;
+                            self.note(u.id,Some(plan.contact),"source_torpedo_order",format!("{}：按本方鱼雷计划请求一枚；{}",u.name,if plan.retain_wire{"保持本方保线意图，未确认实际线状态"}else{"按声明脱离，实际发射由来源门复核"}),format!("{}: request one round from own torpedo plan; preserve declared wire intent without inferring wire status",u.name));
+                        }else{
+                            self.note(u.id,None,"source_torpedo_hold",format!("{}：等待本方明确鱼雷计划、合法档位、管就绪与已确认分配",u.name),format!("{}: hold torpedo release pending an own plan, source setting, tube readiness and known allocation",u.name));
+                        }
+                        self.minds.insert(u.id,mind);
+                        continue;
+                    }
                     let armed=u.weapons.iter().any(|w|w.ammo>0 && matches!(self.kind_of(&w.weapon),Some(WeaponKind::Torpedo|WeaponKind::Ascm|WeaponKind::Slcm)));
                     if !armed {
                         // Exhaustion changes the standing task. Do not keep an
@@ -739,11 +907,10 @@ impl CommandStaff for TacticalStaff {
                             .contacts
                             .iter()
                             .find(|c| c.id == contact)
-                            .map(|c| c.own_in_flight)
-                            .unwrap_or(0);
+                            .and_then(|c| c.own_in_flight);
                         if let Some((weapon, _, ammo)) = self
                             .pick_weapon(u, &[WeaponKind::Torpedo], dist)
-                            .filter(|_| inflight < 4 && obs.tick - mind.last_salvo_tick >= 120)
+                            .filter(|_| inflight.is_some_and(|n|n < 4) && obs.tick - mind.last_salvo_tick >= 120)
                         {
                             cmds.push(Command::Fire {
                                 unit: u.id,
@@ -837,16 +1004,22 @@ impl CommandStaff for TacticalStaff {
                     // Keep automatic air defence unpinned; deliberate surface
                     // salvos use Fire without overriding the air-defence target.
                     cmds.push(Command::ClearTarget { unit: u.id });
-                    let target = self
+                    let source_torpedo=if obs.rules_profile==harpoon_core::rules::damage_runtime::RuleProfile::Rts2026Full {self.source_torpedo_choice(obs,u)}else{None};
+                    let source_weapon=source_torpedo.as_ref().map(|p|p.weapon.clone());
+                    let target = source_torpedo.map(|p|(p.contact,(p.weapon,0.,1)))
+                        .or_else(||self
                         .best_sub_target(obs, u)
                         .and_then(|(c, d)| {
-                            self.pick_weapon(u, &[WeaponKind::AswRocket, WeaponKind::Lwt], d)
+                            let kinds=if obs.rules_profile==harpoon_core::rules::damage_runtime::RuleProfile::Rts2026Full {&[WeaponKind::AswRocket][..]}else{&[WeaponKind::AswRocket,WeaponKind::Lwt][..]};
+                            self.pick_weapon(u, kinds, d)
                                 .map(|w| (c, w))
-                        })
+                        }))
                         .or_else(|| {
-                            self.best_ship_target(obs, u).and_then(|(c, d)| {
+                            if obs.rules_profile==harpoon_core::rules::damage_runtime::RuleProfile::Rts2026Full {
+                                self.plotted_surface_target(obs,u)
+                            } else {self.best_ship_target(obs, u).and_then(|(c, d)| {
                                 self.pick_weapon(u, &[WeaponKind::Ascm], d).map(|w| (c, w))
-                            })
+                            })}
                         })
                         .or_else(|| {
                             self.best_base_target(obs, u).and_then(|(c, d)| {
@@ -858,17 +1031,19 @@ impl CommandStaff for TacticalStaff {
                             .contacts
                             .iter()
                             .find(|c| c.id == contact)
-                            .map(|c| c.own_in_flight)
-                            .unwrap_or(0);
+                            .and_then(|c| c.own_in_flight);
                         if obs.tick - mind.last_salvo_tick
                             >= self.params.surface_salvo_interval_s.max(30)
-                            && inflight < self.params.surface_inflight_cap
+                            && inflight.is_some_and(|n|n < self.params.surface_inflight_cap)
                         {
                             cmds.push(Command::Fire {
                                 unit: u.id,
                                 contact,
+                                rounds: if source_weapon.as_deref()==Some(weapon.as_str())
+                                    ||obs.rules_profile==harpoon_core::rules::damage_runtime::RuleProfile::Rts2026Full
+                                    && self.kind_of(&weapon)==Some(WeaponKind::Ascm) {1}
+                                    else {ammo.min(self.params.surface_salvo_rounds) as u8},
                                 weapon,
-                                rounds: ammo.min(self.params.surface_salvo_rounds) as u8,
                             });
                             mind.last_salvo_tick = obs.tick;
                             self.note(
@@ -898,7 +1073,33 @@ impl CommandStaff for TacticalStaff {
             }
         }
         if let Some(db)=&self.db {self.notes.extend(self.supervision.review_current(obs,db));let (maintenance,notes)=self.supervision.maintenance(obs,db);self.notes.extend(notes);cmds.extend(maintenance);}
-        let cmds=self.coordinate_salvos(obs,cmds);
+        let mut cmds=self.coordinate_salvos(obs,cmds);
+        // Maintenance and previously coordinated orders obey the same own
+        // operation hold as the role loop; observing Blow never grants a new
+        // tactical intent or permission to replace the player's instructions.
+        cmds.retain(|c| !obs.units.iter().any(|u|u.id==c.unit_id()&&(source_blow_in_progress(obs,u)||source_hard_rudder_hold(obs,u))));
+        // Recheck after coordination: a previously queued salvo cannot outlive
+        // its own plot/contact or a newly acquired human reservation.
+        cmds.retain(|c|match c {
+            Command::Fire{unit,contact,weapon,..} if obs.rules_profile==harpoon_core::rules::damage_runtime::RuleProfile::Rts2026Full
+                &&matches!(self.kind_of(weapon),Some(WeaponKind::Torpedo|WeaponKind::Lwt))=>{
+                obs.units.iter().find(|u|u.id==*unit).and_then(|u|self.source_torpedo_choice(obs,u))
+                    .is_some_and(|p|p.contact==*contact&&p.weapon==*weapon)
+            },
+            Command::Fire{unit,contact,weapon,..} if self.kind_of(weapon)==Some(WeaponKind::Ascm)=>{
+                obs.units.iter().find(|u|u.id==*unit).is_some_and(|u|!u.manual_control&&self.source_antiship_order_allowed(obs,u,*contact,weapon))
+            },
+            _=>true,
+        });
+        if obs.rules_profile==harpoon_core::rules::damage_runtime::RuleProfile::Rts2026Full {
+            // Conservative assistant policy, not an inferred source turn rate.
+            // Also cover a previously scheduled order resumed from staff state.
+            for command in &mut cmds {
+                if let Command::Fire{weapon,rounds,..}=command {
+                    if matches!(self.kind_of(weapon),Some(WeaponKind::Ascm|WeaponKind::Torpedo|WeaponKind::Lwt)) {*rounds=(*rounds).min(1);}
+                }
+            }
+        }
         let accepted=if let Some(db)=&self.db {
             let (cmds,notes)=self.supervision.guard(obs,db,cmds);self.notes.extend(notes);cmds
         }else{cmds};
@@ -933,6 +1134,18 @@ pub fn record_notes(world: &mut harpoon_core::World, side: Side, notes: Vec<Staf
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn legacy_params_roundtrip_does_not_add_or_change_raid_policy() {
+        let mut old = serde_json::to_value(super::Params::default()).unwrap();
+        for key in ["surface_salvo_rounds", "surface_salvo_interval_s", "surface_inflight_cap", "strike_wave_size"] {
+            old.as_object_mut().unwrap().remove(key);
+        }
+        let restored: super::Params = serde_json::from_value(old.clone()).unwrap();
+        assert_eq!((restored.surface_salvo_rounds, restored.surface_salvo_interval_s, restored.surface_inflight_cap, restored.strike_wave_size), (2,60,8,4));
+        assert_eq!(serde_json::to_value(restored).unwrap(), old);
+        let current = super::Params::default();
+        assert_eq!(serde_json::from_value::<super::Params>(serde_json::to_value(&current).unwrap()).unwrap(), current);
+    }
     use super::*;
     use harpoon_core::types::ContactId;
     use harpoon_core::world::Contact;

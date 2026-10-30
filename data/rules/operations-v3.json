@@ -22,12 +22,12 @@
       "us_burke_2a_restart":{"catapults":0,"bow_catapults":0,"dual":false,"pads":1,"size":"A","recovery_system":true,"source":"America Navy2025 PDF33/A-30 Aft Pad(1)2; broad hull A-sized; RAST"},
       "us_burke_2a_ti":{"catapults":0,"bow_catapults":0,"dual":false,"pads":1,"size":"A","recovery_system":true,"source":"America Navy2025 PDF33/A-30 Aft Pad(1)2; broad hull A-sized; RAST"},
       "us_zumwalt":{"catapults":0,"bow_catapults":0,"dual":false,"pads":2,"size":"A","stabilizers":2,"recovery_system":true,"source":"America Navy2025 PDF33/A-30 Pad(2)1, RAST; treat A-sized with dual stabilizers"},
-      "cn_001":{"catapults":0,"bow_catapults":0,"dual":false,"size":"A","source":"China Navy2025 PDF10/A-3 angled deck; ski jump"},
-      "cn_002":{"catapults":0,"bow_catapults":0,"dual":false,"size":"A","source":"China Navy2025 PDF10/A-3 angled deck; ski jump"},
+      "cn_001":{"flyoff":true,"catapults":0,"bow_catapults":0,"dual":false,"size":"A","source":"China Navy2025 PDF10/A-3 angled deck; ski jump"},
+      "cn_002":{"flyoff":true,"catapults":0,"bow_catapults":0,"dual":false,"size":"A","source":"China Navy2025 PDF10/A-3 angled deck; ski jump"},
       "cn_003":{"catapults":3,"bow_catapults":2,"dual":false,"size":"A","source":"China Navy2025 PDF10/A-3; deck arrangement not declared dual"}
     },
     "aircraft": {
-      "cn_j15":{"size":2,"rotary":false,"catapult":false,"fmp_low_kts":600,"signature":1,"source":"China Navy2025 PDF51/B-11; basic J15, not J15T"},
+      "cn_j15":{"flyoff":true,"size":2,"rotary":false,"catapult":false,"fmp_low_kts":600,"signature":1,"source":"China Navy2025 PDF51/B-11; basic J15, not J15T"},
       "cn_j15d":{"size":2,"rotary":false,"catapult":false,"fmp_low_kts":600,"signature":1,"source":"China Navy2025 PDF51/B-11; source-estimated variant"},
       "cn_z18f":{"size":2,"rotary":true,"catapult":false,"fmp_low_kts":180,"signature":1,"source":"China Navy2025 PDF66/B-26"},
       "cn_z18j":{"size":2,"rotary":true,"catapult":false,"fmp_low_kts":180,"signature":1,"source":"China Navy2025 PDF66/B-26"},

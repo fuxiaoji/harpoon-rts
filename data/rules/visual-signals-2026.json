@@ -1,0 +1,131 @@
+{
+  "rule_id": "HV2026-5.8.11-visual-signaling",
+  "source": {
+    "book": "14-2.HpnV_Rules_1_Jan_26.pdf",
+    "version": "2026-01-01",
+    "table_pdf_page": 65,
+    "table_printed_page": "5-26",
+    "procedure_pdf_page": 68,
+    "procedure_printed_page": "5-29",
+    "visually_verified": true,
+    "image": "en-065.png"
+  },
+  "range_rows": [
+    {
+      "visibility_percent": 100,
+      "flag_day_kyd": 8,
+      "flash_day_kyd": 16,
+      "night_printed": null,
+      "flash_night_clear_kyd": null,
+      "flash_night_precip_kyd": null
+    },
+    {
+      "visibility_percent": 90,
+      "flag_day_kyd": 7.2,
+      "flash_day_kyd": 14.4,
+      "night_printed": null,
+      "flash_night_clear_kyd": null,
+      "flash_night_precip_kyd": null
+    },
+    {
+      "visibility_percent": 80,
+      "flag_day_kyd": 6.4,
+      "flash_day_kyd": 12.8,
+      "night_printed": null,
+      "flash_night_clear_kyd": null,
+      "flash_night_precip_kyd": null
+    },
+    {
+      "visibility_percent": 70,
+      "flag_day_kyd": 5.6,
+      "flash_day_kyd": 11.2,
+      "night_printed": null,
+      "flash_night_clear_kyd": null,
+      "flash_night_precip_kyd": null
+    },
+    {
+      "visibility_percent": 60,
+      "flag_day_kyd": 4.8,
+      "flash_day_kyd": 9.6,
+      "night_printed": null,
+      "flash_night_clear_kyd": null,
+      "flash_night_precip_kyd": null
+    },
+    {
+      "visibility_percent": 50,
+      "flag_day_kyd": 4,
+      "flash_day_kyd": 8,
+      "night_printed": "20.0",
+      "flash_night_clear_kyd": 20,
+      "flash_night_precip_kyd": 20
+    },
+    {
+      "visibility_percent": 40,
+      "flag_day_kyd": 3.2,
+      "flash_day_kyd": 6.4,
+      "night_printed": "20.0",
+      "flash_night_clear_kyd": 20,
+      "flash_night_precip_kyd": 20
+    },
+    {
+      "visibility_percent": 30,
+      "flag_day_kyd": 2.4,
+      "flash_day_kyd": 4.8,
+      "night_printed": "20.0",
+      "flash_night_clear_kyd": 20,
+      "flash_night_precip_kyd": 20
+    },
+    {
+      "visibility_percent": 20,
+      "flag_day_kyd": 1.6,
+      "flash_day_kyd": 3.2,
+      "night_printed": "20.0",
+      "flash_night_clear_kyd": 20,
+      "flash_night_precip_kyd": 20
+    },
+    {
+      "visibility_percent": 10,
+      "flag_day_kyd": 0.8,
+      "flash_day_kyd": 1.6,
+      "night_printed": "20.0/10.0*",
+      "flash_night_clear_kyd": 20,
+      "flash_night_precip_kyd": 10
+    },
+    {
+      "visibility_percent": 5,
+      "flag_day_kyd": 0.4,
+      "flash_day_kyd": 0.8,
+      "night_printed": "5.0*",
+      "flash_night_clear_kyd": null,
+      "flash_night_precip_kyd": 5
+    },
+    {
+      "visibility_percent": 2,
+      "flag_day_kyd": 0.1,
+      "flash_day_kyd": 0.3,
+      "night_printed": "2.0*",
+      "flash_night_clear_kyd": null,
+      "flash_night_precip_kyd": 2
+    }
+  ],
+  "night_footnote": "Reduced signal range due to nighttime precipitation.",
+  "maximum_characters": 30,
+  "signals_per_board_per_turn": 1,
+  "turn_seconds": 180,
+  "conversion": {
+    "yards_per_nm": 2025.3718285,
+    "yards_per_kyd": 1000
+  },
+  "runtime_policy": "One normal Detection begin closes all current sender/board drafts and commits the source transmission; one delivery after normal sensor-state publication qualifies actual friendly optical stations. Exact duplicate requests merge, differing same-board requests all refuse, previous committed windows remain immutable. Trusted player manual authority transfers only after a real transmission commits, even if reception is unreadable.",
+  "scope": "Actual explicitly installed named/class/side bound optical stations, source table visibility and current qualified open unobstructed rays, finite per-board one<=30ASCII signal each fixed180s turn. No voice/TDL, Contact/FCS, decoded tactical facts, shell stock or physical signal speed. Flag/lamp real Annex fits are not inferred.",
+  "hardware_boundary": "Flags/flag staff are not fabricated SensorKinds or automatically eligible SensorCritical. Known explicit canonical station disabled/pending inputs are consumed; unknown signal staff casualty or lamp backup power is pending. General sensor/radar applicability is not claimed.",
+  "pending": [
+    "unqualified actual LOS/terrain elevation or cloud clearance beyond author clear-ray scope",
+    "unprinted night cells and low-visibility clear-fog versus precipitation starred interpretation",
+    "nonASCII grapheme/character units",
+    "unqualified real device/height/personnel/backup-power fit",
+    "complete signal station damage/repair applicability",
+    "late midphase restoration after the original send tick; no resampling a later world into a past receipt",
+    "enemy interception/decoding and all source procedures beyond declared friendly addressed non-tactical scope"
+  ]
+}

@@ -104,7 +104,7 @@ impl TacticalStaff {
         obs.contacts
             .iter()
             .filter(|c| {
-                c.category == PlatformKind::Aircraft
+                c.category == Some(PlatformKind::Aircraft)
                     && !c.stale
                     && !c.bearing_only
                     && c.quality > 0.4
@@ -118,7 +118,7 @@ impl TacticalStaff {
 
     fn surface_danger(&self, obs: &Observation, point: Vec2, margin: f64) -> bool {
         obs.contacts.iter().any(|c| {
-            c.category == PlatformKind::Ship
+            c.category == Some(PlatformKind::Ship)
                 && !c.stale
                 && !self.sensor_contact(c)
                 && c.quality > 0.25
@@ -127,7 +127,7 @@ impl TacticalStaff {
     }
 
     fn observed_missile_danger(&self,obs:&Observation,point:Vec2)->bool {
-        obs.contacts.iter().any(|c|c.category==PlatformKind::Missile && !c.stale
+        obs.contacts.iter().any(|c|c.category==Some(PlatformKind::Missile) && !c.stale
             && !c.bearing_only && c.quality>0.0 && point.range_to(c.estimate)<45.0)
     }
 
@@ -137,6 +137,64 @@ impl TacticalStaff {
             .filter(|w| w.ammo > 0 && self.kind_of(&w.weapon) == Some(kind))
             .map(|w| self.range_of(&w.weapon))
             .fold(0.0, f64::max)
+    }
+    /// Consume only the source envelope already projected for this own actor.
+    /// Preparing an order does not make the actual release posture ready.
+    fn source_asw_release_ready(obs: &Observation, u: &UnitObs, cmds: &mut Vec<Command>) -> bool {
+        if obs.rules_profile != harpoon_core::rules::damage_runtime::RuleProfile::Rts2026Full {
+            return true;
+        }
+        let Some(aviation) = u
+            .aviation
+            .as_ref()
+            .filter(|v| v["profile"] == "hv2026-rts-v4")
+        else {
+            return false;
+        };
+        let Some(envelope) = aviation.pointer("/aircombat/aerial_torpedo_release") else {
+            return false;
+        };
+        let Some(ready_at) = envelope["ready_at"].as_i64() else {
+            return false;
+        };
+        let Some(max_altitude) = envelope["max_altitude_m"]
+            .as_f64()
+            .filter(|v| v.is_finite() && *v >= 15.)
+        else {
+            return false;
+        };
+        if !u.altitude_m.is_finite() || !u.speed_kts.is_finite() {
+            return false;
+        }
+        let altitude_ready = u.altitude_m >= 15. && u.altitude_m <= max_altitude;
+        if !altitude_ready {
+            // The chosen1000m is an ASW policy altitude inside the own cap,
+            // not an additional adjudication limit or guessed performance.
+            cmds.push(Command::SetAltitude {
+                unit: u.id,
+                altitude_m: max_altitude.min(1000.),
+            });
+        }
+        // Unknown FMP may still allow preparing the known legal altitude;
+        // it cannot supply a guessed speed or permission to release.
+        let Some(max_speed) = envelope["max_speed_kts"]
+            .as_f64()
+            .filter(|v| v.is_finite() && *v >= 0.)
+        else {
+            return false;
+        };
+        let speed_ready = u.speed_kts >= 0. && u.speed_kts <= max_speed;
+        if !speed_ready
+            && (!u.ordered_speed_kts.is_finite()
+                || u.ordered_speed_kts < 0.
+                || u.ordered_speed_kts > max_speed)
+        {
+            cmds.push(Command::SetSpeed {
+                unit: u.id,
+                speed_kts: max_speed,
+            });
+        }
+        altitude_ready && speed_ready && obs.tick >= ready_at
     }
     fn relay_covers(&self,u:&UnitObs,target:&ContactObs)->bool {
         u.sensors.iter().any(|s|s.active&&s.vs_surface.is_some_and(|r|u.pos.range_to(target.estimate)<r.min(harpoon_core::geom::horizon_nm(u.altitude_m,0.0))*0.9))
@@ -256,7 +314,7 @@ impl TacticalStaff {
                 .contacts
                 .iter()
                 .filter(|c| {
-                    c.category == PlatformKind::Ship
+                    c.category == Some(PlatformKind::Ship)
                         && !self.sensor_contact(c)
                         && !c.stale
                         && !c.bearing_only
@@ -412,7 +470,7 @@ impl TacticalStaff {
             if ew.mission.as_deref()!=Some("rtb") {
                 if let Some(jam)=harpoon_core::rules::electronic_warfare::capability(&ew.class) {
                     let esm_ships:Vec<ContactId>=obs.contacts.iter().filter(|c|
-                        !c.stale && !c.bearing_only && c.quality>=0.4 && c.category==PlatformKind::Ship
+                        !c.stale && !c.bearing_only && c.quality>=0.4 && c.category==Some(PlatformKind::Ship)
                         && c.sensors.iter().any(|s| s.contains("esm"))).map(|c|c.id).collect();
                     let (mode,contacts)=if jam.spot_targets>0 && !esm_ships.is_empty() {
                         ("spot", esm_ships.into_iter().take(jam.spot_targets).collect())
@@ -615,7 +673,7 @@ impl TacticalStaff {
                     let missile_danger=self.observed_missile_danger(obs,u.pos);
                     let evade=danger.is_some()||missile_danger;
                     let package_target=self.packages.values().find(|p|p.searcher==Some(u.id)).and_then(|p|p.target);
-                    let ship=obs.contacts.iter().filter(|c|c.category==PlatformKind::Ship && !self.sensor_contact(c) && !c.bearing_only && c.bda_hp_fraction!=Some(0.0)&&package_target.is_none_or(|id|c.id==id))
+                    let ship=obs.contacts.iter().filter(|c|c.category==Some(PlatformKind::Ship) && !self.sensor_contact(c) && !c.bearing_only && c.bda_hp_fraction!=Some(0.0)&&package_target.is_none_or(|id|c.id==id))
                         .min_by(|a,b|u.pos.range_to(a.estimate).total_cmp(&u.pos.range_to(b.estimate)));
                     let reach=u.sensors.iter().filter_map(|s|s.vs_surface).fold(0.0,f64::max).clamp(35.0,120.0)*0.8;
                     let sweep=((obs.tick/240+u.id.0 as i64)%3) as f64-1.0;
@@ -678,9 +736,21 @@ impl TacticalStaff {
                         mind.last_asw_retask=obs.tick;
                     }
                     mind.phase=if danger {Phase::Protect}else{Phase::Patrol};
-                    if let Some((cid, d)) = self.best_sub_target(obs, u).filter(|(_, d)| *d < 6.0) {
+                    if obs.rules_profile==harpoon_core::rules::damage_runtime::RuleProfile::Rts2026Full {
+                        if let Some(plan)=self.source_torpedo_choice(obs,u) {
+                            if Self::source_asw_release_ready(obs,u,cmds) {cmds.push(Command::Fire{unit:u.id,contact:plan.contact,weapon:plan.weapon,rounds:1});}
+                        }else if let Some((cid,d))=self.best_sub_target(obs,u).filter(|(_,d)|*d<6.) {
+                            // Rocket delivery is a distinct source domain; a
+                            // torpedo Plot must not silently become its order.
+                            if let Some((weapon,_,_))=self.pick_weapon(u,&[WeaponKind::AswRocket],d) {
+                                if obs.contacts.iter().find(|c|c.id==cid).is_some_and(|c|c.own_in_flight.is_some_and(|n|n<2))
+                                    &&Self::source_asw_release_ready(obs,u,cmds) {cmds.push(Command::Fire{unit:u.id,contact:cid,weapon,rounds:1});}
+                            }
+                        }
+                    }else if let Some((cid, d)) = self.best_sub_target(obs, u).filter(|(_, d)| *d < 6.0) {
                         if let Some((weapon,_,_))=self.pick_weapon(u,&[WeaponKind::Lwt,WeaponKind::AswRocket],d) {
-                            if obs.contacts.iter().find(|c|c.id==cid).is_some_and(|c|c.own_in_flight<2) {cmds.push(Command::Fire {unit:u.id,contact:cid,weapon,rounds:1});}
+                            if obs.contacts.iter().find(|c|c.id==cid).is_some_and(|c|c.own_in_flight.is_some_and(|n|n<2))
+                                && Self::source_asw_release_ready(obs,u,cmds) {cmds.push(Command::Fire {unit:u.id,contact:cid,weapon,rounds:1});}
                         }
                     } else {
                         cmds.push(Command::ClearTarget { unit: u.id });
@@ -726,7 +796,8 @@ impl TacticalStaff {
         } else {
             30.0
         };
-        value - u.pos.range_to(c.estimate) * 0.08 - c.own_in_flight as f64 * 2.0
+        let Some(known)=c.own_in_flight else{return f64::NEG_INFINITY;};
+        value - u.pos.range_to(c.estimate) * 0.08 - known as f64 * 2.0
             - self.supervision.attacks.get(&c.id).map(|a|a.unconfirmed_batches as f64*value).unwrap_or(0.0)
     }
 
@@ -768,7 +839,7 @@ impl TacticalStaff {
             let mut retargeted=false;
             let confirmed_gone=old.is_some_and(|id|obs.contacts.iter().any(|c|c.id==id&&c.bda_hp_fraction==Some(0.0)));
             if !fresh && (confirmed_gone || obs.tick-last_good>=self.params.strike_retarget_s) {
-                let alternative=obs.contacts.iter().filter(|c|c.category==PlatformKind::Ship && !c.stale
+                let alternative=obs.contacts.iter().filter(|c|c.category==Some(PlatformKind::Ship) && !c.stale
                     && !c.bearing_only && c.quality>=self.params.strike_min_q && !self.sensor_contact(c)
                     && c.bda_hp_fraction!=Some(0.0))
                     .filter(|c|self.supervision.target_allowed(c.id,obs.tick))
@@ -1013,19 +1084,28 @@ impl TacticalStaff {
             // A straggler has a finite rendezvous budget. Once it expires,
             // release a valid in-range element; never extend weapon range.
             let regroup_expired=obs.tick-since>=180;
+            if obs.rules_profile==harpoon_core::rules::damage_runtime::RuleProfile::Rts2026Full
+                && !u.weapons.iter().any(|w|self.kind_of(&w.weapon)==Some(WeaponKind::Ascm)
+                    &&self.source_antiship_order_allowed(obs,u,target.id,&w.weapon)) {
+                self.note(u.id,Some(target.id),"source_antiship_hold",
+                    format!("{}：缺少匹配的本方来源反舰航线或已确认分配，保留挂载并等待指挥官",u.name),
+                    format!("{}: hold source ASCM; matching own plot or known allocation is missing",u.name));
+                return;
+            }
             if (all_in_range || regroup_expired) && u.pos.range_to(target.estimate)<=range*0.95 && u.altitude_m>=release_floor && u.altitude_m <= release_altitude+60.0 {
                 for w in &u.weapons {
                     if w.operational && w.ammo > 0
                         && u.altitude_m>=w.min_launch_altitude_m
                         && w.cooldown_s <= 0.0
                         && self.kind_of(&w.weapon) == Some(WeaponKind::Ascm)
+                        && self.source_antiship_order_allowed(obs,u,target.id,&w.weapon)
                         && u.pos.range_to(target.estimate) <= self.range_of(&w.weapon) * 0.95
                     {
                         cmds.push(Command::Fire {
                             unit: u.id,
                             contact: target.id,
                             weapon: w.weapon.clone(),
-                            rounds: w.ammo.min(4) as u8,
+                            rounds: if obs.rules_profile==harpoon_core::rules::damage_runtime::RuleProfile::Rts2026Full {1}else{w.ammo.min(4) as u8},
                         });
                     }
                 }
@@ -1238,7 +1318,7 @@ fn intercept_estimate(from:Vec2, speed_kts:f64, c:&ContactObs, release_range:f64
         harpoon_core::air::launch_aircraft(&mut w,base,"us_e2d",1,&AirMission::Recon {point:Vec2::new(10.0,0.0)}).unwrap();
         let mut o=harpoon_core::observe(&w,Side::Blue,0,0);o.tick=120;
         let air=o.units.iter().find(|u|u.kind==PlatformKind::Aircraft).unwrap().id;
-        let mut m=track(99,10.0);m.category=PlatformKind::Missile;o.contacts.push(m);
+        let mut m=track(99,10.0);m.category=Some(PlatformKind::Missile);o.contacts.push(m);
         let commands=staff.decide(&o);
         assert!(commands.iter().any(|c|matches!(c,Command::SetAltitude{unit,altitude_m} if *unit==air && *altitude_m==150.0)));
         assert!(staff.take_notes().iter().any(|n|n.unit==air && n.action=="aew_evade"));
@@ -1258,5 +1338,179 @@ fn intercept_estimate(from:Vec2, speed_kts:f64, c:&ContactObs, release_range:f64
         assert!(staff.strike_sortie_reach("cn_h6j")>400.0);
         o.contacts[0].estimate.x=10000.0;o.tick=1000;let mut staff=TacticalStaff::with_db(Side::Blue,staff.db.clone().unwrap());
         assert!(!staff.decide(&o).iter().any(|c|matches!(c,Command::LaunchAircraft{mission:AirMission::Strike{..},..})),"no unlimited-range sortie");
+    }
+
+    fn source_closure_asw_state() -> (TacticalStaff, Observation, EntityId) {
+        let mut db =
+            Database::from_json(include_str!("../../../../database/consolidated.json")).unwrap();
+        // Register the exact source load variant through the same production
+        // database configuration as a v4 scenario, before spawning it. The
+        // observation below deliberately isolates the controller adapter.
+        harpoon_core::rules::aaw2026::configure_database(&mut db);
+        let sc=harpoon_core::scenario_from_json(r#"{"id":"asw-source-adapter","name":"Source ASW adapter","duration_s":1000,"seed":1,
+            "weather":{"visibility_nm":0,"jam":[0,0]},"units":[
+            {"side":"Blue","class":"us_ford","name":"CV","pos":[0,0],"fire_on":false},
+            {"side":"Blue","class":"us_mh60r_mk54x4","name":"MH-60R SOURCE","pos":[0,0],"altitude_m":1000,"speed_kts":0,"fire_on":false}]}"#).unwrap();
+        let world = harpoon_core::load_scenario(sc, db.clone()).unwrap();
+        let mut o = harpoon_core::observe(&world, Side::Blue, 0, 0);
+        o.tick = 100;
+        o.time_s = 100.;
+        o.rules_profile = harpoon_core::rules::damage_runtime::RuleProfile::Rts2026Full;
+        for u in &mut o.units {
+            if let Some(deck) = u.deck.as_mut() {
+                deck.ready.clear();
+                deck.cycling.clear();
+            }
+        }
+        let air = o
+            .units
+            .iter()
+            .find(|u| u.kind == PlatformKind::Aircraft)
+            .unwrap()
+            .id;
+        let u = o.units.iter_mut().find(|u| u.id == air).unwrap();
+        u.mission = Some("asw".into());
+        u.endurance_s = Some(10_000.);
+        // A recorded own-view contract isolates controller consumption; the
+        // core's exact fit, actual Fire and entry timing have separate tests.
+        u.aviation = Some(
+            serde_json::json!({"profile":"hv2026-rts-v4","aircombat":{"aerial_torpedo_release":{
+            "ready_at":100,"remaining_s":0,"max_altitude_m":2000,"rotary_allow_hover":true,"max_speed_kts":70}}}),
+        );
+        let mut target = track(71, 1.);
+        target.category = Some(PlatformKind::Sub);
+        target.class_name = None;
+        target.estimate = Vec2::new(0., 1.);
+        target.own_in_flight = Some(0);
+        o.contacts = vec![target];
+        // This source-posture fixture now carries the explicit own prelaunch
+        // plan required by the new controller contract. It grants no FCS and
+        // does not change any aircraft envelope or prior posture assertion.
+        o.units.iter_mut().find(|u|u.id==air).unwrap().torpedoes=Some(serde_json::json!({
+            "verified":false,"tubes":null,"reserves":null,"reloads":null,"releases":[],
+            "weapon_profiles":{"us_mk54":super::super::torpedo_plot_controller_20261024::public_weapon_profile("us_mk54")},
+            "plans":[{"actor":air,"side":"Blue","contact":71,"weapon":"us_mk54","plotted_at":0,
+                "speed_index":0,"depth_m":0,"enable_run_nm":0,"bearing_deg":null,"spread_deg":[],"cut_wire":false}]}));
+        let mut staff = TacticalStaff::with_db(Side::Blue, db);
+        staff.params.cap_min_size = 0;
+        (staff, o, air)
+    }
+    #[test]
+    fn source_antiship_aircraft_holds_missing_source_plot_while_legacy_keeps_its_release() {
+        for source in [false,true] {
+            let (mut staff,mut o,ids)=searching_package();
+            o.contacts[0].stale=false;o.contacts[0].quality=0.8;o.contacts[0].own_in_flight=Some(0);
+            if source {o.rules_profile=harpoon_core::rules::damage_runtime::RuleProfile::Rts2026Full;}
+            for id in &ids {staff.air_minds.get_mut(id).unwrap().phase=Phase::Attack;}
+            for u in &mut o.units {if ids.contains(&u.id) {u.altitude_m=81.;u.antiship=None;}}
+            let commands=staff.decide(&o);
+            let released=commands.iter().any(|c|matches!(c,Command::Fire{unit,..}if ids.contains(unit)));
+            assert_eq!(released,!source,"v4 aircraft must hold an unsupported source release, without rewriting legacy flight decisions: {commands:?}");
+            assert!(!commands.iter().any(|c|matches!(c,Command::Antiship{..})),"FSM cannot invent the player's enable-run declaration");
+        }
+    }
+    fn source_closure_fires(commands: &[Command], air: EntityId) -> bool {
+        commands.iter().any(
+            |c| matches!(c,Command::Fire{unit,contact,..} if *unit==air&&*contact==ContactId(71)),
+        )
+    }
+    #[test]
+    fn source_closure_asw_prepares_actual_altitude_and_speed_before_source_fire() {
+        let (mut staff, mut o, air) = source_closure_asw_state();
+        let u = o.units.iter_mut().find(|u| u.id == air).unwrap();
+        u.altitude_m = 3000.;
+        u.speed_kts = 140.;
+        u.ordered_speed_kts = 140.;
+        let commands = staff.decide(&o);
+        assert!(
+            !source_closure_fires(&commands, air),
+            "source Fire cannot be submitted before actual altitude/speed satisfy own envelope"
+        );
+        assert!(commands.iter().any(|c|matches!(c,Command::SetAltitude{unit,altitude_m}if *unit==air&&*altitude_m<=2000.&&*altitude_m>60.)),"source ASW must prepare a legal Low altitude");
+        assert!(
+            commands.iter().any(
+                |c| matches!(c,Command::SetSpeed{unit,speed_kts}if *unit==air&&*speed_kts<=70.)
+            ),
+            "source ASW must prepare speed from its own70kt limit"
+        );
+    }
+    #[test]
+    fn source_closure_asw_holds_for_real_drop_clock_and_unknown_source_speed() {
+        for unknown_speed in [false, true] {
+            let (mut staff, mut o, air) = source_closure_asw_state();
+            let u = o.units.iter_mut().find(|u| u.id == air).unwrap();
+            if unknown_speed {
+                u.aviation.as_mut().unwrap()["aircombat"]["aerial_torpedo_release"]
+                    ["max_speed_kts"] = serde_json::Value::Null;
+            } else {
+                u.aviation.as_mut().unwrap()["aircombat"]["aerial_torpedo_release"]["ready_at"] =
+                    serde_json::json!(180);
+            }
+            assert!(
+                !source_closure_fires(&staff.decide(&o), air),
+                "cooldown or unknown source performance cannot become a guessed release"
+            );
+        }
+    }
+    #[test]
+    fn source_closure_sub_picker_rejects_bearing_only_and_nonfinite_locations() {
+        let (staff, mut o, air) = source_closure_asw_state();
+        let u = o.units.iter().find(|u| u.id == air).unwrap().clone();
+        assert_eq!(
+            staff.best_sub_target(&o, &u).map(|(id, _)| id),
+            Some(ContactId(71))
+        );
+        o.contacts[0].bearing_only = true;
+        assert!(
+            staff.best_sub_target(&o, &u).is_none(),
+            "a bearing-only report has no source release location"
+        );
+        o.contacts[0].bearing_only = false;
+        o.contacts[0].estimate.x = f64::NAN;
+        assert!(
+            staff.best_sub_target(&o, &u).is_none(),
+            "nonfinite estimates are not located targets"
+        );
+    }
+    #[test]
+    fn source_closure_asw_unknown_allocation_never_becomes_zero_and_ready_orders_restore() {
+        let (mut staff, mut o, air) = source_closure_asw_state();
+        let db = staff.db.clone().unwrap();
+        let mut resumed: TacticalStaff =
+            serde_json::from_slice(&serde_json::to_vec(&staff).unwrap()).unwrap();
+        resumed.restore_database(db);
+        let commands = staff.decide(&o);
+        let copy = resumed.decide(&o);
+        assert_eq!(
+            serde_json::to_value(&commands).unwrap(),
+            serde_json::to_value(&copy).unwrap()
+        );
+        assert!(
+            source_closure_fires(&commands, air),
+            "positive controller case must actually submit the ready known allocation"
+        );
+        o.tick = 130;
+        o.contacts[0].own_in_flight = None;
+        assert!(
+            !source_closure_fires(&staff.decide(&o), air),
+            "None is unknown underwater survival/allocation, never zero"
+        );
+    }
+    #[test]
+    fn source_closure_legacy_without_source_envelope_retains_its_existing_asw_decision() {
+        let (mut staff, mut o, air) = source_closure_asw_state();
+        o.rules_profile = harpoon_core::rules::damage_runtime::RuleProfile::Rts2026Operations;
+        let u = o.units.iter_mut().find(|u| u.id == air).unwrap();
+        u.aviation = None;
+        u.altitude_m = 3000.;
+        u.speed_kts = 140.;
+        assert!(source_closure_fires(&staff.decide(&o),air),"the source-preparation branch must not rewrite historical non-source controller behavior");
+    }
+    #[test]
+    fn source_closure_asw_profile_does_not_depend_on_a_callsign_keyword() {
+        let (staff, mut o, air) = source_closure_asw_state();
+        let u = o.units.iter_mut().find(|u| u.id == air).unwrap();
+        u.name = "OWN AIRCRAFT".into();
+        assert_eq!(staff.role_for(u),Role::AswScreen,"an explicit own source ASW mission/envelope is a stronger role fact than a callsign spelling");
     }
 }

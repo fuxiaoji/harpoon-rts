@@ -336,9 +336,10 @@ pub fn effective_rules(rules: &[WakeRule]) -> Vec<WakeRule> {
     }
 }
 
-pub fn category_matches(filter: Option<&str>, kind: PlatformKind) -> bool {
+pub fn category_matches(filter: Option<&str>, kind: impl Into<Option<PlatformKind>>) -> bool {
     let Some(filter) = filter else { return true };
     let f = filter.to_ascii_lowercase();
+    let Some(kind)=kind.into() else {return f=="unknown";};
     let actual = match kind {
         PlatformKind::Ship => "surface",
         PlatformKind::Sub => "subsurface",

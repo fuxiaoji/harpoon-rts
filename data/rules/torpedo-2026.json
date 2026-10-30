@@ -1,0 +1,1706 @@
+{
+  "interference": {
+    "rule": "HV2026-7.5.3",
+    "source": "English2026-01-01 PDF79 printed7-4, independently visually reviewed2026-10-25",
+    "distance_yards": 5000,
+    "minimum_active_spread_degrees": 15,
+    "type_identity": "exact stable weapon ID, not equality of capability payloads",
+    "scope": "Unique pair, active enable actually reached, same depth and qualified clear acoustic environment. Multiple contenders or unresolved geometry preserve pending.",
+    "epoch_policy": "Explicit RTS: one synchronized second snapshot, current setting for capture tick, source fastest from next tick, simultaneous approach charged to both weapons with actual common elapsed time.",
+    "meeting_policy": "Source gives no torpedo-on-torpedo terminal, fuze or explosion outcome. Preserve alive bodies and complete pending adjudication, no inferred HP loss or automatic double retirement."
+  },
+  "source": {
+    "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+    "version": "2026-01-01",
+    "visual_verified_pdf_pages": [
+      17,
+      28,
+      74,
+      79,
+      80,
+      109,
+      110,
+      111,
+      112,
+      113,
+      114,
+      115
+    ],
+    "annex": "America Navy2025 PDF84/F2"
+  },
+  "homing": [
+    [
+      [
+        0.4,
+        0.22,
+        0.32,
+        0.18
+      ],
+      [
+        0.6,
+        0.42,
+        0.48,
+        0.34
+      ],
+      [
+        0.7,
+        0.63,
+        0.56,
+        0.5
+      ],
+      [
+        0.8,
+        0.78,
+        0.64,
+        0.63
+      ]
+    ],
+    [
+      [
+        0.4,
+        0.16,
+        0.32,
+        0.13
+      ],
+      [
+        0.6,
+        0.33,
+        0.48,
+        0.26
+      ],
+      [
+        0.7,
+        0.56,
+        0.56,
+        0.45
+      ],
+      [
+        0.8,
+        0.72,
+        0.64,
+        0.58
+      ]
+    ],
+    [
+      [
+        0.4,
+        0.1,
+        0.32,
+        0.08
+      ],
+      [
+        0.6,
+        0.24,
+        0.48,
+        0.19
+      ],
+      [
+        0.7,
+        0.39,
+        0.56,
+        0.31
+      ],
+      [
+        0.8,
+        0.64,
+        0.64,
+        0.51
+      ]
+    ],
+    [
+      [
+        0.4,
+        0.08,
+        0.32,
+        0.06
+      ],
+      [
+        0.6,
+        0.15,
+        0.48,
+        0.12
+      ],
+      [
+        0.7,
+        0.28,
+        0.56,
+        0.22
+      ],
+      [
+        0.8,
+        0.44,
+        0.64,
+        0.35
+      ]
+    ]
+  ],
+  "straight": {
+    "Large": {
+      "1": [
+        [
+          0.25,
+          0.85
+        ],
+        [
+          0.5,
+          0.72
+        ],
+        [
+          1.0,
+          0.38
+        ],
+        [
+          2.0,
+          0.2
+        ],
+        [
+          4.0,
+          0.11
+        ],
+        [
+          6.0,
+          0.07
+        ],
+        [
+          8.0,
+          0.06
+        ],
+        [
+          10.0,
+          0.04
+        ]
+      ],
+      "2": [
+        [
+          0.25,
+          0.85,
+          0.8
+        ],
+        [
+          0.5,
+          0.85,
+          0.52
+        ],
+        [
+          1.0,
+          0.62,
+          0.15
+        ],
+        [
+          2.0,
+          0.37,
+          0.04
+        ],
+        [
+          4.0,
+          0.2,
+          0.01
+        ],
+        [
+          6.0,
+          0.14,
+          0.0
+        ],
+        [
+          8.0,
+          0.09,
+          0.0
+        ],
+        [
+          10.0,
+          0.05,
+          0.0
+        ]
+      ],
+      "3": [
+        [
+          0.25,
+          0.85,
+          0.85,
+          0.73
+        ],
+        [
+          0.5,
+          0.85,
+          0.67,
+          0.37
+        ],
+        [
+          1.0,
+          0.76,
+          0.27,
+          0.06
+        ],
+        [
+          2.0,
+          0.49,
+          0.1,
+          0.01
+        ],
+        [
+          4.0,
+          0.29,
+          0.03,
+          0.0
+        ],
+        [
+          6.0,
+          0.18,
+          0.02,
+          0.0
+        ],
+        [
+          8.0,
+          0.11,
+          0.0,
+          0.0
+        ],
+        [
+          10.0,
+          0.06,
+          0.0,
+          0.0
+        ]
+      ],
+      "4": [
+        [
+          0.25,
+          0.85,
+          0.85,
+          0.79,
+          0.66
+        ],
+        [
+          0.5,
+          0.85,
+          0.75,
+          0.51,
+          0.27
+        ],
+        [
+          1.0,
+          0.85,
+          0.33,
+          0.14,
+          0.02
+        ],
+        [
+          2.0,
+          0.6,
+          0.16,
+          0.03,
+          0.0
+        ],
+        [
+          4.0,
+          0.33,
+          0.06,
+          0.0,
+          0.0
+        ],
+        [
+          6.0,
+          0.21,
+          0.03,
+          0.0,
+          0.0
+        ],
+        [
+          8.0,
+          0.12,
+          0.01,
+          0.0,
+          0.0
+        ],
+        [
+          10.0,
+          0.07,
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "5": [
+        [
+          0.25,
+          0.85,
+          0.85,
+          0.85,
+          0.72,
+          0.59
+        ],
+        [
+          0.5,
+          0.85,
+          0.78,
+          0.58,
+          0.38,
+          0.19
+        ],
+        [
+          1.0,
+          0.85,
+          0.5,
+          0.21,
+          0.07,
+          0.01
+        ],
+        [
+          2.0,
+          0.68,
+          0.21,
+          0.05,
+          0.01,
+          0.0
+        ],
+        [
+          4.0,
+          0.37,
+          0.08,
+          0.01,
+          0.0,
+          0.0
+        ],
+        [
+          6.0,
+          0.24,
+          0.04,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          8.0,
+          0.13,
+          0.03,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          10.0,
+          0.09,
+          0.01,
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "6": [
+        [
+          0.25,
+          0.85,
+          0.85,
+          0.85,
+          0.77,
+          0.68,
+          0.53
+        ],
+        [
+          0.5,
+          0.85,
+          0.82,
+          0.65,
+          0.46,
+          0.32,
+          0.14
+        ],
+        [
+          1.0,
+          0.85,
+          0.6,
+          0.26,
+          0.12,
+          0.03,
+          0.01
+        ],
+        [
+          2.0,
+          0.74,
+          0.25,
+          0.09,
+          0.02,
+          0.0,
+          0.0
+        ],
+        [
+          4.0,
+          0.44,
+          0.11,
+          0.02,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          6.0,
+          0.3,
+          0.06,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          8.0,
+          0.17,
+          0.04,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          10.0,
+          0.1,
+          0.02,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      ]
+    },
+    "Medium": {
+      "1": [
+        [
+          0.25,
+          0.73
+        ],
+        [
+          0.5,
+          0.39
+        ],
+        [
+          1.0,
+          0.2
+        ],
+        [
+          2.0,
+          0.09
+        ],
+        [
+          4.0,
+          0.05
+        ],
+        [
+          6.0,
+          0.03
+        ],
+        [
+          8.0,
+          0.02
+        ],
+        [
+          10.0,
+          0.01
+        ]
+      ],
+      "2": [
+        [
+          0.25,
+          0.85,
+          0.5
+        ],
+        [
+          0.5,
+          0.63,
+          0.15
+        ],
+        [
+          1.0,
+          0.36,
+          0.04
+        ],
+        [
+          2.0,
+          0.17,
+          0.01
+        ],
+        [
+          4.0,
+          0.11,
+          0.0
+        ],
+        [
+          6.0,
+          0.07,
+          0.0
+        ],
+        [
+          8.0,
+          0.04,
+          0.0
+        ],
+        [
+          10.0,
+          0.03,
+          0.0
+        ]
+      ],
+      "3": [
+        [
+          0.25,
+          0.85,
+          0.62,
+          0.39
+        ],
+        [
+          0.5,
+          0.77,
+          0.28,
+          0.06
+        ],
+        [
+          1.0,
+          0.49,
+          0.1,
+          0.01
+        ],
+        [
+          2.0,
+          0.25,
+          0.02,
+          0.0
+        ],
+        [
+          4.0,
+          0.15,
+          0.01,
+          0.0
+        ],
+        [
+          6.0,
+          0.09,
+          0.0,
+          0.0
+        ],
+        [
+          8.0,
+          0.05,
+          0.0,
+          0.0
+        ],
+        [
+          10.0,
+          0.03,
+          0.0,
+          0.0
+        ]
+      ],
+      "4": [
+        [
+          0.25,
+          0.85,
+          0.67,
+          0.42,
+          0.28
+        ],
+        [
+          0.5,
+          0.85,
+          0.34,
+          0.14,
+          0.02
+        ],
+        [
+          1.0,
+          0.59,
+          0.15,
+          0.03,
+          0.0
+        ],
+        [
+          2.0,
+          0.31,
+          0.04,
+          0.0,
+          0.0
+        ],
+        [
+          4.0,
+          0.16,
+          0.02,
+          0.0,
+          0.0
+        ],
+        [
+          6.0,
+          0.1,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          8.0,
+          0.06,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          10.0,
+          0.03,
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "5": [
+        [
+          0.25,
+          0.85,
+          0.74,
+          0.56,
+          0.38,
+          0.21
+        ],
+        [
+          0.5,
+          0.85,
+          0.35,
+          0.22,
+          0.07,
+          0.01
+        ],
+        [
+          1.0,
+          0.67,
+          0.2,
+          0.05,
+          0.01,
+          0.0
+        ],
+        [
+          2.0,
+          0.38,
+          0.06,
+          0.01,
+          0.0,
+          0.0
+        ],
+        [
+          4.0,
+          0.2,
+          0.02,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          6.0,
+          0.11,
+          0.01,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          8.0,
+          0.07,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          10.0,
+          0.04,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "6": [
+        [
+          0.25,
+          0.85,
+          0.81,
+          0.7,
+          0.53,
+          0.34,
+          0.1
+        ],
+        [
+          0.5,
+          0.85,
+          0.37,
+          0.27,
+          0.13,
+          0.03,
+          0.01
+        ],
+        [
+          1.0,
+          0.74,
+          0.25,
+          0.08,
+          0.02,
+          0.0,
+          0.0
+        ],
+        [
+          2.0,
+          0.43,
+          0.08,
+          0.01,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          4.0,
+          0.23,
+          0.03,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          6.0,
+          0.13,
+          0.01,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          8.0,
+          0.08,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          10.0,
+          0.04,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      ]
+    },
+    "Small": {
+      "1": [
+        [
+          0.25,
+          0.44
+        ],
+        [
+          0.5,
+          0.21
+        ],
+        [
+          1.0,
+          0.1
+        ],
+        [
+          2.0,
+          0.05
+        ],
+        [
+          4.0,
+          0.03
+        ],
+        [
+          6.0,
+          0.02
+        ],
+        [
+          8.0,
+          0.0
+        ],
+        [
+          10.0,
+          0.0
+        ]
+      ],
+      "2": [
+        [
+          0.25,
+          0.68,
+          0.19
+        ],
+        [
+          0.5,
+          0.37,
+          0.04
+        ],
+        [
+          1.0,
+          0.19,
+          0.01
+        ],
+        [
+          2.0,
+          0.09,
+          0.0
+        ],
+        [
+          4.0,
+          0.04,
+          0.0
+        ],
+        [
+          6.0,
+          0.03,
+          0.0
+        ],
+        [
+          8.0,
+          0.02,
+          0.0
+        ],
+        [
+          10.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "3": [
+        [
+          0.25,
+          0.82,
+          0.32,
+          0.08
+        ],
+        [
+          0.5,
+          0.5,
+          0.1,
+          0.01
+        ],
+        [
+          1.0,
+          0.27,
+          0.03,
+          0.0
+        ],
+        [
+          2.0,
+          0.14,
+          0.01,
+          0.0
+        ],
+        [
+          4.0,
+          0.07,
+          0.0,
+          0.0
+        ],
+        [
+          6.0,
+          0.04,
+          0.0,
+          0.0
+        ],
+        [
+          8.0,
+          0.02,
+          0.0,
+          0.0
+        ],
+        [
+          10.0,
+          0.01,
+          0.0,
+          0.0
+        ]
+      ],
+      "4": [
+        [
+          0.25,
+          0.85,
+          0.36,
+          0.19,
+          0.06
+        ],
+        [
+          0.5,
+          0.61,
+          0.16,
+          0.03,
+          0.01
+        ],
+        [
+          1.0,
+          0.34,
+          0.05,
+          0.0,
+          0.0
+        ],
+        [
+          2.0,
+          0.18,
+          0.01,
+          0.0,
+          0.0
+        ],
+        [
+          4.0,
+          0.08,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          6.0,
+          0.04,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          8.0,
+          0.03,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          10.0,
+          0.01,
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "5": [
+        [
+          0.25,
+          0.85,
+          0.43,
+          0.26,
+          0.19,
+          0.07
+        ],
+        [
+          0.5,
+          0.69,
+          0.22,
+          0.06,
+          0.02,
+          0.01
+        ],
+        [
+          1.0,
+          0.41,
+          0.07,
+          0.01,
+          0.0,
+          0.0
+        ],
+        [
+          2.0,
+          0.22,
+          0.02,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          4.0,
+          0.11,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          6.0,
+          0.05,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          8.0,
+          0.03,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          10.0,
+          0.01,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "6": [
+        [
+          0.25,
+          0.85,
+          0.51,
+          0.3,
+          0.27,
+          0.24,
+          0.02
+        ],
+        [
+          0.5,
+          0.75,
+          0.26,
+          0.09,
+          0.05,
+          0.02,
+          0.01
+        ],
+        [
+          1.0,
+          0.47,
+          0.1,
+          0.02,
+          0.01,
+          0.0,
+          0.0
+        ],
+        [
+          2.0,
+          0.25,
+          0.03,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          4.0,
+          0.14,
+          0.01,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          6.0,
+          0.06,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          8.0,
+          0.03,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          10.0,
+          0.02,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      ]
+    },
+    "VSmall": {
+      "1": [
+        [
+          0.25,
+          0.24
+        ],
+        [
+          0.5,
+          0.12
+        ],
+        [
+          1.0,
+          0.07
+        ],
+        [
+          2.0,
+          0.03
+        ],
+        [
+          4.0,
+          0.02
+        ],
+        [
+          6.0,
+          0.01
+        ],
+        [
+          8.0,
+          0.0
+        ],
+        [
+          10.0,
+          0.0
+        ]
+      ],
+      "2": [
+        [
+          0.25,
+          0.42,
+          0.06
+        ],
+        [
+          0.5,
+          0.23,
+          0.02
+        ],
+        [
+          1.0,
+          0.13,
+          0.0
+        ],
+        [
+          2.0,
+          0.07,
+          0.0
+        ],
+        [
+          4.0,
+          0.04,
+          0.0
+        ],
+        [
+          6.0,
+          0.02,
+          0.0
+        ],
+        [
+          8.0,
+          0.01,
+          0.0
+        ],
+        [
+          10.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "3": [
+        [
+          0.25,
+          0.56,
+          0.13,
+          0.03
+        ],
+        [
+          0.5,
+          0.33,
+          0.04,
+          0.01
+        ],
+        [
+          1.0,
+          0.18,
+          0.01,
+          0.0
+        ],
+        [
+          2.0,
+          0.1,
+          0.0,
+          0.0
+        ],
+        [
+          4.0,
+          0.05,
+          0.0,
+          0.0
+        ],
+        [
+          6.0,
+          0.03,
+          0.0,
+          0.0
+        ],
+        [
+          8.0,
+          0.01,
+          0.0,
+          0.0
+        ],
+        [
+          10.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "4": [
+        [
+          0.25,
+          0.66,
+          0.2,
+          0.06,
+          0.03
+        ],
+        [
+          0.5,
+          0.41,
+          0.07,
+          0.02,
+          0.01
+        ],
+        [
+          1.0,
+          0.24,
+          0.02,
+          0.0,
+          0.0
+        ],
+        [
+          2.0,
+          0.13,
+          0.01,
+          0.0,
+          0.0
+        ],
+        [
+          4.0,
+          0.06,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          6.0,
+          0.04,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          8.0,
+          0.02,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          10.0,
+          0.01,
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "5": [
+        [
+          0.25,
+          0.74,
+          0.25,
+          0.12,
+          0.09,
+          0.02
+        ],
+        [
+          0.5,
+          0.49,
+          0.1,
+          0.04,
+          0.02,
+          0.01
+        ],
+        [
+          1.0,
+          0.29,
+          0.03,
+          0.01,
+          0.0,
+          0.0
+        ],
+        [
+          2.0,
+          0.16,
+          0.01,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          4.0,
+          0.08,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          6.0,
+          0.05,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          8.0,
+          0.03,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          10.0,
+          0.01,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "6": [
+        [
+          0.25,
+          0.8,
+          0.29,
+          0.15,
+          0.11,
+          0.04,
+          0.01
+        ],
+        [
+          0.5,
+          0.55,
+          0.14,
+          0.06,
+          0.03,
+          0.02,
+          0.0
+        ],
+        [
+          1.0,
+          0.33,
+          0.05,
+          0.02,
+          0.01,
+          0.0,
+          0.0
+        ],
+        [
+          2.0,
+          0.19,
+          0.02,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          4.0,
+          0.1,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          6.0,
+          0.05,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          8.0,
+          0.03,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          10.0,
+          0.01,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      ]
+    }
+  },
+  "acquisition_yards": [
+    [
+      500,
+      300
+    ],
+    [
+      1000,
+      500
+    ],
+    [
+      2000,
+      1000
+    ],
+    [
+      4000,
+      2000
+    ]
+  ],
+  "angle_offsets": {
+    "Gyro1": 0,
+    "Gyro2": 45,
+    "Passive": 90,
+    "ActivePassive": 90,
+    "Wire": 120,
+    "DualWire": 120,
+    "Shkval": 10
+  },
+  "wire": [
+    [
+      10,
+      0,
+      0.15
+    ],
+    [
+      15,
+      0.25,
+      0.6
+    ],
+    [
+      20,
+      0.5,
+      0.8
+    ],
+    [
+      null,
+      1,
+      1
+    ]
+  ],
+  "wire_launch": 0.2,
+  "wire_reattack": 0.4,
+  "depth_limits_m": [
+    25,
+    50,
+    100,
+    200,
+    300,
+    400,
+    500,
+    600,
+    750,
+    900,
+    1050,
+    1200
+  ],
+  "hardkill": {
+    "RBU": [
+      0.05,
+      0.03
+    ],
+    "RKPTZ1": [
+      0.2,
+      0.1
+    ],
+    "ATT1": [
+      0.25,
+      0.1
+    ],
+    "ATT2": [
+      0.35,
+      0.15
+    ]
+  },
+  "weapons": {
+    "us_mk48": {
+      "source": "America Navy2025 PDF84/F2 Mk48 Mod7 CBASS",
+      "guidance": "DualWire",
+      "generation": 4,
+      "settings": [
+        {
+          "speed_kts": 65,
+          "range_nm": 15
+        },
+        {
+          "speed_kts": 40,
+          "range_nm": 22.6
+        },
+        {
+          "speed_kts": 28,
+          "range_nm": 25
+        }
+      ],
+      "max_depth_m": 900,
+      "shallow_water_capable": true,
+      "surface": true,
+      "submarine": true
+    },
+    "us_mk54": {
+      "source": "America Navy2025 PDF84/F2 Mk54 mod0/1",
+      "guidance": "ActivePassive",
+      "generation": 4,
+      "settings": [
+        {
+          "speed_kts": 45,
+          "range_nm": 6
+        },
+        {
+          "speed_kts": 30,
+          "range_nm": 8
+        }
+      ],
+      "max_depth_m": 600,
+      "shallow_water_capable": true,
+      "surface": false,
+      "submarine": true
+    },
+    "ru_65k": {
+      "source": "Russia Navy2025 PDF90/F-1 exact65-76A Kit; PDF91/F-2 remarkE. Historical service1991-2002; explicit scenario tube/offset binding required.",
+      "guidance": "Wake",
+      "generation": 3,
+      "settings": [
+        {
+          "speed_kts": 50,
+          "range_nm": 27
+        }
+      ],
+      "max_depth_m": 25,
+      "shallow_water_capable": false,
+      "surface": true,
+      "submarine": false,
+      "max_sea_state": 4
+    }
+  },
+  "constants": {
+    "yards_to_nm": 0.0004937365010799136,
+    "cone_half_angle_deg": 60,
+    "straight_attack_radius_nm": 0.25,
+    "wake_progress": 0.75,
+    "wake_evasion_add": 0.05,
+    "wake_placement_modifier": 1,
+    "wake_reattack_past_yards": 500,
+    "wake_reattack_right_turn_deg": 180,
+    "wake_evasion_minimum_kts": 25,
+    "wake_evasion_minimum_turn_deg": 90,
+    "wake_towed_generations": [
+      3,
+      4
+    ],
+    "wake_placement_group_tactical_seconds": 180,
+    "air_search_diameter_yards": 150,
+    "air_search_endurance_yards": 500,
+    "reattack_past_yards": 1000,
+    "reattack_diameter_yards": [
+      500,
+      500,
+      1000,
+      1000
+    ]
+  },
+  "adaptations": [
+    "180-second rolling Tactical Turn for reload and wire checks; continuous geometric search uses declared source radii.",
+    "An explicit scenario solution binding is permitted for isolated rule fixtures; normal contact quality is never promoted to Good/Fair/Poor.",
+    "Missing target noise/coating/layer environment or platform tube configuration blocks the affected attack/admission adjudication; H1 self-contained empty-water physics does not require its original target to remain alive or retain metadata.",
+    "Straight spread keeps a stable first-projectile salvo ID and is moved once per tick; relative swept paths implement proportional movement. Default danger radius0.25nm; optional variable Danger Zone table remains disabled.",
+    "The source gives a salvo hit count but no projectile identities. Assign hits by closest proportional approach then stable ID; this RTS identity choice does not change the source die or hit count.",
+    "Hidden true target depth and foil-borne state do not determine release admission; source maximum depth and immunity remain authoritative in acquisition/terminal collision."
+  ],
+  "submerged_launch": {
+    "source": "HV2026 PDF115/10-6 section10.3; PDF28/3-6 section3.2.1 depth bands",
+    "max_depth_m": 50,
+    "min_speed_kts": 3,
+    "max_speed_kts": 10,
+    "requires_submerged": true,
+    "scope": "Necessary submerged missile/standoff envelope; source launcher fit/load coverage remains incomplete"
+  },
+  "target_aspects": {
+    "source": "HV2026 PDF17/2-1 section2.1 physicalC/D bothSmall; PDF111/10-2 Target Aspects",
+    "broad": [
+      "Large",
+      "Medium",
+      "Small",
+      "Small",
+      "VSmall"
+    ],
+    "quarter": [
+      "Medium",
+      "Small",
+      "VSmall",
+      "VSmall",
+      "VSmall"
+    ],
+    "narrow": [
+      "Small",
+      "VSmall",
+      "VSmall",
+      "VSmall",
+      "VSmall"
+    ]
+  },
+  "execution_revision": {
+    "revision": "2026-10-25-source-guidance-opportunity-endurance-arrival-v17",
+    "initial_acquisition_a1": {
+      "source": "English2026 PDF74/6-6 section6.3.8; PDF79-80/7-4-5 sections7.5.3,7.5.6,7.5.7; PDF113-114/10-4-5 sections10.2.4-5. First non-original eligible opportunity after failed original Placement; not a reattack Placement.",
+      "policy_id": "A1-single-opportunity-radial-coplanar-swept-domain-next-tick-fast-precommand-reaction-v4",
+      "scope": "Initial failed aerial Placement,non-wire enable0 acoustic Flight. One complete source-bound non-original submarine opportunity during a whole coplanar radial tick,clear no-layer/nonreverberant water,uncoated target. Actual saved horizontal and depth Motion must prove first eligibility and continued range/cone/depth eligibility at epoch end. Transient entry/exit,unknown,multiple,vertical or circle-transition competitors retain full referee epoch evidence; transient candidates cannot be ignored to choose a stable one. Source-proven horizontal cone exclusions continue physical H1. No speed or author-class-prefix special case defines this domain.",
+      "rts_conventions": "The simultaneous selection epoch is the current one-second tick,an explicit RTS adaptation of same-Tactical-Turn selection rather than a claim that180second collection is implemented. Solve first eligible relative-Motion range/cone time,but inspect every qualified/unknown competitor before choosing. Capture tick completes all old-setting physical motion/endurance; fastest-setting homing starts on the following tick. Preserve spent endurance fraction when changing source speed/range settings.",
+      "epoch_boundaries": "Only the saved real entry-resolution tick with zero usable time checks current candidate positions as an instantaneous interval; pre-entry Motion cannot become a future search path. Immediate potential candidates still require referee adjudication,not an unconditional entry bypass. Every positive-time epoch retains the complete native horizontal/depth sweep. An end depth beyond source maximum excludes a candidate only when finite matching current-epoch DepthMotion proves both ends beyond maximum; missing history and599to602m across a600m limit cannot discard a competitor.",
+      "domain_sweep": "Instantaneous entry uses current combat domain only. A positive-time epoch of a real submarine must retain any underwater/surface portion demonstrated by its native matching DepthMotion; a surfaced endpoint cannot hide its earlier underwater competitor. Missing valid depth history proves neither domain absent. This only preserves complete referee acquisition pending: automatic A1 capture still requires its actual end domain Sub and the complete coplanar subset. The weapon surface/submarine capabilities and source damage columns are never broadened.",
+      "defender_reaction": "English2026 PDF114/10-5 section10.2.5 measures evasion after the defender detected the torpedo. Native tick begin separately preserves original-target f.threat and actual captured-target AcquisitionRecord.threat before any reaction commands/Movement,even if the original record already exists. A detected captured defender without that source-ordered baseline remains pending on direct advance; a postmovement pose must never replace its precommand baseline. Existing Ph cells,ACM generations,attack random identity and original release/Placement are unchanged.",
+      "persistence_privacy": "Private AcquisitionRecord separates actual captured target from original release target/CID/order/failed Placement/D6/pass. Capture adds no random roll or new Placement. Complete World retains physical depth snapshots,capture time,mode,setting transition,actual projectile owner side and first terminal result. Actual damage uses that saved projectile side even when the launcher disappears; no default Blue side is inferred. All capture/probability/raw dice/actual target evidence is Referee; own release declarations and unknown physical status stay unchanged.",
+      "first_attack": "Use existing source homing probability and annex damage on actual arrival once. Native10.2.5.attack:<pass> identity is unchanged. A miss saves its D100/result and1000yd Past declaration pending the separate source reattack procedure; it cannot reroll or attack again next tick. This subset does not close general vertical tracking,opportunity weighting,same-type5000yd terminal effects,seabed interaction or allR054."
+    },
+    "helical_h1": {
+      "source": "English2026 PDF79/7-4 section7.5.3; physical depth anchors PDF28/3-6. Parent-approved RTS conventions are identified separately from source constants.",
+      "policy_id": "H1-radial-right-500-clock-band2-first-ascent-swept-v2",
+      "bands_per_circle": 2,
+      "source_facts": "Initial aerial acoustic search centered on actual water entry,150yd diameter,500yd endurance per circle,Shallow start,two depth bands each circle,max-depth ascent.",
+      "rts_conventions": "After the unchanged entry-tick attempt, move continuously along saved declared entry heading for one radius75yd at selected rated speed,charging the actual radial distance. Initial circle turns right. A circle takes500yd/selectedSpeed time while tracing150pi yd on the map; selected speed remains the source endurance/noise setting. Continuous source-band coordinates advance2per circle; reflect at exact source max depth without resetting the clock. Partial fuel/time boundaries retain only affordable motion.",
+      "limits": "Initial non-wire acoustic aerial Flights with declared Shallow25<depth<=50,enable0,source max deeper than50and within finite1200m anchors,source water deeper than max. No live launcher/primary metadata dependency. Possible acquisition/interference uses the actual current-tick saved candidate Motion segment expanded by this weapon's affordable travel,not just a candidate endpoint. Missing history or a moving spawn's degenerate Motion uses a local full-tick physical speed-cap envelope; a missing finite bound preserves complete referee pending instead of declaring an unknown path empty. No target selection or attack is inferred. First upward Shallow return remains full referee pending. Legacy pending is never silently resumed.",
+      "privacy": "Physical circle/depth/endurance/progress/candidates and all source dice remain Referee. Own release declarations and unreported physical status remain unchanged/unknown. This is a partial R054 physical subset, not complete acquisition,opportunity,multiple-target,standoff,reattack or resume support."
+    },
+    "wire_evidence_visibility": "Raw source_launch quality/launch_wire_d100/wire_intact and periodic wire_check d100/probability/intact remain Referee evidence. Actual own WeaponsRelease, ammunition/tube declarations and accepted wire orders stay public to the owner; exact qualified DualWire feedback remains incomplete and is not inferred from the raw physical wire flag. This execution revision changes v4 replay fingerprints; v1-v3 tables are unchanged.",
+    "airdrop_entry": "HV2026-9.7.1-ENTRY retains actual entry tick/position/course and one resolution timestamp. After all entry/interference registrations,9.7.1 overrides ordinary10.2.4 half-run timing for the first aerial attack only. Successful source placement plus actual acquisition/domain/depth/immunity resolves10.2.5 immediately at the unteleported entry point; source10.placement:<id>:0/10.2.5.attack:0 identities,quality/modifiers,Ph and annex damage remain unchanged. Failed/no-eligible entry enters only the explicitly bound H1 physical subset with its original Placement/D6/pass. Unsupported declaration/environment,possible acquisition/interference and the first upward Shallow boundary preserve full referee pending. Immediate-miss source reattack and complete search remain outside H1.",
+    "asw_admission": "Known own target domain/location, own source solution and own release envelope admit fire; true target alive/class is consumed only after release. Physical domain still prevents a sub-only weapon from damaging a surfaced ship.",
+    "wake": "Explicit authored width, lifetime and prehistory; actual swept crossing;75percent made-good follows chronological contiguous wake segments. A single effective Gen3/4 towed object consumes a separate ACM-only die; successful seduction destroys both, otherwise an independent base/evasion-only+0.05 attack die reaches damage. Detected25kt+90deg evasion and500yd right180deg return use source constants. Stable pass records save raw referee dice. A real other-ship trajectory must cross an already-existing valid followed wake, and this weapon must physically encounter its local junction before the complete flight is held for referee adjudication; nearby ships, branches elsewhere and crossings behind it do not trigger a global guard. Multiple eligible towed priority, other-vessel retarget, failed placement, missing geometry and Poor reattack ambiguity remain explicit pending.",
+    "wake_placement": "Source6.3.8/10.2.4 half the initial own-reported firing range is preserved; the first continuous1-second movement tick crossing that threshold rolls initial placement independently of seeker activation, and successful placement alone never grants homing before a physical wake crossing. Crossing before completed placement has no reconciled combined procedure and saves the full flight pending without early dice.10.2.7 actual reattack reacquisition repeats placement. Native random identities and source Ph are unchanged.",
+    "wake_placement_group": "Before a placement die, stable launch records are grouped by same shooter, same weapon ID and launch_tick.div_euclid(180). More than one known launch, or absent launch metadata, saves referee pending instead of guessing independent or common Wake dice. Hidden retirement never shrinks this cohort. Future RTS fire orders cannot be predicted: later same-turn launches join the unresolved group without re-adjudicating an earlier recorded single launch. Full same-type placement grouping and changed-wake paths remain incomplete.",
+    "own_status": "Own launch declarations and source tube inventory are separate from underwater referee position, homing phase and survival. Missing qualified reports produce explicit unknown counts, preserved after hidden retirement.",
+    "wire_command_receipt": "An allowed own wire order is recorded and acknowledged independently of secret projectile cleanup; physical application only occurs when the body exists. Source wire connection qualifications unchanged.",
+    "release_contact_association": "Contact projections use only the saved release ContactId. A new track cannot inherit another track's declaration through the referee EntityId. Historical flights without an original declaration retain unknown contact in the own platform log.",
+    "physical_tube_sharing": "Explicit source physical tube IDs share the same loaded item, reserve and servicing clock between torpedo and mine rules; no class-inferred IDs or duplicate magazines.",
+    "d100_comparison": "Compare D100/100 to the printed source decimal Ph; multiplying0.29 or0.58 by100 can round below29 or58. Source probabilities unchanged.",
+    "straight_pipeline": "Stable spread identity, proportional relative sweep and source one-die multi-hit table; surviving members split only after a nonzero hit.",
+    "hidden_target_admission": "Own source declarations and known target domain admit release; enemy true depth and foil state remain physical acquisition/terminal restrictions.",
+    "pending_actual_target": "Referee pending names the current unique mutual partner, then captured opportunity, then A1 target. Multi-competitor groups keep the original assignment only as scalar context and preserve all actual members, never choose by ID. Immutable launch/CID/original assignment are not rewritten. Existing pending evidence is never overwritten.",
+    "generic_endurance_arrival": "Source-setting remaining fraction limits every actual generic Run/Search/Past/Locked step; no extra final full second or fuel>1. Locked motion and its source terminal die require actual physical arrival in the same-plane declared subset. The exact affordable endpoint may resolve its original terminal die; a miss there exhausts before another Past/Search step. Entry remains the separate immediate9.7.1 procedure. Geometric1e-9nm and fractional1e-12 are numerical tolerances, not new weapon performance.",
+    "wake_endurance": "English2026 PDF80/7-5 section7.5.5:75percent made-good represents zigzag at source attack speed. Charge the whole paid engine epoch at that speed, not net displacement from the launcher or discounted75percent made-good. Returning through a source500yd/180deg reattack cannot replenish fuel. The last epoch is capped by remaining source range; position is committed before exhaustion and actual affordable arrival can resolve its source terminal. Within the established1-second RTS mapping, a short Past-to-turn transition consumes its paid epoch; no unspent fractional epoch is given as free follow movement."
+  },
+  "own_status": {
+    "source": "English2026 section7.5.4 PDF79-80/7-4--7-5 and10.1 PDF110/10-1; repository side-observation boundary",
+    "rule_ids": [
+      "R-TORP-OWN-STATUS",
+      "R-TORP-OWN-TUBE-LOG"
+    ],
+    "reload_seconds": 180,
+    "change_load_seconds": 540,
+    "single_wire": "May issue course/speed/depth/enable commands; no receive-status grant in this passage.",
+    "dual_wire": "May receive status including target location while connected; report precision, freshness and target-localization error remain unimplemented, so no exact body or target coordinates are projected.",
+    "unreported_survival": "unknown",
+    "raw_projectile_unit_projection": false,
+    "physical_tube_ids": "Explicit source/scenario mapping only; absence blocks shared-tube deployment.",
+    "inventory_scope": "Loaded tubes, physical reserves and already reserved reloads; legacy mount ammo is a distinct aggregate, not an inferred initial tube fit."
+  }
+}

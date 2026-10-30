@@ -15,7 +15,7 @@
     system_repair: pair('受损系统恢复','Damaged systems repaired'),
     towed_array_deployed: pair('拖曳声纳已展开','Towed sonar deployed'),
     towed_array_retracted: pair('拖曳声纳已收回','Towed sonar retracted'),
-    battery_low: pair('潜艇电量不足','Submarine battery low'),
+    battery_low: pair('历史电池模型：电量不足','Historical battery model: low charge'),
     sonobuoy_laid: pair('声纳浮标已布放','Sonobuoy deployed'),
     sonobuoy_expired: pair('声纳浮标已失效','Sonobuoy expired'),
     dogfight_merge: pair('航空器进入近距缠斗','Aircraft enter a dogfight'),
@@ -40,7 +40,7 @@
     system_repair: pair('记录中列出的受损系统得到修复；系统恢复与舰体耐久是不同指标。','The listed damaged systems recovered. System condition and hull durability are separate measures.'),
     towed_array_deployed: pair('满足当前引擎的低速与部署时间条件后，拖曳阵列自动投入工作。','The towed array deployed after the engine’s low-speed and deployment-time conditions were met.'),
     towed_array_retracted: pair('航速超过当前引擎的收回条件，拖曳阵列被收回。','The towed array retracted after speed exceeded the engine’s operating condition.'),
-    battery_low: pair('常规潜艇电池进入低电量状态，当前最大航速受到限制。','A conventional submarine has low battery and a reduced maximum speed.'),
+    battery_low: pair('这是旧规则版本的近似低电量事件，不是v4来源电池裁决；v4以本方battery_state为准，缺失的来源数值仍待裁定。','This is a historical approximate low-battery event, not v4 source battery adjudication. Under v4 use own battery_state; missing source values remain unadjudicated.'),
     sonobuoy_laid: pair('己方航空器布放了有工作寿命的声纳浮标，以维持水下探测。','A friendly aircraft placed a finite-life sonobuoy to support underwater detection.'),
     sonobuoy_expired: pair('这枚声纳浮标已超过工作寿命，不能再继续提供探测。','This sonobuoy has reached the end of its working life and no longer provides detection.'),
     dogfight_merge: pair('航空器进入近距交战状态，后续交错攻击由现有缠斗机制推进。','Aircraft entered close combat; subsequent firing passes are advanced by the dogfight subsystem.'),
@@ -90,7 +90,7 @@
       [/^damage control extinguished the fire on (.+) \(dc_progress ([\d.]+)\)$/,'$1 的火灾已扑灭；损管进度累计 $2。'],
       [/^damage control contained flooding on (.+) \(dc_progress ([\d.]+)\)$/,'$1 的进水已控制；损管进度累计 $2。'],
       [/^damage control restored (.+) on (.+); systems now mobility ([\d.]+), radar ([\d.]+), sonar ([\d.]+), fire_control ([\d.]+)$/,(_,systems,name,m,r,s,f)=>`${name} 修复了 ${systems.replace(/mobility/g,'机动').replace(/fire_control/g,'火控').replace(/radar/g,'雷达').replace(/sonar/g,'声纳')}；当前能力比例：机动 ${m}、雷达 ${r}、声纳 ${s}、火控 ${f}。1.00表示完整能力，不是舰体耐久。`],
-      [/^battery ([\d.]+)% below ([\d.]+)%; max speed halved to ([\d.]+) kt$/,'电池剩余 $1%，低于 $2% 阈值；最大航速减半至 $3 节。'],
+      [/^battery ([\d.]+)% below ([\d.]+)%; max speed halved to ([\d.]+) kt$/,'历史模型：电池剩余 $1%，低于 $2% 阈值；当时最大航速减半至 $3 节。此阈值不是v4来源规则。'],
       [/^towed array streamed after ([\d.]+) s below ([\d.]+) kt \(speed ([\d.]+) kt\)$/,'持续 $1 秒低于 $2 节后，拖曳声纳展开；当时航速 $3 节。'],
       [/^towed array recovered: speed ([\d.]+) kt above ([\d.]+) kt$/,'航速 $1 节超过 $2 节的收回条件，拖曳声纳收回。'],
       [/^(.+) merges with #(\d+) at ([\d.]+) nmi$/,'$1 在 $3 海里距离与航空器 #$2 进入近距缠斗。'],
@@ -109,7 +109,76 @@
     for(const [pattern,replacement] of patterns) if(pattern.test(s)) return s.replace(pattern,replacement);
     return null;
   }
+  function sensorRangeText(sensor,lang='zh-CN') {
+    const en=lang==='en',annex=sensor?.annex;
+    if(annex?.verified===false) return en?'Annex unverified; automatic range adjudication blocked':'附件待核验；未自动使用旧近似射程';
+    const parts=[];
+    for(const [key,zh,label] of [['vs_air','空','air'],['vs_surface','海','surface'],['vs_sub','潜','sub']]) {
+      const value=sensor?.[key];if(Number.isFinite(value)&&value>0)parts.push(`${en?label:zh} ${value} NM`);
+    }
+    const text=parts.join(' · ')||'—';
+    return annex?.verified?(en?`Annex maximum ${text}; target signature, clutter and horizon still apply`:`附件最大标称 ${text}；实际范围另受特征、杂波和视距限制`):text;
+  }
+  function batteryText(unit,profile,lang='zh-CN') {
+    if(profile==='hv2026-rts-v4') {
+      if(unit?.kind!=='Sub') return '';
+      const state=unit.battery_state;
+      if(state&&typeof state==='object'&&!Array.isArray(state)) {
+        const amount=value=>Number.isFinite(value)&&value>=0?String(Number(value.toFixed(3))):pick(pair('未知','Unknown'),lang);
+        let text=pick(pair(`来源电池：电量 ${amount(state.charge_units)} / 容量 ${amount(state.capacity_units)} 单位`,
+          `Source battery: charge ${amount(state.charge_units)} / capacity ${amount(state.capacity_units)} source units`),lang);
+        if(state.aip_fitted===true) text+=pick(pair(`；AIP余量 ${amount(state.aip_remaining_units)} 单位`,
+          `; AIP reserve ${amount(state.aip_remaining_units)} source units`),lang);
+        if(state.pending_adjudications&&typeof state.pending_adjudications==='object'&&Object.keys(state.pending_adjudications).length)
+          text+=pick(pair('；部分来源条件仍待裁定','; some source conditions remain unadjudicated'),lang);
+        return text;
+      }
+      return pick(pair('电池续航：尚未裁定；缺失电量不代表无限续航。','Battery endurance: unadjudicated; unknown charge does not mean unlimited endurance.'),lang);
+    }
+    const value=unit?.battery;
+    if(!Number.isFinite(value)) return '';
+    return pick(pair(`历史电池模型：${value}/100（水下耗电，低于20半速）`,`Historical battery model: ${value}/100 (submerged drain; below20 halves speed)`),lang);
+  }
+  function weaponMountName(mount,fallback,lang='zh-CN') {
+    if(String(mount?.weapon||'').startsWith('ciws_')&&Number.isFinite(mount.source_caliber_mm))
+      return lang==='en'?`CIWS (${mount.source_caliber_mm} mm)`:`近防炮（${mount.source_caliber_mm}毫米）`;
+    return fallback;
+  }
   function ruleReport(event,lang='zh-CN') {
+    if(event.domain==='communications2026') {
+      const en=lang==='en', states={
+        '6.3.10.warning_queued':pair('报告警告已排队，等待本阶段交付','Report warning queued for delivery in this phase'),
+        '6.3.10.warning_delivered':pair('报告警告已交付给所选收件人','Report warning delivered to the selected recipients'),
+        '6.3.10.warning_received':pair('收到一份原始探测报告警告','Received a warning with an original detection report'),
+        '6.3.10.warning_failed':pair('报告警告交付失败','Report warning delivery failed'),
+      };
+      let d={};try {d=JSON.parse(event.detail);} catch { /* Do not present an unreadable payload as a player explanation. */ }
+      const report=d.report||{}, at=Number.isFinite(report.observed_at)?`T${report.observed_at}s`:(en?'unknown time':'时间未知');
+      const label=report.contact!=null?`C${report.contact}`:(en?'unknown source label':'来源编号未知');
+      return {title:en?'COMMUNICATIONS · REPORT WARNING':'通信 · 报告警告',meaning:pick(states[event.rule]||pair('报告警告记录','Report warning record'),lang),
+        detail:en?`${label} · observed ${at}. This is a frozen report; its C label belongs to the sender and does not provide a live track or firing solution.`:`${label} · 观测于 ${at}。这是固定的历史报告；C编号属于发报方，接收不产生实时航迹或射击解算。`,known:!!states[event.rule]};
+    }
+    if(event.domain==='operations') {
+      let d={};try {d=JSON.parse(event.detail);} catch { /* preserve raw trace below */ }
+      const en=lang==='en', names={
+        '4.6.launch_queued':pair('航空器已排入起飞队列','Aircraft queued for launch'),
+        '4.6.launch_complete':pair('起飞程序完成','Launch sequence completed'),
+        '4.6.launch_cancelled':pair('起飞队列已撤销','Queued launch cancelled'),
+        '4.6.recovery_complete':pair('着舰程序完成','Recovery resolved'),
+        '4.6.recovery_blocked':pair('航空勤务待核验','Aircraft servicing blocked'),
+        '5.2.sensor_data_blocked':pair('雷达附件数据待核验','Radar annex data missing'),
+        '5.2.1.reaction_clock':pair('裁判记录：雷达识别与反应时钟','Referee: radar recognition and reaction clock'),
+        '8.1.5.fragment_roll':pair('近程拦截破片检定','Point-defense fragment roll'),
+        '8.1.5.adjudication_blocked':pair('破片效果待裁定','Fragment outcome pending adjudication'),
+      };
+      let meaning=pick(names[event.rule]||pair('航空、雷达或防空规则记录','Aviation, radar or AAW rule trace'),lang);
+      if(event.rule==='4.6.launch_queued') meaning+=en?` · ${d.count} reserved; earliest T${d.earliest}s. No aircraft has launched yet.`:` · 预留 ${d.count} 架，最早模拟第 ${d.earliest} 秒放飞。此时尚未实际起飞。`;
+      if(event.rule==='4.6.launch_complete'||event.rule==='4.6.recovery_complete') meaning+=en?` · ${d.crash?'Aircraft lost in an accident':'Aircraft survived'}; D100=${d.d100}, accident risk=${Math.round(d.risk*100)}%.`:` · ${d.crash?'发生事故，航空器损失':'航空器安全完成作业'}；D100=${d.d100}，事故概率 ${Math.round(d.risk*100)}%。`;
+      if(event.rule==='4.6.launch_cancelled') meaning+=en?' · Reserved aircraft remain in the hangar unless separately lost.':' · 仅撤销预留，未起飞飞机仍在机库；其他损伤另行结算。';
+      if(event.rule==='8.1.5.fragment_roll') meaning+=en?` · D100=${d.d100}, chance=${Math.round(d.probability*100)}%: ${d.struck?'fragments struck':'no fragment strike'}. This is not a direct missile hit.`:` · D100=${d.d100}，波及概率 ${Math.round(d.probability*100)}%，${d.struck?'破片波及目标':'未发生破片波及'}；不等于整枚导弹命中。`;
+      if(event.rule.endsWith('blocked')) meaning+=en?' · Missing source data; no estimated outcome substituted.':' · 来源数据不足，未以估计数值代替裁决。';
+      return {title:en?'HV2026 · OPERATIONS':'鱼叉2026 · 航空与探测',meaning,detail:String(event.detail||''),known:!!names[event.rule]};
+    }
     if(event.domain==='command') {
       let message=String(event.detail||'');
       if(lang!=='en')message=message.replace('set_unit_automation: Higher-level AI may issue orders again','已允许AI重新指挥此单位').replace('set_unit_automation: Manual command retained; current task and basic self-defence continue','已保留人工控制；当前任务与基本自卫继续').replace('goto: charted land blocks destination or no safe sea route within planner bounds','航路受阻：目的地位于陆地，或规划范围内没有安全海路').replace('retask_aircraft: recon','重设航空任务：侦察').replace('retask_aircraft: cap','重设航空任务：空中巡逻').replace('retask_aircraft: asw','重设航空任务：反潜搜索');
@@ -155,9 +224,9 @@
       : pair('本次拦截未成功；来袭弹可能继续飞行，后续仍需留意拦截与命中记录。','This intercept failed; the incoming weapon may continue. Watch for later interception or impact reports.'),lang);
     return pick(notes[event.event],lang);
   }
-  if(typeof module!=='undefined'&&module.exports) module.exports={firingState,ruleReport,traceZh,eventNote};
+  if(typeof module!=='undefined'&&module.exports) module.exports={firingState,ruleReport,traceZh,eventNote,sensorRangeText,weaponMountName,batteryText};
   if(!root.document) return;
-  root.HarpoonCombat={firingState,ruleReport,traceZh,eventNote};
+  root.HarpoonCombat={firingState,ruleReport,traceZh,eventNote,sensorRangeText,weaponMountName,batteryText};
   if(!document.getElementById('btn-operator-help')) return;
   const I=root.HarpoonI18n, b=(zh,en)=>pick(pair(zh,en),I.language);
   let overlay, returnFocus;

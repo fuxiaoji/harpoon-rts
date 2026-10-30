@@ -1,0 +1,14 @@
+{
+  "source":"English2026 PDF129 / printed14-3 section14.1.2, source visually verified2026-10-29",
+  "minimum_caliber_mm":120,
+  "long_percent":60,
+  "extreme_percent":70,
+  "carrier_role":"aviation",
+  "execution":{
+    "revision":"RTS-GUN-DECK-20261029-01",
+    "tactical_turn_seconds":180,
+    "cadence":"One occurrence D100 per carrier per completed Tactical Turn with a real penetrating qualified source-gun hit. Independent of ordinary ratio, bomb and gun hit dice.",
+    "mixed_ranges":"Both Long and Extreme in one carrier-turn is source-pending: preserve the original D100 and exposures, invent no band priority or extra roll.",
+    "producer":"Only the native8.3 gun executor creates typed range/caliber proof; actual common-damage penetration and flight-deck armor qualify it. A miss, shell declaration or generic legacy Gun hit is not an exposure."
+  }
+}

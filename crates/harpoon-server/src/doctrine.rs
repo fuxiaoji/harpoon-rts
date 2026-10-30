@@ -24,7 +24,7 @@ pub fn orders(obs: &Observation) -> Vec<(Side, Command)> {
             Some(Command::LaunchAircraft { profile: None, unit: unit.id, class: "us_f18e_asm".into(), count: 2,
                 mission: AirMission::Recon { point: obs.mission.as_ref().unwrap().config.center } })
         } else if next_tick >= 120 && (next_tick - 120) % 900 == 0 && ready("us_f18e_asm") >= 2 {
-            let target = obs.contacts.iter().filter(|c| !c.stale && !c.bearing_only && c.quality > 0.4 && c.category == PlatformKind::Ship)
+            let target = obs.contacts.iter().filter(|c| !c.stale && !c.bearing_only && c.quality > 0.4 && c.category == Some(PlatformKind::Ship))
                 .min_by(|a,b| unit.pos.range_to(a.estimate).total_cmp(&unit.pos.range_to(b.estimate)));
             target.map(|c| Command::LaunchAircraft { profile: None, unit: unit.id, class: "us_f18e_asm".into(), count: 2,
                 mission: AirMission::Strike { contact: c.id } })

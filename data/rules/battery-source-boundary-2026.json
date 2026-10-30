@@ -1,0 +1,35 @@
+{
+  "revision": "2026-10-26-v4-source-battery-narrow-resume-and-wide-consumers-2",
+  "source": "Harpoon V2026-01-01 PDF29/3-7 section3.2.4 and Battery Discharge/Charge tables; AnnexA rating and technology are required inputs",
+  "scope": "Unbound historical v4 name/year and100/.05/.1/20percent defaults stay withdrawn. Opt-in battery2026 executes previously accepted exact4-fit source accounting and new wide-batch6-fit/physical-consumer candidates. Legacyv1-v3 retain separate behavior/fingerprints. Unknown energy is not zero/full/unlimited; metadata/guards alone do not close whole battery domain.",
+  "status": "opt_in_source_endurance_implemented_narrow_scope_wide_candidate_pending",
+  "unknown_is_not_unlimited_endurance": true,
+  "remaining": [
+    "Old10kt source prose/table conflict requires explicit policy",
+    "Fractional/outside4..25 discharge speed no printed conversion",
+    "Continuous70..71 charge gap and within-turn band-cross timing",
+    "Explicit initial charge, chemistry, typed snorkel, full-speed reference and era remain required",
+    "Unprinted AIP unit curves including>=20kt <10percent conversion",
+    "Actual port fuel/oxygen replenishment duration/provider/fit",
+    "Unmapped exact Annex rows and separate nuclear5Emerg program"
+  ],
+  "already_accepted_before_this_window": [
+    "4 exact conventional battery fits",
+    "11 exact depth/surface fields",
+    "selected-turn source discharge",
+    "1800s eligible charging and AIP accounting",
+    "source mast15kt/25m operation modes",
+    "AIP reservation/shutdown persistence",
+    "source critical stableidentity proportional capacity/AIP disable",
+    "unknown preservation"
+  ],
+  "wide_candidate_after_real_source_red": [
+    "2 exact battery fits039G1165new/generic677300new",
+    "actual live-only energy accounting",
+    "eligible-only charging speed",
+    "unique config entity binding",
+    "shared physical mast timestamp/detection and depth hooks",
+    "shared known-empty/unknown/AIP movement gate",
+    "field-specific runtime applicability registry"
+  ]
+}

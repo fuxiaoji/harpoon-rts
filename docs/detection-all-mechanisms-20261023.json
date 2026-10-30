@@ -1,0 +1,807 @@
+{
+  "profile": "hv2026-rts-v4",
+  "chapter": "5",
+  "source_version": "2026-01-01",
+  "test_target": "cargo test -p harpoon-core --test detection_2026 --offline -j1",
+  "rows": [
+    {
+      "id": "DET-01",
+      "section": "5.1",
+      "mechanism": "Active/passive information and hidden referee scan",
+      "status": "tested",
+      "execution": "evaluate_world/update_sensors_v4",
+      "pdf_page": 40,
+      "scope": "Explicit all detected evidence; failed scans Referee only; initial passive category null; every actual successful receiver retains its own report, not only fused best; shared/failed/broken sensors do not earn tracks",
+      "four_way": {
+        "source": "verified_source English2026; table rendering when present",
+        "data": "structured subset",
+        "execution": "evaluate_world/update_sensors_v4",
+        "tests": "crates/harpoon-core/tests/detection_2026.rs; source-derived boundary/World cases, not every branch"
+      }
+    },
+    {
+      "id": "DET-02",
+      "section": "5.2.1",
+      "mechanism": "Surface automatic and fleeting/continuous masts",
+      "status": "tested_subset",
+      "execution": "radar_range_world/radar_mast_probability",
+      "pdf_page": 40,
+      "scope": "Source verified radars only; mast command/maximum counts still need annex binding",
+      "four_way": {
+        "source": "verified_source English2026; table rendering when present",
+        "data": "structured subset",
+        "execution": "radar_range_world/radar_mast_probability",
+        "tests": "crates/harpoon-core/tests/detection_2026.rs; source-derived boundary/World cases, not every branch"
+      }
+    },
+    {
+      "id": "DET-03",
+      "section": "5.2.1",
+      "mechanism": "Air combat-system recognition",
+      "status": "existing_v3_subset",
+      "execution": "operations radar_clocks",
+      "pdf_page": 41,
+      "scope": "Existing source subset reused; negative predictive adjustments remain unimplemented",
+      "four_way": {
+        "source": "verified_source English2026; table rendering when present",
+        "data": "structured subset",
+        "execution": "operations radar_clocks",
+        "tests": "crates/harpoon-core/tests/detection_2026.rs; source-derived boundary/World cases, not every branch"
+      }
+    },
+    {
+      "id": "DET-04",
+      "section": "5.2.2",
+      "mechanism": "Signature/aspect/external stores/3-or9 formation uplift",
+      "status": "tested_subset",
+      "execution": "radar_range_world/group_signature",
+      "pdf_page": 41,
+      "scope": "Explicit group signature; ordinary unresolved group now publishes one contact, retaining contact identity across representative changes; full annex coverage still incomplete",
+      "four_way": {
+        "source": "verified_source English2026; table rendering when present",
+        "data": "structured subset",
+        "execution": "radar_range_world/group_signature",
+        "tests": "crates/harpoon-core/tests/detection_2026.rs; source-derived boundary/World cases, not every branch"
+      }
+    },
+    {
+      "id": "DET-05",
+      "section": "5.2.3",
+      "mechanism": "Radar range/bearing, 180s derived motion, no ordinary class leak",
+      "status": "tested_subset",
+      "execution": "update_sensors_v4/update_radar_motion",
+      "pdf_page": 41,
+      "scope": "No truth motion/class leak. Public projection and individual SensorReport reuse identical saved angular die/range eligibility. Source FCS uses only own measured positions and own continuous 180s motion clock; fused side motion never substitutes. Declared TDL/crossfix and bearing-only localization remain pending.",
+      "four_way": {
+        "source": "verified_source English2026; table rendering when present",
+        "data": "structured subset",
+        "execution": "update_sensors_v4/update_radar_motion",
+        "tests": "crates/harpoon-core/tests/detection_2026.rs; source-derived boundary/World cases, not every branch"
+      }
+    },
+    {
+      "id": "DET-06",
+      "section": "5.2.3",
+      "mechanism": "SAR/ISAR/NCTR special recognition",
+      "status": "executable_subset",
+      "execution": "radar_identifies",
+      "pdf_page": 41,
+      "scope": "Explicit Receiver::RadarFeatures source capability; actual ISAR class recognition tested; unknown fitted features not inferred",
+      "four_way": {
+        "source": "verified_source English2026; table rendering when present",
+        "data": "structured subset",
+        "execution": "radar_identifies",
+        "tests": "crates/harpoon-core/tests/detection_2026.rs; source-derived boundary/World cases, not every branch"
+      }
+    },
+    {
+      "id": "DET-07",
+      "section": "5.2.4-6",
+      "mechanism": "Ship/air/ground radar roles, arcs, bands, HF nonsearch",
+      "status": "existing_v3_subset",
+      "execution": "operations altitude_modifier/radar_profile",
+      "pdf_page": 41,
+      "scope": "Unknown search fits blocked; OTH-B/HFSW scenario supplied only, not automatic satellite intelligence",
+      "four_way": {
+        "source": "verified_source English2026; table rendering when present",
+        "data": "structured subset",
+        "execution": "operations altitude_modifier/radar_profile",
+        "tests": "crates/harpoon-core/tests/detection_2026.rs; source-derived boundary/World cases, not every branch"
+      }
+    },
+    {
+      "id": "DET-08",
+      "section": "5.2.8-9.4",
+      "mechanism": "Horizon, intervening land, largest sea/rain/land/EW clutter",
+      "status": "tested_subset",
+      "execution": "radar_range_world/operations clutter_modifier",
+      "pdf_page": 42,
+      "scope": "No invented DEM; directional rain-squall clutter layer incomplete",
+      "four_way": {
+        "source": "verified_source English2026; table rendering when present",
+        "data": "structured subset",
+        "execution": "radar_range_world/operations clutter_modifier",
+        "tests": "crates/harpoon-core/tests/detection_2026.rs; source-derived boundary/World cases, not every branch"
+      }
+    },
+    {
+      "id": "DET-09",
+      "section": "5.2.9.5",
+      "mechanism": "Evaporative/surface duct table/probability",
+      "status": "executable_subset",
+      "execution": "duct_horizon/evaporative_max_size/surface_duct_chance/radar_range_world",
+      "pdf_page": 44,
+      "scope": "Explicit Configuration.duct enters radar and ES; auto weather generation, SS-T/SRS1 size exceptions pending",
+      "four_way": {
+        "source": "verified_source English2026; table rendering when present",
+        "data": "structured subset",
+        "execution": "duct_horizon/evaporative_max_size/surface_duct_chance/radar_range_world",
+        "tests": "crates/harpoon-core/tests/detection_2026.rs; source-derived boundary/World cases, not every branch"
+      }
+    },
+    {
+      "id": "DET-10",
+      "section": "5.2.9.5 optional",
+      "mechanism": "Ambiguous overrange duct contacts",
+      "status": "not_implemented",
+      "execution": "none",
+      "pdf_page": 45,
+      "scope": "Optional requires neutral/white shipping and ambiguous range UI",
+      "four_way": {
+        "source": "verified_source English2026; table rendering when present",
+        "data": "source/prose only",
+        "execution": "none",
+        "tests": "crates/harpoon-core/tests/detection_2026.rs; source-derived boundary/World cases, not every branch"
+      }
+    },
+    {
+      "id": "DET-11",
+      "section": "5.3",
+      "mechanism": "ES search/weapon emissions, generation/LPI/SS-T ranges",
+      "status": "tested_subset",
+      "execution": "evaluate_world Receiver::Es",
+      "pdf_page": 45,
+      "scope": "Explicit emission and receiver metadata; no default from estimated DB; radio not modeled",
+      "four_way": {
+        "source": "verified_source English2026; table rendering when present",
+        "data": "structured subset",
+        "execution": "evaluate_world Receiver::Es",
+        "tests": "crates/harpoon-core/tests/detection_2026.rs; source-derived boundary/World cases, not every branch"
+      }
+    },
+    {
+      "id": "DET-12",
+      "section": "5.3",
+      "mechanism": "RWR gen0/1/2+",
+      "status": "partial",
+      "execution": "Receiver::Es",
+      "pdf_page": 45,
+      "scope": "Gen0 has no source horizon multiplier so blocks, later-gen capability explicit",
+      "four_way": {
+        "source": "verified_source English2026; table rendering when present",
+        "data": "structured subset",
+        "execution": "Receiver::Es",
+        "tests": "crates/harpoon-core/tests/detection_2026.rs; source-derived boundary/World cases, not every branch"
+      }
+    },
+    {
+      "id": "DET-13",
+      "section": "5.3.1",
+      "mechanism": "ELS Fair/Good after successive moving detections",
+      "status": "tested_subset",
+      "execution": "State Track ELS window",
+      "pdf_page": 46,
+      "scope": "Evidence quality retained; no truth coordinate granted; actual RF cross-fix is chapter6 integration",
+      "four_way": {
+        "source": "verified_source English2026; table rendering when present",
+        "data": "structured subset",
+        "execution": "State Track ELS window",
+        "tests": "crates/harpoon-core/tests/detection_2026.rs; source-derived boundary/World cases, not every branch"
+      }
+    },
+    {
+      "id": "DET-14",
+      "section": "5.4.1",
+      "mechanism": "Bow/keel/flank/sail baffles and generation",
+      "status": "tested",
+      "execution": "sonar_bearing_eligible/evaluate_world",
+      "pdf_page": 46,
+      "scope": "Diagram visually checked; inactive Gen1-3 flank search blocked",
+      "four_way": {
+        "source": "verified_source English2026; table rendering when present",
+        "data": "structured subset",
+        "execution": "sonar_bearing_eligible/evaluate_world",
+        "tests": "crates/harpoon-core/tests/detection_2026.rs; source-derived boundary/World cases, not every branch"
+      }
+    },
+    {
+      "id": "DET-15",
+      "section": "5.4.2",
+      "mechanism": "Towed/VDS deployment/15kt/21min/25kt/sea and seabed loss",
+      "status": "tested_subset",
+      "execution": "order_array/update_lifecycle/movement cap",
+      "pdf_page": 47,
+      "scope": "Real SetArray/API->1260s lifecycle, movement15/25kt cap, sea/seabed loss and own-side view; clip-on and national depth prescriptions pending",
+      "four_way": {
+        "source": "verified_source English2026; table rendering when present",
+        "data": "structured subset",
+        "execution": "order_array/update_lifecycle/movement cap",
+        "tests": "crates/harpoon-core/tests/detection_2026.rs; source-derived boundary/World cases, not every branch"
+      }
+    },
+    {
+      "id": "DET-16",
+      "section": "5.4.2.1 optional",
+      "mechanism": "Ambiguity and stabilization",
+      "status": "structured",
+      "execution": "array_stabilization_seconds",
+      "pdf_page": 48,
+      "scope": "Time table tested; maneuver/ambiguous bearing lifecycle pending",
+      "four_way": {
+        "source": "verified_source English2026; table rendering when present",
+        "data": "structured subset",
+        "execution": "array_stabilization_seconds",
+        "tests": "crates/harpoon-core/tests/detection_2026.rs; source-derived boundary/World cases, not every branch"
+      }
+    },
+    {
+      "id": "DET-17",
+      "section": "5.4.3",
+      "mechanism": "Dipping sonar moving break/depth",
+      "status": "tested_subset",
+      "execution": "DetectionAction::Dip/order_dipping/update_lifecycle/evaluate_world",
+      "pdf_page": 48,
+      "scope": "Immediate deployment/recovery, explicit hovering helicopter or landed flying boat, motion permanently loses cable; actual command/tick/World save and replay tests pass. Source attachment coverage incomplete.",
+      "four_way": {
+        "source": "verified_source English2026; table rendering when present",
+        "data": "structured subset",
+        "execution": "evaluate_world",
+        "tests": "crates/harpoon-core/tests/detection_2026.rs; source-derived boundary/World cases, not every branch"
+      }
+    },
+    {
+      "id": "DET-18",
+      "section": "5.4.4/6.3",
+      "mechanism": "Sonobuoy deployment/survival/channels/field monitoring",
+      "status": "partial",
+      "execution": "buoy_drop_valid/buoy_monitor_range/buoy_fix",
+      "pdf_page": 48,
+      "scope": "Tables/localization helpers tested; source exact loadout/channels and lifecycle not yet fully connected",
+      "four_way": {
+        "source": "verified_source English2026; table rendering when present",
+        "data": "structured subset",
+        "execution": "buoy_drop_valid/buoy_monitor_range/buoy_fix",
+        "tests": "crates/harpoon-core/tests/detection_2026.rs; source-derived boundary/World cases, not every branch"
+      }
+    },
+    {
+      "id": "DET-19",
+      "section": "5.4.5",
+      "mechanism": "Acoustic intercept generation/range/bearing/type/12nm ranging",
+      "status": "tested_subset",
+      "execution": "Receiver::AcousticIntercept/acoustic_intercept/deployed_sonar_depth",
+      "pdf_page": 48,
+      "scope": "Actual deployed working array depth shared by scanning/AIR/masking. Recovered/lost/damaged/unpowered emitters silent. Gen5 ranging preserves printed bearing error and does not expose host category. Indirect AIR blocked pending bearingless warning representation.",
+      "four_way": {
+        "source": "verified_source English2026; table rendering when present",
+        "data": "structured subset",
+        "execution": "Receiver::AcousticIntercept/acoustic_intercept",
+        "tests": "crates/harpoon-core/tests/detection_2026.rs; source-derived boundary/World cases, not every branch"
+      }
+    },
+    {
+      "id": "DET-20",
+      "section": "5.4.6",
+      "mechanism": "Separate sonar mode/50% ranges/speed matrices/nearest probability row",
+      "status": "tested_subset",
+      "execution": "Receiver::Sonar/sonar_probability",
+      "pdf_page": 49,
+      "scope": "75x17 source rows, Gen1-4 mode lock; active direct scan does not require passive target noise metadata (EW13 source regression green); full attachment bands pending",
+      "four_way": {
+        "source": "verified_source English2026; table rendering when present",
+        "data": "structured subset",
+        "execution": "Receiver::Sonar/sonar_probability",
+        "tests": "crates/harpoon-core/tests/detection_2026.rs; source-derived boundary/World cases, not every branch"
+      }
+    },
+    {
+      "id": "DET-21",
+      "section": "5.4.6",
+      "mechanism": "Active size/aspect/anechoic and torpedo restriction",
+      "status": "executable_subset",
+      "execution": "Receiver::Sonar/active_aspect_modifier",
+      "pdf_page": 49,
+      "scope": "B/Medium is+1 per table despite example+2; torpedo capability explicit",
+      "four_way": {
+        "source": "verified_source English2026; table rendering when present",
+        "data": "structured subset",
+        "execution": "Receiver::Sonar/active_aspect_modifier",
+        "tests": "crates/harpoon-core/tests/detection_2026.rs; source-derived boundary/World cases, not every branch"
+      }
+    },
+    {
+      "id": "DET-22",
+      "section": "5.4.6",
+      "mechanism": "Passive noise/cavitation/sea+shipping versus rain/biologics/ice",
+      "status": "tested_subset",
+      "execution": "Receiver::Sonar/sonar_environment",
+      "pdf_page": 49,
+      "scope": "Noisiest environment; real UltraQuiet3kt source propulsion gate; real production launch hook resolves ProjectileData stable IDs with saved event sequence, 180s Noisy/Quiet/Loud floor, ambiguous unmapped display names block passive signature; actual source NAV acceleration/deceleration adds cavitation +4 once; active sonar bands; diesel/snorkel pending",
+      "four_way": {
+        "source": "verified_source English2026; table rendering when present",
+        "data": "structured subset",
+        "execution": "Receiver::Sonar/sonar_environment",
+        "tests": "crates/harpoon-core/tests/detection_2026.rs; source-derived boundary/World cases, not every branch"
+      }
+    },
+    {
+      "id": "DET-23",
+      "section": "5.4.6.5",
+      "mechanism": "Passive masking/acoustic jammer/explosion/nuclear blueout",
+      "status": "partial",
+      "execution": "passive_masked/passive_strength/ew2026 sensor objects",
+      "pdf_page": 55,
+      "scope": "Masking executes pre-roll against source probabilities, range ties and baffle/path; explicit chapter12 jammer objects execute Loud noise and ten-degree cone in real scan (ew_2026 13 green); explosion/nuclear blueout still pending",
+      "four_way": {
+        "source": "verified_source English2026; table rendering when present",
+        "data": "structured subset",
+        "execution": "passive_masked/passive_strength/ew2026 sensor objects",
+        "tests": "crates/harpoon-core/tests/detection_2026.rs; source-derived boundary/World cases, not every branch"
+      }
+    },
+    {
+      "id": "DET-24",
+      "section": "5.4.6.6",
+      "mechanism": "Next-turn passive classification, torpedo and decoy penalties",
+      "status": "tested_subset",
+      "execution": "sonar_classification/evaluate_world",
+      "pdf_page": 56,
+      "scope": "Retained passive detection enables next-turn classification; active echoes never reveal narrowband class. Torpedo AIR category without model/type. Mobile object profile/classification path is connected, but real mobile-decoy next-window classification still needs a full scan regression; attack-speed handling pending.",
+      "four_way": {
+        "source": "verified_source English2026; table rendering when present",
+        "data": "structured subset",
+        "execution": "sonar_classification/evaluate_world",
+        "tests": "crates/harpoon-core/tests/detection_2026.rs; source-derived boundary/World cases, not every branch"
+      }
+    },
+    {
+      "id": "DET-25",
+      "section": "5.4.7.1",
+      "mechanism": "Layer/environment restrictions and VLF immunity",
+      "status": "tested",
+      "execution": "layer_modifier/Environment.validate",
+      "pdf_page": 57,
+      "scope": "Actual array depth, not towing platform depth",
+      "four_way": {
+        "source": "verified_source English2026; table rendering when present",
+        "data": "structured subset",
+        "execution": "layer_modifier/Environment.validate",
+        "tests": "crates/harpoon-core/tests/detection_2026.rs; source-derived boundary/World cases, not every branch"
+      }
+    },
+    {
+      "id": "DET-26",
+      "section": "5.4.7.2",
+      "mechanism": "Bottom bounce depth intervals/frequency/generation",
+      "status": "executable_subset",
+      "execution": "Configuration.propagation/Receiver::Sonar",
+      "pdf_page": 57,
+      "scope": "Explicit rocky-flat bottom; no guessed GEBCO/DEM; actual scan connected",
+      "four_way": {
+        "source": "verified_source English2026; table rendering when present",
+        "data": "structured subset",
+        "execution": "Configuration.propagation/Receiver::Sonar",
+        "tests": "crates/harpoon-core/tests/detection_2026.rs; source-derived boundary/World cases, not every branch"
+      }
+    },
+    {
+      "id": "DET-27",
+      "section": "5.4.7.3",
+      "mechanism": "CZ count/ring/region/generation/chance",
+      "status": "executable_subset",
+      "execution": "Configuration.propagation/Receiver::Sonar",
+      "pdf_page": 58,
+      "scope": "Actual scan connected; passive contacts remain bearing only",
+      "four_way": {
+        "source": "verified_source English2026; table rendering when present",
+        "data": "structured subset",
+        "execution": "Configuration.propagation/Receiver::Sonar",
+        "tests": "crates/harpoon-core/tests/detection_2026.rs; source-derived boundary/World cases, not every branch"
+      }
+    },
+    {
+      "id": "DET-28",
+      "section": "5.4.8",
+      "mechanism": "Holding/reacquisition +15% for12min",
+      "status": "tested_subset",
+      "execution": "State Track last_success",
+      "pdf_page": 59,
+      "scope": "Deterministic one roll per window; replay serialized",
+      "four_way": {
+        "source": "verified_source English2026; table rendering when present",
+        "data": "structured subset",
+        "execution": "State Track last_success",
+        "tests": "crates/harpoon-core/tests/detection_2026.rs; source-derived boundary/World cases, not every branch"
+      }
+    },
+    {
+      "id": "DET-29",
+      "section": "5.5",
+      "mechanism": "IR generation ranges80%/retention/moisture/half-range image",
+      "status": "tested_subset",
+      "execution": "Receiver::Ir/evaluate_world",
+      "pdf_page": 59,
+      "scope": "Explicit signature + source fit; no arbitrary range from DB",
+      "four_way": {
+        "source": "verified_source English2026; table rendering when present",
+        "data": "structured subset",
+        "execution": "Receiver::Ir/evaluate_world",
+        "tests": "crates/harpoon-core/tests/detection_2026.rs; source-derived boundary/World cases, not every branch"
+      }
+    },
+    {
+      "id": "DET-30",
+      "section": "5.5.1-3",
+      "mechanism": "Scanner/FLIR cue/IRST aspect/imaging",
+      "status": "tested_subset",
+      "execution": "Receiver::Ir",
+      "pdf_page": 59,
+      "scope": "FLIR explicit15/5degree tracking command pending; IR cloud blocking unresolved",
+      "four_way": {
+        "source": "verified_source English2026; table rendering when present",
+        "data": "structured subset",
+        "execution": "Receiver::Ir",
+        "tests": "crates/harpoon-core/tests/detection_2026.rs; source-derived boundary/World cases, not every branch"
+      }
+    },
+    {
+      "id": "DET-31",
+      "section": "5.5.4",
+      "mechanism": "TV/LLLTV classification/visibility",
+      "status": "executable_subset",
+      "execution": "none",
+      "pdf_page": 59,
+      "scope": "Receiver::Tv actual scan requires existing contact, visibility and explicit optical range; no invented TV performance",
+      "four_way": {
+        "source": "verified_source English2026; table rendering when present",
+        "data": "structured subset",
+        "execution": "none",
+        "tests": "crates/harpoon-core/tests/detection_2026.rs; source-derived boundary/World cases, not every branch"
+      }
+    },
+    {
+      "id": "DET-32",
+      "section": "5.6",
+      "mechanism": "Laser ranging/designation/warning/LST/LRMTS",
+      "status": "partial",
+      "execution": "Receiver::LaserRangefinder/laser_range",
+      "pdf_page": 60,
+      "scope": "Ranging and cloud gate executes; warning/designation/spot tracking weapons integration pending",
+      "four_way": {
+        "source": "verified_source English2026; table rendering when present",
+        "data": "structured subset",
+        "execution": "Receiver::LaserRangefinder/laser_range",
+        "tests": "crates/harpoon-core/tests/detection_2026.rs; source-derived boundary/World cases, not every branch"
+      }
+    },
+    {
+      "id": "DET-33",
+      "section": "5.7.1",
+      "mechanism": "MAD depth/size/titanium/masking/prior localizing/pass",
+      "status": "executable_subset",
+      "execution": "Receiver::Mad/mad_probability",
+      "pdf_page": 60,
+      "scope": "No own fabricated range; straight/level envelope; masking source fixtures not yet spatially connected",
+      "four_way": {
+        "source": "verified_source English2026; table rendering when present",
+        "data": "structured subset",
+        "execution": "Receiver::Mad/mad_probability",
+        "tests": "crates/harpoon-core/tests/detection_2026.rs; source-derived boundary/World cases, not every branch"
+      }
+    },
+    {
+      "id": "DET-34",
+      "section": "5.7.2",
+      "mechanism": "Wide-area MAD30min/dwell/depth/area",
+      "status": "structured",
+      "execution": "wide_mad_probability",
+      "pdf_page": 60,
+      "scope": "Matrix tested; monitoring field and dwell runtime pending",
+      "four_way": {
+        "source": "verified_source English2026; table rendering when present",
+        "data": "structured subset",
+        "execution": "wide_mad_probability",
+        "tests": "crates/harpoon-core/tests/detection_2026.rs; source-derived boundary/World cases, not every branch"
+      }
+    },
+    {
+      "id": "DET-35",
+      "section": "5.7.3",
+      "mechanism": "Wake detection generation/time/depth/speed/sea/three crossings",
+      "status": "structured",
+      "execution": "wake_probability",
+      "pdf_page": 61,
+      "scope": "Formula tested; real wake history/crossing lifecycle still missing",
+      "four_way": {
+        "source": "verified_source English2026; table rendering when present",
+        "data": "structured subset",
+        "execution": "wake_probability",
+        "tests": "crates/harpoon-core/tests/detection_2026.rs; source-derived boundary/World cases, not every branch"
+      }
+    },
+    {
+      "id": "DET-36",
+      "section": "5.7.4",
+      "mechanism": "Diesel sniffer/LIDAR ineffective sensors",
+      "status": "not_applicable",
+      "execution": "none",
+      "pdf_page": 61,
+      "scope": "No effective standard sniffer modeled; experimental LIDAR not silently included",
+      "four_way": {
+        "source": "verified_source English2026; table rendering when present",
+        "data": "source/prose only",
+        "execution": "none",
+        "tests": "crates/harpoon-core/tests/detection_2026.rs; source-derived boundary/World cases, not every branch"
+      }
+    },
+    {
+      "id": "DET-37",
+      "section": "5.8.1-4",
+      "mechanism": "Visual surface/air and common formation roll",
+      "status": "tested_subset",
+      "execution": "visual_base/visual_detection_range/Receiver::Visual",
+      "pdf_page": 62,
+      "scope": "12x7x7+71x6+air tables; precise source modification helpers; runtime emission cues partly absent",
+      "four_way": {
+        "source": "verified_source English2026; table rendering when present",
+        "data": "structured subset",
+        "execution": "visual_base/visual_detection_range/Receiver::Visual",
+        "tests": "crates/harpoon-core/tests/detection_2026.rs; source-derived boundary/World cases, not every branch"
+      }
+    },
+    {
+      "id": "DET-38",
+      "section": "5.8.5",
+      "mechanism": "Periscope visual sea/feather/continuous/multiple masts",
+      "status": "tested_subset",
+      "execution": "periscope_visual_probability/evaluate_world",
+      "pdf_page": 65,
+      "scope": "Sea/feather/continuous and multiple-mast1.5range execute. Source literal continuous D100+20 is applied as probability-20; no physical-intent override",
+      "four_way": {
+        "source": "verified_source English2026; table rendering when present",
+        "data": "structured subset",
+        "execution": "periscope_visual_probability/evaluate_world",
+        "tests": "crates/harpoon-core/tests/detection_2026.rs; source-derived boundary/World cases, not every branch"
+      }
+    },
+    {
+      "id": "DET-39",
+      "section": "5.8.6",
+      "mechanism": "Land spotting/camouflage/combined structures",
+      "status": "executable_subset",
+      "execution": "land_visibility",
+      "pdf_page": 66,
+      "scope": "Actual Receiver::Visual consumes land C–H table, observation-post eye-height table and camouflage; fired state persists beyond event ring. Unknown structure sizes remain blocked",
+      "four_way": {
+        "source": "verified_source English2026; table rendering when present",
+        "data": "structured subset",
+        "execution": "land_visibility",
+        "tests": "crates/harpoon-core/tests/detection_2026.rs; source-derived boundary/World cases, not every branch"
+      }
+    },
+    {
+      "id": "DET-40",
+      "section": "5.8.7.1",
+      "mechanism": "Cloud shared reciprocal hole/range/blocking",
+      "status": "tested_subset",
+      "execution": "cloud_effect/Receiver::Visual",
+      "pdf_page": 66,
+      "scope": "Same pair shares one die; in-cloud collision/hiding and joint formation roll pending",
+      "four_way": {
+        "source": "verified_source English2026; table rendering when present",
+        "data": "structured subset",
+        "execution": "cloud_effect/Receiver::Visual",
+        "tests": "crates/harpoon-core/tests/detection_2026.rs; source-derived boundary/World cases, not every branch"
+      }
+    },
+    {
+      "id": "DET-41",
+      "section": "5.8.7.2",
+      "mechanism": "Wind-driven squalls",
+      "status": "not_implemented",
+      "execution": "none",
+      "pdf_page": 67,
+      "scope": "No authored localized precipitation cells/lifecycle",
+      "four_way": {
+        "source": "verified_source English2026; table rendering when present",
+        "data": "source/prose only",
+        "execution": "none",
+        "tests": "crates/harpoon-core/tests/detection_2026.rs; source-derived boundary/World cases, not every branch"
+      }
+    },
+    {
+      "id": "DET-42",
+      "section": "5.8.8",
+      "mechanism": "Starshell range/miss/illumination/silhouette",
+      "status": "executable_api_subset",
+      "execution": "starshell_effect/starshell_detection_range",
+      "pdf_page": 67,
+      "scope": "Parent AAW owner integrating gunfire;16-20 gray box contradictory distance blocks",
+      "four_way": {
+        "source": "verified_source English2026; table rendering when present",
+        "data": "structured subset",
+        "execution": "starshell_effect/starshell_detection_range",
+        "tests": "crates/harpoon-core/tests/detection_2026.rs; source-derived boundary/World cases, not every branch"
+      }
+    },
+    {
+      "id": "DET-43",
+      "section": "5.8.9 optional",
+      "mechanism": "Graded visual identification",
+      "status": "structured",
+      "execution": "source tables only",
+      "pdf_page": 68,
+      "scope": "Basic rule immediate visual class ID executes; optional table not enabled",
+      "four_way": {
+        "source": "verified_source English2026; table rendering when present",
+        "data": "structured subset",
+        "execution": "source tables only",
+        "tests": "crates/harpoon-core/tests/detection_2026.rs; source-derived boundary/World cases, not every branch"
+      }
+    },
+    {
+      "id": "DET-44",
+      "section": "5.8.10 optional",
+      "mechanism": "Intermediate no-roll sighting",
+      "status": "not_enabled",
+      "execution": "none",
+      "pdf_page": 68,
+      "scope": "Explicit optional alternative not enabled",
+      "four_way": {
+        "source": "verified_source English2026; table rendering when present",
+        "data": "source/prose only",
+        "execution": "none",
+        "tests": "crates/harpoon-core/tests/detection_2026.rs; source-derived boundary/World cases, not every branch"
+      }
+    },
+    {
+      "id": "DET-45",
+      "section": "5.8.11",
+      "mechanism": "Visual signaling range/message budget",
+      "status": "structured",
+      "execution": "source tables; no simulation comms",
+      "pdf_page": 65,
+      "scope": "Flag/light transport30character per-side per-turn pending",
+      "four_way": {
+        "source": "verified_source English2026; table rendering when present",
+        "data": "structured subset",
+        "execution": "source tables; no simulation comms",
+        "tests": "crates/harpoon-core/tests/detection_2026.rs; source-derived boundary/World cases, not every branch"
+      }
+    },
+    {
+      "id": "DET-46",
+      "section": "5.8.12",
+      "mechanism": "Steam stack smoke source propulsion thresholds",
+      "status": "not_implemented",
+      "execution": "none",
+      "pdf_page": 68,
+      "scope": "Full source propulsion/fuel/national-origin metadata absent",
+      "four_way": {
+        "source": "verified_source English2026; table rendering when present",
+        "data": "source/prose only",
+        "execution": "none",
+        "tests": "crates/harpoon-core/tests/detection_2026.rs; source-derived boundary/World cases, not every branch"
+      }
+    }
+  ],
+  "all_chapter_complete": false,
+  "open_questions": [
+    {
+      "id": "DET-Q01",
+      "source": "5.4.6,PDF50",
+      "question": "Modifier total below-10 and exact nearest50%row ties are not specified; automatic adjudication blocks."
+    },
+    {
+      "id": "DET-Q02",
+      "source": "5.8,PDF64-65",
+      "question": "Air-to-surface base can exceed52kyd; detection table ends52. Source interpolation/extrapolation not stated. Also0.3–0.5kyd missing row. Block."
+    },
+    {
+      "id": "DET-Q03",
+      "source": "5.8.8,PDF67-68",
+      "question": "Gray starshell cell16–20 is4kyd beyond target, while text says silhouette up to2kyd. Block that branch."
+    },
+    {
+      "id": "DET-Q04",
+      "source": "5.4.6,PDF49 versus52/58",
+      "question": "Printed Active Strength table B/Medium+1 versus examples+2. Use table+1 and record contradiction."
+    },
+    {
+      "id": "DET-Q05",
+      "source": "5.8.5 PDF62; officialerrata20260728p3",
+      "question": "Continuous mast literal D100+20 makes harder sighting, though intuition expects easier. Source literal implemented (probability-20); do not silently reinterpret as probability+20."
+    }
+  ],
+  "official_errata_comparison": {
+    "url": "https://www.admiraltytrilogy.com/cic/Harpoon/Hpn%20V%201%20Dec%202025%20Printing%20Errata%2028%20Jul%2026.pdf",
+    "version": "2026-07-28",
+    "visually_checked_pages": [
+      3,
+      4,
+      5,
+      6
+    ],
+    "policy": "January2026 authority retained; no silent later-value migration",
+    "january_already_contains": [
+      "D100 detection column includes modified roll",
+      "cloud round down prose and example result",
+      "most revised optional visual identification table and example",
+      "continuous mast wording"
+    ],
+    "clarifies": [
+      "open ocean sea+shipping or rain or biologics only; implementation already uses max noise"
+    ],
+    "conflicts_retained_january": [
+      "deletes Low-altitude aircraft visual two-row penalty while JanuaryPDF64 retains it"
+    ],
+    "unresolved": [
+      "starshell gray16–20 at4kyd versus prose2kyd",
+      "continuous visual mast D100+20 reduces chance; literal retained, no intent-based reversal"
+    ]
+  },
+  "validation": {
+    "latest_verified_count": 61,
+    "latest_verified_log": "artifacts/rules-next-20261023/validation/fifth-core.log",
+    "next_cases": "Full annex fits, multiple sonar frequencies, bearingless indirect AIR, full sonobuoy and wake lifecycle remain incomplete.",
+    "not_claimed": "whole chapter completion, complete annex corpus, final UI/workspace regression",
+    "continuation_red_log": "artifacts/rules-all-20261023/master/continuation-red-detection.log",
+    "continuation_red_result": {
+      "passed": 44,
+      "failed": 2
+    },
+    "continuation_green_result": {
+      "passed": 51,
+      "failed": 0,
+      "ignored": 0
+    },
+    "workspace_result": {
+      "passed": 747,
+      "failed": 0,
+      "ignored": 5,
+      "count_scope": "test executions including existing and repeated targets, not rule count"
+    },
+    "continuation_intermediate_log": "artifacts/rules-all-20261023/master/continuation-domains-3.log",
+    "continuation_intermediate_result": {
+      "passed": 50,
+      "failed": 1
+    },
+    "next_green_result": {
+      "passed": 61,
+      "failed": 0,
+      "ignored": 0
+    },
+    "next_first_log": "artifacts/rules-next-20261023/validation/second-core-run.log",
+    "next_first_result": {
+      "passed": 53,
+      "failed": 2,
+      "failure_scope": "two mechanism fixtures needed legal submerged launch speed/depth and NAV fit maximum; production gates were not relaxed"
+    },
+    "actual_launch_red_log": "artifacts/rules-next-20261023/validation/actual-launch-red.log",
+    "actual_launch_red_scope": "one valid production failure: display name not resolved to weapon ID. Second test initially failed because its trace assertion missed the inputs nesting; not a second production bug.",
+    "fcs_next_case": "own-report geometry, local 180s clock, gap reset, save/restore, fused-motion independence and legacy Track serde all green in fifth-core.log; no complete TDL/crossfix or bearing-only localization claim",
+    "fcs_first_green": {
+      "log": "artifacts/rules-next-20261023/validation/fourth-core.log",
+      "passed": 56,
+      "failed": 0,
+      "scope": "all own observer/sensor successful provenance; geometry refinement followed"
+    },
+    "fcs_own_motion_red": {
+      "log": "artifacts/rules-next-20261023/validation/fcs-own-motion-red.log",
+      "passed": 0,
+      "failed": 2,
+      "scope": "two actual sim-tick fused range/motion borrowing cases"
+    },
+    "fcs_document": "fcs-own-reports-20261023.md"
+  }
+}

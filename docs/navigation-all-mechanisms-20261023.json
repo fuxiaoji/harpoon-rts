@@ -1,0 +1,169 @@
+{
+  "profile": "hv2026-rts-v4",
+  "whole_chapter_complete": false,
+  "source": {
+    "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+    "version": "2026-01-01",
+    "visually_verified_tables": [
+      23,
+      24,
+      25,
+      28,
+      32
+    ],
+    "rag": "artifacts/rules-all-20261023/master/rag-navigation-next.txt"
+  },
+  "data": "data/rules/navigation-2026.json",
+  "validation": "Search/navigation73 targets1203/0/5 Node70. EmergencyBlow11, acoustic3, withdrawal battery10 Rust+3Node, common protocol/FSM13; declared subsets only.",
+  "rows": [
+    {
+      "rule_id": "HV2026-3.1.1",
+      "mechanism": "Ship speed change",
+      "source_pdf": 24,
+      "scope": "acceleration source rows; slow/fast25kt, CPP/waterjet, merchant/passenger liner and75% threshold",
+      "execution": "navigation2026::acceleration/motion -> movement::update_movement",
+      "tests": "printed_acceleration_rows_and_thresholds; actual_movement_uses_source_acceleration_turn_coasting_and_sea_cap",
+      "status": "tested_subset"
+    },
+    {
+      "rule_id": "HV2026-3.1.1-QUIET",
+      "mechanism": "Quiet submarine acceleration and coasting",
+      "source_pdf": 24,
+      "scope": "source50% quiet acceleration/deceleration and coasting half deceleration; noise marker consumed by source detection",
+      "execution": "navigation2026::motion; detection2026 source noise",
+      "tests": "heave_to_unknown_sinking_time_blocks_and_quiet_changes_actual_acceleration",
+      "status": "tested_subset"
+    },
+    {
+      "rule_id": "HV2026-3.1.4",
+      "mechanism": "Ship turning",
+      "source_pdf": 24,
+      "scope": "Actual standard-rudder advance and source pivot speed loss; waterjet next smaller source size/60deg, submerged and merchant rows. Explicit proportional partial-pivot RTS policy and180deg loss budget; no pre-order straight credit. Hard-rudder risk/release and source casualty steering remain.",
+      "execution": "navigation2026::turning::advance called by real movement; same-tick pivot records, own trace and serialized work",
+      "tests": "navigation_turning_2026 ten tests; full closure workspace accepted",
+      "status": "tested_subset"
+    },
+    {
+      "rule_id": "HV2026-3.1.5",
+      "mechanism": "Sea state and speed",
+      "source_pdf": 25,
+      "scope": "all50 sea state cells; submerged exemption; surfaced submarines one class larger; H blocks without declared heave-to",
+      "execution": "navigation2026::weather_fraction/motion -> real movement",
+      "tests": "all_source_sea_state_cells_and_surfaced_sub_column; heave_to_unknown_sinking_time_blocks_and_quiet_changes_actual_acceleration",
+      "status": "tested_subset"
+    },
+    {
+      "rule_id": "HV2026-3.6",
+      "mechanism": "Getting underway",
+      "source_pdf": 32,
+      "scope": "D10/D6/2D6 source expressions; nuclear double; inport steam half time/quarter speed; anchored ready",
+      "execution": "Command::Navigation -> navigation2026::apply/step -> movement",
+      "tests": "underway_original_dice_fractional_turns_nuclear_and_inport; underway_command_real_clock_no_reroll_save_and_own_observation",
+      "status": "tested_subset"
+    },
+    {
+      "rule_id": "HV2026-3.1.3",
+      "mechanism": "Astern",
+      "source_pdf": 25,
+      "scope": "Actual reverse travel after braking through0, source damage/depth maximum, reverse coast sweep; single tow loss/cable engineering per180s. Steering/casualty combinations, multiple cables and deployment/recovery pending.",
+      "execution": "navigation2026::astern -> movement; damage_runtime::astern_cable_engineering; actual sonar/ew loss",
+      "tests": "navigation_astern_2026 fifteen tests",
+      "status": "tested_subset"
+    },
+    {
+      "rule_id": "HV2026-3.1.6",
+      "mechanism": "Evasive steering",
+      "source_pdf": 25,
+      "scope": "source restrictions indexed; full travel-distance/gunnery/critical combinations incomplete",
+      "execution": null,
+      "tests": null,
+      "status": "partial"
+    },
+    {
+      "rule_id": "HV2026-3.2",
+      "mechanism": "Submarine depth/battery/AIP",
+      "source_pdf": 28,
+      "scope": "Previous ordinary-depth8 retained; EmergencyBlow11 tested next-bracket actual motion, minimum three bands and ordinary-mode replacement. Battery legacy defaults withdrawn, source battery/AIP not implemented; CrashDive/VeryDeep remain.",
+      "execution": "navigation2026::submarine -> actual movement; SetDepth source validation",
+      "tests": "submarine_depth_2026 eight tests",
+      "status": "tested_subset"
+    },
+    {
+      "rule_id": "HV2026-3.3",
+      "mechanism": "Collisions and ramming",
+      "source_pdf": 31,
+      "scope": "source indexed; real collision/ramming dice and damage missing",
+      "execution": null,
+      "tests": null,
+      "status": "not_implemented"
+    },
+    {
+      "rule_id": "HV2026-3.4",
+      "mechanism": "Grounding",
+      "source_pdf": 32,
+      "scope": "source grounding dice/timer not connected; charted coastline guard is navigation aid",
+      "execution": null,
+      "tests": null,
+      "status": "not_implemented"
+    },
+    {
+      "rule_id": "HV2026-3.5",
+      "mechanism": "Torpedo movement",
+      "source_pdf": 32,
+      "scope": "see dedicated torpedo source ledger; not counted as completed chapter3",
+      "execution": "torpedo2026::advance",
+      "tests": "torpedo_2026",
+      "status": "partial"
+    },
+    {
+      "rule_id": "HV2026-3.7",
+      "mechanism": "Arrival from off map",
+      "source_pdf": 32,
+      "scope": "source indexed; off-map movement and table-top placement not yet separately adapted",
+      "execution": null,
+      "tests": null,
+      "status": "not_implemented"
+    },
+    {
+      "rule_id": "HV2026-3.1.2",
+      "mechanism": "Crash Back",
+      "source_pdf": 23,
+      "scope": "Double deceleration, native5% Engineering without attached fire, forced cavitation; once at first deceleration per declared maneuver is RTS timing. Quiet/coasting/astern/heave-to/casualty combinations pending.",
+      "execution": "navigation2026::crashback -> motion/detection2026; damage_runtime::crash_back_engineering",
+      "tests": "navigation_crashback_2026 twelve tests",
+      "status": "tested_subset"
+    }
+  ],
+  "validation_log": "artifacts/rules-navigation-remaining-20261024/workspace-final.log",
+  "depth_packet": {
+    "document": "docs/submarine-depth-production-20261023.md",
+    "validation": "artifacts/rules-following-20261023/validation/following-core-red-green.log",
+    "passed": 8,
+    "complete_chapter": false
+  },
+  "normal_turning_packet": {
+    "document": "docs/normal-rudder-production-20261023.md",
+    "validation": "artifacts/rules-after-following-20261023/validation/workspace.log",
+    "passed": 10,
+    "complete_chapter": false
+  },
+  "latest_packet_validation": {
+    "date": "2026-10-24",
+    "status": "tested_declared_subsets_only",
+    "report": "docs/all-rules-submarine-annex-20261024.md",
+    "log": "artifacts/rules-submarine-annex-20261024/workspace-final.log",
+    "workspace": {
+      "targets": 76,
+      "passed": 1240,
+      "failed": 0,
+      "ignored": 5
+    },
+    "whole_chapter_complete": false
+  },
+  "search_navigation_subset": {
+    "report": "docs/all-rules-search-navigation-20261024.md",
+    "ledger": "docs/search-navigation-all-mechanisms-20261024.json",
+    "whole_chapter_complete": false
+  },
+  "latest_declared_subset_ledger": "docs/submarine-annex-a1-all-mechanisms-20261024.json"
+}

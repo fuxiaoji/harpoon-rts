@@ -1,0 +1,52 @@
+{
+  "revision": "2026-10-30-nuclear-asw-remaining-1",
+  "authority": {
+    "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+    "edition": "Harpoon V English Digital Update 2026-01-01",
+    "sha256": "8196ffc715bbcccd862d8597c607de7816dac5baee31fa659f89dfaf4323700c",
+    "sections": [
+      "14.1.8 Nuclear Weapons Effects",
+      "8.5.2 standoff placement",
+      "5.4.6.5 blueout"
+    ],
+    "pdf_pages": [
+      99,
+      131,
+      132
+    ],
+    "printed_pages": [
+      "8-19",
+      "14-5",
+      "14-6"
+    ],
+    "verification": "PDF131/132 rendered and visually inspected in the 2026-10-26/28 batches (parent nuclear-2026.json authority block); PDF99/8-19 referenced by the shipped standoff trace. Page texts reused from artifacts .../zcode-parallel-20261029/nuclear/rag-1418-en.json; no unviewed page is cited."
+  },
+  "rules": {
+    "loss_lock_requires_armed_and_acquired": true,
+    "loss_lock_detonation_delay_seconds": 0,
+    "miss_continue_seconds_reference": 30,
+    "opposite_medium_range_factor_reference": 0.5,
+    "armed_carrier_destroyed_probability_reference": 0.5
+  },
+  "execution_policy": {
+    "id": "RTS-NUCLEAR-ASW-REMAINING-20261030-01",
+    "bystander_measurement_basis": "actual_scatter_ground_zero (flight.payload_position / persisted burst.pos); the author aim point and hidden target pointers are not a measurement basis",
+    "bystander_radius_boundary": "inclusive_within",
+    "submarine_detail_damage": "pending; PDF131 note1 D6 x10% sentence covers surface ships only, no printed per-component submarine value is invented",
+    "subsurface_low_altitude_aircraft": "destroyed within the ship kill radius (PDF132 aircraft clause)",
+    "air_mission_abort": "consumer exists and is already exercised by tests/nuclear_air_abort_asw_source_20261026.rs; not duplicated here",
+    "loss_lock_production_consumer": "surface2026/antiship.rs:995 target-body-gone branch calls removed(Removal::LostAcquiredLock); verified 2026-10-30; the leaf adds the witness contract only, never a second implementation",
+    "guided_miss_production_consumer": "surface2026/antiship.rs:941-943 miss-continue -> nuclear terminal(false) -> burst at tick+30s; verified 2026-10-30",
+    "surface_burst_vs_submerged_submarine_real_gz_case": "Actual public launch/physical armed hit and common surface burst tested against submerged bystanders at 0.20/0.21 and 0.49/0.50 nmi using recorded GZ; fictional payload and pre-adjudicated attack Contact/FCS are explicit laboratory premises.",
+    "source_absence_is_not_completion": true
+  },
+  "not_invented": [
+    "EMP",
+    "fallout",
+    "facility blast DP",
+    "submarine detail damage table",
+    "yield interpolation",
+    "measurement from author aim or hidden target pointer",
+    "second implementation of an existing consumer"
+  ]
+}

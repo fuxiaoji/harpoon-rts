@@ -1,0 +1,855 @@
+{
+  "source": {
+    "document": "14-2.HpnV_Rules_1_Jan_26.pdf",
+    "version": "2026-01-01",
+    "sections": [
+      "13.1–13.8.4",
+      "8.5.3",
+      "3.2"
+    ],
+    "pdf_pages": [
+      28,
+      100,
+      122,
+      123,
+      124,
+      125,
+      126
+    ],
+    "visually_verified_tables": [
+      28,
+      100,
+      124,
+      126
+    ]
+  },
+  "contact": {
+    "spacing_yd": [
+      50,
+      75,
+      100,
+      125,
+      150,
+      175,
+      200,
+      250,
+      300,
+      350,
+      400,
+      450,
+      500
+    ],
+    "probability": [
+      [
+        0.6,
+        0.4,
+        0.3,
+        0.24,
+        0.2,
+        0.17,
+        0.15,
+        0.12,
+        0.1,
+        0.09,
+        0.08,
+        0.07,
+        0.06
+      ],
+      [
+        0.48,
+        0.32,
+        0.24,
+        0.19,
+        0.16,
+        0.14,
+        0.12,
+        0.1,
+        0.08,
+        0.07,
+        0.06,
+        0.05,
+        0.05
+      ],
+      [
+        0.28,
+        0.19,
+        0.14,
+        0.11,
+        0.09,
+        0.08,
+        0.07,
+        0.06,
+        0.05,
+        0.04,
+        0.04,
+        0.03,
+        0.03
+      ],
+      [
+        0.16,
+        0.11,
+        0.08,
+        0.06,
+        0.05,
+        0.05,
+        0.04,
+        0.03,
+        0.03,
+        0.02,
+        0.02,
+        0.02,
+        0.01
+      ],
+      [
+        0.1,
+        0.07,
+        0.05,
+        0.04,
+        0.03,
+        0.03,
+        0.03,
+        0.02,
+        0.02,
+        0.02,
+        0.01,
+        0.01,
+        0.01
+      ]
+    ]
+  },
+  "influence": {
+    "spacing_yd": [
+      75,
+      100,
+      125,
+      150,
+      175,
+      200,
+      250,
+      300,
+      350,
+      400,
+      450,
+      500,
+      600
+    ],
+    "probability": [
+      [
+        0.75,
+        0.56,
+        0.45,
+        0.37,
+        0.32,
+        0.28,
+        0.22,
+        0.19,
+        0.16,
+        0.14,
+        0.12,
+        0.11,
+        0.09
+      ],
+      [
+        0.6,
+        0.45,
+        0.36,
+        0.3,
+        0.26,
+        0.22,
+        0.18,
+        0.15,
+        0.13,
+        0.11,
+        0.1,
+        0.09,
+        0.07
+      ],
+      [
+        0.35,
+        0.26,
+        0.21,
+        0.17,
+        0.15,
+        0.13,
+        0.1,
+        0.09,
+        0.07,
+        0.06,
+        0.06,
+        0.05,
+        0.04
+      ],
+      [
+        0.2,
+        0.15,
+        0.12,
+        0.1,
+        0.09,
+        0.07,
+        0.06,
+        0.05,
+        0.05,
+        0.04,
+        0.04,
+        0.03,
+        0.02
+      ],
+      [
+        0.12,
+        0.09,
+        0.07,
+        0.06,
+        0.05,
+        0.05,
+        0.04,
+        0.03,
+        0.03,
+        0.02,
+        0.02,
+        0.02,
+        0.01
+      ]
+    ]
+  },
+  "mechanical_remaining": [
+    [
+      0.7,
+      0.8,
+      0.85
+    ],
+    [
+      0.5,
+      0.65,
+      0.7
+    ],
+    [
+      0.35,
+      0.5,
+      0.6
+    ],
+    [
+      0.25,
+      0.4,
+      0.5
+    ],
+    [
+      null,
+      0.3,
+      0.45
+    ],
+    [
+      null,
+      0.25,
+      0.4
+    ],
+    [
+      null,
+      null,
+      0.35
+    ],
+    [
+      null,
+      null,
+      0.25
+    ]
+  ],
+  "influence_remaining": [
+    [
+      0.7,
+      0.85,
+      0.9
+    ],
+    [
+      0.6,
+      0.75,
+      0.85
+    ],
+    [
+      0.4,
+      0.65,
+      0.8
+    ],
+    [
+      0.3,
+      0.55,
+      0.75
+    ],
+    [
+      0.2,
+      0.45,
+      0.65
+    ],
+    [
+      null,
+      0.35,
+      0.55
+    ],
+    [
+      null,
+      0.25,
+      0.45
+    ],
+    [
+      null,
+      null,
+      0.35
+    ]
+  ],
+  "sweep": {
+    "minimum_remaining": 0.25,
+    "ship_half_passes": 2,
+    "helicopter_half_passes": 1,
+    "gear": {
+      "oropesa": {
+        "deploy_s": 3600,
+        "deploy_max_kts": 5,
+        "tow_max_kts": 15,
+        "width_yd": 500,
+        "short_stay_s": 720,
+        "restream_s": 720
+      },
+      "a_sweep": {
+        "deploy_s": 1800,
+        "deploy_max_kts": 5,
+        "tow_max_kts": 10,
+        "width_yd": 250,
+        "pair_max_yd": 250
+      },
+      "magnetic": {
+        "deploy_s": 1800,
+        "deploy_max_kts": 5,
+        "tow_max_kts": 12,
+        "width_yd": 200
+      },
+      "acoustic": {
+        "deploy_s": 1800,
+        "deploy_max_kts": 5,
+        "tow_max_kts": 7,
+        "width_yd": 200
+      }
+    },
+    "helicopter_max_kts": 20,
+    "helicopter_max_altitude_m": 30,
+    "hunt_die_seconds": 1800
+  },
+  "lay": {
+    "tactical_s": 180,
+    "sub_reload_s": 360,
+    "ship_max_kts": 20,
+    "sub_max_kts": 5,
+    "surface_sea_max": 4,
+    "sub_sea_max": 5,
+    "rates": {
+      "minelayer": 20,
+      "rails": 16,
+      "ordinary": 8,
+      "merchant": 12
+    },
+    "arming_s": {
+      "shallow": 360,
+      "int_i": 540
+    },
+    "minimum_contact_spacing_yd": 50,
+    "minimum_influence_spacing_yd": 75,
+    "minimum_row_spacing_yd": 200
+  },
+  "attack": {
+    "round_distance_yd": 50,
+    "large_dwt": 160000,
+    "large_bonus": 0.15,
+    "acoustic_large_kts": 15,
+    "pressure_small_kts": 5,
+    "pressure_no_benefit_from_size": 5,
+    "optional_damage_thresholds": [
+      0.4,
+      0.7,
+      0.9,
+      1.0
+    ],
+    "moored_narrow_percent": 50
+  },
+  "hull": {
+    "contact_single_percent": [
+      15,
+      30,
+      60,
+      90
+    ],
+    "contact_double_percent": [
+      5,
+      15,
+      45,
+      75
+    ],
+    "pre1955_add_percent": 30,
+    "contact_multiplier": 2,
+    "influence_large_medium": 50,
+    "influence_small_vsmall": 80,
+    "shallow_rescue_percent": 15
+  },
+  "depth_max_m": [
+    25,
+    50,
+    100,
+    200,
+    300,
+    400,
+    500,
+    600,
+    750,
+    900,
+    1050,
+    1200
+  ],
+  "mines": {
+    "chen_0": {
+      "kind": "bottom",
+      "fuzes": [
+        "magnetic"
+      ],
+      "generation": 2,
+      "annex_max_depth_band": 1,
+      "max_case_band": 1,
+      "max_anchor_band": 1,
+      "damage": [
+        132,
+        79,
+        39,
+        20
+      ],
+      "lay_methods": [
+        "ship",
+        "air"
+      ],
+      "source": "6-3.（数据库）2025版Chinas_Navy_1_Dec_25.pdf;2025-12-01;PDF78;AnnexG G-1"
+    },
+    "chen_1": {
+      "kind": "bottom",
+      "fuzes": [
+        "magnetic"
+      ],
+      "generation": 1,
+      "annex_max_depth_band": 1,
+      "max_case_band": 1,
+      "max_anchor_band": 1,
+      "damage": [
+        132,
+        79,
+        39,
+        20
+      ],
+      "lay_methods": [
+        "air",
+        "ship"
+      ],
+      "source": "6-3.（数据库）2025版Chinas_Navy_1_Dec_25.pdf;2025-12-01;PDF78;AnnexG G-1"
+    },
+    "chen_2": {
+      "kind": "bottom",
+      "fuzes": [
+        "magnetic",
+        "acoustic"
+      ],
+      "generation": 2,
+      "annex_max_depth_band": 1,
+      "max_case_band": 1,
+      "max_anchor_band": 1,
+      "damage": [
+        153,
+        92,
+        46,
+        23
+      ],
+      "lay_methods": [
+        "sub",
+        "ship"
+      ],
+      "source": "6-3.（数据库）2025版Chinas_Navy_1_Dec_25.pdf;2025-12-01;PDF78;AnnexG G-1"
+    },
+    "chen_2b": {
+      "kind": "bottom",
+      "fuzes": [
+        "magnetic",
+        "acoustic"
+      ],
+      "generation": 3,
+      "annex_max_depth_band": 1,
+      "max_case_band": 1,
+      "max_anchor_band": 1,
+      "damage": [
+        159,
+        95,
+        48,
+        24
+      ],
+      "lay_methods": [
+        "sub",
+        "ship"
+      ],
+      "source": "6-3.（数据库）2025版Chinas_Navy_1_Dec_25.pdf;2025-12-01;PDF78;AnnexG G-1"
+    },
+    "chen_3b": {
+      "kind": "bottom",
+      "fuzes": [
+        "magnetic",
+        "acoustic",
+        "pressure"
+      ],
+      "generation": 3,
+      "annex_max_depth_band": 3,
+      "max_case_band": 3,
+      "max_anchor_band": 3,
+      "damage": [
+        164,
+        98,
+        49,
+        25
+      ],
+      "lay_methods": [
+        "air",
+        "sub",
+        "ship"
+      ],
+      "source": "6-3.（数据库）2025版Chinas_Navy_1_Dec_25.pdf;2025-12-01;PDF78;AnnexG G-1"
+    },
+    "mdm_1": {
+      "kind": "bottom",
+      "fuzes": [
+        "magnetic",
+        "acoustic"
+      ],
+      "generation": 2,
+      "annex_max_depth_band": 2,
+      "max_case_band": 2,
+      "max_anchor_band": 2,
+      "damage": [
+        235,
+        141,
+        71,
+        35
+      ],
+      "lay_methods": [
+        "ship",
+        "sub"
+      ],
+      "source": "6-3.（数据库）2025版Chinas_Navy_1_Dec_25.pdf;2025-12-01;PDF78;AnnexG G-1"
+    },
+    "mao_1": {
+      "kind": "moored",
+      "fuzes": [
+        "contact"
+      ],
+      "generation": 1,
+      "annex_max_depth_band": 1,
+      "max_case_band": null,
+      "max_anchor_band": null,
+      "damage": [
+        74,
+        null,
+        null,
+        null
+      ],
+      "lay_methods": [
+        "ship"
+      ],
+      "source": "6-3.（数据库）2025版Chinas_Navy_1_Dec_25.pdf;2025-12-01;PDF78;AnnexG G-1"
+    },
+    "mao_1a": {
+      "kind": "moored",
+      "fuzes": [
+        "contact"
+      ],
+      "generation": 1,
+      "annex_max_depth_band": 2,
+      "max_case_band": null,
+      "max_anchor_band": null,
+      "damage": [
+        82,
+        null,
+        null,
+        null
+      ],
+      "lay_methods": [
+        "ship"
+      ],
+      "source": "6-3.（数据库）2025版Chinas_Navy_1_Dec_25.pdf;2025-12-01;PDF78;AnnexG G-1"
+    },
+    "mao_3": {
+      "kind": "moored",
+      "fuzes": [
+        "contact"
+      ],
+      "generation": 2,
+      "annex_max_depth_band": 3,
+      "max_case_band": null,
+      "max_anchor_band": null,
+      "damage": [
+        64,
+        null,
+        null,
+        null
+      ],
+      "lay_methods": [
+        "ship"
+      ],
+      "source": "6-3.（数据库）2025版Chinas_Navy_1_Dec_25.pdf;2025-12-01;PDF78;AnnexG G-1"
+    },
+    "piao_1": {
+      "kind": "drifting",
+      "fuzes": [
+        "contact"
+      ],
+      "generation": 1,
+      "annex_max_depth_band": 0,
+      "max_case_band": 0,
+      "max_anchor_band": 0,
+      "damage": [
+        39,
+        null,
+        null,
+        null
+      ],
+      "lay_methods": [
+        "ship"
+      ],
+      "source": "6-3.（数据库）2025版Chinas_Navy_1_Dec_25.pdf;2025-12-01;PDF78;AnnexG G-1"
+    },
+    "te_5": {
+      "kind": "mobile",
+      "fuzes": [
+        "seismic",
+        "pressure"
+      ],
+      "generation": 2,
+      "annex_max_depth_band": 1,
+      "max_case_band": 1,
+      "max_anchor_band": 1,
+      "damage": [
+        148,
+        89,
+        44,
+        22
+      ],
+      "lay_methods": [
+        "sub"
+      ],
+      "source": "6-3.（数据库）2025版Chinas_Navy_1_Dec_25.pdf;2025-12-01;PDF78;AnnexG G-1"
+    },
+    "cn_chen0_500": {
+      "name": "Chen-0 500",
+      "kind": "bottom",
+      "generation": 2,
+      "fuzes": [
+        "magnetic"
+      ],
+      "weight_kg": 500,
+      "warhead_kg": 300,
+      "annex_max_depth_band": 1,
+      "max_case_band": 1,
+      "max_anchor_band": 1,
+      "damage": [
+        132,
+        79,
+        39,
+        20
+      ],
+      "lay_methods": [
+        "ship",
+        "air"
+      ],
+      "source": "6-3.（数据库）2025版Chinas_Navy_1_Dec_25.pdf;2025-12-01;PDF78;AnnexG G-1; exact named variant visually verified"
+    },
+    "cn_chen1_500": {
+      "name": "Chen-1 500",
+      "kind": "bottom",
+      "generation": 1,
+      "fuzes": [
+        "magnetic"
+      ],
+      "weight_kg": 495,
+      "warhead_kg": 300,
+      "annex_max_depth_band": 1,
+      "max_case_band": 1,
+      "max_anchor_band": 1,
+      "damage": [
+        132,
+        79,
+        39,
+        20
+      ],
+      "lay_methods": [
+        "air",
+        "ship"
+      ],
+      "source": "6-3.（数据库）2025版Chinas_Navy_1_Dec_25.pdf;2025-12-01;PDF78;AnnexG G-1; exact named variant visually verified"
+    },
+    "cn_chen2_500": {
+      "name": "Chen-2 500",
+      "kind": "bottom",
+      "generation": 2,
+      "fuzes": [
+        "magnetic",
+        "acoustic"
+      ],
+      "weight_kg": 500,
+      "warhead_kg": 300,
+      "annex_max_depth_band": 1,
+      "max_case_band": 1,
+      "max_anchor_band": 1,
+      "damage": [
+        153,
+        92,
+        46,
+        23
+      ],
+      "lay_methods": [
+        "sub",
+        "ship"
+      ],
+      "source": "6-3.（数据库）2025版Chinas_Navy_1_Dec_25.pdf;2025-12-01;PDF78;AnnexG G-1; exact named variant visually verified"
+    },
+    "cn_chen3b_1000": {
+      "name": "Chen-3B 1000",
+      "kind": "bottom",
+      "generation": 3,
+      "fuzes": [
+        "magnetic",
+        "acoustic",
+        "pressure"
+      ],
+      "weight_kg": 950,
+      "warhead_kg": 700,
+      "annex_max_depth_band": 3,
+      "max_case_band": 3,
+      "max_anchor_band": 3,
+      "damage": [
+        242,
+        145,
+        73,
+        36
+      ],
+      "lay_methods": [
+        "air",
+        "sub",
+        "ship"
+      ],
+      "source": "6-3.（数据库）2025版Chinas_Navy_1_Dec_25.pdf;2025-12-01;PDF78;AnnexG G-1; exact named variant visually verified"
+    },
+    "ru_mdm1_china_g": {
+      "name": "MDM-1",
+      "kind": "bottom",
+      "generation": 2,
+      "fuzes": [
+        "acoustic",
+        "magnetic"
+      ],
+      "weight_kg": 1120,
+      "warhead_kg": 960,
+      "annex_max_depth_band": 2,
+      "max_case_band": 2,
+      "max_anchor_band": 2,
+      "damage": [
+        235,
+        141,
+        71,
+        35
+      ],
+      "lay_methods": [
+        "ship",
+        "sub"
+      ],
+      "source": "6-3.（数据库）2025版Chinas_Navy_1_Dec_25.pdf;2025-12-01;PDF78;AnnexG G-1; exact named variant visually verified"
+    }
+  },
+  "adaptations": [
+    {
+      "id": "RTS13-geometry",
+      "rule": "13.4–13.5",
+      "description": "Scenario-authored oriented rectangular minefields; exact path clipping accumulates only distance inside danger area, excluding authored safe channels. No bathymetry inferred."
+    },
+    {
+      "id": "RTS13-round",
+      "rule": "13.8.4 example",
+      "description": "After sweep multiplication, round probability to nearest integer percent as the printed 0.32×0.40=0.13 example. No interpolation between spacing columns."
+    },
+    {
+      "id": "RTS13-cap",
+      "rule": "13.8.4",
+      "description": "Explicit maximum 75% reduction takes precedence over influence generation1 pass5 table0.20; preserve raw cell but cap applied remaining at0.25."
+    },
+    {
+      "id": "RTS13-limits",
+      "rule": "13.7",
+      "description": "Source rate of roughly5kt for submerged minelaying implemented as maximum5kt; mobile mines exempt. Authored source capability still mandatory."
+    },
+    {
+      "id": "RTS13-counter",
+      "rule": "13.7",
+      "description": "Mine activation timers and ship counters must be explicit scenario inputs; timers never guessed."
+    },
+    {
+      "id": "RTS13-lifecycle",
+      "rule": "13.3/13.4/13.7/13.8",
+      "description": "See lifecycle: complete one-row atomic cohorts after real track/work; own event180s combat window; known individual neutralization preserves original die/claim and suspends work. Partial minefield damage explicitly pending, not inferred."
+    }
+  ],
+  "blocked": [
+    {
+      "rule": "13.6 antenna",
+      "reason": "First paragraph permits IntI-case antenna atP/S; last paragraph excludes IntI. IntI surface/P/S antenna branch blocked."
+    },
+    {
+      "rule": "13.7 arming",
+      "reason": "Only Shallow and IntI arming delays printed; other case bands need source scenario override, no guess."
+    },
+    {
+      "rule": "13.7 airfield",
+      "reason": "Odd aircraft count gives half an attack; no rounding printed. Reject odd aircraft count unless explicit scenario adaptation."
+    },
+    {
+      "rule": "13.6 propelled no seeker",
+      "reason": "Full vs Severe selection procedure not printed; unknown branch pending."
+    }
+  ],
+  "lifecycle": {
+    "execution_revision": "20261023-complete-row-physical-tubes-classified-hunt-v2",
+    "activation_max_s": 1209600,
+    "combat_window_s": 180,
+    "source": "English2026 PDF123/125/126;13.3/13.4/13.7/13.8.3/13.8.4",
+    "initial_contact_authority": "Trusted scenario/referee authored previously-classified receipts only. Engine search/classification not implemented. No player truth-ID command bypass.",
+    "row_policy": "First dynamic package accepts exactly one complete regular bottom-mine row no larger than the source per180s quota. Real path must intersect every declared row position. Ship cohort releases atomically after180 actual legal work seconds; sub cohort after actual route with each declared same physical loaded tube available. Each body preserves actual cohort release/arming clocks. Larger/partial rows, air/mobile fields, counters and mixed rows remain blocked.",
+    "combat_policy": "Own real combat events mark the source180s work window. Any combat in a ship cohort halves that cohort capacity; no silent upgrade aftercombat. A row exceeding the reduced quota remains blocked until cancelled/replanned. No hidden enemy inventory/location eligibility predicate.",
+    "hunt_policy": "One original D6 per classified mine, one neutralizer charge. Active work D6*1800sec. Combat/nonpermissive/range/depth/speed violation suspends work. Cancel pauses while preserving exclusive claim/die/progress/cost; same actor resumes. No cooperative speed-up. Source method/range/depth/work-speed/charges explicitly authored, no generic ROV defaults.",
+    "partial_manifest_policy": "After any individual neutralization, remaining original Field and complete manifest stay saved. Actual danger-area crossings are saved as referee pending paths; do not roll old full-density Ph, reduce proportionally, declare clear, or apply sweep25% floor. Retire Field only when every manifest body actually neutralized.",
+    "equipment_limit": "Specific neutralizer/rail functional damage mapping still requires source equipment integration; generic ship sensor capability never grants MCM fit.",
+    "initialization_policy": "Each authored stock/fit/plan binds one unique unit name; planned/initial field identities unique. Complete manifest bodies match Field type/depth/owner/arming/activation clocks. First subset rejects trusted scenarios that give both sides classified permission to the same physical mine: contested work has no private claim procedure yet.",
+    "private_physical_work": "Order admission/range/depth use own source report only. Actual neutralizer work also requires reaching real body inside source physical range/depth. Own task projection shows attempted_s and own-condition phase, never referee worked_s or hidden physical failure cause. Successful real operation is the completion confirmation. Report mismatch cannot authorize remote neutralization or form an immediate progress/admission probe.",
+    "own_plan_discovery": "own_view.lay_plans lists only source-valid own-unit plans with id/actor/source/geometry and known mine/depth/spacing/timing, so player/AI does not guess plan IDs. No enemy plan or body/manifest IDs."
+  },
+  "search": {
+    "source": "English2026 PDF49/50/52 §5.4.6.1 core algorithm verified; CommonwealthNavies2025-12-01 PDF65/A-61 proves only M1151/1971 Type193M fit. PDF90/K-2 has no Type193M row; automatic receiver parameters withdrawn2026-10-24.",
+    "revision": "20261024-source-correction-Type193M-blocked-explicit-author-fixture",
+    "trial_period_s": 180,
+    "mine_strength_size_index": 4,
+    "mine_strength_label": "VSmall (printed E–G active-strength row; no hull aspect, noise or launcher profile)",
+    "classification": "blocked: no verified mine-specific classification probability/procedure; successful echo is not a classified-mine receipt",
+    "projection": "Reuse chapter5 successful active sonar report geometry. Private body identity only in referee state; per-Side opaque echo IDs.",
+    "scenario_assumption_policy": "Explicit fictitious platform IDs start scenario_assumption: and active sensor IDs start sonar_a_scenario_assumption: to preserve the existing active-sonar operation prefix. Both sources retain scenario_assumption:, parameters are authored in scenario configuration, actual database equipment must already exist, and reports preserve evidence_basis/source. Direct keel-only engineering subset; never supplies a missing historical Annex K cell.",
+    "profiles": {
+      "uk_ton_m1151_1971": {
+        "source": "CommonwealthNavies2025-12-01 PDF65/A-61: M1151 fitted Type193M minehunting sonar in1971. PDF90/K-2 contains no Type193M row.",
+        "verification": "blocked",
+        "blocked_reason": "TBD: generation, active50 range, frequency and mount are not established by the verified fit note; former Gen3/HFa/Keel/0.4nm/1955 claim was a mixture of unrelated rows and is withdrawn.",
+        "platform_class": "uk_ton_m1151_1971",
+        "sensor": "sonar_a_uk_type193m",
+        "capability": "dedicated_bottom_minehunting",
+        "generation": null,
+        "frequency": null,
+        "mount": null,
+        "active50_nm": null,
+        "direct_only": true,
+        "sensor_definition": null
+      }
+    }
+  }
+}
