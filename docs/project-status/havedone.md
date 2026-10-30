@@ -587,3 +587,9 @@ Rust整库1356/0/5，40新增独立例，Node70/0；296输入锁验，Cargo后�
 - 三电池fit2/0：A17S150new+AIP存在、Collins240new、加拿大Victoria150new；统一per-field许可和实际初始化/公开AIP/充电/stow helper。无深度、锂电或整艇装备认证。A17S附件raw2400与2026正文2000冲突，保2000运行/补给兼容子集，>2000明确source_pending，不猜覆盖优先关系。
 - IIRH3 F/G印刷源行及实际飞行/转向/烟幕四新例与旧4合8/0；作者实验挂载，移动目标/完整SARH仍待。PRH四例通过：真实AGM45A Direct释放/飞行/原D100、独立原D6+2、共同伤害窗指定单雷达Base额外一critical；玩家预检仅己方分配信息，裁判末端发射/损伤资格，关机留pending，无私态oracle。未支持舰载多雷达或停机记忆/原生ES侦察，未把适配0固定DP当真实伤害。
 - 1–5、6–10、11–14三分区只读缺口表已落，均明确partial/nonexhaustive，不是完整规则数或完成率。全书/可选/真实附件仍false。后续六接口→综合近岸→游戏协同FSM顺序不变；无UI/HTTP/旧长局验收声称，无提交推送。
+
+
+## 2026-10-30 GitHub开发进度上传
+
+- 按用户要求，将当前游戏仓库540项源码/数据/测试/文档变更作为进行中快照提交a83aed7，并已实际推送至 fuxiaoji/harpoon-rts 的 codex/in-game-agent 分支；未合并main。上级治理/计划/完成记录/歧义与第92批核心验证元数据同步至游戏仓库docs/project-status。
+- 已检查暂存JSON全部可解析、无新增超过5MB文件、常见凭据模式扫描未发现命中。实际cargo check --workspace核心库通过检查，但服务端agent.rs缺通信SendVisualSignal及五种反潜Action分支导致失败，已写入上传说明；不称整库可编译或全书完成。原始PDF/大型证据/构建缓存未新增上传。
